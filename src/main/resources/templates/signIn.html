@@ -35,14 +35,14 @@
 ================================================== -->
 	<section class="navbar navbar-fixed-top custom-navbar"
 		role="navigation">
-		<div class="container">
+		<div class="container-fluid">
 			<div class="navbar-header">
 				<button class="navbar-toggle" data-toggle="collapse"
 					data-target=".navbar-collapse">
 					<span class="icon icon-bar"></span> <span class="icon icon-bar"></span>
 					<span class="icon icon-bar"></span>
 				</button>
-				<a href="#home" class="smoothScroll navbar-brand">BICYCLE
+				<a href="index.html#home" class="smoothScroll navbar-brand">BICYCLE
 					SHARING</a>
 			</div>
 			<div class="collapse navbar-collapse">
@@ -77,11 +77,13 @@
 							tabindex="3" required="required" />
 					</div>
 
-					<span class="button-checkbox pull-left"> <input
-						type="checkbox" name="remember_me" id="remember_me" /> Remember
-						Me
-					</span> <span><a href="" class="btn btn-link pull-right"
-						style="font-size: 1.1em">Forgot Password?</a></span>
+					<div>
+						<span class="button-checkbox pull-left"> <input
+							type="checkbox" name="remember_me" id="remember_me" /> Remember
+							Me
+						</span> <span><a href="" class="btn btn-link pull-right"
+							style="font-size: 1.1em">Forgot Password?</a></span>
+					</div><br />
 					<hr class="colorgraph" />
 					<div class="row">
 						<div class="col-md-6">
@@ -118,7 +120,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<!-- javascript  -->
 	<script src="js/jquery.js" th:src="@{js/jquery.js}"></script>
 	<script src="js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
