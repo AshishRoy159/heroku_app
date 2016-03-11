@@ -24,18 +24,21 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  * This is the Security Configuration file for Spring Security.
  * 
  * @author mindfire
- * @version 1.0
- * {@link WebSecurityConfigurerAdapter}
+ * @version 1.0 {@link WebSecurityConfigurerAdapter}
  * @since 10/03/2016
  */
 @Configuration
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
-	
-	/* (non-Javadoc)
-	 * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.web.builders.HttpSecurity)
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.security.config.annotation.web.configuration.
+	 * WebSecurityConfigurerAdapter#configure(org.springframework.security.
+	 * config.annotation.web.builders.HttpSecurity)
 	 */
 	@Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeRequests().antMatchers("/").permitAll();
-    }
+	protected void configure(HttpSecurity httpSecurity) throws Exception {
+		httpSecurity.authorizeRequests().antMatchers("/").permitAll();
+	}
 }

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<span th:text="*{message}">Sebastian</span>
+<div th:if="${expired}">
+<a th:href="@{/resendRegistrationToken.html(token=${token.token})}">Resend</a>
+</div>
+</body>
+</html>
