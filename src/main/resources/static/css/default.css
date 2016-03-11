@@ -6,6 +6,7 @@
 	float: inherit;
 	background-color: white;
 	padding: 40px;
+	bottom: 0;
 }
 
 .navbar {
@@ -36,9 +37,15 @@
 		50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1
 		87.5%, #62c2e4 87.5%, #62c2e4);
 }
+.foot {
+	position: relative;
+}
 
 .footer {
-	padding-top: 20px;
-	height: 80px;
+	padding: 20px;
+	height: auto;
 	background-color: #babdb6;
+	position: fixed;
+	width: 100%;
+	bottom: 0;
 }

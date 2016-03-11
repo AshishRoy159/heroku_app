@@ -16,8 +16,16 @@
 
 package com.mindfire.bicyclesharing.controller;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.mindfire.bicyclesharing.DTO.LoginDTO;
 
 /**
  * This class contains all the Request Mappings related to the navigation of the
@@ -29,14 +37,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class HomeController {
-
+	
 	/**
 	 * This method maps all root request. Simply render the index view.
 	 * 
 	 * @return the index view.
 	 */
 	@RequestMapping(value = { "/", "index" })
-	public String index() {
+	public String getHomePage() {
 		return "index";
 	}
 
@@ -45,8 +53,8 @@ public class HomeController {
 	 * 
 	 * @return the registration view.
 	 */
-	@RequestMapping("register")
-	public String reg() {
+	@RequestMapping(value = {"register"}, method = RequestMethod.GET)
+	public String getUserCreatePage() {
 		return "registration";
 	}
 
@@ -55,8 +63,23 @@ public class HomeController {
 	 * 
 	 * @return the signIn view.
 	 */
-	@RequestMapping("login")
-	public String signIn() {
-		return "signIn";
+	@RequestMapping(value = {"login"}, method = RequestMethod.GET)
+	public ModelAndView getUserSignInPage(@ModelAttribute("loginData") LoginDTO logiDTO, @RequestParam Optional<String> error) {
+		return new ModelAndView("signIn", "error", error);
+	}
+	
+	//This method is only for checking that all request to /users/** must have ADMIN authority to access.
+	@RequestMapping(value = {"users/userDetails"})
+	public String getUserDetails(){
+		return "userDetails";
+	}
+	
+	/**
+	 * This method maps any request which is not authorized to the user. Simply render the Access Denied view.
+	 * @return 403 view
+	 */
+	@RequestMapping(value = {"403"})
+	public String getAccessDeniedPage(){
+		return "403";
 	}
 }
