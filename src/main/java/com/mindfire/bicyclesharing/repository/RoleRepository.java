@@ -35,4 +35,6 @@ public interface RoleRepository extends JpaRepository<Role, Long>{
 	
 	@Query("select a.userRole from Role a, User b where b.email = ?1 and a.roleId = b.role.roleId")
 	public List<String> findRoleByEmail(String email);
+	
+	public Role findByUserRole(String role);
 }

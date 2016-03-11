@@ -24,7 +24,6 @@ import com.mindfire.bicyclesharing.dto.SetPasswordDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
 import com.mindfire.bicyclesharing.model.ProofDetail;
 import com.mindfire.bicyclesharing.model.RateGroup;
-import com.mindfire.bicyclesharing.model.Role;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.service.UserService;
 
@@ -65,13 +64,10 @@ public class UserComponent {
 		proofDetail.setProofNo(userDTO.getProofNo());
 		proofDetail.setDocument(userDTO.getDocument());
 
-		Role userRole = new Role();
-		userRole.setUserRole("user");
-
 		RateGroup rateGroup = new RateGroup();
 		rateGroup.setGroupType("user-type");
 
-		return userService.saveUserDetails(newUser, proofDetail, userRole, rateGroup);
+		return userService.saveUserDetails(newUser, proofDetail, rateGroup);
 	}
 
 	/**
