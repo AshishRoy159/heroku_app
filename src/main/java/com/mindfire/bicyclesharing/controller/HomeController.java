@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.mindfire.bicyclesharing.DTO.LoginDTO;
+import com.mindfire.bicyclesharing.dto.LoginDTO;
 
 /**
  * This class contains all the Request Mappings related to the navigation of the

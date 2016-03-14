@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
 import com.mindfire.bicyclesharing.dto.SetPasswordDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
 import com.mindfire.bicyclesharing.model.ProofDetail;
@@ -82,5 +83,16 @@ public class UserComponent {
 
 		return userService.savePassword(passEncoder.encode(setPasswordDTO.getPassword()),
 				setPasswordDTO.getEmail());
+	}
+	
+	/**
+	 * This method receives the data from the ForgotPasswordDTO class and retrieves the user data  
+	 * corresponding to the email in the dto.
+	 * 
+	 * @param forgotPasswordDTO
+	 * @return User Object
+	 */
+	public User retrieveUserPassword(ForgotPasswordDTO forgotPasswordDTO){
+		return userService.userDetails(forgotPasswordDTO.getEmail());
 	}
 }

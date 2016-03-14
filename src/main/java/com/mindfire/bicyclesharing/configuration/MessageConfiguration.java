@@ -52,6 +52,8 @@ public class MessageConfiguration {
 		messageBean.setContextPath(env.getProperty("contextpath"));
 		messageBean.setResendToken(env.getProperty("message.resendToken"));
 		messageBean.setAlreadyActivated(env.getProperty("message.alreadyActivated"));
+		messageBean.setResetPasswordEmail(env.getProperty("message.resetPasswordEmail"));
+		messageBean.setResetPassword(env.getProperty("message.resetPassword"));
 		return messageBean;
 	}
 

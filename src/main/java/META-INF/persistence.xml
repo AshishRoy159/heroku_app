@@ -15,5 +15,6 @@
 		<class>com.mindfire.bicyclesharing.model.VerificationToken</class>
 		<class>com.mindfire.bicyclesharing.model.WalletTransaction</class>
 		<class>com.mindfire.bicyclesharing.model.Wallet</class>
+		<class>com.mindfire.bicyclesharing.model.PasswordResetToken</class>
 	</persistence-unit>
 </persistence>

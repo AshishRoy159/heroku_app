@@ -22,10 +22,12 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mindfire.bicyclesharing.model.PasswordResetToken;
 import com.mindfire.bicyclesharing.model.ProofDetail;
 import com.mindfire.bicyclesharing.model.RateGroup;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.VerificationToken;
+import com.mindfire.bicyclesharing.repository.PasswordResetTokenRepository;
 import com.mindfire.bicyclesharing.repository.ProofDetailRepository;
 import com.mindfire.bicyclesharing.repository.RateGroupRepository;
 import com.mindfire.bicyclesharing.repository.RoleRepository;
@@ -47,6 +49,9 @@ public class UserService {
 
 	@Autowired
 	private VerificationTokenRepository tokenRepository;
+	
+	@Autowired
+	private PasswordResetTokenRepository passwordResetTokenRepository;
 
 	@Autowired
 	private ProofDetailRepository proofDetailRepository;
@@ -163,5 +168,16 @@ public class UserService {
 	 */
 	public Optional<User> getUserByEmail(String email) {
 		return userRepository.findOneByEmail(email);
+	}
+	
+	/**
+	 * This method is used for storing a Password Reset token for the user
+	 * 
+	 * @param user
+	 * @param token
+	 */
+	public void createResetPasswordTokenForUser(final User user, final String token) {
+		final PasswordResetToken myToken = new PasswordResetToken(token, user);
+		passwordResetTokenRepository.save(myToken);
 	}
 }

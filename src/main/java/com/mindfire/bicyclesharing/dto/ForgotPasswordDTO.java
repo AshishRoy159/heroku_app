@@ -14,56 +14,31 @@
  * limitations under the License.
  */
 
-package com.mindfire.bicyclesharing.DTO;
+package com.mindfire.bicyclesharing.dto;
 
 import javax.validation.constraints.NotNull;
 
 /**
- * LoginDTO class is used for taking data from login view.
+ * ForgotPasswordDTO class is used for taking data from forgotPassword view.
  * 
  * @author mindfire
  * @version 1.0
  * @since 10/03/2016
  */
-/**
- * @author mindfire
- *
- */
-public class LoginDTO {
+public class ForgotPasswordDTO {
 	
 	@NotNull
 	private String email;
-	@NotNull
-	private String password;
-	
-	
-	
 	/**
 	 * @return the email
 	 */
 	public String getEmail() {
 		return email;
 	}
-
 	/**
 	 * @param email the email to set
 	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
-	
-	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 }

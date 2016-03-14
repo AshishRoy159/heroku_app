@@ -36,14 +36,19 @@ import org.springframework.web.servlet.ModelAndView;
 import com.mindfire.bicyclesharing.component.MessageBean;
 import com.mindfire.bicyclesharing.component.UserComponent;
 import com.mindfire.bicyclesharing.constant.Constant;
+import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
 import com.mindfire.bicyclesharing.dto.SetPasswordDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
 import com.mindfire.bicyclesharing.event.OnRegistrationCompleteEvent;
+import com.mindfire.bicyclesharing.event.OnResetPasswordEvent;
 import com.mindfire.bicyclesharing.event.ResendVerificationTokenEvent;
+import com.mindfire.bicyclesharing.model.PasswordResetToken;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.VerificationToken;
+import com.mindfire.bicyclesharing.repository.PasswordResetTokenRepository;
 import com.mindfire.bicyclesharing.repository.VerificationTokenRepository;
 import com.mindfire.bicyclesharing.service.UserService;
+
 /**
  * UserController contains all the mappings related to the users
  * 
@@ -67,10 +72,14 @@ public class UserController {
 	private VerificationTokenRepository tokenRepository;
 
 	@Autowired
+	private PasswordResetTokenRepository passwordResetTokenRepository;
+
+	@Autowired
 	private MessageBean messageBean;
 
 	/**
-	 * This method maps the registration request. Simply render the registration view.
+	 * This method maps the registration request. Simply render the registration
+	 * view.
 	 * 
 	 * @return the registration view.
 	 */
@@ -80,7 +89,8 @@ public class UserController {
 	}
 
 	/**
-	 * This method maps the registration request. Simply render the successRegister view.
+	 * This method maps the registration request. Simply render the
+	 * successRegister view.
 	 * 
 	 * @return the successRegister view.
 	 */
@@ -138,7 +148,8 @@ public class UserController {
 	}
 
 	/**
-	 * This method is used for mapping the request when the user request to resend the verification mail
+	 * This method is used for mapping the request when the user request to
+	 * resend the verification mail
 	 * 
 	 * @param request
 	 * @param existingToken
@@ -162,7 +173,8 @@ public class UserController {
 	}
 
 	/**
-	 * This method is used to map the set password request. Simply render the setPassword view
+	 * This method is used to map the set password request. Simply render the
+	 * setPassword view
 	 * 
 	 * @param setPasswordDTO
 	 * @return the setPassword view
@@ -173,7 +185,8 @@ public class UserController {
 	}
 
 	/**
-	 * This method maps the request after the user sets the password. Simply render the userProfile view.
+	 * This method maps the request after the user sets the password. Simply
+	 * render the userProfile view.
 	 * 
 	 * @param setPasswordDTO
 	 * @param model
@@ -181,8 +194,8 @@ public class UserController {
 	 * @return the userProfile view
 	 */
 	@RequestMapping(value = "afterSetPassword", method = RequestMethod.POST)
-	public ModelAndView setPassword(@ModelAttribute("setPasswordData") @Valid SetPasswordDTO setPasswordDTO, Model model,
-			BindingResult result) {
+	public ModelAndView setPassword(@ModelAttribute("setPasswordData") @Valid SetPasswordDTO setPasswordDTO,
+			Model model, BindingResult result) {
 		int num = userComponent.mapPassword(setPasswordDTO);
 		if (num == 0) {
 			return new ModelAndView("setPassword");
@@ -193,4 +206,69 @@ public class UserController {
 		}
 	}
 
+	/**
+	 * This method maps the request after the user clicks on forgot password
+	 * link. Simply render the forgotPassword view.
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "forgotPassword", method = RequestMethod.GET)
+	public ModelAndView forgotPassword() {
+		return new ModelAndView("forgotPassword");
+	}
+
+	@RequestMapping(value = "afterForgotPassword", method = RequestMethod.POST)
+	public ModelAndView forgotOldPassword(@ModelAttribute("forgotPasswordData") ForgotPasswordDTO forgotPasswordDTO,
+			WebRequest request) {
+		User user = userComponent.retrieveUserPassword(forgotPasswordDTO);
+
+		try {
+			String appUrl = System.getProperty("server.context-path");
+			eventPublisher.publishEvent(new OnResetPasswordEvent(user, request.getLocale(), appUrl));
+		} catch (Exception me) {
+			System.out.println(me.getMessage());
+		}
+
+		return new ModelAndView("successRegister");
+	}
+
+	/**
+	 * This method maps the reset password from the user's email.
+	 * Simply render the setPassword view.
+	 * 
+	 * @param model
+	 * @param token
+	 * @return ModelAndView object
+	 */
+	@RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
+	public ModelAndView resetPassword(Model model, @RequestParam("token") String token) {
+		System.out.println(token);
+		PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
+
+		if (passwordResetToken == null) {
+			String message = messageBean.getInvalidToken();
+			model.addAttribute("message", message);
+			return new ModelAndView("badUser");
+		}
+
+		User user = passwordResetToken.getUser();
+		if (!user.getEnabled()) {
+			String message = messageBean.getDisabled();
+			model.addAttribute("message", message);
+			return new ModelAndView("badUser");
+		} else {
+			Calendar cal = Calendar.getInstance();
+			if ((passwordResetToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+				model.addAttribute("message", messageBean.getExpired());
+				model.addAttribute("expired", true);
+				model.addAttribute("token", passwordResetToken);
+				return new ModelAndView("badUser");
+			} else {
+				user.setEnabled(true);
+				userService.saveRegisteredUser(user);
+				model.addAttribute("user", user);
+				return new ModelAndView("setPassword");
+			}
+		}
+	}
 }

@@ -106,6 +106,10 @@ public class User implements Serializable {
 	//bi-directional many-to-one association to VerificationToken
 	@OneToMany(mappedBy="user")
 	private List<VerificationToken> verificationTokens;
+	
+	//bi-directional many-to-one association to PasswordResetToken
+		@OneToMany(mappedBy="user")
+		private List<PasswordResetToken> passwordResetTokens;
 
 	//bi-directional many-to-one association to Wallet
 	@OneToMany(mappedBy="user")
@@ -293,7 +297,29 @@ public class User implements Serializable {
 
 		return verificationToken;
 	}
+	
+	public List<PasswordResetToken> getPasswordResetTokens() {
+		return this.passwordResetTokens;
+	}
 
+	public void setPasswordResetTokens(List<PasswordResetToken> passwordResetTokens) {
+		this.passwordResetTokens = passwordResetTokens;
+	}
+
+	public PasswordResetToken addPasswordResetToken(PasswordResetToken passwordResetToken) {
+		getPasswordResetTokens().add(passwordResetToken);
+		passwordResetToken.setUser(this);
+
+		return passwordResetToken;
+	}
+
+	public PasswordResetToken removePasswordResetToken(PasswordResetToken passwordResetToken) {
+		getPasswordResetTokens().remove(passwordResetToken);
+		passwordResetToken.setUser(null);
+
+		return passwordResetToken;
+	}
+	
 	public List<Wallet> getWallets() {
 		return this.wallets;
 	}
