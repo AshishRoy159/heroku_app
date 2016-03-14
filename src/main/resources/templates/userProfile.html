@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org" lang="en-us">
+<html xmlns:th="http://www.thymeleaf.org" lang="en-us"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 
 <head>
 
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet"
-	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 <script
@@ -36,7 +37,6 @@
 
 	<!-- Navigation section
 ================================================== -->
-
 	<section class="navbar navbar-fixed-top custom-navbar"
 		role="navigation">
 		<div class="container">
@@ -54,120 +54,176 @@
 				<ul class="nav navbar-nav navbar-right">
 
 					<li><a href="index.html" class="smoothScroll">HOME</a></li>
-					<li><a href="index.html#work" class="smoothScroll">HOW IT WORKS</a></li>
+					<li><a href="index.html#work" class="smoothScroll">HOW IT
+							WORKS</a></li>
 					<li><a href="index.html#about" class="smoothScroll">ABOUT</a></li>
 					<li><a href="index.html#portfolio" class="smoothScroll">GALLERY</a></li>
 					<li><a href="index.html#plan" class="smoothScroll">PLANS</a></li>
 					<li><a href="index.html#contact" class="smoothScroll">CONTACT</a></li>
+					<li class="dropdown pull-right"
+						sec:authorize="isAuthenticated()"><a href="#"
+						data-toggle="dropdown" class="dropdown-toggle"><i
+							class="fa fa-user fa-fw"></i><span sec:authentication="name">[USERNAME]</span><strong
+							class="caret"></strong></a>
+						<ul class="dropdown-menu">
+							<li><a href="userProfile" style="color: black;">View Profile</a></li>
+							<li><a href="changePassword" style="color: black;">Change Password</a></li>
+							<li class="divider"></li>
+							<li><a href="logout" style="color: black;">Logout</a></li>
+						</ul></li>
 				</ul>
 			</div>
-
 		</div>
 	</section>
-<div class="container">
-    <div class="row profile">
-		<div class="col-md-3">
-			<div class="profile-sidebar">
-				<!-- SIDEBAR USERPIC -->
-				<div class="profile-userpic">
-					<img src="images/bicycles-46a.jpg" class="img-responsive" alt="" />
-				</div>
-				<!-- END SIDEBAR USERPIC -->
-				<!-- SIDEBAR USER TITLE -->
-				<div class="profile-usertitle">
-					<div class="profile-usertitle-name">
-						 <span th:text="*{user.firstName}"></span>
+	<div class="container">
+		<div class="row profile">
+			<div class="col-md-3">
+				<div class="profile-sidebar">
+					<!-- SIDEBAR USERPIC -->
+					<div class="profile-userpic">
+						<img src="images/bicycles-46a.jpg" class="img-responsive" alt="" />
 					</div>
-					<div class="profile-usertitle-job">
-						Developer
+					<!-- END SIDEBAR USERPIC -->
+					<!-- SIDEBAR USER TITLE -->
+					<div class="profile-usertitle">
+						<div class="profile-usertitle-name">
+							<span th:text="*{user.firstName}"></span>
+						</div>
+						<div class="profile-usertitle-job">Developer</div>
+					</div>
+					<!-- END SIDEBAR USER TITLE -->
+					<!-- SIDEBAR BUTTONS -->
+					<div class="profile-userbuttons">
+						<button type="button" class="btn btn-success btn-sm">Follow</button>
+						<button type="button" class="btn btn-danger btn-sm">Message</button>
+					</div>
+					<!-- END SIDEBAR BUTTONS -->
+					<!-- SIDEBAR MENU -->
+					<div class="profile-usermenu">
+						<ul class="nav">
+							<li class="active"><a href="#"> <i
+									class="glyphicon glyphicon-home"></i> Overview
+							</a></li>
+							<li><a href="#"> <i class="glyphicon glyphicon-user"></i>
+									Edit Account
+							</a></li>
+							<li><a href="changePassword"> <i
+									class="glyphicon glyphicon-ok"></i> Change Password
+							</a></li>
+							<li><a href="#"> <i class="glyphicon glyphicon-flag"></i>
+									Help
+							</a></li>
+						</ul>
+					</div>
+					<!-- END MENU -->
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div class="profile-content">
+					<div class="row">
+						<div class="col-md-2"></div>
+						<div class="col-md-8">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="col-md-6">
+											<label>First Name:</label>
+										</div>
+										<div class="col-md-6">
+											<span th:text="*{user.firstName}"></span>
+										</div>
+									</div>
+									<br />
+									<div class="row">
+										<div class="col-md-6">
+											<label>Last Name:</label>
+										</div>
+										<div class="col-md-6">
+											<span th:text="*{user.lastName}"></span>
+										</div>
+									</div>
+									<br />
+									<div class="row">
+										<div class="col-md-6">
+											<label>Email:</label>
+										</div>
+										<div class="col-md-6">
+											<span th:text="*{user.email}"></span>
+										</div>
+									</div>
+									<br />
+									<div class="row">
+										<div class="col-md-6">
+											<label>DateOfBirth:</label>
+										</div>
+										<div class="col-md-6">
+											<span th:text="*{user.dateOfBirth}"></span>
+										</div>
+									</div>
+									<br />
+									<div class="row">
+										<div class="col-md-6">
+											<label>Phone.No:</label>
+										</div>
+										<div class="col-md-6">
+											<span th:text="*{user.mobileNo}"></span>
+										</div>
+									</div>
+									<br />
+									<div class="row">
+										<div class="col-md-6">
+											<label>Address:</label>
+										</div>
+										<div class="col-md-6">
+											<span th:text="*{user.userAddress}"></span>
+										</div>
+									</div>
+									<br />
+									<div class="row">
+										<div class="col-md-6">
+											<label>Proof Type:</label>
+										</div>
+										<div class="col-md-6">
+											<span th:text="*{user.proofDetail.proofType}"></span>
+										</div>
+									</div>
+									<br />
+									<div class="row">
+										<div class="col-md-6">
+											<label>ProofNo:</label>
+										</div>
+										<div class="col-md-6">
+											<span th:text="*{user.proofDetail.proofNo}"></span>
+										</div>
+									</div>
+									<br />
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2"></div>
 					</div>
 				</div>
-				<!-- END SIDEBAR USER TITLE -->
-				<!-- SIDEBAR BUTTONS -->
-				<div class="profile-userbuttons">
-					<button type="button" class="btn btn-success btn-sm">Follow</button>
-					<button type="button" class="btn btn-danger btn-sm">Message</button>
-				</div>
-				<!-- END SIDEBAR BUTTONS -->
-				<!-- SIDEBAR MENU -->
-				<div class="profile-usermenu">
-					<ul class="nav">
-						<li class="active">
-							<a href="#">
-							<i class="glyphicon glyphicon-home"></i>
-							Overview </a>
-						</li>
-						<li>
-							<a href="#">
-							<i class="glyphicon glyphicon-user"></i>
-							Edit Account </a>
-						</li>
-						<li>
-							<a href="#" target="_blank">
-							<i class="glyphicon glyphicon-ok"></i>
-							Tasks </a>
-						</li>
-						<li>
-							<a href="#">
-							<i class="glyphicon glyphicon-flag"></i>
-							Help </a>
-						</li>
-					</ul>
-				</div>
-				<!-- END MENU -->
 			</div>
 		</div>
-		<div class="col-md-9">
-            <div class="profile-content">
-            <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-8">
-                  <div class="row">
-                  <div class="col-md-12">
-                  <div class="row">
-                  <div class="col-md-6"><label>First Name:</label></div>
-                  <div class="col-md-6"><span th:text="*{user.firstName}"></span></div>
-                  </div><br/>
-                 <div class="row">
-                  <div class="col-md-6"><label>Last Name:</label></div>
-                  <div class="col-md-6"><span th:text="*{user.lastName}"></span></div>
-                  </div><br/>
-                  <div class="row">
-                  <div class="col-md-6"><label>Email:</label></div>
-                  <div class="col-md-6"><span th:text="*{user.email}"></span></div>
-                  </div><br/>
-                  <div class="row">
-                  <div class="col-md-6"><label>DateOfBirth:</label></div>
-                  <div class="col-md-6"><span th:text="*{user.dateOfBirth}"></span></div>
-                  </div><br/>
-                   <div class="row">
-                  <div class="col-md-6"><label>Phone.No:</label></div>
-                  <div class="col-md-6"><span th:text="*{user.mobileNo}"></span></div>
-                  </div><br/>
-                   <div class="row">
-                  <div class="col-md-6"><label>Address:</label></div>
-                  <div class="col-md-6"><span th:text="*{user.userAddress}"></span></div>
-                  </div><br/>
-                   <div class="row">
-                  <div class="col-md-6"><label>Proof Type:</label></div>
-                  <div class="col-md-6"><span th:text="*{user.proofDetail.proofType}"></span></div>
-                  </div><br/>
-                  <div class="row">
-                  <div class="col-md-6"><label>ProofNo:</label></div>
-                  <div class="col-md-6"><span th:text="*{user.proofDetail.proofNo}"></span></div>
-                  </div><br/>
-                  </div>
-                  </div>
-                </div>
-                <div class="col-md-2"></div>
-            </div>
-			  
-            </div>
+	</div>
+	<div class="footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3" align="left">
+					<h4>
+						Copyright <a href="#index.html#home">Bicycle Sharing</a>
+					</h4>
+				</div>
+				<div class="col-md-6"></div>
+				<div class="col-md-3" align="right">
+					<h4>
+						Developed by <a href="index.html#home">Java Interns</a>
+					</h4>
+				</div>
+			</div>
 		</div>
 	</div>
-</div>
-<footer><strong>Powered by <a href="https:www.mindfire.com" target="_blank">mindfire</a></strong></footer>
-<br/>
-<br/>
+	<br />
+	<br />
 </body>
 </html>

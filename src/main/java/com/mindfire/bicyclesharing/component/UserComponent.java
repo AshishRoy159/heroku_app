@@ -21,7 +21,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
-import com.mindfire.bicyclesharing.dto.SetPasswordDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
 import com.mindfire.bicyclesharing.model.ProofDetail;
 import com.mindfire.bicyclesharing.model.RateGroup;
@@ -78,13 +77,14 @@ public class UserComponent {
 	 * @param setPasswordDTO
 	 * @return int either 0 or 1 
 	 */
-	public int mapPassword(SetPasswordDTO setPasswordDTO) {
+	public int mapPassword(String password, String userEmail) {
 		BCryptPasswordEncoder passEncoder = new BCryptPasswordEncoder();
 
-		return userService.savePassword(passEncoder.encode(setPasswordDTO.getPassword()),
-				setPasswordDTO.getEmail());
+		return userService.savePassword(passEncoder.encode(password),
+				userEmail);
 	}
 	
+
 	/**
 	 * This method receives the data from the ForgotPasswordDTO class and retrieves the user data  
 	 * corresponding to the email in the dto.

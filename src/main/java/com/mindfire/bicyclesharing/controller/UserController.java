@@ -23,6 +23,9 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,10 +36,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.component.MessageBean;
 import com.mindfire.bicyclesharing.component.UserComponent;
 import com.mindfire.bicyclesharing.constant.Constant;
+
 import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
+
+import com.mindfire.bicyclesharing.dto.ChangePasswordDTO;
+
 import com.mindfire.bicyclesharing.dto.SetPasswordDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
 import com.mindfire.bicyclesharing.event.OnRegistrationCompleteEvent;
@@ -191,18 +199,17 @@ public class UserController {
 	 * @param setPasswordDTO
 	 * @param model
 	 * @param result
-	 * @return the userProfile view
+	 * @return the signIn view
 	 */
 	@RequestMapping(value = "afterSetPassword", method = RequestMethod.POST)
 	public ModelAndView setPassword(@ModelAttribute("setPasswordData") @Valid SetPasswordDTO setPasswordDTO,
 			Model model, BindingResult result) {
-		int num = userComponent.mapPassword(setPasswordDTO);
+		int num = userComponent.mapPassword(setPasswordDTO.getPassword(), setPasswordDTO.getEmail());
+
 		if (num == 0) {
 			return new ModelAndView("setPassword");
 		} else {
-			User user = userService.userDetails(setPasswordDTO.getEmail());
-			model.addAttribute("user", user);
-			return new ModelAndView("userProfile");
+			return new ModelAndView("redirect:/logout");
 		}
 	}
 
@@ -270,5 +277,55 @@ public class UserController {
 				return new ModelAndView("setPassword");
 			}
 		}
+	}
+	/**
+	 * This method is used for check authentication and map the request for
+	 * change password and simply render the changePassword view.
+	 * 
+	 * @return changePassword view.
+	 */
+	@PreAuthorize("isAuthenticated()")
+	@RequestMapping(value = "changePassword", method = RequestMethod.GET)
+	public String changePassword() {
+		return Constant.CHANGE_PASSWORD;
+	}
+
+	/**
+	 * This method is used for taking data from the changePassword view and send
+	 * to the component for update the password.
+	 * 
+	 * @param authentication
+	 * @param changePasswordDTO
+	 * @return signIn view
+	 */
+	@RequestMapping(value = "afterChangePassword", method = RequestMethod.POST)
+	public String afterChangePassword(Authentication authentication,
+			@ModelAttribute("changePasswordData") ChangePasswordDTO changePasswordDTO) {
+		BCryptPasswordEncoder passEncoder = new BCryptPasswordEncoder();
+		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+
+		if (passEncoder.matches(changePasswordDTO.getOldPassword(), currentUser.getUser().getPassword())) {
+			if (userComponent.mapPassword(changePasswordDTO.getNewPassword(), currentUser.getUser().getEmail()) != 0) {
+				return "redirect:/logout";
+			}
+		}
+
+		return Constant.CHANGE_PASSWORD;
+	}
+
+	/**
+	 * This method map the request for view the user profile.
+	 * 
+	 * @param authentication
+	 * @param model
+	 * @return userProfile view
+	 */
+	@RequestMapping("userProfile")
+	public ModelAndView userProfile(Authentication authentication, Model model) {
+		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+		User userDetails = currentUser.getUser();
+		model.addAttribute("user", userDetails);
+
+		return new ModelAndView("userProfile");
 	}
 }
