@@ -84,6 +84,18 @@ public class UserComponent {
 	}
 
 	/**
+	 * This method receives the data from the UserDTO class and sets the data to
+	 * the corresponding entity class
+	 * 
+	 * @param userDTO
+	 * @return Integer 0 or 1
+	 */
+	public int mapUpdateUserDetail(UserDTO userDTO) {
+		return userService.updateUserDetail(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getDateOfBirth(),
+				userDTO.getMobileNo(), userDTO.getUserAddress(), userDTO.getEmail());
+	}
+
+	/**
 	 * This method receives the data from the ForgotPasswordDTO class and
 	 * retrieves the user data corresponding to the email in the dto.
 	 * 

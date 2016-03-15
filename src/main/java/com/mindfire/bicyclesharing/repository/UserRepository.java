@@ -16,6 +16,7 @@
 
 package com.mindfire.bicyclesharing.repository;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -44,4 +45,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Modifying(clearAutomatically = true)
 	@Query("update User u set u.password =:password where u.email =:userEmail")
 	public int updatePassword(@Param("password") String password, @Param("userEmail") String userEmail);
+
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query("update User u set u.firstName =:firstName, u.lastName =:lastName, u.dateOfBirth =:dateOfBirth, u.mobileNo =:mobileNo, u.userAddress =:userAddress where u.email =:userEmail")
+	public int updateUser(@Param("firstName") String firstName, @Param("lastName") String lastName,
+			@Param("dateOfBirth") Date dateOfBirth, @Param("mobileNo") Long mobileNo,
+			@Param("userAddress") String userAddress, @Param("userEmail") String userEmail);
 }

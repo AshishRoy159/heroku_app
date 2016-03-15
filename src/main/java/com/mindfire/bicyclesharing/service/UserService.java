@@ -16,6 +16,7 @@
 
 package com.mindfire.bicyclesharing.service;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -95,6 +96,22 @@ public class UserService {
 	 */
 	public int savePassword(String password, String userEmail) {
 		return userRepository.updatePassword(password, userEmail);
+	}
+
+	/**
+	 * This method is for updating the user data
+	 * 
+	 * @param firstName
+	 * @param lastName
+	 * @param dateOfBirth
+	 * @param mobileNo
+	 * @param userAddress
+	 * @param email
+	 * @return Integer 0 or 1
+	 */
+	public int updateUserDetail(String firstName, String lastName, Date dateOfBirth, Long mobileNo, String userAddress,
+			String email) {
+		return userRepository.updateUser(firstName, lastName, dateOfBirth, mobileNo, userAddress, email);
 	}
 
 	/**

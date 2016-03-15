@@ -107,10 +107,10 @@
 					<!-- SIDEBAR MENU -->
 					<div class="profile-usermenu">
 						<ul class="nav">
-							<li class="active"><a href="#"> <i
+							<li><a href="userProfile"> <i
 									class="glyphicon glyphicon-home"></i> Overview
 							</a></li>
-							<li><a href="updateUserDetails"> <i
+							<li class="active"><a href="#"> <i
 									class="fa fa-user fa-fw"></i> Edit Account
 							</a></li>
 							<li><a href="changePassword"> <i
@@ -130,79 +130,91 @@
 						<div class="col-md-2"></div>
 						<div class="col-md-8">
 							<div class="row">
-								<div class="col-md-12">
-									<div class="row">
-										<div class="col-md-6">
-											<label>First Name:</label>
+								<div class="col-md-12 form-group">
+									<form action="#" th:action="@{/updateUserDetails}"
+										th:object="${userDetailData}" method="post">
+										<div class="row">
+											<div class="col-md-6">
+												<label>First Name:</label>
+											</div>
+											<div class="col-md-6">
+												<input class="form-control" type="text" name="firstName"
+													th:value="${user.firstName}" required="required" />
+											</div>
 										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.firstName}"></span>
+										<br />
+										<div class="row">
+											<div class="col-md-6">
+												<label>Last Name:</label>
+											</div>
+											<div class="col-md-6">
+												<input class="form-control" type="text" name="lastName"
+													th:value="${user.lastName}" />
+											</div>
 										</div>
-									</div>
-									<br />
-									<div class="row">
-										<div class="col-md-6">
-											<label>Last Name:</label>
+										<br />
+										<div class="row">
+											<div class="col-md-6">
+												<label>Email:</label>
+											</div>
+											<div class="col-md-6">
+												<input class="form-control" type="text" name="email"
+													th:value="${user.email}" readonly="readonly" />
+											</div>
 										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.lastName}"></span>
+										<br />
+										<div class="row">
+											<div class="col-md-6">
+												<label>DateOfBirth:</label>
+											</div>
+											<div class="col-md-6">
+												<input class="form-control" type="date" name="dateOfBirth"
+													th:value="${user.dateOfBirth}" required="required" />
+											</div>
 										</div>
-									</div>
-									<br />
-									<div class="row">
-										<div class="col-md-6">
-											<label>Email:</label>
+										<br />
+										<div class="row">
+											<div class="col-md-6">
+												<label>Phone.No:</label>
+											</div>
+											<div class="col-md-6">
+												<input class="form-control" type="text" name="mobileNo"
+													maxlength="10" pattern="*[0-9]{10}"
+													title="Enter only numbers" th:value="${user.mobileNo}"
+													required="required" />
+											</div>
 										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.email}"></span>
+										<br />
+										<div class="row">
+											<div class="col-md-6">
+												<label>Address:</label>
+											</div>
+											<div class="col-md-6">
+												<textarea class="form-control" name="userAddress"
+													th:text="${user.userAddress}"></textarea>
+											</div>
 										</div>
-									</div>
-									<br />
-									<div class="row">
-										<div class="col-md-6">
-											<label>DateOfBirth:</label>
+										<br />
+										<div class="row">
+											<div class="col-md-6">
+												<label>Proof Type:</label>
+											</div>
+											<div class="col-md-6">
+												<span th:text="${user.proofDetail.proofType}"></span>
+											</div>
 										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.dateOfBirth}"></span>
+										<br />
+										<div class="row">
+											<div class="col-md-6">
+												<label>ProofNo:</label>
+											</div>
+											<div class="col-md-6">
+												<span th:text="${user.proofDetail.proofNo}"></span>
+											</div>
 										</div>
-									</div>
-									<br />
-									<div class="row">
-										<div class="col-md-6">
-											<label>Phone.No:</label>
-										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.mobileNo}"></span>
-										</div>
-									</div>
-									<br />
-									<div class="row">
-										<div class="col-md-6">
-											<label>Address:</label>
-										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.userAddress}"></span>
-										</div>
-									</div>
-									<br />
-									<div class="row">
-										<div class="col-md-6">
-											<label>Proof Type:</label>
-										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.proofDetail.proofType}"></span>
-										</div>
-									</div>
-									<br />
-									<div class="row">
-										<div class="col-md-6">
-											<label>ProofNo:</label>
-										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.proofDetail.proofNo}"></span>
-										</div>
-									</div>
-									<br />
+										<br />
+										<button type="submit" class="btn btn-primary pull-right">Submit</button>
+									</form>
 								</div>
 							</div>
 						</div>
@@ -212,6 +224,7 @@
 			</div>
 		</div>
 	</div>
+	<div style="height: 100px;"></div>
 	<div class="footer">
 		<div class="container">
 			<div class="row">

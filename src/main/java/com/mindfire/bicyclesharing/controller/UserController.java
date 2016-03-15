@@ -40,11 +40,8 @@ import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.component.MessageBean;
 import com.mindfire.bicyclesharing.component.UserComponent;
 import com.mindfire.bicyclesharing.constant.Constant;
-
-import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
-
 import com.mindfire.bicyclesharing.dto.ChangePasswordDTO;
-
+import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
 import com.mindfire.bicyclesharing.dto.SetPasswordDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
 import com.mindfire.bicyclesharing.event.OnRegistrationCompleteEvent;
@@ -324,9 +321,48 @@ public class UserController {
 	@RequestMapping("userProfile")
 	public ModelAndView userProfile(Authentication authentication, Model model) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-		User userDetails = currentUser.getUser();
+		User userDetails = userService.userDetails(currentUser.getUsername());
 		model.addAttribute("user", userDetails);
 
 		return new ModelAndView("userProfile");
 	}
+
+	/**
+	 * This method map the request for view the update user details.
+	 * 
+	 * @param authentication
+	 * @param model
+	 * @return updateUserDetails view
+	 */
+	@RequestMapping(value = "updateUserDetails", method = RequestMethod.GET)
+	public ModelAndView updateUserDetails(Authentication authentication, Model model) {
+		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+		User userDetails = userService.userDetails(currentUser.getUsername());
+		model.addAttribute("user", userDetails);
+
+		return new ModelAndView("updateUserDetails");
+	}
+
+	/**
+	 * This method map the request for view the update user details.
+	 * 
+	 * @param authentication
+	 * @param model
+	 * @return updateUserDetails view
+	 */
+	@RequestMapping(value = "updateUserDetails", method = RequestMethod.POST)
+	public ModelAndView afterUpdateUserDetails(@ModelAttribute("userDetailData") UserDTO userDTO,
+			Authentication authentication, Model model) {
+		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+		int success = userComponent.mapUpdateUserDetail(userDTO);
+		User userDetails = userService.userDetails(currentUser.getUsername());
+		model.addAttribute("user", userDetails);
+		
+		if (success == 0) {
+			return new ModelAndView("updateUserDetails");
+		} else {
+			return new ModelAndView("userProfile");
+		}
+	}
+
 }

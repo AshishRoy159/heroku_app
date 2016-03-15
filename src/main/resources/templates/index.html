@@ -92,16 +92,20 @@
 					<li><a href="#contact" class="smoothScroll">CONTACT</a></li>
 					<li sec:authorize="isAnonymous()"><a class="smoothScroll"
 						href="login">LOGIN</a></li>
-					<li class="dropdown pull-right"
-						sec:authorize="isAuthenticated()"><a href="#"
-						data-toggle="dropdown" class="dropdown-toggle"><i
-							class="fa fa-user fa-fw"></i><span sec:authentication="name">[USERNAME]</span><strong
+					<li class="dropdown pull-right" sec:authorize="isAuthenticated()"><a
+						href="#" data-toggle="dropdown" class="dropdown-toggle"><i
+							class="fa fa-user fa-fw"></i><span>ACCOUNT</span><strong
 							class="caret"></strong></a>
 						<ul class="dropdown-menu">
-							<li><a href="userProfile" style="color: black;">View Profile</a></li>
-							<li><a href="changePassword" style="color: black;">Change Password</a></li>
+							<li><a href="userProfile" style="color: black;"><i
+									class="fa fa-user fa-fw"></i>View Profile<br /> [<small
+									sec:authentication="name">[email]</small>] </a></li>
 							<li class="divider"></li>
-							<li><a href="logout" style="color: black;">Logout</a></li>
+							<li><a href="changePassword" style="color: black;"><i
+									class="fa fa-gear fa-fw"></i>Change Password</a></li>
+							<li class="divider"></li>
+							<li><a href="logout" style="color: black;"><i
+									class="fa fa-sign-out fa-fw"></i>Logout</a></li>
 						</ul></li>
 				</ul>
 			</div>
