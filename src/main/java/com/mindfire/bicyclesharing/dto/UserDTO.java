@@ -35,7 +35,7 @@ public class UserDTO {
 	private String lastName;
 	private Long mobileNo;
 	@Temporal(TemporalType.DATE)
-	@DateTimeFormat (pattern="yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dateOfBirth;
 	private String email;
 	private String userAddress;

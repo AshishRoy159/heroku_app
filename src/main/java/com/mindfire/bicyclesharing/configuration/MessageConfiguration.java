@@ -39,7 +39,8 @@ public class MessageConfiguration {
 	Environment env;
 
 	/**
-	 * This bean is used for getting the messages from the message.properties file
+	 * This bean is used for getting the messages from the message.properties
+	 * file
 	 * 
 	 * @return messageBean Returns a MessageBean object
 	 */

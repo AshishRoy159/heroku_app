@@ -84,7 +84,8 @@ public class Wallet implements Serializable {
 	}
 
 	/**
-	 * @param user the user to set
+	 * @param user
+	 *            the user to set
 	 */
 	public void setUser(User user) {
 		this.user = user;

@@ -39,6 +39,7 @@ public class OnResetPasswordEvent extends ApplicationEvent {
 
 	/**
 	 * OnRegistrationCompleteEvent constructor
+	 * 
 	 * @param user
 	 * @param locale
 	 * @param appUrl

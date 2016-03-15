@@ -47,8 +47,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 		this.userService = userService;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.security.core.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.security.core.userdetails.UserDetailsService#
+	 * loadUserByUsername(java.lang.String)
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

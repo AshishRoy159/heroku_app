@@ -24,17 +24,16 @@ import org.springframework.data.jpa.repository.Query;
 import com.mindfire.bicyclesharing.model.Role;
 
 /**
- * Repository for {@link Role} Entity
- * used for CRUD operation on Role.
+ * Repository for {@link Role} Entity used for CRUD operation on Role.
  * 
  * @author mindfire
  * @version 1.0
  * @since 10/03/2016
  */
-public interface RoleRepository extends JpaRepository<Role, Long>{
-	
+public interface RoleRepository extends JpaRepository<Role, Long> {
+
 	@Query("select a.userRole from Role a, User b where b.email = ?1 and a.roleId = b.role.roleId")
 	public List<String> findRoleByEmail(String email);
-	
+
 	public Role findByUserRole(String role);
 }

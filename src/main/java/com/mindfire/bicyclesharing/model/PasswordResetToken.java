@@ -30,7 +30,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-
 /**
  * The persistent class for the verification_token database table.
  * 
@@ -39,43 +38,43 @@ import javax.persistence.Table;
  * @since 10/03/2016
  */
 @Entity
-@Table(name="passwordreset_token")
-@NamedQuery(name="PasswordResetToken.findAll", query="SELECT v FROM PasswordResetToken v")
+@Table(name = "passwordreset_token")
+@NamedQuery(name = "PasswordResetToken.findAll", query = "SELECT v FROM PasswordResetToken v")
 public class PasswordResetToken implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private static final int EXPIRATION = (24*60);
+	private static final int EXPIRATION = (24 * 60);
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name="expiry_date")
+	@Column(name = "expiry_date")
 	private Date expiryDate;
 
 	private String token;
 
-	//bi-directional many-to-one association to User
+	// bi-directional many-to-one association to User
 	@ManyToOne
-	@JoinColumn(name="user_id")
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	public PasswordResetToken() {
 	}
-	
+
 	public PasswordResetToken(final String token) {
-        super();
+		super();
 
-        this.token = token;
-        this.expiryDate = calculateExpiryDate(EXPIRATION);
-    }
+		this.token = token;
+		this.expiryDate = calculateExpiryDate(EXPIRATION);
+	}
 
-    public PasswordResetToken(final String token, final User user) {
-        super();
+	public PasswordResetToken(final String token, final User user) {
+		super();
 
-        this.token = token;
-        this.user = user;
-        this.expiryDate = calculateExpiryDate(EXPIRATION);
-    }
+		this.token = token;
+		this.user = user;
+		this.expiryDate = calculateExpiryDate(EXPIRATION);
+	}
 
 	public Long getId() {
 		return this.id;
@@ -108,18 +107,17 @@ public class PasswordResetToken implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	public void updateToken(final String token) {
-        this.token = token;
-        this.expiryDate = calculateExpiryDate(EXPIRATION);
-    }
-	
-	private Date calculateExpiryDate(final int expiryTimeInMinutes) {
-        final Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(new Date().getTime());
-        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
-        return new Date(cal.getTime().getTime());
-    }
 
-    
+	public void updateToken(final String token) {
+		this.token = token;
+		this.expiryDate = calculateExpiryDate(EXPIRATION);
+	}
+
+	private Date calculateExpiryDate(final int expiryTimeInMinutes) {
+		final Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(new Date().getTime());
+		cal.add(Calendar.MINUTE, expiryTimeInMinutes);
+		return new Date(cal.getTime().getTime());
+	}
 
 }

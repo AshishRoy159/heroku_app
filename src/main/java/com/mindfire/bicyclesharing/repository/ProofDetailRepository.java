@@ -22,14 +22,14 @@ import org.springframework.stereotype.Repository;
 import com.mindfire.bicyclesharing.model.ProofDetail;
 
 /**
- * Repository for {@link ProofDetail} Entity
- * used for CRUD operation on ProofDetail.
+ * Repository for {@link ProofDetail} Entity used for CRUD operation on
+ * ProofDetail.
  * 
  * @author mindfire
  * @version 1.0
  * @since 10/03/2016
  */
 @Repository
-public interface ProofDetailRepository extends JpaRepository<ProofDetail, Long>{
+public interface ProofDetailRepository extends JpaRepository<ProofDetail, Long> {
 
 }

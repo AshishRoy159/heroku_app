@@ -240,8 +240,8 @@ public class UserController {
 	}
 
 	/**
-	 * This method maps the reset password from the user's email.
-	 * Simply render the setPassword view.
+	 * This method maps the reset password from the user's email. Simply render
+	 * the setPassword view.
 	 * 
 	 * @param model
 	 * @param token
@@ -278,6 +278,7 @@ public class UserController {
 			}
 		}
 	}
+
 	/**
 	 * This method is used for check authentication and map the request for
 	 * change password and simply render the changePassword view.

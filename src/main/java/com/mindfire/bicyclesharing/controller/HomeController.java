@@ -37,7 +37,7 @@ import com.mindfire.bicyclesharing.dto.LoginDTO;
  */
 @Controller
 public class HomeController {
-	
+
 	/**
 	 * This method maps all root request. Simply render the index view.
 	 * 
@@ -53,7 +53,7 @@ public class HomeController {
 	 * 
 	 * @return the registration view.
 	 */
-	@RequestMapping(value = {"register"}, method = RequestMethod.GET)
+	@RequestMapping(value = { "register" }, method = RequestMethod.GET)
 	public String getUserCreatePage() {
 		return "registration";
 	}
@@ -63,23 +63,27 @@ public class HomeController {
 	 * 
 	 * @return the signIn view.
 	 */
-	@RequestMapping(value = {"login"}, method = RequestMethod.GET)
-	public ModelAndView getUserSignInPage(@ModelAttribute("loginData") LoginDTO logiDTO, @RequestParam Optional<String> error) {
+	@RequestMapping(value = { "login" }, method = RequestMethod.GET)
+	public ModelAndView getUserSignInPage(@ModelAttribute("loginData") LoginDTO logiDTO,
+			@RequestParam Optional<String> error) {
 		return new ModelAndView("signIn", "error", error);
 	}
-	
-	//This method is only for checking that all request to /users/** must have ADMIN authority to access.
-	@RequestMapping(value = {"users/userDetails"})
-	public String getUserDetails(){
+
+	// This method is only for checking that all request to /users/** must have
+	// ADMIN authority to access.
+	@RequestMapping(value = { "users/userDetails" })
+	public String getUserDetails() {
 		return "userDetails";
 	}
-	
+
 	/**
-	 * This method maps any request which is not authorized to the user. Simply render the Access Denied view.
+	 * This method maps any request which is not authorized to the user. Simply
+	 * render the Access Denied view.
+	 * 
 	 * @return 403 view
 	 */
-	@RequestMapping(value = {"403"})
-	public String getAccessDeniedPage(){
+	@RequestMapping(value = { "403" })
+	public String getAccessDeniedPage() {
 		return "403";
 	}
 }

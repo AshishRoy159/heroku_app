@@ -23,8 +23,8 @@ import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.VerificationToken;
 
 /**
- * Repository for {@link VerificationToken} Entity
- * used for CRUD operation on VerificationToken.
+ * Repository for {@link VerificationToken} Entity used for CRUD operation on
+ * VerificationToken.
  * 
  * @author mindfire
  * @version 1.0
@@ -33,7 +33,7 @@ import com.mindfire.bicyclesharing.model.VerificationToken;
 @Repository
 public interface VerificationTokenRepository extends JpaRepository<VerificationToken, Long> {
 
-	 VerificationToken findByToken(String token);
+	VerificationToken findByToken(String token);
 
-	 VerificationToken findByUser(User user);
+	VerificationToken findByUser(User user);
 }

@@ -39,6 +39,7 @@ public class OnRegistrationCompleteEvent extends ApplicationEvent {
 
 	/**
 	 * OnRegistrationCompleteEvent constructor
+	 * 
 	 * @param user
 	 * @param locale
 	 * @param appUrl

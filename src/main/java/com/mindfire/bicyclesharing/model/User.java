@@ -34,7 +34,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
 /**
  * The persistent class for the users database table.
  * 
@@ -43,76 +42,76 @@ import javax.persistence.TemporalType;
  * @since 10/03/2016
  */
 @Entity
-@Table(name="users")
-@NamedQuery(name="User.findAll", query="SELECT u FROM User u")
+@Table(name = "users")
+@NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="user_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "user_id")
 	private Long userId;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="date_of_birth")
+	@Column(name = "date_of_birth")
 	private Date dateOfBirth;
 
 	private String email;
 
 	private Boolean enabled;
 
-	@Column(name="first_name")
+	@Column(name = "first_name")
 	private String firstName;
 
-	@Column(name="is_approved")
+	@Column(name = "is_approved")
 	private Boolean isApproved;
 
-	@Column(name="last_name")
+	@Column(name = "last_name")
 	private String lastName;
 
-	@Column(name="mobile_no")
+	@Column(name = "mobile_no")
 	private Long mobileNo;
 
 	private String password;
 
 	@ManyToOne
-	@JoinColumn(name="rate_group_id")
+	@JoinColumn(name = "rate_group_id")
 	private RateGroup rateGroupId;
 
 	@Column(name = "regisration_time", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp regisrationTime;
 
-	@Column(name="user_address")
+	@Column(name = "user_address")
 	private String userAddress;
 
-	//bi-directional many-to-one association to Booking
-	@OneToMany(mappedBy="user")
+	// bi-directional many-to-one association to Booking
+	@OneToMany(mappedBy = "user")
 	private List<Booking> bookings;
 
-	//bi-directional many-to-one association to UserLog
-	@OneToMany(mappedBy="user")
+	// bi-directional many-to-one association to UserLog
+	@OneToMany(mappedBy = "user")
 	private List<UserLog> userLogs;
 
-	//bi-directional many-to-one association to ProofDetail
+	// bi-directional many-to-one association to ProofDetail
 	@ManyToOne
-	@JoinColumn(name="proof_id")
+	@JoinColumn(name = "proof_id")
 	private ProofDetail proofDetail;
 
-	//bi-directional many-to-one association to Role
+	// bi-directional many-to-one association to Role
 	@ManyToOne
-	@JoinColumn(name="role_id")
+	@JoinColumn(name = "role_id")
 	private Role role;
 
-	//bi-directional many-to-one association to VerificationToken
-	@OneToMany(mappedBy="user")
+	// bi-directional many-to-one association to VerificationToken
+	@OneToMany(mappedBy = "user")
 	private List<VerificationToken> verificationTokens;
-	
-	//bi-directional many-to-one association to PasswordResetToken
-		@OneToMany(mappedBy="user")
-		private List<PasswordResetToken> passwordResetTokens;
 
-	//bi-directional many-to-one association to Wallet
-	@OneToMany(mappedBy="user")
+	// bi-directional many-to-one association to PasswordResetToken
+	@OneToMany(mappedBy = "user")
+	private List<PasswordResetToken> passwordResetTokens;
+
+	// bi-directional many-to-one association to Wallet
+	@OneToMany(mappedBy = "user")
 	private List<Wallet> wallets;
 
 	public User() {
@@ -195,7 +194,7 @@ public class User implements Serializable {
 	public RateGroup getRateGroupId() {
 		return rateGroupId;
 	}
-	
+
 	public void setRateGroupId(RateGroup rateGroupId) {
 		this.rateGroupId = rateGroupId;
 	}
@@ -297,7 +296,7 @@ public class User implements Serializable {
 
 		return verificationToken;
 	}
-	
+
 	public List<PasswordResetToken> getPasswordResetTokens() {
 		return this.passwordResetTokens;
 	}
@@ -319,7 +318,7 @@ public class User implements Serializable {
 
 		return passwordResetToken;
 	}
-	
+
 	public List<Wallet> getWallets() {
 		return this.wallets;
 	}

@@ -26,14 +26,12 @@ import javax.validation.constraints.NotNull;
  * @since 10/03/2016
  */
 public class LoginDTO {
-	
+
 	@NotNull
 	private String email;
 	@NotNull
 	private String password;
-	
-	
-	
+
 	/**
 	 * @return the email
 	 */
@@ -42,7 +40,8 @@ public class LoginDTO {
 	}
 
 	/**
-	 * @param email the email to set
+	 * @param email
+	 *            the email to set
 	 */
 	public void setEmail(String email) {
 		this.email = email;
@@ -54,9 +53,10 @@ public class LoginDTO {
 	public String getPassword() {
 		return password;
 	}
-	
+
 	/**
-	 * @param password the password to set
+	 * @param password
+	 *            the password to set
 	 */
 	public void setPassword(String password) {
 		this.password = password;

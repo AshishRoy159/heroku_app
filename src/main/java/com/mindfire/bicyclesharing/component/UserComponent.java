@@ -71,28 +71,26 @@ public class UserComponent {
 	}
 
 	/**
-	 * This method receives the data from the SetPasswordDTO class and sets the data to the 
-	 * corresponding entity class
+	 * This method receives the data from the SetPasswordDTO class and sets the
+	 * data to the corresponding entity class
 	 * 
 	 * @param setPasswordDTO
-	 * @return int either 0 or 1 
+	 * @return int either 0 or 1
 	 */
 	public int mapPassword(String password, String userEmail) {
 		BCryptPasswordEncoder passEncoder = new BCryptPasswordEncoder();
 
-		return userService.savePassword(passEncoder.encode(password),
-				userEmail);
+		return userService.savePassword(passEncoder.encode(password), userEmail);
 	}
-	
 
 	/**
-	 * This method receives the data from the ForgotPasswordDTO class and retrieves the user data  
-	 * corresponding to the email in the dto.
+	 * This method receives the data from the ForgotPasswordDTO class and
+	 * retrieves the user data corresponding to the email in the dto.
 	 * 
 	 * @param forgotPasswordDTO
 	 * @return User Object
 	 */
-	public User retrieveUserPassword(ForgotPasswordDTO forgotPasswordDTO){
+	public User retrieveUserPassword(ForgotPasswordDTO forgotPasswordDTO) {
 		return userService.userDetails(forgotPasswordDTO.getEmail());
 	}
 }

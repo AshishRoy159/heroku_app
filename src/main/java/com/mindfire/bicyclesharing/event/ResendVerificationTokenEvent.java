@@ -41,6 +41,7 @@ public class ResendVerificationTokenEvent extends ApplicationEvent {
 
 	/**
 	 * ResendVerificationTokenEvent constructor
+	 * 
 	 * @param appUrl
 	 * @param locale
 	 * @param newToken

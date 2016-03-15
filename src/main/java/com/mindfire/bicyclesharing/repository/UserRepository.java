@@ -28,8 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mindfire.bicyclesharing.model.User;
 
 /**
- * Repository for {@link User} Entity
- * used for CRUD operation on User.
+ * Repository for {@link User} Entity used for CRUD operation on User.
  * 
  * @author mindfire
  * @version 1.0
@@ -38,8 +37,9 @@ import com.mindfire.bicyclesharing.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findOneByEmail(String email);
+
 	public User findByEmail(String email);
-	
+
 	@Transactional
 	@Modifying(clearAutomatically = true)
 	@Query("update User u set u.password =:password where u.email =:userEmail")

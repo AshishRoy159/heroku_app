@@ -49,7 +49,7 @@ public class UserService {
 
 	@Autowired
 	private VerificationTokenRepository tokenRepository;
-	
+
 	@Autowired
 	private PasswordResetTokenRepository passwordResetTokenRepository;
 
@@ -163,13 +163,14 @@ public class UserService {
 
 	/**
 	 * This method is used to get user details using user email
+	 * 
 	 * @param email
 	 * @return User object
 	 */
 	public Optional<User> getUserByEmail(String email) {
 		return userRepository.findOneByEmail(email);
 	}
-	
+
 	/**
 	 * This method is used for storing a Password Reset token for the user
 	 * 

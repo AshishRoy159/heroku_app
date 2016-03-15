@@ -21,13 +21,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.mindfire.bicyclesharing.model.RateGroup;
 
 /**
- * Repository for {@link RateGroup} Entity
- * used for CRUD operation on RateGroup.
+ * Repository for {@link RateGroup} Entity used for CRUD operation on RateGroup.
  * 
  * @author mindfire
  * @version 1.0
  * @since 10/03/2016
  */
-public interface RateGroupRepository extends JpaRepository<RateGroup, Long>{
-        
+public interface RateGroupRepository extends JpaRepository<RateGroup, Long> {
+
 }

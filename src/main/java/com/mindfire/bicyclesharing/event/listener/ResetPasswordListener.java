@@ -94,8 +94,7 @@ public class ResetPasswordListener implements ApplicationListener<OnResetPasswor
 	 * @param token
 	 * @return Message object
 	 */
-	private final Message constructEmailMessage(final OnResetPasswordEvent event, final User user,
-			final String token) {
+	private final Message constructEmailMessage(final OnResetPasswordEvent event, final User user, final String token) {
 		final String recipientAddress = user.getEmail();
 		final String subject = "ResetPassword";
 		final String confirmationUrl = Constant.CONTEXT_ROOT + "/resetPassword.html?token=" + token;

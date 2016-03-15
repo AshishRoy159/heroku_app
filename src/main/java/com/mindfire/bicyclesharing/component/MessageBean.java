@@ -56,7 +56,8 @@ public class MessageBean {
 	}
 
 	/**
-	 * @param alreadyActivated the alreadyActivated to set
+	 * @param alreadyActivated
+	 *            the alreadyActivated to set
 	 */
 	public void setAlreadyActivated(String alreadyActivated) {
 		this.alreadyActivated = alreadyActivated;

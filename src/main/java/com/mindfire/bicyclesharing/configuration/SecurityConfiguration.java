@@ -31,45 +31,40 @@ import com.mindfire.bicyclesharing.security.CustomSavedRequestAwareAuthenticatio
  * This is the Security Configuration file for Spring Security.
  * 
  * @author mindfire
- * @version 1.0
- * {@link WebSecurityConfigurerAdapter}
+ * @version 1.0 {@link WebSecurityConfigurerAdapter}
  * @since 10/03/2016
  */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
-	
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
 	@Autowired
 	private CustomSavedRequestAwareAuthenticationSuccessHandler successHandler;
-	
+
 	@Autowired
 	private UserDetailsService userDetailsService;
-		
-	/* (non-Javadoc)
-	 * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.web.builders.HttpSecurity)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.security.config.annotation.web.configuration.
+	 * WebSecurityConfigurerAdapter#configure(org.springframework.security.
+	 * config.annotation.web.builders.HttpSecurity)
 	 */
 	@Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity
-        .exceptionHandling()
-        .accessDeniedPage( "/403" )
-        .and()
-        .authorizeRequests()
-		.antMatchers("/users/**").hasAuthority("ADMIN")
-		.anyRequest().permitAll()
-		.and()
-		.formLogin()
-		.loginPage("/login")
-		.successHandler(successHandler)
-		.failureUrl("/login?error")
-		.usernameParameter("email")
-		.permitAll()
-		.and()
-		.csrf().disable();
-    }
-	
-	/* (non-Javadoc)
-	 * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.web.builders.HttpSecurity)
+	protected void configure(HttpSecurity httpSecurity) throws Exception {
+		httpSecurity.exceptionHandling().accessDeniedPage("/403").and().authorizeRequests().antMatchers("/users/**")
+				.hasAuthority("ADMIN").anyRequest().permitAll().and().formLogin().loginPage("/login")
+				.successHandler(successHandler).failureUrl("/login?error").usernameParameter("email").permitAll().and()
+				.csrf().disable();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.security.config.annotation.web.configuration.
+	 * WebSecurityConfigurerAdapter#configure(org.springframework.security.
+	 * config.annotation.web.builders.HttpSecurity)
 	 */
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
