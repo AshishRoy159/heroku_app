@@ -19,6 +19,7 @@ package com.mindfire.bicyclesharing.controller;
 import java.util.Calendar;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ import com.mindfire.bicyclesharing.component.UserComponent;
 import com.mindfire.bicyclesharing.constant.Constant;
 import com.mindfire.bicyclesharing.dto.ChangePasswordDTO;
 import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
+import com.mindfire.bicyclesharing.dto.RegistrationPaymentDTO;
 import com.mindfire.bicyclesharing.dto.SetPasswordDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
 import com.mindfire.bicyclesharing.event.OnRegistrationCompleteEvent;
@@ -50,6 +52,7 @@ import com.mindfire.bicyclesharing.event.ResendVerificationTokenEvent;
 import com.mindfire.bicyclesharing.model.PasswordResetToken;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.VerificationToken;
+import com.mindfire.bicyclesharing.model.WalletTransaction;
 import com.mindfire.bicyclesharing.repository.PasswordResetTokenRepository;
 import com.mindfire.bicyclesharing.repository.VerificationTokenRepository;
 import com.mindfire.bicyclesharing.service.UserService;
@@ -100,16 +103,24 @@ public class UserController {
 	 * @return the successRegister view.
 	 */
 	@RequestMapping(value = "register", method = RequestMethod.POST)
-	public ModelAndView addUser(@ModelAttribute("userData") UserDTO userDTO, BindingResult result, WebRequest request) {
+	public ModelAndView addUser(@ModelAttribute("paymentData") RegistrationPaymentDTO regPaymentDTO,
+			BindingResult result, HttpSession session, WebRequest request) {
 
-		User registered = userComponent.mapUserComponent(userDTO);
-		try {
-			String appUrl = System.getProperty("server.context-path");
-			eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), appUrl));
-		} catch (Exception me) {
-			System.out.println(me.getMessage());
+		UserDTO userDTO = (UserDTO) session.getAttribute("userDTO");
+		WalletTransaction transaction = userComponent.mapUserComponent(userDTO, regPaymentDTO);
+
+		if (transaction != null) {
+			User registered = transaction.getWallet().getUser();
+			try {
+				String appUrl = System.getProperty("server.context-path");
+				eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), appUrl));
+			} catch (Exception me) {
+				System.out.println(me.getMessage());
+			}
+			return new ModelAndView("successRegister", "user", userDTO);
+		} else {
+			return new ModelAndView("failure");
 		}
-		return new ModelAndView("successRegister", "user", userDTO);
 	}
 
 	/**
@@ -344,11 +355,13 @@ public class UserController {
 	}
 
 	/**
-	 * This method map the request for view the update user details.
+	 * This method receives data from the updateUserDetail view and send the
+	 * data to the UserComponent class for updating the user data.
 	 * 
+	 * @param userDTO
 	 * @param authentication
 	 * @param model
-	 * @return updateUserDetails view
+	 * @return
 	 */
 	@RequestMapping(value = "updateUserDetails", method = RequestMethod.POST)
 	public ModelAndView afterUpdateUserDetails(@ModelAttribute("userDetailData") UserDTO userDTO,
@@ -357,12 +370,23 @@ public class UserController {
 		int success = userComponent.mapUpdateUserDetail(userDTO);
 		User userDetails = userService.userDetails(currentUser.getUsername());
 		model.addAttribute("user", userDetails);
-		
+
 		if (success == 0) {
 			return new ModelAndView("updateUserDetails");
 		} else {
 			return new ModelAndView("userProfile");
 		}
+	}
+
+	/**
+	 * This method maps the request for the payment view.
+	 * 
+	 * @return payment view
+	 */
+	@RequestMapping(value = "payment", method = RequestMethod.POST)
+	public ModelAndView getPayment(@ModelAttribute("userData") UserDTO userDTO, HttpSession session) {
+		session.setAttribute("userDTO", userDTO);
+		return new ModelAndView("payment");
 	}
 
 }

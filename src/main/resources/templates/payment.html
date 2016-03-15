@@ -5,7 +5,7 @@
 
 <!-- Template site title
    ================================================== -->
-<title>Bicycle Sharing</title>
+<title>Payment</title>
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="keywords" content="" />
@@ -58,115 +58,64 @@
 	</section>
 
 	<!-- form start -->
-	<form action="#" th:action="@{/payment}" th:object="${userData}"
+	<form action="#" th:action="@{/register}" th:object="${paymentData}"
 		method="post">
 		<div class="register">
 			<div class="container">
 				<div class="row">
 					<div
 						class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
-						<h2>Please Sign Up</h2>
+						<h2>Payment</h2>
 						<hr class="colorgraph"></hr>
 						<div class="row">
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<div class="form-group">
-									<input type="text" name="firstName"
-										class="form-control input-lg" placeholder="First Name"
-										tabindex="1" required="required" />
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<input type="text" name="lastName"
-										class="form-control input-lg" placeholder="Last Name"
-										tabindex="2" required="required" />
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-6">
-								<div class="form-group">
-									<input type="email" name="email" class="form-control input-lg"
-										placeholder="Enter Email" tabindex="1" required="required" />
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<input type="email" name="confirmUserEmail"
-										class="form-control input-lg" placeholder="Confirm Email"
-										tabindex="2" required="required" />
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<input type="text" name="mobileNo" class="form-control input-lg"
-								placeholder="Enter Mobile No" tabindex="3" pattern="[0-9]{10}"
-								title="Enter Numbers Only" maxlength="10" required="required" />
-						</div>
-						<div class="row">
-							<div class="col-md-6">
-								<div class="form-group">
-									<select class="form-control input-lg" name="proofType"
-										required="required">
-										<option value="">Select Proof Type:</option>
-										<option value="Driving Licence">Driving Licence</option>
-										<option value="Voter ID">Voter ID</option>
-										<option value="Aadhar Card">Aadhar Card</option>
-										<option value="PAN Card">PAN Card</option>
+									<select id ="option" class="form-control input-lg" name="type"
+										required="required" onchange="payment()">
+										<option value="">Choose Plan:</option>
+										<option value="Starter">Starter</option>
+										<option value="Regular">Regular</option>
+										<option value="Explorer">Explorer</option>
 									</select>
 								</div>
 							</div>
-							<div class="col-md-6">
+						</div>
+						<div class="row">
+							<div class="col-md-12">
 								<div class="form-group">
-									<input type="text" name="proofNo" class="form-control input-lg"
-										placeholder="Enter Proof Id" tabindex="6" required="required" />
+									<div class="col-md-4">
+										<p><strong>Payment Mode</strong></p>
+									</div>
+									<div class="col-md-8">
+										<label class="radio-inline"> <input type="radio"
+											name="mode" value="cash" />Cash
+										</label> <label class="radio-inline"> <input type="radio"
+											name="mode" value="debitCard" />Debit Card
+										</label> <label class="radio-inline"> <input type="radio"
+											name="mode" value="internetBanking" />Internet Banking
+										</label>
+									</div>
 								</div>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-md-6">
+							<div class="col-md-4">
 								<div class="form-group">
-									<input type="file" name="document"
-										class="form-control input-lg" tabindex="1"
-										title="Upload Proof Document" required="required" />
+									<h4>Amount</h4>
 								</div>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-8">
 								<div class="form-group">
-									<input type="date" name="dateOfBirth"
-										class="form-control input-lg"
-										placeholder="Enter Date Of Birth" tabindex="2"
-										required="required" />
+									<input id ="amount" type="text" name="amount" class="form-control input-lg"
+										tabindex="2" readonly="readonly" />
 								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<textarea name="userAddress" class="form-control input-lg"
-								placeholder="Enter Address" tabindex="3" rows="5"
-								required="required"></textarea>
-						</div>
-						<div class="row">
-							<div class="col-md-3">
-								<p class="agreement input-lg">
-									<input type="checkbox" value="" required="required" /> I Agree
-								</p>
-							</div>
-							<div class="col-md-9" align="left">
-								By clicking <strong class="label label-primary">I Agree</strong>,
-								you agree to the <a href="#" data-toggle="modal"
-									data-target="#t_and_c_m" style="color: maroon;">Terms and
-									Conditions</a> set out by this site.
 							</div>
 						</div>
 						<hr class="colorgraph" />
 						<div class="row">
 							<div class="col-md-6">
-								<a href="payment">
-									<button class="btn btn-primary btn-block btn-lg" tabindex="7">
-										Pay Now</button>
-								</a>
-<!-- 								<input type="submit" value="Pay Now" -->
-<!-- 								class="btn btn-primary btn-block btn-lg" tabindex="7" /> -->
+								<input type="submit" value="Pay Now"
+									class="btn btn-primary btn-block btn-lg" tabindex="7" />
 							</div>
 							<div class="col-md-6">
 								<a href="login"> <input type="button" value="Sign In"
@@ -225,8 +174,9 @@
 	</div>
 
 	<script src="js/jquery.js" th:src="@{js/jquery.js}"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
 	<script src="js/smoothscroll.js" th:src="@{js/smoothscroll.js}"></script>
-	<script src="/js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
 </body>
 </html>

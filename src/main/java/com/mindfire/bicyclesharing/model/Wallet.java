@@ -18,14 +18,12 @@ package com.mindfire.bicyclesharing.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.util.List;
 
 
 /**
  * The persistent class for the wallets database table.
  * 
- * @author mindfire
- * @version 1.0
- * @since 10/03/2016
  */
 @Entity
 @Table(name="wallets")
@@ -40,6 +38,10 @@ public class Wallet implements Serializable {
 
 	private double balance;
 
+	//bi-directional many-to-one association to WalletTransaction
+	@OneToMany(mappedBy="wallet")
+	private List<WalletTransaction> walletTransactions;
+
 	//bi-directional many-to-one association to User
 	@ManyToOne
 	@JoinColumn(name="user_id")
@@ -48,46 +50,50 @@ public class Wallet implements Serializable {
 	public Wallet() {
 	}
 
-	/**
-	 * @return the walletId
-	 */
 	public Integer getWalletId() {
-		return walletId;
+		return this.walletId;
 	}
 
-	/**
-	 * @param walletId the walletId to set
-	 */
 	public void setWalletId(Integer walletId) {
 		this.walletId = walletId;
 	}
 
-	/**
-	 * @return the balance
-	 */
 	public double getBalance() {
-		return balance;
+		return this.balance;
 	}
 
-	/**
-	 * @param balance the balance to set
-	 */
 	public void setBalance(double balance) {
 		this.balance = balance;
 	}
 
-	/**
-	 * @return the user
-	 */
-	public User getUser() {
-		return user;
+	public List<WalletTransaction> getWalletTransactions() {
+		return this.walletTransactions;
 	}
 
-	/**
-	 * @param user
-	 *            the user to set
-	 */
+	public void setWalletTransactions(List<WalletTransaction> walletTransactions) {
+		this.walletTransactions = walletTransactions;
+	}
+
+	public WalletTransaction addWalletTransaction(WalletTransaction walletTransaction) {
+		getWalletTransactions().add(walletTransaction);
+		walletTransaction.setWallet(this);
+
+		return walletTransaction;
+	}
+
+	public WalletTransaction removeWalletTransaction(WalletTransaction walletTransaction) {
+		getWalletTransactions().remove(walletTransaction);
+		walletTransaction.setWallet(null);
+
+		return walletTransaction;
+	}
+
+	public User getUser() {
+		return this.user;
+	}
+
 	public void setUser(User user) {
 		this.user = user;
 	}
+
 }

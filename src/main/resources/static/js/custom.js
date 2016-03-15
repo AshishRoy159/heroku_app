@@ -109,3 +109,14 @@ function passwordFunction(form) {
 	}
 	return ok;
 }
+
+function payment(){
+	var x = document.getElementById("option").value;
+	if(x == "Starter") {
+		document.getElementById("amount").value = 100;
+	} else if(x == "Regular") {
+		document.getElementById("amount").value = 220;
+	} else if(x == "Explorer") {
+		document.getElementById("amount").value = 345;
+	}
+}

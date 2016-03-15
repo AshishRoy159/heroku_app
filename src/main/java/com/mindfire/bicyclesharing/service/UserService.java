@@ -28,12 +28,16 @@ import com.mindfire.bicyclesharing.model.ProofDetail;
 import com.mindfire.bicyclesharing.model.RateGroup;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.VerificationToken;
+import com.mindfire.bicyclesharing.model.Wallet;
+import com.mindfire.bicyclesharing.model.WalletTransaction;
 import com.mindfire.bicyclesharing.repository.PasswordResetTokenRepository;
 import com.mindfire.bicyclesharing.repository.ProofDetailRepository;
 import com.mindfire.bicyclesharing.repository.RateGroupRepository;
 import com.mindfire.bicyclesharing.repository.RoleRepository;
 import com.mindfire.bicyclesharing.repository.UserRepository;
 import com.mindfire.bicyclesharing.repository.VerificationTokenRepository;
+import com.mindfire.bicyclesharing.repository.WalletRepository;
+import com.mindfire.bicyclesharing.repository.WalletTransactionRepository;
 
 /**
  * UserService class contains methods for user related operations
@@ -63,6 +67,12 @@ public class UserService {
 	@Autowired
 	private RateGroupRepository rateGroupRepository;
 
+	@Autowired
+	private WalletRepository walletRepository;
+
+	@Autowired
+	private WalletTransactionRepository transactionRepository;
+
 	/**
 	 * This method is used to save the user related data to the database
 	 * 
@@ -72,19 +82,26 @@ public class UserService {
 	 * @param rateGroup
 	 * @return User object
 	 */
-	public User saveUserDetails(User user, ProofDetail proofDetail, RateGroup rateGroup) {
+	public WalletTransaction saveUserDetails(User user, ProofDetail proofDetail, RateGroup rateGroup, Wallet wallet,
+			WalletTransaction transaction) {
 		proofDetailRepository.save(proofDetail);
 		rateGroupRepository.save(rateGroup);
 		user.setProofDetail(proofDetail);
 		user.setRole(roleRepository.findByUserRole("USER"));
-		user.setRateGroupId(rateGroup);
+		user.setRateGroup(rateGroup);
 		userRepository.save(user);
 
 		proofDetailRepository.save(proofDetail);
 		user.setProofDetail(proofDetail);
 		userRepository.save(user);
 
-		return user;
+		wallet.setUser(user);
+		walletRepository.save(wallet);
+		
+		transaction.setWallet(wallet);
+		transactionRepository.save(transaction);
+		
+		return transaction;
 	}
 
 	/**

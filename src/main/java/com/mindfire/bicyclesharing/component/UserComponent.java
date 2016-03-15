@@ -21,10 +21,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
+import com.mindfire.bicyclesharing.dto.RegistrationPaymentDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
 import com.mindfire.bicyclesharing.model.ProofDetail;
 import com.mindfire.bicyclesharing.model.RateGroup;
 import com.mindfire.bicyclesharing.model.User;
+import com.mindfire.bicyclesharing.model.Wallet;
+import com.mindfire.bicyclesharing.model.WalletTransaction;
 import com.mindfire.bicyclesharing.service.UserService;
 
 /**
@@ -48,10 +51,9 @@ public class UserComponent {
 	 * @param userDTO
 	 * @return user Returns an User object
 	 */
-	public User mapUserComponent(UserDTO userDTO) {
+	public WalletTransaction mapUserComponent(UserDTO userDTO, RegistrationPaymentDTO regPaymentDTO) {
 
 		User newUser = new User();
-
 		newUser.setFirstName(userDTO.getFirstName());
 		newUser.setLastName(userDTO.getLastName());
 		newUser.setEmail(userDTO.getEmail());
@@ -65,9 +67,17 @@ public class UserComponent {
 		proofDetail.setDocument(userDTO.getDocument());
 
 		RateGroup rateGroup = new RateGroup();
-		rateGroup.setGroupType("user-type");
+		rateGroup.setGroupType("USER");
 
-		return userService.saveUserDetails(newUser, proofDetail, rateGroup);
+		Wallet wallet = new Wallet();
+		wallet.setBalance(regPaymentDTO.getAmount());
+
+		WalletTransaction transaction = new WalletTransaction();
+		transaction.setMode(regPaymentDTO.getMode());
+		transaction.setType("REGISTRATION");
+		transaction.setAmount(regPaymentDTO.getAmount());
+
+		return userService.saveUserDetails(newUser, proofDetail, rateGroup, wallet, transaction);
 	}
 
 	/**
