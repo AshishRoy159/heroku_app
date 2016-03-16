@@ -25,7 +25,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.mindfire.bicyclesharing.security.CustomSavedRequestAwareAuthenticationSuccessHandler;
+import com.mindfire.bicyclesharing.security.CustomAuthenticationSuccessHandler;
 
 /**
  * This is the Security Configuration file for Spring Security.
@@ -39,7 +39,7 @@ import com.mindfire.bicyclesharing.security.CustomSavedRequestAwareAuthenticatio
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	private CustomSavedRequestAwareAuthenticationSuccessHandler successHandler;
+	private CustomAuthenticationSuccessHandler successHandler;
 
 	@Autowired
 	private UserDetailsService userDetailsService;
