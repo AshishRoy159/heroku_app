@@ -59,7 +59,7 @@
 
 	<!-- form start -->
 	<form action="#" th:action="@{/payment}" th:object="${userData}"
-		method="post">
+		method="post" onsubmit="return emailFunction(this);">
 		<div class="register">
 			<div class="container">
 				<div class="row">
@@ -83,16 +83,17 @@
 								</div>
 							</div>
 						</div>
+						<span id="email_error_id" class="text-danger"></span>
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
-									<input type="email" name="email" class="form-control input-lg"
+									<input type="email" name="email" id="emailId" class="form-control input-lg"
 										placeholder="Enter Email" tabindex="1" required="required" />
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<input type="email" name="confirmUserEmail"
+									<input type="email" name="confirmUserEmail" id="email_confirm"
 										class="form-control input-lg" placeholder="Confirm Email"
 										tabindex="2" required="required" />
 								</div>
@@ -227,6 +228,6 @@
 	<script src="js/jquery.js" th:src="@{js/jquery.js}"></script>
 	<script src="js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
 	<script src="js/smoothscroll.js" th:src="@{js/smoothscroll.js}"></script>
-	<script src="/js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
 </body>
 </html>

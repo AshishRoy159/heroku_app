@@ -99,24 +99,44 @@ $(document).ready(function() {
 
 });
 
+/*
+ * Match password and confirm password
+ */
 function passwordFunction(form) {
-	var pass1 = document.getElementById("password").value;
-	var pass2 = document.getElementById("password_confirm").value;
+	var pass = document.getElementById("password").value;
+	var cnfPass = document.getElementById("password_confirm").value;
 	var ok = true;
-	if (pass1 != pass2) {
-		document.getElementById("error_id").innerHTML = "Passwords doesn't match."
+	if (pass != cnfPass) {
+		document.getElementById("error_id").innerHTML = "Passwords doesn't match.";
 		ok = false;
 	}
 	return ok;
 }
 
-function payment(){
+/*
+ * Match email and confirm email
+ */
+function emailFunction(form) {
+	var email = document.getElementById("emailId").value;
+	var cnfEmail = document.getElementById("email_confirm").value;
+	var ok = true;
+	if (email != cnfEmail) {
+		document.getElementById("email_error_id").innerHTML = "Emails doesn't match.";
+		ok = false;
+	}
+	return ok;
+}
+
+/*
+ * Set amount as per chosen package
+ */
+function payment() {
 	var x = document.getElementById("option").value;
-	if(x == "Starter") {
+	if (x == "Starter") {
 		document.getElementById("amount").value = 100;
-	} else if(x == "Regular") {
+	} else if (x == "Regular") {
 		document.getElementById("amount").value = 220;
-	} else if(x == "Explorer") {
+	} else if (x == "Explorer") {
 		document.getElementById("amount").value = 345;
 	}
 }
