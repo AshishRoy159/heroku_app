@@ -35,10 +35,12 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
 	private static final long serialVersionUID = 1L;
 
 	private User user;
+
 	@SuppressWarnings("unused")
 	private final Long userId;
 	private final String firstName;
-    private final String lastName; 
+	private final String lastName;
+	private final String userRole;
 
 	public CurrentUser(User user) {
 		super(user.getEmail(), user.getPassword(),
@@ -47,6 +49,7 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
 		this.userId = user.getUserId();
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
+		this.userRole = user.getRole().getUserRole();
 	}
 
 	/**
@@ -64,9 +67,10 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
 	}
 
 	/**
-	 * @param userId the userId to set
+	 * @return the userRole
 	 */
-	public void setUserId(Long userId) {
+	public String getUserRole() {
+		return userRole;
 	}
 
 	/**
@@ -86,9 +90,9 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
 	public Long getUserId() {
 		return user.getUserId();
 	}
-	
+
 	public Role getRole() {
-        return user.getRole();
-    }
+		return user.getRole();
+	}
 
 }

@@ -72,9 +72,11 @@
 							class="fa fa-user fa-fw"></i><span>ACCOUNT</span><strong
 							class="caret"></strong></a>
 						<ul class="dropdown-menu">
-							<li><a th:href="@{/userProfile/} + ${#authentication.principal.userId}" style="color: black;"><i
-									class="fa fa-user fa-fw"></i>View Profile<br /> [<small
-									sec:authentication="name">[email]</small>] </a></li>
+							<li><a
+								th:href="@{/userProfile/} + ${#authentication.principal.userId}"
+								style="color: black;"><i class="fa fa-user fa-fw"></i>View
+									Profile<br /> [<small sec:authentication="name">[email]</small>]
+							</a></li>
 							<li class="divider"></li>
 							<li><a href="/changePassword" style="color: black;"><i
 									class="fa fa-gear fa-fw"></i>Change Password</a></li>
@@ -113,9 +115,21 @@
 							<li><a href="/updateUserDetails"> <i
 									class="fa fa-user fa-fw"></i> Edit Account
 							</a></li>
-							<li><a href="/changePassword"> <i
-									class="fa fa-gear fa-fw"></i> Change Password
-							</a></li>
+							<li><div th:switch="${#authentication.principal.userRole}"
+									style="padding-left: 15px;">
+									<p th:case="ADMIN">
+										<a href="/admin/changePassword"><i
+											class="fa fa-gear fa-fw"></i>Change Password</a>
+									</p>
+									<p th:case="MANAGER">
+										<a href="/admin/changePassword"><i
+											class="fa fa-gear fa-fw"></i>Change Password</a>
+									</p>
+									<p th:case="USER">
+										<a href="/user/changePassword"><i class="fa fa-gear fa-fw"></i>Change
+											Password</a>
+									</p>
+								</div></li>
 							<li><a href="#"> <i class="glyphicon glyphicon-flag"></i>
 									Help
 							</a></li>

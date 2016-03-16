@@ -97,11 +97,14 @@
 							class="fa fa-user fa-fw"></i><span>ACCOUNT</span><strong
 							class="caret"></strong></a>
 						<ul class="dropdown-menu">
-						<li><a th:href="@{/users/userProfile/} + ${#authentication.principal.userId}" style="color: black;"><i
-									class="fa fa-user fa-fw"></i>View Profile<br /> [<small
-									sec:authentication="name">[email]</small>] </a></li>
+
+							<li><a
+								th:href="@{/users/userProfile/} + ${#authentication.principal.userId}"
+								style="color: black;"><i class="fa fa-user fa-fw"></i>View
+									Profile<br /> [<small sec:authentication="name">[email]</small>]
+							</a></li>
 							<li class="divider"></li>
-							<li><a href="changePassword" style="color: black;"><i
+							<li><a href="user/changePassword" style="color: black;"><i
 									class="fa fa-gear fa-fw"></i>Change Password</a></li>
 							<li class="divider"></li>
 							<li><a href="logout" style="color: black;"><i
@@ -608,7 +611,8 @@
 							<li>Visit anywhere in bhubaneswar</li>
 						</ul>
 						<div class="plan-button">
-							<a href="register.html?plan=1"><button class="btn btn-default">CHOOSE PLAN</button></a>
+							<a href="register.html?plan=1"><button
+									class="btn btn-default">CHOOSE PLAN</button></a>
 						</div>
 					</div>
 				</div>
@@ -627,7 +631,8 @@
 							<li>Make your plans</li>
 						</ul>
 						<div class="plan-button">
-							<a href="register.html?plan=2"><button class="btn btn-default">CHOOSE PLAN</button></a>
+							<a href="register.html?plan=2"><button
+									class="btn btn-default">CHOOSE PLAN</button></a>
 						</div>
 					</div>
 				</div>
@@ -646,7 +651,8 @@
 							<li>Unique Experiences</li>
 						</ul>
 						<div class="plan-button">
-							<a href="register.html?plan=3"><button class="btn btn-default">CHOOSE PLAN</button></a>
+							<a href="register.html?plan=3"><button
+									class="btn btn-default">CHOOSE PLAN</button></a>
 						</div>
 					</div>
 				</div>

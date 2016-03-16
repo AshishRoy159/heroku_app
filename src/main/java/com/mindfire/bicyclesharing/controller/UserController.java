@@ -211,7 +211,7 @@ public class UserController {
 	 * @param result
 	 * @return the signIn view
 	 */
-	@RequestMapping(value = "afterSetPassword", method = RequestMethod.POST)
+	@RequestMapping(value = "/afterSetPassword", method = RequestMethod.POST)
 	public ModelAndView setPassword(@ModelAttribute("setPasswordData") @Valid SetPasswordDTO setPasswordDTO,
 			Model model, BindingResult result) {
 		int num = userComponent.mapPassword(setPasswordDTO.getPassword(), setPasswordDTO.getEmail());
@@ -227,13 +227,21 @@ public class UserController {
 	 * This method maps the request after the user clicks on forgot password
 	 * link. Simply render the forgotPassword view.
 	 * 
-	 * @return
+	 * @return forgotPassword view.
 	 */
 	@RequestMapping(value = "forgotPassword", method = RequestMethod.GET)
 	public ModelAndView forgotPassword() {
 		return new ModelAndView("forgotPassword");
 	}
 
+	/**
+	 * This method takes the email id and send the link for set the new
+	 * password.
+	 * 
+	 * @param forgotPasswordDTO
+	 * @param request
+	 * @return successRegister view
+	 */
 	@RequestMapping(value = "afterForgotPassword", method = RequestMethod.POST)
 	public ModelAndView forgotOldPassword(@ModelAttribute("forgotPasswordData") ForgotPasswordDTO forgotPasswordDTO,
 			WebRequest request) {
@@ -296,7 +304,7 @@ public class UserController {
 	 * @return changePassword view.
 	 */
 	@PreAuthorize("isAuthenticated()")
-	@RequestMapping(value = "changePassword", method = RequestMethod.GET)
+	@RequestMapping(value = { "/user/changePassword", "/admin/changePassword"}, method = RequestMethod.GET)
 	public String changePassword() {
 		return Constant.CHANGE_PASSWORD;
 	}

@@ -24,14 +24,14 @@
 
 <!-- Bootstrap CSS
    ================================================== -->
-<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="/css/bootstrap.min.css" />
 
 <!-- Font Icons
    ================================================== -->
-<link rel="stylesheet" href="css/font-awesome.min.css"
-	th:href="@{css/font-awesome.min.css}" />
-<link rel="stylesheet" href="css/et-line-font.css"
-	th:href="@{css/et-line-font.css}" />
+<link rel="stylesheet" href="/css/font-awesome.min.css"
+	th:href="@{/css/font-awesome.min.css}" />
+<link rel="stylesheet" href="/css/et-line-font.css"
+	th:href="@{/css/et-line-font.css}" />
 
 <!-- Main CSS
    	================================================== -->
@@ -63,10 +63,10 @@
 					<li><a href="index.html" class="smoothScroll">HOME</a></li>
 					<li><a href="index.html#work" class="smoothScroll">HOW IT
 							WORKS</a></li>
-					<li><a href="index.html#about" class="smoothScroll">ABOUT</a></li>
-					<li><a href="index.html#portfolio" class="smoothScroll">GALLERY</a></li>
-					<li><a href="index.html#plan" class="smoothScroll">PLANS</a></li>
-					<li><a href="index.html#contact" class="smoothScroll">CONTACT</a></li>
+					<li><a href="/index.html#about" class="smoothScroll">ABOUT</a></li>
+					<li><a href="/index.html#portfolio" class="smoothScroll">GALLERY</a></li>
+					<li><a href="/index.html#plan" class="smoothScroll">PLANS</a></li>
+					<li><a href="/index.html#contact" class="smoothScroll">CONTACT</a></li>
 					<li class="dropdown pull-right" sec:authorize="isAuthenticated()"><a
 						href="#" data-toggle="dropdown" class="dropdown-toggle"><i
 							class="fa fa-user fa-fw"></i><span>ACCOUNT</span><strong
@@ -76,8 +76,20 @@
 									class="fa fa-user fa-fw"></i>View Profile<br /> [<small
 									sec:authentication="name">[email]</small>]</a></li>
 							<li class="divider"></li>
-							<li><a href="changePassword" style="color: black;"><i
-									class="fa fa-gear fa-fw"></i>Change Password</a></li>
+							<li><div th:switch="${#authentication.principal.userRole}">
+									<p th:case="ADMIN">
+										<a href="/admin/changePassword" style="color: black;"><i
+											class="fa fa-gear fa-fw"></i>Change Password</a>
+									</p>
+									<p th:case="MANAGER">
+										<a href="/admin/changePassword" style="color: black;"><i
+											class="fa fa-gear fa-fw"></i>Change Password</a>
+									</p>
+									<p th:case="USER">
+										<a href="/user/changePassword" style="color: black;"><i
+											class="fa fa-gear fa-fw"></i>Change Password</a>
+									</p>
+								</div></li>
 							<li class="divider"></li>
 							<li><a href="logout" style="color: black;"><i
 									class="fa fa-sign-out fa-fw"></i>Logout</a></li>
@@ -113,9 +125,21 @@
 							<li class="active"><a href="#"> <i
 									class="fa fa-user fa-fw"></i> Edit Account
 							</a></li>
-							<li><a href="changePassword"> <i
-									class="fa fa-gear fa-fw"></i> Change Password
-							</a></li>
+							<li><div th:switch="${#authentication.principal.userRole}"
+									style="padding-left: 15px;">
+									<p th:case="ADMIN">
+										<a href="/admin/changePassword"><i
+											class="fa fa-gear fa-fw"></i>Change Password</a>
+									</p>
+									<p th:case="MANAGER">
+										<a href="/admin/changePassword"><i
+											class="fa fa-gear fa-fw"></i>Change Password</a>
+									</p>
+									<p th:case="USER">
+										<a href="/user/changePassword"><i class="fa fa-gear fa-fw"></i>Change
+											Password</a>
+									</p>
+								</div></li>
 							<li><a href="#"> <i class="glyphicon glyphicon-flag"></i>
 									Help
 							</a></li>
