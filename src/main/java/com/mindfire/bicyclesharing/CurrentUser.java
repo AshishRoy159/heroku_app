@@ -18,6 +18,7 @@ package com.mindfire.bicyclesharing;
 
 import org.springframework.security.core.authority.AuthorityUtils;
 
+import com.mindfire.bicyclesharing.model.Role;
 import com.mindfire.bicyclesharing.model.User;
 
 /**
@@ -34,11 +35,38 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
 	private static final long serialVersionUID = 1L;
 
 	private User user;
+	@SuppressWarnings("unused")
+	private final Long userId;
+	private final String firstName;
+    private final String lastName; 
 
 	public CurrentUser(User user) {
 		super(user.getEmail(), user.getPassword(),
 				AuthorityUtils.createAuthorityList(user.getRole().getUserRole().toString()));
 		this.user = user;
+		this.userId = user.getUserId();
+		this.firstName = user.getFirstName();
+		this.lastName = user.getLastName();
+	}
+
+	/**
+	 * @return the firstName
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
+
+	/**
+	 * @return the lastName
+	 */
+	public String getLastName() {
+		return lastName;
+	}
+
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(Long userId) {
 	}
 
 	/**
@@ -58,5 +86,9 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
 	public Long getUserId() {
 		return user.getUserId();
 	}
+	
+	public Role getRole() {
+        return user.getRole();
+    }
 
 }

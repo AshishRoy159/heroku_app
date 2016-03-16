@@ -24,6 +24,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -329,10 +331,11 @@ public class UserController {
 	 * @param model
 	 * @return userProfile view
 	 */
-	@RequestMapping("userProfile")
-	public ModelAndView userProfile(Authentication authentication, Model model) {
-		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-		User userDetails = userService.userDetails(currentUser.getUsername());
+	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
+	@RequestMapping("/users/userProfile/{id}")
+	public ModelAndView userProfile(Authentication authentication, Model model, @PathVariable Long id) {
+		
+		User userDetails = userService.userDetails(id);
 		model.addAttribute("user", userDetails);
 
 		return new ModelAndView("userProfile");

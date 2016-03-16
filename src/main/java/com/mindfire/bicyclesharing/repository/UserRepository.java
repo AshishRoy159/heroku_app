@@ -39,7 +39,10 @@ import com.mindfire.bicyclesharing.model.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findOneByEmail(String email);
 
+	public User findByUserId(Long id);
+	
 	public User findByEmail(String email);
+	
 
 	@Transactional
 	@Modifying(clearAutomatically = true)

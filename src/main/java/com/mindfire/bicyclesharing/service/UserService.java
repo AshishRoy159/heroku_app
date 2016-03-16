@@ -196,6 +196,16 @@ public class UserService {
 	}
 
 	/**
+	 * This method is used to get user details using user id
+	 * 
+	 * @param userEmail
+	 * @return User object
+	 */
+	public User userDetails(Long id) {
+		return userRepository.findByUserId(id);
+	}
+	
+	/**
 	 * This method is used to get user details using user email
 	 * 
 	 * @param email

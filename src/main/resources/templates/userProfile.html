@@ -24,20 +24,20 @@
 
 <!-- Bootstrap CSS
    ================================================== -->
-<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="/css/bootstrap.min.css" />
 
 <!-- Font Icons
    ================================================== -->
-<link rel="stylesheet" href="css/font-awesome.min.css"
-	th:href="@{css/font-awesome.min.css}" />
-<link rel="stylesheet" href="css/et-line-font.css"
-	th:href="@{css/et-line-font.css}" />
+<link rel="stylesheet" href="/css/font-awesome.min.css"
+	th:href="@{/css/font-awesome.min.css}" />
+<link rel="stylesheet" href="/css/et-line-font.css"
+	th:href="@{/css/et-line-font.css}" />
 
 <!-- Main CSS
    	================================================== -->
-<link rel="stylesheet" href="css/style.css" />
-<link rel="stylesheet" type="text/css" href="css/default.css" />
-<link rel="stylesheet" type="text/css" href="css/profile.css" />
+<link rel="stylesheet" href="/css/style.css" />
+<link rel="stylesheet" type="text/css" href="/css/default.css" />
+<link rel="stylesheet" type="text/css" href="/css/profile.css" />
 </head>
 
 <body data-spy="scroll" data-target=".navbar-collapse" data-offset="50">
@@ -72,14 +72,14 @@
 							class="fa fa-user fa-fw"></i><span>ACCOUNT</span><strong
 							class="caret"></strong></a>
 						<ul class="dropdown-menu">
-							<li><a href="userProfile" style="color: black;"><i
+							<li><a th:href="@{/userProfile/} + ${#authentication.principal.userId}" style="color: black;"><i
 									class="fa fa-user fa-fw"></i>View Profile<br /> [<small
-									sec:authentication="name">[email]</small>]</a></li>
+									sec:authentication="name">[email]</small>] </a></li>
 							<li class="divider"></li>
-							<li><a href="changePassword" style="color: black;"><i
+							<li><a href="/changePassword" style="color: black;"><i
 									class="fa fa-gear fa-fw"></i>Change Password</a></li>
 							<li class="divider"></li>
-							<li><a href="logout" style="color: black;"><i
+							<li><a href="/logout" style="color: black;"><i
 									class="fa fa-sign-out fa-fw"></i>Logout</a></li>
 						</ul></li>
 				</ul>
@@ -92,7 +92,7 @@
 				<div class="profile-sidebar">
 					<!-- SIDEBAR USERPIC -->
 					<div class="profile-userpic">
-						<img src="images/bicycles-46a.jpg" class="img-responsive" alt="" />
+						<img src="/images/bicycles-46a.jpg" class="img-responsive" alt="" />
 					</div>
 					<!-- END SIDEBAR USERPIC -->
 					<!-- SIDEBAR USER TITLE -->
@@ -110,10 +110,10 @@
 							<li class="active"><a href="#"> <i
 									class="glyphicon glyphicon-home"></i> Overview
 							</a></li>
-							<li><a href="updateUserDetails"> <i
+							<li><a href="/updateUserDetails"> <i
 									class="fa fa-user fa-fw"></i> Edit Account
 							</a></li>
-							<li><a href="changePassword"> <i
+							<li><a href="/changePassword"> <i
 									class="fa fa-gear fa-fw"></i> Change Password
 							</a></li>
 							<li><a href="#"> <i class="glyphicon glyphicon-flag"></i>
