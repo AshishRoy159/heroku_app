@@ -64,7 +64,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 			if (auths.toArray()[0].toString().equals("ADMIN")) {
 				//this targetUrl will be changed to admin home page when the page design is complete.
-				String targetUrl = "index.html";
+				String targetUrl = "admin/adminHome";
 				getRedirectStrategy().sendRedirect(request, response, targetUrl);
 			} else if (auths.toArray()[0].toString().equals("USER")) {
 				String targetUrl = "index.html";

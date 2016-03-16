@@ -86,4 +86,14 @@ public class HomeController {
 	public String getAccessDeniedPage() {
 		return "403";
 	}
+	
+	/**
+	 * This method maps request for admin home page.
+	 * 
+	 * @return adminHome view
+	 */
+	@RequestMapping(value = {"admin", "admin/adminHome"})
+	public ModelAndView adminHome() {
+		return new ModelAndView("adminHome");
+	}
 }

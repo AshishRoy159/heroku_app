@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bicycle Sharing:Admin</title>
+<!-- Bootstrap Styles-->
+<link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+<!-- FontAwesome Styles-->
+<link th:href="@{/css/font-awesome.css}" rel="stylesheet" />
+<!-- Custom Styles-->
+<link th:href="@{/css/admin-styles.css}" rel="stylesheet" />
+<!-- Google Fonts-->
+<link th:href="@{http://fonts.googleapis.com/css?family=Open+Sans}"
+	rel="stylesheet" type="text/css" />
+<!-- TABLE STYLES-->
+<link th:href="@{/css/dataTables.bootstrap.css}" rel="stylesheet" />
+</head>
+<body>
+	<div class="wrapper">
+		<div th:include="adminNav :: head-and-side"></div>
+		<div id="page-wrapper">
+			<div id="page-inner">
+
+				<div class="row">
+					<div class="col-md-12">
+						<h1 class="page-header">
+							Welcome <small>Today's summary</small>
+						</h1>
+					</div>
+				</div>
+				<!-- /. ROW  -->
+
+				<div class="row">
+					<div class="col-md-3 col-sm-12 col-xs-12">
+						<div
+							class="panel panel-primary text-center no-boder bg-color-green">
+							<div class="panel-body">
+								<i class="fa fa-bar-chart-o fa-5x"></i>
+								<h3>8,457</h3>
+							</div>
+							<div class="panel-footer back-footer-green">Total bookings
+								today</div>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-12 col-xs-12">
+						<div
+							class="panel panel-primary text-center no-boder bg-color-blue">
+							<div class="panel-body">
+								<i class="fa fa-shopping-cart fa-5x"></i>
+								<h3>52,160</h3>
+							</div>
+							<div class="panel-footer back-footer-blue">Total income</div>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-12 col-xs-12">
+						<div class="panel panel-primary text-center no-boder bg-color-red">
+							<div class="panel-body">
+								<i class="fa fa fa-comments fa-5x"></i>
+								<h3>15,823</h3>
+							</div>
+							<div class="panel-footer back-footer-red">Users visited</div>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-12 col-xs-12">
+						<div
+							class="panel panel-primary text-center no-boder bg-color-brown">
+							<div class="panel-body">
+								<i class="fa fa-users fa-5x"></i>
+								<h3>2,367</h3>
+							</div>
+							<div class="panel-footer back-footer-brown">New users</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<!-- Advanced Tables -->
+						<div class="panel panel-default">
+							<div class="panel-heading">Today's bookings</div>
+							<div class="panel-body">
+								<div class="table-responsive">
+									<table class="table table-striped table-bordered table-hover"
+										id="dataTables-example">
+										<thead>
+											<tr>
+												<th>Booking Id</th>
+												<th>User Id</th>
+												<th>User name</th>
+												<th>Booking time</th>
+												<th>Picked up from</th>
+												<th>Returned at</th>
+												<th>Out time</th>
+												<th>In time</th>
+												<th>Transaction Id</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr class="odd">
+												<td class="center">bkn34324</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr class="even">
+												<td class="center">bkn34325</td>
+												<td class="center">usr54835</td>
+												<td class="center">B</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp73959</td>
+												<td class="center">pkp67887</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn657567</td>
+											</tr>
+
+											<tr class="odd">
+												<td class="center">bkn34326</td>
+												<td class="center">usr57567</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">8:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr class="even">
+												<td class="center">bkn34327</td>
+												<td class="center">usr56868</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr class="odd">
+												<td class="center">bkn34328</td>
+												<td class="center">usr67878</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn768786</td>
+											</tr>
+
+											<tr class="even">
+												<td class="center">bkn34329</td>
+												<td class="center">usr23534</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp45666</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn565576</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34330</td>
+												<td class="center">usr56858</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34331</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34332</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34333</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34334</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34335</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34336</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34337</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34338</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34339</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34340</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34341</td>
+												<td class="center">usr64765</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34342</td>
+												<td class="center">usr67785</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34343</td>
+												<td class="center">usr54254</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34344</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34345</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34346</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34347</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34348</td>
+												<td class="center">usr54656</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34349</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34350</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34351</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34352</td>
+												<td class="center">usr12143</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34353</td>
+												<td class="center">usr47657</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34354</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34355</td>
+												<td class="center">usr654656</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn865674</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34356</td>
+												<td class="center">usr34435</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34357</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34358</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34359</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34360</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34361</td>
+												<td class="center">usr34546</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34362</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34363</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34364</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34365</td>
+												<td class="center">usr546335</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34366</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34367</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34368</td>
+												<td class="center">usr798798</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34369</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34370</td>
+												<td class="center">usr24234</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34371</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34372</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34373</td>
+												<td class="center">usr475677</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34374</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34375</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34376</td>
+												<td class="center">usr456570</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34377</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34378</td>
+												<td class="center">usr34356</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34379</td>
+												<td class="center">usr23342</td>
+												<td class="center">A</td>
+												<td class="center">7:00</td>
+												<td class="center">pkp54657</td>
+												<td class="center">pkp78678</td>
+												<td class="center">7:00</td>
+												<td class="center">9:30</td>
+												<td class="center">trn456546</td>
+											</tr>
+
+											<tr>
+												<td class="center">bkn34380</td>
+												<td class="center">usr3657768</td>
+												<td class="center">Z</td>
+												<td class="center">9:00</td>
+												<td class="center">pkp54547</td>
+												<td class="center">pkp56677</td>
+												<td class="center">9:00</td>
+												<td class="center">11:30</td>
+												<td class="center">trn576869</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+
+							</div>
+						</div>
+						<!--End Advanced Tables -->
+					</div>
+
+				</div>
+				<!-- /. ROW  -->
+
+				<div class="row">
+					<div class="col-md-4 col-sm-12 col-xs-12">
+						<div class="panel panel-default">
+							<div class="panel-heading">Requests Panel</div>
+							<div class="panel-body">
+								<div class="list-group">
+
+									<a href="#" class="list-group-item"> <span class="badge">7
+											minutes ago</span> <i class="fa fa-fw fa-comment"></i> Requested for
+										bicycles
+									</a> <a href="#" class="list-group-item"> <span class="badge">16
+											minutes ago</span> <i class="fa fa-fw fa-truck"></i> Order 392
+										shipped
+									</a> <a href="#" class="list-group-item"> <span class="badge">36
+											minutes ago</span> <i class="fa fa-fw fa-globe"></i> Invoice 653 has
+										paid
+									</a> <a href="#" class="list-group-item"> <span class="badge">1
+											hour ago</span> <i class="fa fa-fw fa-user"></i> A new manager has
+										been added
+									</a> <a href="#" class="list-group-item"> <span class="badge">1.23
+											hour ago</span> <i class="fa fa-fw fa-user"></i> A pickup point blew
+										up
+									</a> <a href="#" class="list-group-item"> <span class="badge">yesterday</span>
+										<i class="fa fa-fw fa-globe"></i> Saved the world
+									</a>
+								</div>
+								<div class="text-right">
+									<a href="#">More requests <i
+										class="fa fa-arrow-circle-right"></i></a>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="col-md-8 col-sm-12 col-xs-12">
+
+						<div class="panel panel-default">
+							<div class="panel-heading">Pickup point managers</div>
+							<div class="panel-body">
+								<div class="table-responsive">
+									<table class="table table-striped table-bordered table-hover">
+										<thead>
+											<tr>
+												<th>Pickup point Id</th>
+												<th>First Name</th>
+												<th>Last Name</th>
+												<th>User Id</th>
+												<th>Email ID.</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>1</td>
+												<td>John</td>
+												<td>Doe</td>
+												<td>John15482</td>
+												<td>name@site.com</td>
+											</tr>
+											<tr>
+												<td>2</td>
+												<td>Kimsila</td>
+												<td>Marriye</td>
+												<td>Kim1425</td>
+												<td>name@site.com</td>
+											</tr>
+											<tr>
+												<td>3</td>
+												<td>Rossye</td>
+												<td>Nermal</td>
+												<td>Rossy1245</td>
+												<td>name@site.com</td>
+											</tr>
+											<tr>
+												<td>4</td>
+												<td>Richard</td>
+												<td>Orieal</td>
+												<td>Rich5685</td>
+												<td>name@site.com</td>
+											</tr>
+											<tr>
+												<td>5</td>
+												<td>Jacob</td>
+												<td>Hielsar</td>
+												<td>Jac4587</td>
+												<td>name@site.com</td>
+											</tr>
+											<tr>
+												<td>6</td>
+												<td>Wrapel</td>
+												<td>Dere</td>
+												<td>Wrap4585</td>
+												<td>name@site.com</td>
+											</tr>
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<!-- /. ROW  -->
+
+			</div>
+			<!-- /. PAGE INNER  -->
+		</div>
+		<div class="footerDiv" style="height: 100px;background-color: #babdb6;padding: 20px;">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3" align="left">
+						<h4>
+							Copyright <a href="/index.html#home">Bicycle Sharing</a>
+						</h4>
+					</div>
+					<div class="col-md-6"></div>
+					<div class="col-md-3" align="right">
+						<h4>
+							Developed by <a href="/index.html#home">Java Interns</a>
+						</h4>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /. PAGE WRAPPER  -->
+	<!-- /. WRAPPER  -->
+	<!-- JS Scripts-->
+	<!-- jQuery Js -->
+	<script th:src="@{/js/jquery-1.10.2.js}" type="text/javascript"></script>
+	<!-- Bootstrap Js -->
+	<script th:src="@{/js/bootstrap.min.js}" type="text/javascript"></script>
+	<!-- Metis Menu Js -->
+	<script th:src="@{/js/jquery.metisMenu.js}" type="text/javascript"></script>
+	<!-- DATA TABLE SCRIPTS -->
+	<script th:src="@{/js/jquery.dataTables.js}" type="text/javascript"></script>
+	<script th:src="@{/js/dataTables.bootstrap.js}" type="text/javascript"></script>
+	<script>
+		$(document).ready(function() {
+			$("#dataTables-example").dataTable();
+		});
+	</script>
+	<!-- Custom Js -->
+	<script th:src="@{/js/custom-scripts.js}" type="text/javascript"></script>
+</body>
+</html>
