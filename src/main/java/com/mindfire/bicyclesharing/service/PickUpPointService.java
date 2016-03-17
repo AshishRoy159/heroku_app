@@ -16,6 +16,8 @@
 
 package com.mindfire.bicyclesharing.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +47,24 @@ public class PickUpPointService {
 		PickUpPoint addedPickUpPoint = pickUpPointRepository.save(pickUpPoint);
 		return addedPickUpPoint;
 	}
+
+	/**
+	 * This method is used to find all pickup points
+	 * 
+	 * @return PickUpPoint list
+	 */
+	public List<PickUpPoint> getAllPickupPoints() {
+		return pickUpPointRepository.findAll();
+	}
+	
+	/**
+	 * This method is used to find pickup point by its id
+	 * 
+	 * @return PickUpPoint object
+	 */
+	public PickUpPoint getPickupPointById(int pickUpPointId) {
+		return pickUpPointRepository.findByPickUpPointId(pickUpPointId);
+	}
+
 
 }

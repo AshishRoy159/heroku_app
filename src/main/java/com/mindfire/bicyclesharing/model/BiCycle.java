@@ -17,8 +17,17 @@
 package com.mindfire.bicyclesharing.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.sql.Timestamp;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the bi_cycles database table.
@@ -38,19 +47,20 @@ public class BiCycle implements Serializable {
 	@Column(name = "bi_cycle_id")
 	private Integer biCycleId;
 
-	@Column(name = "added_on")
+	@Column(name = "added_on", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp addedOn;
 
 	@Column(name = "chasis_no")
 	private String chasisNo;
 
-	@Column(name = "current_location")
-	private String currentLocation;
+	@ManyToOne
+	@JoinColumn(name = "current_location")
+	private PickUpPoint currentLocation;
 
-	@Column(name = "is_active")
+	@Column(name = "is_active", insertable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
 	private Boolean isActive;
 
-	@Column(name = "is_available")
+	@Column(name = "is_available", insertable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
 	private Boolean isAvailable;
 
 	public BiCycle() {
@@ -104,7 +114,7 @@ public class BiCycle implements Serializable {
 	/**
 	 * @return the currentLocation
 	 */
-	public String getCurrentLocation() {
+	public PickUpPoint getCurrentLocation() {
 		return currentLocation;
 	}
 
@@ -112,7 +122,7 @@ public class BiCycle implements Serializable {
 	 * @param currentLocation
 	 *            the currentLocation to set
 	 */
-	public void setCurrentLocation(String currentLocation) {
+	public void setCurrentLocation(PickUpPoint currentLocation) {
 		this.currentLocation = currentLocation;
 	}
 

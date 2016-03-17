@@ -16,25 +16,20 @@
 
 package com.mindfire.bicyclesharing.repository;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.mindfire.bicyclesharing.model.PickUpPoint;
+import com.mindfire.bicyclesharing.model.BiCycle;
 
 /**
- * Repository for {@link PickUpPoint} Entity used for CRUD operation on
- * PickUpPoint.
+ * Repository for {@link BiCycle} Entity used for CRUD operation on
+ * BiCycle.
  * 
  * @author mindfire
  * @version 1.0
  * @since 10/03/2016
  */
 @Repository
-public interface PickUpPointRepository extends JpaRepository<PickUpPoint, Integer> {
-	
-	public List<PickUpPoint> findAll();
-	public PickUpPoint findByPickUpPointId(Integer pickUpPointId);
+public interface BiCycleRepository extends JpaRepository<BiCycle, Integer> {
 
 }

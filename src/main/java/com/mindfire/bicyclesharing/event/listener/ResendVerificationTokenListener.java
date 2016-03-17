@@ -91,7 +91,7 @@ public class ResendVerificationTokenListener implements ApplicationListener<Rese
 	 * @param locale
 	 * @param newToken
 	 * @param user
-	 * @return
+	 * @return Message object
 	 */
 	private Message constructResendVerificationTokenEmail(String contextPath, Locale locale, VerificationToken newToken,
 			User user) {

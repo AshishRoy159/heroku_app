@@ -18,6 +18,7 @@ package com.mindfire.bicyclesharing.controller.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,57 +26,61 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mindfire.bicyclesharing.component.PickUpPointComponent;
-import com.mindfire.bicyclesharing.dto.PickUpPointDTO;
-import com.mindfire.bicyclesharing.model.PickUpPoint;
+import com.mindfire.bicyclesharing.component.BiCycleComponent;
+import com.mindfire.bicyclesharing.dto.BiCycleDTO;
+import com.mindfire.bicyclesharing.model.BiCycle;
+import com.mindfire.bicyclesharing.service.PickUpPointService;
 
 /**
  * This class contains all the Request Mappings related to the navigation of the
- * pickup point related pages from admin section.
+ * Bicycle related pages from admin section.
  * 
  * @author mindfire
  * @version 1.0
  * @since 10/03/2016
  */
 @Controller
-public class PickupPointController {
+public class BicycleController {
 
 	@Autowired
-	private PickUpPointComponent pickUpPointComponent;
+	private PickUpPointService pickUpPointService;
+
+	@Autowired
+	private BiCycleComponent biCycleComponent;
 
 	/**
-	 * This method maps the add new pick up point request. Simply render the
-	 * addNewPickupPoint view
+	 * This method maps the add new pickup point request. Simply render the
+	 * addNewBicycle view.
 	 * 
 	 * @param model
-	 * @return addNewPickupPoint view
+	 * @return addNewBicycle view
 	 */
-	@RequestMapping(value = "admin/addNewPickupPoint", method = RequestMethod.GET)
-	public ModelAndView addPickupPointForm() {
-		return new ModelAndView("addNewPickupPoint");
+	@RequestMapping(value = "admin/addNewBicycle", method = RequestMethod.GET)
+	public ModelAndView addBicycleForm(Model model) {
+		model.addAttribute("pickUpPoints", pickUpPointService.getAllPickupPoints());
+		return new ModelAndView("addNewBicycle");
 	}
 
 	/**
-	 * This method receives data from the addNewPickUpPoint view and send the
-	 * data to the corresponding component class
+	 * This method receives data from the addNewBicycle view and sends the data
+	 * to the corresponding component class
 	 * 
-	 * @param pickUpPointDTO
+	 * @param biCycleDTO
 	 * @param result
 	 * @param model
-	 * @return addNewPickupPoint view
+	 * @return addNewBicycle view
 	 */
-	@RequestMapping(value = "/admin/addPickupPoint", method = RequestMethod.POST)
-	public ModelAndView addedPickupPoint(@ModelAttribute("pickupPointData") PickUpPointDTO pickUpPointDTO,
-			BindingResult result, RedirectAttributes redirectAttributes) {
-		PickUpPoint pickUpPoint = pickUpPointComponent.mapPickUpPointDetails(pickUpPointDTO);
+	@RequestMapping(value = "admin/addBicycle", method = RequestMethod.POST)
+	public ModelAndView addedNewBicycle(@ModelAttribute("bicycleData") BiCycleDTO biCycleDTO, BindingResult result,
+			RedirectAttributes redirectAttributes) {
+		BiCycle biCycle = biCycleComponent.mapBiCycleData(biCycleDTO);
 
-		if (pickUpPoint == null) {
+		if (biCycle == null) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Oops... Operation failed!!");
-			return new ModelAndView("redirect:addNewPickupPoint");
+			return new ModelAndView("redirect:addNewBicycle");
 		} else {
 			redirectAttributes.addFlashAttribute("successMessage", "Successfully Added!!!");
-			return new ModelAndView("redirect:addNewPickupPoint");
+			return new ModelAndView("redirect:addNewBicycle");
 		}
 	}
-
 }

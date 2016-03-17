@@ -14,27 +14,22 @@
  * limitations under the License.
  */
 
-package com.mindfire.bicyclesharing.repository;
+package com.mindfire.bicyclesharing.service;
 
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.mindfire.bicyclesharing.model.BiCycle;
+import com.mindfire.bicyclesharing.repository.BiCycleRepository;
 
-import com.mindfire.bicyclesharing.model.PickUpPoint;
+@Service
+public class BiCycleService {
 
-/**
- * Repository for {@link PickUpPoint} Entity used for CRUD operation on
- * PickUpPoint.
- * 
- * @author mindfire
- * @version 1.0
- * @since 10/03/2016
- */
-@Repository
-public interface PickUpPointRepository extends JpaRepository<PickUpPoint, Integer> {
+	@Autowired
+	private BiCycleRepository biCycleRepository;
 	
-	public List<PickUpPoint> findAll();
-	public PickUpPoint findByPickUpPointId(Integer pickUpPointId);
-
+	public BiCycle saveBiCycle(BiCycle biCycle) {
+		return biCycleRepository.save(biCycle);
+	}
+	
 }

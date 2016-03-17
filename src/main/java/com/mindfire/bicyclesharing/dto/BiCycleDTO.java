@@ -14,27 +14,48 @@
  * limitations under the License.
  */
 
-package com.mindfire.bicyclesharing.repository;
-
-import java.util.List;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.mindfire.bicyclesharing.model.PickUpPoint;
+package com.mindfire.bicyclesharing.dto;
 
 /**
- * Repository for {@link PickUpPoint} Entity used for CRUD operation on
- * PickUpPoint.
+ * BiCycleDTO class is used for taking data from addNewBicycle view.
  * 
  * @author mindfire
  * @version 1.0
  * @since 10/03/2016
  */
-@Repository
-public interface PickUpPointRepository extends JpaRepository<PickUpPoint, Integer> {
-	
-	public List<PickUpPoint> findAll();
-	public PickUpPoint findByPickUpPointId(Integer pickUpPointId);
+public class BiCycleDTO {
+
+	private String chasisNo;
+	private int pickUpPoint;
+
+	/**
+	 * @return the chasisNo
+	 */
+	public String getChasisNo() {
+		return chasisNo;
+	}
+
+	/**
+	 * @param chasisNo
+	 *            the chasisNo to set
+	 */
+	public void setChasisNo(String chasisNo) {
+		this.chasisNo = chasisNo;
+	}
+
+	/**
+	 * @return the pickUpPoint
+	 */
+	public int getPickUpPoint() {
+		return pickUpPoint;
+	}
+
+	/**
+	 * @param pickUpPoint
+	 *            the pickUpPoint to set
+	 */
+	public void setPickUpPoint(int pickUpPoint) {
+		this.pickUpPoint = pickUpPoint;
+	}
 
 }
