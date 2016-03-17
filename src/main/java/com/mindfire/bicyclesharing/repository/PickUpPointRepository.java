@@ -19,21 +19,17 @@ package com.mindfire.bicyclesharing.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.mindfire.bicyclesharing.model.PasswordResetToken;
-import com.mindfire.bicyclesharing.model.User;
+import com.mindfire.bicyclesharing.model.PickUpPoint;
 
 /**
- * Repository for {@link PasswordResetToken} Entity used for CRUD operation on
- * PasswordResetToken.
+ * Repository for {@link PickUpPoint} Entity used for CRUD operation on
+ * PickUpPoint.
  * 
  * @author mindfire
  * @version 1.0
  * @since 10/03/2016
  */
 @Repository
-public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long> {
+public interface PickUpPointRepository extends JpaRepository<PickUpPoint, Integer> {
 
-	PasswordResetToken findByToken(String token);
-
-	PasswordResetToken findByUser(User user);
 }

@@ -38,16 +38,16 @@ public class PickUpPoint implements Serializable {
 	@Column(name = "pick_up_point_id")
 	private Integer pickUpPointId;
 
-	@Column(name = "added_on")
+	@Column(name = "added_on", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp addedOn;
 
 	@Column(name = "current_availability")
 	private Integer currentAvailability;
 
-	@Column(name = "is_active")
+	@Column(name = "is_active", insertable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
 	private Boolean isActive;
 
-	@Column(name = "is_open")
+	@Column(name = "is_open", insertable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
 	private Boolean isOpen;
 
 	private String location;

@@ -19,13 +19,10 @@ package com.mindfire.bicyclesharing.controller;
 import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.mindfire.bicyclesharing.dto.LoginDTO;
 
 /**
  * This class contains all the Request Mappings related to the navigation of the
@@ -64,8 +61,7 @@ public class HomeController {
 	 * @return the signIn view.
 	 */
 	@RequestMapping(value = { "login" }, method = RequestMethod.GET)
-	public ModelAndView getUserSignInPage(@ModelAttribute("loginData") LoginDTO logiDTO,
-			@RequestParam Optional<String> error) {
+	public ModelAndView getUserSignInPage(@RequestParam Optional<String> error) {
 		return new ModelAndView("signIn", "error", error);
 	}
 

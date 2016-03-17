@@ -88,17 +88,6 @@ public class UserController {
 	private MessageBean messageBean;
 
 	/**
-	 * This method maps the registration request. Simply render the registration
-	 * view.
-	 * 
-	 * @return the registration view.
-	 */
-	@RequestMapping("registration.html")
-	public String register(@ModelAttribute("userData") UserDTO userDTO, BindingResult result) {
-		return Constant.REGISTRATION;
-	}
-
-	/**
 	 * This method maps the registration request. Simply render the
 	 * successRegister view.
 	 * 
