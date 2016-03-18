@@ -102,8 +102,7 @@
 						<div class="profile-usertitle-name">
 							<span th:text="*{user.firstName}"></span>
 						</div>
-						<div class="profile-usertitle-job"
-							th:text="*{user.role.userRole}">[User_Role]</div>
+						<div class="profile-usertitle-job" th:text="*{user.role.userRole}">[User_Role]</div>
 					</div>
 					<!-- END SIDEBAR USER TITLE -->
 					<!-- SIDEBAR MENU -->
@@ -112,24 +111,11 @@
 							<li class="active"><a href="#"> <i
 									class="glyphicon glyphicon-home"></i> Overview
 							</a></li>
-							<li><a href="/updateUserDetails"> <i
-									class="fa fa-user fa-fw"></i> Edit Account
-							</a></li>
-							<li><div th:switch="${#authentication.principal.userRole}"
-									style="padding-left: 15px;">
-									<p th:case="ADMIN">
-										<a href="/admin/changePassword"><i
-											class="fa fa-gear fa-fw"></i>Change Password</a>
-									</p>
-									<p th:case="MANAGER">
-										<a href="/admin/changePassword"><i
-											class="fa fa-gear fa-fw"></i>Change Password</a>
-									</p>
-									<p th:case="USER">
-										<a href="/user/changePassword"><i class="fa fa-gear fa-fw"></i>Change
-											Password</a>
-									</p>
-								</div></li>
+							<li><a
+								th:href="@{/user/updateUserDetails/} + ${user.userId}"><i
+									class=" fa fa-user fa-fw"></i>Edit Account</a></li>
+							<li><a href="/user/changePassword"><i
+									class="fa fa-gear fa-fw"></i>Change Password</a></li>
 							<li><a href="#"> <i class="glyphicon glyphicon-flag"></i>
 									Help
 							</a></li>

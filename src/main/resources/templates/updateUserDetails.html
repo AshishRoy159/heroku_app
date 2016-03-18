@@ -35,9 +35,9 @@
 
 <!-- Main CSS
    	================================================== -->
-<link rel="stylesheet" href="css/style.css" />
-<link rel="stylesheet" type="text/css" href="css/default.css" />
-<link rel="stylesheet" type="text/css" href="css/profile.css" />
+<link rel="stylesheet" href="/css/style.css" />
+<link rel="stylesheet" type="text/css" href="/css/default.css" />
+<link rel="stylesheet" type="text/css" href="/css/profile.css" />
 </head>
 
 <body data-spy="scroll" data-target=".navbar-collapse" data-offset="50">
@@ -76,22 +76,10 @@
 									class="fa fa-user fa-fw"></i>View Profile<br /> [<small
 									sec:authentication="name">[email]</small>]</a></li>
 							<li class="divider"></li>
-							<li><div th:switch="${#authentication.principal.userRole}">
-									<p th:case="ADMIN">
-										<a href="/admin/changePassword" style="color: black;"><i
-											class="fa fa-gear fa-fw"></i>Change Password</a>
-									</p>
-									<p th:case="MANAGER">
-										<a href="/admin/changePassword" style="color: black;"><i
-											class="fa fa-gear fa-fw"></i>Change Password</a>
-									</p>
-									<p th:case="USER">
-										<a href="/user/changePassword" style="color: black;"><i
-											class="fa fa-gear fa-fw"></i>Change Password</a>
-									</p>
-								</div></li>
+							<li><a href="/user/changePassword" style="color: black;"><i
+									class="fa fa-gear fa-fw"></i>Change Password</a></li>
 							<li class="divider"></li>
-							<li><a href="logout" style="color: black;"><i
+							<li><a href="/logout" style="color: black;"><i
 									class="fa fa-sign-out fa-fw"></i>Logout</a></li>
 						</ul></li>
 				</ul>
@@ -104,7 +92,7 @@
 				<div class="profile-sidebar">
 					<!-- SIDEBAR USERPIC -->
 					<div class="profile-userpic">
-						<img src="images/bicycles-46a.jpg" class="img-responsive" alt="" />
+						<img src="/images/bicycles-46a.jpg" class="img-responsive" alt="" />
 					</div>
 					<!-- END SIDEBAR USERPIC -->
 					<!-- SIDEBAR USER TITLE -->
@@ -125,21 +113,8 @@
 							<li class="active"><a href="#"> <i
 									class="fa fa-user fa-fw"></i> Edit Account
 							</a></li>
-							<li><div th:switch="${#authentication.principal.userRole}"
-									style="padding-left: 15px;">
-									<p th:case="ADMIN">
-										<a href="/admin/changePassword"><i
-											class="fa fa-gear fa-fw"></i>Change Password</a>
-									</p>
-									<p th:case="MANAGER">
-										<a href="/admin/changePassword"><i
-											class="fa fa-gear fa-fw"></i>Change Password</a>
-									</p>
-									<p th:case="USER">
-										<a href="/user/changePassword"><i class="fa fa-gear fa-fw"></i>Change
-											Password</a>
-									</p>
-								</div></li>
+							<li><a href="/user/changePassword"><i
+									class="fa fa-gear fa-fw"></i>Change Password</a></li>
 							<li><a href="#"> <i class="glyphicon glyphicon-flag"></i>
 									Help
 							</a></li>
@@ -155,7 +130,8 @@
 						<div class="col-md-8">
 							<div class="row">
 								<div class="col-md-12 form-group">
-									<form action="#" th:action="@{/updateUserDetails}"
+									<form action="#"
+										th:action="@{/user/updateUserDetails/} + ${user.userId}"
 										th:object="${userDetailData}" method="post">
 										<div class="row">
 											<div class="col-md-6">

@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.model.PasswordResetToken;
 import com.mindfire.bicyclesharing.model.ProofDetail;
-import com.mindfire.bicyclesharing.model.RateGroup;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.VerificationToken;
 import com.mindfire.bicyclesharing.model.Wallet;
@@ -82,13 +81,12 @@ public class UserService {
 	 * @param rateGroup
 	 * @return User object
 	 */
-	public WalletTransaction saveUserDetails(User user, ProofDetail proofDetail, RateGroup rateGroup, Wallet wallet,
+	public WalletTransaction saveUserDetails(User user, ProofDetail proofDetail, Wallet wallet,
 			WalletTransaction transaction) {
 		proofDetailRepository.save(proofDetail);
-		rateGroupRepository.save(rateGroup);
 		user.setProofDetail(proofDetail);
 		user.setRole(roleRepository.findByUserRole("USER"));
-		user.setRateGroup(rateGroup);
+		user.setRateGroup(rateGroupRepository.findByGroupType("USER"));
 		userRepository.save(user);
 
 		proofDetailRepository.save(proofDetail);

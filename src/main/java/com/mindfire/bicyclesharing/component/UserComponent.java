@@ -24,7 +24,6 @@ import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
 import com.mindfire.bicyclesharing.dto.RegistrationPaymentDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
 import com.mindfire.bicyclesharing.model.ProofDetail;
-import com.mindfire.bicyclesharing.model.RateGroup;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
@@ -66,9 +65,6 @@ public class UserComponent {
 		proofDetail.setProofNo(userDTO.getProofNo());
 		proofDetail.setDocument(userDTO.getDocument());
 
-		RateGroup rateGroup = new RateGroup();
-		rateGroup.setGroupType("USER");
-
 		Wallet wallet = new Wallet();
 		wallet.setBalance(regPaymentDTO.getAmount());
 
@@ -77,7 +73,7 @@ public class UserComponent {
 		transaction.setType("REGISTRATION");
 		transaction.setAmount(regPaymentDTO.getAmount());
 
-		return userService.saveUserDetails(newUser, proofDetail, rateGroup, wallet, transaction);
+		return userService.saveUserDetails(newUser, proofDetail, wallet, transaction);
 	}
 
 	/**

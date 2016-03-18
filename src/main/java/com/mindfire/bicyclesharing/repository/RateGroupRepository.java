@@ -29,4 +29,5 @@ import com.mindfire.bicyclesharing.model.RateGroup;
  */
 public interface RateGroupRepository extends JpaRepository<RateGroup, Long> {
 
+	public RateGroup findByGroupType(String rateGroup);
 }

@@ -53,7 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	 */
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.exceptionHandling().accessDeniedPage("/403").and().authorizeRequests().antMatchers("/users/**")
+		httpSecurity.exceptionHandling().accessDeniedPage("/403").and().authorizeRequests().antMatchers("/user/**")
 				.hasAnyAuthority("ADMIN", "USER").and().authorizeRequests().antMatchers("/admin/**")
 				.hasAuthority("ADMIN").anyRequest().permitAll().and().formLogin().loginPage("/login")
 				.successHandler(successHandler).failureUrl("/login?error").usernameParameter("email").permitAll().and()

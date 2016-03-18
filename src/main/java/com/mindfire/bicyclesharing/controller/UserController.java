@@ -293,7 +293,8 @@ public class UserController {
 	 * @return changePassword view.
 	 */
 	@PreAuthorize("isAuthenticated()")
-	@RequestMapping(value = { "/user/changePassword", "/admin/changePassword"}, method = RequestMethod.GET)
+	@RequestMapping(value = { "/user/changePassword", "/admin/changePassword",
+			"/manager/changePassword" }, method = RequestMethod.GET)
 	public String changePassword() {
 		return Constant.CHANGE_PASSWORD;
 	}
@@ -329,9 +330,9 @@ public class UserController {
 	 * @return userProfile view
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
-	@RequestMapping("/users/userProfile/{id}")
+	@RequestMapping(value = { "/user/userProfile/{id}"})
 	public ModelAndView userProfile(Authentication authentication, Model model, @PathVariable Long id) {
-		
+
 		User userDetails = userService.userDetails(id);
 		model.addAttribute("user", userDetails);
 
@@ -345,11 +346,11 @@ public class UserController {
 	 * @param model
 	 * @return updateUserDetails view
 	 */
-	@RequestMapping(value = "updateUserDetails", method = RequestMethod.GET)
-	public ModelAndView updateUserDetails(Authentication authentication, Model model) {
-		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-		User userDetails = userService.userDetails(currentUser.getUsername());
-		model.addAttribute("user", userDetails);
+	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
+	@RequestMapping(value = { "/user/updateUserDetails/{id}"}, method = RequestMethod.GET)
+	public ModelAndView updateUserDetails(Model model, @PathVariable("id") Long id) {
+		User user = userService.userDetails(id);
+		model.addAttribute("user", user);
 
 		return new ModelAndView("updateUserDetails");
 	}
@@ -363,12 +364,12 @@ public class UserController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "updateUserDetails", method = RequestMethod.POST)
+	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
+	@RequestMapping(value = { "user/updateUserDetails/{id}"}, method = RequestMethod.POST)
 	public ModelAndView afterUpdateUserDetails(@ModelAttribute("userDetailData") UserDTO userDTO,
-			Authentication authentication, Model model) {
-		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+			@PathVariable("id") Long id, Model model) {
 		int success = userComponent.mapUpdateUserDetail(userDTO);
-		User userDetails = userService.userDetails(currentUser.getUsername());
+		User userDetails = userService.userDetails(id);
 		model.addAttribute("user", userDetails);
 
 		if (success == 0) {

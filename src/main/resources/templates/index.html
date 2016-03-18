@@ -99,12 +99,13 @@
 						<ul class="dropdown-menu">
 
 							<li><a
-								th:href="@{/users/userProfile/} + ${#authentication.principal.userId}"
+								th:href="@{/user/userProfile/} + ${#authentication.principal.userId}"
 								style="color: black;"><i class="fa fa-user fa-fw"></i>View
 									Profile<br /> [<small sec:authentication="name">[email]</small>]
 							</a></li>
 							<li class="divider"></li>
-							<li><a href="user/changePassword" style="color: black;"><i
+							<li><a style="color: black"
+								th:href="@{/user/changePassword}"><i
 									class="fa fa-gear fa-fw"></i>Change Password</a></li>
 							<li class="divider"></li>
 							<li><a href="logout" style="color: black;"><i
