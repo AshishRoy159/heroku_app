@@ -72,9 +72,10 @@
 							class="fa fa-user fa-fw"></i><span>ACCOUNT</span><strong
 							class="caret"></strong></a>
 						<ul class="dropdown-menu">
-							<li><a href="userProfile" style="color: black;"><i
-									class="fa fa-user fa-fw"></i>View Profile<br /> [<small
-									sec:authentication="name">[email]</small>]</a></li>
+							<li><a
+								th:href="@{/user/userProfile/} + ${#authentication.principal.userId}"
+								style="color: black;"><i class="fa fa-user fa-fw"></i>View
+									Profile<br /> [<small sec:authentication="name">[email]</small>]</a></li>
 							<li class="divider"></li>
 							<li><a href="/user/changePassword" style="color: black;"><i
 									class="fa fa-gear fa-fw"></i>Change Password</a></li>
@@ -100,14 +101,13 @@
 						<div class="profile-usertitle-name">
 							<span th:text="*{user.firstName}"></span>
 						</div>
-						<div class="profile-usertitle-job"
-							sec:authentication="principal.authorities">[User_Role]</div>
+						<div class="profile-usertitle-job" th:text="${user.role.userRole}">[User_Role]</div>
 					</div>
 					<!-- END SIDEBAR USER TITLE -->
 					<!-- SIDEBAR MENU -->
 					<div class="profile-usermenu">
 						<ul class="nav">
-							<li><a href="userProfile"> <i
+							<li><a href="/user/userProfile"> <i
 									class="glyphicon glyphicon-home"></i> Overview
 							</a></li>
 							<li class="active"><a href="#"> <i
