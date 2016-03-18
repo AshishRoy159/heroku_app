@@ -56,7 +56,7 @@ public class PickUpPointService {
 	public List<PickUpPoint> getAllPickupPoints() {
 		return pickUpPointRepository.findAllByOrderByPickUpPointIdAsc();
 	}
-	
+
 	/**
 	 * This method is used to find pickup point by its id
 	 * 
@@ -66,5 +66,14 @@ public class PickUpPointService {
 		return pickUpPointRepository.findByPickUpPointId(pickUpPointId);
 	}
 
-
+	/**
+	 * This method is used to update pickup point details.
+	 * 
+	 * @param pickUpPoint
+	 * @return Integer either 0 or 1
+	 */
+	public int updatePickUpPointDetails(PickUpPoint pickUpPoint) {
+		return pickUpPointRepository.updatePickUpPoint(pickUpPoint.getLocation(), pickUpPoint.getMaxCapacity(),
+				pickUpPoint.getIsActive(), pickUpPoint.getPickUpPointId());
+	}
 }

@@ -53,7 +53,7 @@
 									<tbody>
 										<tr th:each="pickUpPoint : ${pickUpPointList}">
 											<td th:text="${pickUpPoint.pickUpPointId}"></td>
-											<td><a th:href="@{/admin/updatePickupPointDetails}" th:text="${pickUpPoint.location}"></a></td>
+											<td><a th:href="@{/admin/updatePickupPointDetails/} + ${pickUpPoint.pickUpPointId}" th:text="${pickUpPoint.location}"></a></td>
 											<td class="text-center" th:text="${pickUpPoint.maxCapacity}"></td>
 											<td class="text-center" th:text="${pickUpPoint.currentAvailability}"></td>
 											<td th:text="${pickUpPoint.addedOn}"></td>
@@ -73,6 +73,7 @@
 
 		</div>
 	</div>
+	<div th:include="adminNav :: page-footer"></div>
 	<!-- JS Scripts-->
 	<!-- jQuery Js -->
 	<script th:src="@{/js/jquery-1.10.2.js}" type="text/javascript"></script>

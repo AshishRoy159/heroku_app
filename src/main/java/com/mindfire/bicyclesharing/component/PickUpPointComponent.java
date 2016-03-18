@@ -53,4 +53,22 @@ public class PickUpPointComponent {
 
 		return pickUpPointService.savePickUpPoint(pickUpPoint);
 	}
+	
+	/**
+	 * This method is used for receiving the data from PickUpPointDto object and
+	 * set the data to the corresponding entity class
+	 * 
+	 * @param pickUpPointDto
+	 * @return Integer 0 or 1
+	 */
+	public int mapUpdatePickUpPointDetails(PickUpPointDTO pickUpPointDTO) {
+		PickUpPoint pickUpPoint = new PickUpPoint();
+		
+		pickUpPoint.setLocation(pickUpPointDTO.getLocation());
+		pickUpPoint.setMaxCapacity(pickUpPointDTO.getMaxCapacity());
+		pickUpPoint.setIsActive(pickUpPointDTO.getIsActive());
+		pickUpPoint.setPickUpPointId(pickUpPointDTO.getPickUpPointId());
+
+		return pickUpPointService.updatePickUpPointDetails(pickUpPoint);
+	}
 }

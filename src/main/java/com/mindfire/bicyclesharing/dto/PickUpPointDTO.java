@@ -31,10 +31,44 @@ public class PickUpPointDTO {
 
 	@NotNull
 	private String location;
-	
+
 	@NotNull
 	@NumberFormat
 	private int maxCapacity;
+
+	private Boolean isActive;
+
+	private int pickUpPointId;
+
+	/**
+	 * @return the isActive
+	 */
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	/**
+	 * @param isActive
+	 *            the isActive to set
+	 */
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	/**
+	 * @return the pickUpPointId
+	 */
+	public int getPickUpPointId() {
+		return pickUpPointId;
+	}
+
+	/**
+	 * @param pickUpPointId
+	 *            the pickUpPointId to set
+	 */
+	public void setPickUpPointId(int pickUpPointId) {
+		this.pickUpPointId = pickUpPointId;
+	}
 
 	/**
 	 * @return the location
@@ -59,7 +93,8 @@ public class PickUpPointDTO {
 	}
 
 	/**
-	 * @param maxCapacity the maxCapacity to set
+	 * @param maxCapacity
+	 *            the maxCapacity to set
 	 */
 	public void setMaxCapacity(int maxCapacity) {
 		this.maxCapacity = maxCapacity;

@@ -19,7 +19,11 @@ package com.mindfire.bicyclesharing.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 
@@ -35,6 +39,12 @@ import com.mindfire.bicyclesharing.model.PickUpPoint;
 public interface PickUpPointRepository extends JpaRepository<PickUpPoint, Integer> {
 	
 	public List<PickUpPoint> findAllByOrderByPickUpPointIdAsc();
+	
 	public PickUpPoint findByPickUpPointId(Integer pickUpPointId);
 
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query("update PickUpPoint p set p.location =:location, p.maxCapacity =:maxCapacity, p.isActive=:isActive where p.pickUpPointId =:pickUpPointId")
+	public int updatePickUpPoint(@Param("location") String location, @Param("maxCapacity") int maxCapacity,
+			@Param("isActive") Boolean isActive, @Param("pickUpPointId") int pickUpPointId);
 }
