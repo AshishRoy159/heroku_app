@@ -103,7 +103,7 @@
 							<span th:text="*{user.firstName}"></span>
 						</div>
 						<div class="profile-usertitle-job"
-							sec:authentication="principal.authorities">[User_Role]</div>
+							th:text="*{user.role.userRole}">[User_Role]</div>
 					</div>
 					<!-- END SIDEBAR USER TITLE -->
 					<!-- SIDEBAR MENU -->

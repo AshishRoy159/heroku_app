@@ -18,6 +18,7 @@ package com.mindfire.bicyclesharing.controller;
 
 import java.util.Optional;
 
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -60,6 +61,7 @@ public class HomeController {
 	 * 
 	 * @return the signIn view.
 	 */
+	@PostAuthorize("isAnonymous()")
 	@RequestMapping(value = { "login" }, method = RequestMethod.GET)
 	public ModelAndView getUserSignInPage(@RequestParam Optional<String> error) {
 		return new ModelAndView("signIn", "error", error);

@@ -34,7 +34,7 @@ import com.mindfire.bicyclesharing.model.PickUpPoint;
 @Repository
 public interface PickUpPointRepository extends JpaRepository<PickUpPoint, Integer> {
 	
-	public List<PickUpPoint> findAll();
+	public List<PickUpPoint> findAllByOrderByPickUpPointIdAsc();
 	public PickUpPoint findByPickUpPointId(Integer pickUpPointId);
 
 }

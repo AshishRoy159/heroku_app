@@ -17,8 +17,15 @@
 package com.mindfire.bicyclesharing.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
-import java.sql.Timestamp;
+import java.sql.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the pick_up_points database table.
@@ -39,7 +46,7 @@ public class PickUpPoint implements Serializable {
 	private Integer pickUpPointId;
 
 	@Column(name = "added_on", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-	private Timestamp addedOn;
+	private Date addedOn;
 
 	@Column(name = "current_availability")
 	private Integer currentAvailability;
@@ -76,7 +83,7 @@ public class PickUpPoint implements Serializable {
 	/**
 	 * @return the addedOn
 	 */
-	public Timestamp getAddedOn() {
+	public Date getAddedOn() {
 		return addedOn;
 	}
 
@@ -84,7 +91,7 @@ public class PickUpPoint implements Serializable {
 	 * @param addedOn
 	 *            the addedOn to set
 	 */
-	public void setAddedOn(Timestamp addedOn) {
+	public void setAddedOn(Date addedOn) {
 		this.addedOn = addedOn;
 	}
 

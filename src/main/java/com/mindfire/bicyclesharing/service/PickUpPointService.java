@@ -54,7 +54,7 @@ public class PickUpPointService {
 	 * @return PickUpPoint list
 	 */
 	public List<PickUpPoint> getAllPickupPoints() {
-		return pickUpPointRepository.findAll();
+		return pickUpPointRepository.findAllByOrderByPickUpPointIdAsc();
 	}
 	
 	/**
