@@ -17,6 +17,7 @@
 package com.mindfire.bicyclesharing.repository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -43,6 +44,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	public User findByEmail(String email);
 	
+	public List<User> findAllByOrderByUserId();
 
 	@Transactional
 	@Modifying(clearAutomatically = true)

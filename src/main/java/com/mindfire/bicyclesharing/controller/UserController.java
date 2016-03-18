@@ -293,8 +293,7 @@ public class UserController {
 	 * @return changePassword view.
 	 */
 	@PreAuthorize("isAuthenticated()")
-	@RequestMapping(value = { "/user/changePassword", "/admin/changePassword",
-			"/manager/changePassword" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/user/changePassword"}, method = RequestMethod.GET)
 	public String changePassword() {
 		return Constant.CHANGE_PASSWORD;
 	}
@@ -390,4 +389,14 @@ public class UserController {
 		return new ModelAndView("payment");
 	}
 
+	/**
+	 * This method maps the request for fetching all users detail.
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("admin/userList")
+	public ModelAndView userList() {
+		return new ModelAndView("searchUsers", "usersList", userService.getAllUsers());
+	}
 }

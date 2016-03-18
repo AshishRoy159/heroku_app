@@ -17,6 +17,7 @@
 package com.mindfire.bicyclesharing.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -222,5 +223,14 @@ public class UserService {
 	public void createResetPasswordTokenForUser(final User user, final String token) {
 		final PasswordResetToken myToken = new PasswordResetToken(token, user);
 		passwordResetTokenRepository.save(myToken);
+	}
+	
+	/**
+	 * This method is used for getting all users detail.
+	 * 
+	 * @return List<User> 
+	 */
+	public List<User> getAllUsers(){
+		return userRepository.findAllByOrderByUserId();
 	}
 }

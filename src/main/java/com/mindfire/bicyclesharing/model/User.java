@@ -79,7 +79,7 @@ public class User implements Serializable {
 	private RateGroup rateGroup;
 
 	@Column(name = "regisration_time", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-	private Timestamp regisrationTime;
+	private Timestamp registrationTime;
 
 	@Column(name = "user_address")
 	private String userAddress;
@@ -199,12 +199,12 @@ public class User implements Serializable {
 		this.rateGroup = rateGroup;
 	}
 
-	public Timestamp getRegisrationTime() {
-		return this.regisrationTime;
+	public Timestamp getRegistrationTime() {
+		return this.registrationTime;
 	}
 
-	public void setRegisrationTime(Timestamp regisrationTime) {
-		this.regisrationTime = regisrationTime;
+	public void setRegistrationTime(Timestamp registrationTime) {
+		this.registrationTime = registrationTime;
 	}
 
 	public String getUserAddress() {

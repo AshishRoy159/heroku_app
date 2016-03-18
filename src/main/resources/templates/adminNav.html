@@ -185,7 +185,7 @@
 						<li><a
 							th:href="@{/user/userProfile/} + ${#authentication.principal.userId}"><i
 								class="fa fa-user fa-fw"></i> User Profile</a></li>
-						<li><a th:href="@{/admin/changePassword}"><i
+						<li><a th:href="@{/user/changePassword}"><i
 								class="fa fa-gear fa-fw"></i> Settings</a></li>
 						<li class="divider"></li>
 						<li><a th:href="@{/logout}"><i
@@ -206,7 +206,7 @@
 					<li><a th:href="@{#}"><i class="fa fa-bar-chart-o "></i>Charts</a></li>
 					<li><a th:href="@{/admin/requests}"><i
 							class="fa fa-qrcode "></i>Requests</a></li>
-					<li><a th:href="@{/admin/userDetails}"><i
+					<li><a th:href="@{/admin/userList}"><i
 							class="fa fa-table "></i>Users</a></li>
 					<li><a th:href="@{#}"><i class="fa fa-edit "></i>Forms</a></li>
 					<li><a th:href="@{#}"><i class="fa fa-sitemap "></i>Manage
