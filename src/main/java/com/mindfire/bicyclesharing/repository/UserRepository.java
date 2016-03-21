@@ -27,6 +27,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mindfire.bicyclesharing.model.Role;
 import com.mindfire.bicyclesharing.model.User;
 
 /**
@@ -57,4 +58,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	public int updateUser(@Param("firstName") String firstName, @Param("lastName") String lastName,
 			@Param("dateOfBirth") Date dateOfBirth, @Param("mobileNo") Long mobileNo,
 			@Param("userAddress") String userAddress, @Param("userEmail") String userEmail);
+	
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query("update User u set u.role =:userRoleId where u.email =:userEmail")
+	public int updateUserRole(@Param("userRoleId") Role userRoleId, @Param("userEmail") String userEmail);
 }

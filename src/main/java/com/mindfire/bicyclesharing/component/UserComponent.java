@@ -21,12 +21,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
+import com.mindfire.bicyclesharing.dto.ManageRoleDTO;
 import com.mindfire.bicyclesharing.dto.RegistrationPaymentDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
+import com.mindfire.bicyclesharing.model.PickUpPointManager;
 import com.mindfire.bicyclesharing.model.ProofDetail;
+import com.mindfire.bicyclesharing.model.Role;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
+import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
+import com.mindfire.bicyclesharing.repository.RoleRepository;
+import com.mindfire.bicyclesharing.repository.UserRepository;
+import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
 import com.mindfire.bicyclesharing.service.UserService;
 
 /**
@@ -43,6 +50,17 @@ public class UserComponent {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private RoleRepository roleRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private PickUpPointRepository pickUpPointRepository;
+	
+	@Autowired
+	private PickUpPointManagerService pickPointManagerService;
 	/**
 	 * This method is used for receiving the data from UserDTO object and set
 	 * the data to the corresponding entity classes
@@ -110,5 +128,18 @@ public class UserComponent {
 	 */
 	public User retrieveUserPassword(ForgotPasswordDTO forgotPasswordDTO) {
 		return userService.userDetails(forgotPasswordDTO.getEmail());
+	}
+	
+	public int mapUpdateRole(ManageRoleDTO manageRoleDTO){
+		Role userRole = roleRepository.findByRoleId(manageRoleDTO.getUserRoleId());
+		return userService.updateUserRole(manageRoleDTO.getUserEmail(),userRole);
+	}
+	
+	public PickUpPointManager mapPickUpPointManagerDetails(ManageRoleDTO manageRoleDTO){
+		PickUpPointManager pickUpPointManager = new PickUpPointManager();
+		pickUpPointManager.setPickUpPoint(pickUpPointRepository.findByPickUpPointId(manageRoleDTO.getPickUpPointId()));
+		pickUpPointManager.setRole(userRepository.findByEmail(manageRoleDTO.getUserEmail()).getRole());
+		pickUpPointManager.setUser(userRepository.findByEmail(manageRoleDTO.getUserEmail()));
+		return pickPointManagerService.setPickUpPointToManager(pickUpPointManager);
 	}
 }

@@ -41,16 +41,11 @@ public class Role implements Serializable {
 	@Column(name = "user_role")
 	private String userRole;
 
-	@ManyToOne
-	@JoinColumn(name = "pick_up_point_id")
-	private PickUpPoint pickUpPoint;
-
 	// bi-directional many-to-one association to User
 	@OneToMany(mappedBy = "role")
 	private List<User> users;
 
 	public Role() {
-		this.pickUpPoint = null;
 	}
 
 	/**
@@ -111,20 +106,4 @@ public class Role implements Serializable {
 
 		return user;
 	}
-
-	/**
-	 * @return the pickUpPoint
-	 */
-	public PickUpPoint getPickUpPoint() {
-		return pickUpPoint;
-	}
-
-	/**
-	 * @param pickUpPoint
-	 *            the pickUpPoint to set
-	 */
-	public void setPickUpPoint(PickUpPoint pickUpPoint) {
-		this.pickUpPoint = pickUpPoint;
-	}
-
 }

@@ -32,7 +32,6 @@ import com.mindfire.bicyclesharing.dto.OutgoingTransfersDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
 import com.mindfire.bicyclesharing.dto.WalletBalanceDTO;
 import com.mindfire.bicyclesharing.model.User;
-import com.mindfire.bicyclesharing.service.BiCycleService;
 import com.mindfire.bicyclesharing.service.UserService;
 
 /**
@@ -47,9 +46,6 @@ public class ManagerController {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private BiCycleService biCycleService;
 
 	/**
 	 * This method is used to map the add new user request by the manager.
@@ -85,10 +81,10 @@ public class ManagerController {
 	 * @return booking view
 	 */
 	@RequestMapping(value = { "/manager/booking/{id}" }, method = RequestMethod.GET)
-	public ModelAndView getBookingView(Model model,@PathVariable("id") Long id) {
+	public ModelAndView getBookingView(Model model, @PathVariable("id") Long id) {
 		User userDetails = userService.userDetails(id);
 		model.addAttribute("user", userDetails);
-		return new ModelAndView("booking","biCycles",biCycleService.findAllBiCycleByPickUpPointId(userDetails.getRole().getPickUpPoint()));
+		return new ModelAndView("booking");
 	}
 
 	/**

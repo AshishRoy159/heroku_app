@@ -71,4 +71,6 @@ public class PickUpPointComponent {
 
 		return pickUpPointService.updatePickUpPointDetails(pickUpPoint);
 	}
+	
+	
 }

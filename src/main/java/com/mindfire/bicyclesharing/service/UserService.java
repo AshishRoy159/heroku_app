@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.model.PasswordResetToken;
 import com.mindfire.bicyclesharing.model.ProofDetail;
+import com.mindfire.bicyclesharing.model.Role;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.VerificationToken;
 import com.mindfire.bicyclesharing.model.Wallet;
@@ -232,5 +233,9 @@ public class UserService {
 	 */
 	public List<User> getAllUsers(){
 		return userRepository.findAllByOrderByUserId();
+	}
+	
+	public int updateUserRole(String userEmail,Role userRoleId){
+		return userRepository.updateUserRole(userRoleId, userEmail);
 	}
 }
