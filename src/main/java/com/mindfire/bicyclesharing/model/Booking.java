@@ -44,8 +44,9 @@ public class Booking implements Serializable {
 	@Column(name = "actual_out")
 	private Timestamp actualOut;
 
-	@Column(name = "bi_cycle_id")
-	private String biCycleId;
+	@ManyToOne
+	@JoinColumn(name = "bi_cycle_id")
+	private BiCycle biCycleId;
 
 	@Column(name = "booking_time")
 	private Timestamp bookingTime;
@@ -126,7 +127,7 @@ public class Booking implements Serializable {
 	/**
 	 * @return the biCycleId
 	 */
-	public String getBiCycleId() {
+	public BiCycle getBiCycleId() {
 		return biCycleId;
 	}
 
@@ -134,7 +135,7 @@ public class Booking implements Serializable {
 	 * @param biCycleId
 	 *            the biCycleId to set
 	 */
-	public void setBiCycleId(String biCycleId) {
+	public void setBiCycleId(BiCycle biCycleId) {
 		this.biCycleId = biCycleId;
 	}
 

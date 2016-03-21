@@ -16,10 +16,13 @@
 
 package com.mindfire.bicyclesharing.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.model.BiCycle;
+import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.repository.BiCycleRepository;
 
 @Service
@@ -28,8 +31,23 @@ public class BiCycleService {
 	@Autowired
 	private BiCycleRepository biCycleRepository;
 	
+	/**
+	 * This method is used for saving the bicycle details.
+	 * 
+	 * @param biCycle
+	 * @return
+	 */
 	public BiCycle saveBiCycle(BiCycle biCycle) {
 		return biCycleRepository.save(biCycle);
 	}
 	
+	/**
+	 * This method is used for finding all bicycle at any particular pickup point.
+	 * 
+	 * @param pickUpPointId
+	 * @return List<BiCycle> list of bicycles
+	 */
+	public List<BiCycle> findAllBiCycleByPickUpPointId(PickUpPoint pickUpPointId){
+		return biCycleRepository.findAllByCurrentLocation(pickUpPointId);
+	}
 }

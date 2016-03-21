@@ -37,14 +37,37 @@ import com.mindfire.bicyclesharing.model.PickUpPoint;
  */
 @Repository
 public interface PickUpPointRepository extends JpaRepository<PickUpPoint, Integer> {
-	
+
 	public List<PickUpPoint> findAllByOrderByPickUpPointIdAsc();
-	
+
 	public PickUpPoint findByPickUpPointId(Integer pickUpPointId);
 
+	/**
+	 * This method is used for updating particular pickup point details.
+	 * 
+	 * @param location
+	 * @param maxCapacity
+	 * @param isActive
+	 * @param pickUpPointId
+	 * @return Integer 0 or 1
+	 */
 	@Transactional
 	@Modifying(clearAutomatically = true)
 	@Query("update PickUpPoint p set p.location =:location, p.maxCapacity =:maxCapacity, p.isActive=:isActive where p.pickUpPointId =:pickUpPointId")
 	public int updatePickUpPoint(@Param("location") String location, @Param("maxCapacity") int maxCapacity,
 			@Param("isActive") Boolean isActive, @Param("pickUpPointId") int pickUpPointId);
+
+	/**
+	 * This method is used for updating the current availability of bicycle at
+	 * particular pickup point..
+	 * 
+	 * @param currentAvailability
+	 * @param pickUpPointId
+	 * @return Integer 0 or 1
+	 */
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query("update PickUpPoint p set p.currentAvailability =:currentAvailability where p.pickUpPointId =:pickUpPointId")
+	public int updateCurrentAvailability(@Param("currentAvailability") int currentAvailability,
+			@Param("pickUpPointId") int pickUpPointId);
 }

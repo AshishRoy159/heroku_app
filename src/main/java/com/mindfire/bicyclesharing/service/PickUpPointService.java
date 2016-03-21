@@ -76,4 +76,13 @@ public class PickUpPointService {
 		return pickUpPointRepository.updatePickUpPoint(pickUpPoint.getLocation(), pickUpPoint.getMaxCapacity(),
 				pickUpPoint.getIsActive(), pickUpPoint.getPickUpPointId());
 	}
+	
+	/**
+	 * 
+	 * @param pickUpPointId
+	 * @return
+	 */
+	public int updateBicycleCurrentAvailability(int currentAvailability, int pickUpPointId){
+		return pickUpPointRepository.updateCurrentAvailability(currentAvailability, pickUpPointId);
+	}
 }

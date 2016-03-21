@@ -21,12 +21,13 @@ import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.BiCycleDTO;
 import com.mindfire.bicyclesharing.model.BiCycle;
+import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.service.BiCycleService;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
 
 /**
- * BiCycleComponent class is used to get the data from the BiCycleDTO
- * class and set the data to the corresponding Entity class
+ * BiCycleComponent class is used to get the data from the BiCycleDTO class and
+ * set the data to the corresponding Entity class
  * 
  * @author mindfire
  * @version 1.0
@@ -34,25 +35,30 @@ import com.mindfire.bicyclesharing.service.PickUpPointService;
  */
 @Component
 public class BiCycleComponent {
-	
+
 	@Autowired
 	private BiCycleService biCycleService;
-	
+
 	@Autowired
 	private PickUpPointService pickUpPointService;
-	
+
 	/**
-	 * This method is used for receiving the data from BiCycleDTO object and
-	 * set the data to the corresponding entity class
+	 * This method is used for receiving the data from BiCycleDTO object and set
+	 * the data to the corresponding entity class
+	 * 
 	 * @param biCycleDTO
-	 * @return BiCycle controller
+	 * @return BiCycle object
 	 */
 	public BiCycle mapBiCycleData(BiCycleDTO biCycleDTO) {
 		BiCycle biCycle = new BiCycle();
+		PickUpPoint pickUpPoint = pickUpPointService.getPickupPointById(biCycleDTO.getPickUpPoint());
 		biCycle.setChasisNo(biCycleDTO.getChasisNo());
-		biCycle.setCurrentLocation(pickUpPointService.getPickupPointById(biCycleDTO.getPickUpPoint()));
+		biCycle.setCurrentLocation(pickUpPoint);
+		pickUpPointService.updateBicycleCurrentAvailability(pickUpPoint.getCurrentAvailability() + 1,
+				pickUpPoint.getPickUpPointId());
 		
 		return biCycleService.saveBiCycle(biCycle);
+
 	}
 
 }

@@ -16,10 +16,13 @@
 
 package com.mindfire.bicyclesharing.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.mindfire.bicyclesharing.model.BiCycle;
+import com.mindfire.bicyclesharing.model.PickUpPoint;
 
 /**
  * Repository for {@link BiCycle} Entity used for CRUD operation on
@@ -32,4 +35,5 @@ import com.mindfire.bicyclesharing.model.BiCycle;
 @Repository
 public interface BiCycleRepository extends JpaRepository<BiCycle, Integer> {
 
+	public List<BiCycle> findAllByCurrentLocation(PickUpPoint pickUpPointId);
 }

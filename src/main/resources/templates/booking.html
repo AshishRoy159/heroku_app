@@ -32,7 +32,7 @@
 					<div class="col-md-6">
 						<div class="panel panel-info">
 							<div class="panel-heading">
-								<h3>Issue Bicycle</h3>
+								<h3>Issue Bicycle From <strong th:text="${user.role.pickUpPoint.location}"></strong></h3>
 							</div>
 							<div class="panel-body">
 								<div class="col-md-8 col-sm-8 col-xs-8">
@@ -40,18 +40,22 @@
 										th:object="${issueCycle}" method="POST">
 										<div>
 											<label class="control-label"> UserId</label> <input
-												type="text" name="userId" th:field="*{userId}"
-												class="form-control" required="required" />
+												type="text" name="userId" class="form-control"
+												required="required" />
 										</div>
 										<div>
-											<label class="control-label">Bicycle Id</label> <input
-												type="text" name="bicycleId" th:field="*{bicycleId}"
-												class="form-control" required="required" />
+											<label class="control-label">Select BiCycle</label> <select
+												class="input-xlarge form-control" name="biCycle"
+												required="required">
+												<option value="">Select BiCycle</option>
+												<option th:each="biCycle : ${biCycles}"
+													th:value="${biCycle.biCycleId}"
+													th:text="${biCycle.chasisNo}"></option>
+											</select>
 										</div>
 										<div>
 											<label class="control-label">Expected Return Time</label> <input
-												type="text" name="expectedInTime"
-												th:field="*{expectedInTime}" class="form-control"
+												type="text" name="expectedInTime" class="form-control"
 												required="required" />
 										</div>
 
@@ -76,19 +80,18 @@
 									th:object="${recieveCycle}" method="POST">
 									<div>
 										<label class="control-label">Booking Id</label> <input
-											type="text" name="bookingId" th:field="*{bookingId}"
-											class="form-control" required="required" />
+											type="text" name="bookingId" class="form-control"
+											required="required" />
 									</div>
 									<div>
 										<label class="control-label">Payment (if applicable)</label> <input
-											type="text" name="amount" th:field="*{amount}"
-											class="form-control" required="required" />
+											type="text" name="amount" class="form-control"
+											required="required" />
 									</div>
 
 									<div>
 										<label>Bicycle Condition (Is Active?) </label> <select
-											class="form-control" required="required" name="isActive"
-											th:field="*{isActive}">
+											class="form-control" required="required" name="isActive">
 											<option value="true" th:value="${'true'}">Yes</option>
 											<option value="false" th:value="${'false'}">No</option>
 										</select>
