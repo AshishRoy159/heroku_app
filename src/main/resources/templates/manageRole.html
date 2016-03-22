@@ -52,25 +52,23 @@
 									th:object="${manageRoleData}" method="post">
 									<div class="col-md-8 col-sm-8 col-xs-8">
 										<fieldset>
-										<p>
-											<label>User Email</label> <input name="userEmail"
-												class="form-control input-lg" required="required" /> 
-										</p>
-										<p>
-												<label>Role</label><select
-												class="form-control input-lg" id="select" name="userRoleId"
-												required="required">
-												<option value="">Select Role:</option>
-												<option value="1">ADMIN</option>
-												<option value="2">MANAGER</option>
-												<option value="3">USER</option>
-											</select>
+											<p>
+												<label>User Id</label> <input name="userId" th:value="${userId}"
+													class="form-control input-lg" readonly="readonly" required="required" />
+											</p>
+											<p>
+												<label>Role</label><select class="form-control input-lg"
+													id="select" name="userRoleId" required="required">
+													<option value="">Select Role:</option>
+													<option value="1">ADMIN</option>
+													<option value="2">MANAGER</option>
+													<option value="3">USER</option>
+												</select>
 											</p>
 											<p id="warning" style="display: none;">
 												<label>Set Pickup Point:</label> <select
-													class="form-control input-lg" name="pickUpPointId"
-													required="required">
-													<option value="">Select Pickup Point</option>
+													class="form-control input-lg" name="pickUpPointId">
+													<option value="0">Select Pickup Point</option>
 													<option th:each="pickUpPoint : ${pickUpPoints}"
 														th:value="${pickUpPoint.pickUpPointId}"
 														th:text="${pickUpPoint.location}"></option>
@@ -79,9 +77,8 @@
 											<div style="height: 10px;"></div>
 										</fieldset>
 										<div>
-											<a href="/admin/setPickUpPoint"><button
-													class="btn btn-primary">Submit &raquo;</button></a> <input
-												type="reset" class="btn btn-info" />
+											<button type="submit" class="btn btn-primary">Submit &raquo;</button>
+											<input type="reset" class="btn btn-info" />
 										</div>
 									</div>
 								</form>

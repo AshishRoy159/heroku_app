@@ -30,6 +30,7 @@ import com.mindfire.bicyclesharing.model.Role;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
+import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
 import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
 import com.mindfire.bicyclesharing.repository.RoleRepository;
 import com.mindfire.bicyclesharing.repository.UserRepository;
@@ -52,15 +53,19 @@ public class UserComponent {
 
 	@Autowired
 	private RoleRepository roleRepository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private PickUpPointRepository pickUpPointRepository;
-	
+
 	@Autowired
 	private PickUpPointManagerService pickPointManagerService;
+
+	@Autowired
+	private PickUpPointManagerRepository pickUpPointManagerRepository;
+
 	/**
 	 * This method is used for receiving the data from UserDTO object and set
 	 * the data to the corresponding entity classes
@@ -129,17 +134,40 @@ public class UserComponent {
 	public User retrieveUserPassword(ForgotPasswordDTO forgotPasswordDTO) {
 		return userService.userDetails(forgotPasswordDTO.getEmail());
 	}
-	
-	public int mapUpdateRole(ManageRoleDTO manageRoleDTO){
+
+	/**
+	 * This method receives the data from the ManageRoleDTO class and deletes
+	 * any existing record from PickUpPointManager entity before changing the
+	 * user role of the corresponding user id.
+	 * 
+	 * @param manageRoleDTO
+	 * @return Integer 0 or 1
+	 */
+	public int mapUpdateRole(ManageRoleDTO manageRoleDTO) {
+		PickUpPointManager pickUpPointManager = pickUpPointManagerRepository
+				.findByUser(userRepository.findByUserId(manageRoleDTO.getUserId()));
+
+		if (pickUpPointManager != null) {
+			pickUpPointManagerRepository.deleteByUser(pickUpPointManager.getUser());
+		}
+
 		Role userRole = roleRepository.findByRoleId(manageRoleDTO.getUserRoleId());
-		return userService.updateUserRole(manageRoleDTO.getUserEmail(),userRole);
+		return userService.updateUserRole(manageRoleDTO.getUserId(), userRole);
 	}
-	
-	public PickUpPointManager mapPickUpPointManagerDetails(ManageRoleDTO manageRoleDTO){
+
+	/**
+	 * This method receives data from the ManageRoleDTO class and sets data to
+	 * the PickUpPointManager entity class
+	 * 
+	 * @param manageRoleDTO
+	 * @return PickUpPointManager object
+	 */
+	public PickUpPointManager mapPickUpPointManagerDetails(ManageRoleDTO manageRoleDTO) {
 		PickUpPointManager pickUpPointManager = new PickUpPointManager();
 		pickUpPointManager.setPickUpPoint(pickUpPointRepository.findByPickUpPointId(manageRoleDTO.getPickUpPointId()));
-		pickUpPointManager.setRole(userRepository.findByEmail(manageRoleDTO.getUserEmail()).getRole());
-		pickUpPointManager.setUser(userRepository.findByEmail(manageRoleDTO.getUserEmail()));
+		pickUpPointManager.setRole(userRepository.findByUserId(manageRoleDTO.getUserId()).getRole());
+		pickUpPointManager.setUser(userRepository.findByUserId(manageRoleDTO.getUserId()));
+
 		return pickPointManagerService.setPickUpPointToManager(pickUpPointManager);
 	}
 }

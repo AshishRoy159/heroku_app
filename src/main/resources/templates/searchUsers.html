@@ -61,7 +61,9 @@
 											<td class="text-center" th:text="${user.userAddress}"></td>
 											<td class="text-center" th:text="${user.mobileNo}"></td>
 											<td class="text-center" th:text="${user.registrationTime}"></td>
-											<td class="text-center" th:text="${user.role.userRole}"></td>
+											<td class="text-center"><a
+												th:href="@{/admin/manageRole/} + ${user.userId}"
+												th:text="${user.role.userRole}"></a></td>
 											<td class="text-center" th:if="${user.isApproved}">✔</td>
 											<td class="text-center" th:unless="${user.isApproved}">✘</td>
 											<td class="text-center" th:if="${user.enabled}">✔</td>

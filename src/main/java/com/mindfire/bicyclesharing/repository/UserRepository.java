@@ -61,6 +61,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	@Transactional
 	@Modifying(clearAutomatically = true)
-	@Query("update User u set u.role =:userRoleId where u.email =:userEmail")
-	public int updateUserRole(@Param("userRoleId") Role userRoleId, @Param("userEmail") String userEmail);
+	@Query("update User u set u.role =:userRoleId where u.userId =:userId")
+	public int updateUserRole(@Param("userRoleId") Role userRoleId, @Param("userId") Long userId);
 }

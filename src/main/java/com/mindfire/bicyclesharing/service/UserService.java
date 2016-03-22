@@ -235,7 +235,7 @@ public class UserService {
 		return userRepository.findAllByOrderByUserId();
 	}
 	
-	public int updateUserRole(String userEmail,Role userRoleId){
-		return userRepository.updateUserRole(userRoleId, userEmail);
+	public int updateUserRole(Long userId,Role userRoleId){
+		return userRepository.updateUserRole(userRoleId, userId);
 	}
 }
