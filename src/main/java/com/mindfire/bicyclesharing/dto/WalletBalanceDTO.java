@@ -26,53 +26,34 @@ package com.mindfire.bicyclesharing.dto;
  */
 public class WalletBalanceDTO {
 
-	private String walletId;
-	private String userId;
+	private Long userId;
 	private Double balance;
 
 	/**
-	 * returns the wallet Id
-	 * @return walletId
+	 * @return the userId
 	 */
-	public String getWalletId() {
-		return walletId;
-	}
-
-	/**
-	 * sets the wallet Id
-	 * @param walletId
-	 */
-	public void setWalletId(String walletId) {
-		this.walletId = walletId;
-	}
-
-	/**
-	 * returns the userId
-	 * @return userId
-	 */
-	public String getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
 	/**
-	 * sets the UserId.
 	 * @param userId
+	 *            the userId to set
 	 */
-	public void setUserId(String userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
 	/**
-	 * returns the balance.
-	 * @return balance.
+	 * @return the balance
 	 */
 	public Double getBalance() {
 		return balance;
 	}
 
 	/**
-	 * sets the balance
 	 * @param balance
+	 *            the balance to set
 	 */
 	public void setBalance(Double balance) {
 		this.balance = balance;

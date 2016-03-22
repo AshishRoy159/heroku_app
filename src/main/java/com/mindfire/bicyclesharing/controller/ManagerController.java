@@ -87,18 +87,7 @@ public class ManagerController {
 		return new ModelAndView("booking");
 	}
 
-	/**
-	 * This method is used to map the add wallet balance request. Simply render
-	 * the addWalletBalance view
-	 * 
-	 * @param walletBalance
-	 * @return addWalletBalance view
-	 */
-	@RequestMapping(value = { "/manager/addWalletBalance" }, method = RequestMethod.GET)
-	public ModelAndView getWalletView(@ModelAttribute("addWalletBalance") WalletBalanceDTO walletBalance) {
-		return new ModelAndView("addWalletBalance");
-	}
-
+	
 	/**
 	 * This method is used to map the bicycle transfer request. Simply render
 	 * the bicycleTransfer view.

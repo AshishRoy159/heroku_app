@@ -36,17 +36,17 @@
 							</div>
 							<div class="panel-body">
 								<div class="col-md-8 col-sm-8 col-xs-8">
-									<form action="wallet" th:action="@{/wallet}"
+									<form action="#" th:action="@{/manager/wallet}"
 										th:object="${addWalletBalance}" method="post">
 										<div>
 											<label class="control-label"> UserId</label> <input
-												type="text" name="userId" th:field="*{userId}"
-												class="form-control" required="required" />
+												type="text" name="userId" class="form-control"
+												required="required" />
 										</div>
 										<div>
 											<label class="control-label">Balance</label> <input
-												type="text" name="balance" th:field="*{balance}"
-												class="form-control" required="required" />
+												type="text" name="balance" class="form-control"
+												required="required" />
 
 										</div>
 										<div style="padding: 5px">
@@ -57,6 +57,10 @@
 								</div>
 							</div>
 						</div>
+					</div>
+					<div class="col-md-6" style="padding-top: 60px;">
+						<h3 class="text-danger" th:text="*{errorMessage}"></h3>
+						<h2 class="text-success" th:text="*{successMessage}"></h2>
 					</div>
 				</div>
 			</div>

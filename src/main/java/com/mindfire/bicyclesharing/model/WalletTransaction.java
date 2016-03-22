@@ -20,34 +20,33 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-
 /**
  * The persistent class for the wallet_transactions database table.
  * 
  */
 @Entity
-@Table(name="wallet_transactions")
-@NamedQuery(name="WalletTransaction.findAll", query="SELECT w FROM WalletTransaction w")
+@Table(name = "wallet_transactions")
+@NamedQuery(name = "WalletTransaction.findAll", query = "SELECT w FROM WalletTransaction w")
 public class WalletTransaction implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="transaction_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "transaction_id")
 	private Integer transactionId;
 
 	private double amount;
 
 	private String mode;
 
-	@Column(name="transcation_time")
+	@Column(name = "transcation_time", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp transcationTime;
 
 	private String type;
 
-	//bi-directional many-to-one association to Wallet
+	// bi-directional many-to-one association to Wallet
 	@ManyToOne
-	@JoinColumn(name="wallet_id")
+	@JoinColumn(name = "wallet_id")
 	private Wallet wallet;
 
 	public WalletTransaction() {
