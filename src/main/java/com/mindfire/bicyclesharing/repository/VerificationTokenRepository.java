@@ -33,7 +33,21 @@ import com.mindfire.bicyclesharing.model.VerificationToken;
 @Repository
 public interface VerificationTokenRepository extends JpaRepository<VerificationToken, Long> {
 
-	VerificationToken findByToken(String token);
+	/**
+	 * This method is used to find VerificationToken object by token String
+	 * 
+	 * @param token
+	 *            the token String
+	 * @return VerificationToken object
+	 */
+	public VerificationToken findByToken(String token);
 
-	VerificationToken findByUser(User user);
+	/**
+	 * This method is used to find VerificationToken object by User
+	 * 
+	 * @param user
+	 *            User object
+	 * @return VerificationToken object
+	 */
+	public VerificationToken findByUser(User user);
 }

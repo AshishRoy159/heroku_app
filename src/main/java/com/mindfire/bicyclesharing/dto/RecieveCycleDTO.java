@@ -35,100 +35,92 @@ public class RecieveCycleDTO {
 	private Double amount;
 
 	/**
-	 * returns the booking Id
-	 * @return bookingId
+	 * @return the bookingId
 	 */
 	public String getBookingId() {
 		return bookingId;
 	}
 
 	/**
-	 * sets the booking Id
 	 * @param bookingId
+	 *            the bookingId to set
 	 */
 	public void setBookingId(String bookingId) {
 		this.bookingId = bookingId;
 	}
 
 	/**
-	 * returns the actual in time of the bicycle
-	 * @return actualInTime
+	 * @return the actualInTime
 	 */
 	public Timestamp getActualInTime() {
 		return actualInTime;
 	}
 
 	/**
-	 * sets the actual in time of the bicycle.
 	 * @param actualInTime
+	 *            the actualInTime to set
 	 */
 	public void setActualInTime(Timestamp actualInTime) {
 		this.actualInTime = actualInTime;
 	}
 
 	/**
-	 * returns the return time of the bicycle
-	 * @return returnedAt
+	 * @return the returnedAt
 	 */
 	public String getReturnedAt() {
 		return returnedAt;
 	}
 
 	/**
-	 * sets the return time of the bicycle.
 	 * @param returnedAt
+	 *            the returnedAt to set
 	 */
 	public void setReturnedAt(String returnedAt) {
 		this.returnedAt = returnedAt;
 	}
 
 	/**
-	 * returns the boolean value of whether booking is open or not.
-	 * @return
+	 * @return the isOpen
 	 */
 	public Boolean getIsOpen() {
 		return isOpen;
 	}
 
 	/**
-	 * sets the boolean value whether the boking is open or not.
 	 * @param isOpen
+	 *            the isOpen to set
 	 */
 	public void setIsOpen(Boolean isOpen) {
 		this.isOpen = isOpen;
 	}
 
 	/**
-	 * returns boolean value whether the cycle is active or not.
-	 * @return
+	 * @return the isActive
 	 */
 	public Boolean getIsActive() {
 		return isActive;
 	}
 
 	/**
-	 * sets the condition to true or false based on the condition of the
-	 * bicycle.
 	 * @param isActive
+	 *            the isActive to set
 	 */
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
 
 	/**
-	 * returns the amount
-	 * @return amount
+	 * @return the amount
 	 */
 	public Double getAmount() {
 		return amount;
 	}
 
 	/**
-	 * sets the amount if applicable.
 	 * @param amount
+	 *            the amount to set
 	 */
 	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
-
 }

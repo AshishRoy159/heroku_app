@@ -42,6 +42,7 @@ public class BicycleSharingApplication {
 	 * 
 	 * @see SpringApplication
 	 * @param args
+	 *            Arguments for the main() method
 	 */
 	public static void main(String[] args) {
 		SpringApplication.run(BicycleSharingApplication.class, args);

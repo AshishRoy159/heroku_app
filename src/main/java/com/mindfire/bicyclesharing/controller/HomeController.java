@@ -59,6 +59,8 @@ public class HomeController {
 	/**
 	 * This method maps login request. Simply render the signIn view.
 	 * 
+	 * @param error
+	 *            to catch login errors
 	 * @return the signIn view.
 	 */
 	@PostAuthorize("isAnonymous()")
@@ -77,13 +79,13 @@ public class HomeController {
 	public String getAccessDeniedPage() {
 		return "403";
 	}
-	
+
 	/**
 	 * This method maps request for admin home page.
 	 * 
 	 * @return adminHome view
 	 */
-	@RequestMapping(value = {"admin", "admin/adminHome", "manager/adminHome"})
+	@RequestMapping(value = { "admin", "admin/adminHome", "manager/adminHome" })
 	public ModelAndView adminHome() {
 		return new ModelAndView("adminHome");
 	}

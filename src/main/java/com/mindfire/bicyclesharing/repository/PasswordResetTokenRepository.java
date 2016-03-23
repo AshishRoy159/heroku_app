@@ -33,7 +33,21 @@ import com.mindfire.bicyclesharing.model.User;
 @Repository
 public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long> {
 
-	PasswordResetToken findByToken(String token);
+	/**
+	 * This method is used to get PasswordResetToken object using a token String
+	 * 
+	 * @param token
+	 *            the token string
+	 * @return PasswordResetToken object
+	 */
+	public PasswordResetToken findByToken(String token);
 
-	PasswordResetToken findByUser(User user);
+	/**
+	 * This method is used to get PasswordResetToken object using User object
+	 * 
+	 * @param user
+	 *            User object
+	 * @return PasswordResetToken object
+	 */
+	public PasswordResetToken findByUser(User user);
 }

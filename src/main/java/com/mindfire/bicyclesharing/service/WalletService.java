@@ -46,7 +46,9 @@ public class WalletService {
 	 * This method is used to add balance to the User's wallet
 	 * 
 	 * @param user
+	 *            User object
 	 * @param balance
+	 *            amount to be added to wallet
 	 * @return Integer 0 or 1
 	 */
 	public int addBalance(User user, Double balance) {
@@ -57,6 +59,7 @@ public class WalletService {
 	 * This method is used to find wallet of a corresponding user.
 	 * 
 	 * @param user
+	 *            User object
 	 * @return Wallet object
 	 */
 	public Wallet getWallet(User user) {
@@ -68,6 +71,7 @@ public class WalletService {
 	 * database.
 	 * 
 	 * @param walletTransaction
+	 *            WalletTransaction details to be saved in the database
 	 * @return WalletTransaction object
 	 */
 	public WalletTransaction saveWalletTransactionDetail(WalletTransaction walletTransaction) {

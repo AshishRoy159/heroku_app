@@ -39,26 +39,88 @@ import com.mindfire.bicyclesharing.model.User;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+
+	/**
+	 * This method is used to find the details of one User by its email id
+	 * 
+	 * @param email
+	 *            the email id of User
+	 * @return User object
+	 */
 	Optional<User> findOneByEmail(String email);
 
+	/**
+	 * This method is used to find the details of one User by its userId
+	 * 
+	 * @param id
+	 *            the userID
+	 * @return User object
+	 */
 	public User findByUserId(Long id);
-	
+
+	/**
+	 * This method is used to find the details of one User by its email id
+	 * 
+	 * @param email
+	 *            the email id of User
+	 * @return User object
+	 */
 	public User findByEmail(String email);
-	
+
+	/**
+	 * This method is used to find the details of all users
+	 * 
+	 * @return User List
+	 */
 	public List<User> findAllByOrderByUserId();
 
+	/**
+	 * This method is used to update the password of the user
+	 * 
+	 * @param password
+	 *            of User
+	 * @param userEmail
+	 *            of User
+	 * @return Integer 0 or 1
+	 */
 	@Transactional
 	@Modifying(clearAutomatically = true)
 	@Query("update User u set u.password =:password where u.email =:userEmail")
 	public int updatePassword(@Param("password") String password, @Param("userEmail") String userEmail);
 
+	/**
+	 * This method is used to update the user details
+	 * 
+	 * @param firstName
+	 *            of User
+	 * @param lastName
+	 *            of User
+	 * @param dateOfBirth
+	 *            of User
+	 * @param mobileNo
+	 *            of User
+	 * @param userAddress
+	 *            of User
+	 * @param userEmail
+	 *            of User
+	 * @return Integer 0 or 1
+	 */
 	@Transactional
 	@Modifying(clearAutomatically = true)
 	@Query("update User u set u.firstName =:firstName, u.lastName =:lastName, u.dateOfBirth =:dateOfBirth, u.mobileNo =:mobileNo, u.userAddress =:userAddress where u.email =:userEmail")
 	public int updateUser(@Param("firstName") String firstName, @Param("lastName") String lastName,
 			@Param("dateOfBirth") Date dateOfBirth, @Param("mobileNo") Long mobileNo,
 			@Param("userAddress") String userAddress, @Param("userEmail") String userEmail);
-	
+
+	/**
+	 * This method is used to update the user role
+	 * 
+	 * @param userRoleId
+	 *            of User
+	 * @param userId
+	 *            of User
+	 * @return Integer 0 or 1
+	 */
 	@Transactional
 	@Modifying(clearAutomatically = true)
 	@Query("update User u set u.role =:userRoleId where u.userId =:userId")

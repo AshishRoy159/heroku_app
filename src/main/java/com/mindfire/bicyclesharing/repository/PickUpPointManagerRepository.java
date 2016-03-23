@@ -33,10 +33,25 @@ import com.mindfire.bicyclesharing.model.User;
  */
 @Repository
 public interface PickUpPointManagerRepository extends JpaRepository<PickUpPointManager, Long> {
-	
+
+	/**
+	 * This method is used to retrieve PickUpPointManager details using User
+	 * object
+	 * 
+	 * @param user
+	 *            User object
+	 * @return PickUpPointManager object
+	 */
 	public PickUpPointManager findByUser(User user);
-	
+
+	/**
+	 * This method is used to delete a PickUpPointManager record
+	 * 
+	 * @param user
+	 *            User object
+	 * @return number of records deleted
+	 */
 	@Transactional
-	public Long deleteByUser(User user); 
+	public Long deleteByUser(User user);
 
 }

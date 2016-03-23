@@ -37,146 +37,122 @@ public class IssueCycleDTO {
 	private String pickedUpFrom;
 
 	/**
-	 * returns bookingId
-	 * @return bokingId
+	 * @return the bookingId
 	 */
 	public String getBookingId() {
 		return bookingId;
 	}
 
 	/**
-	 * 
 	 * @param bookingId
-	 *            sets the booking Id
+	 *            the bookingId to set
 	 */
 	public void setBookingId(String bookingId) {
 		this.bookingId = bookingId;
 	}
 
 	/**
-	 * returnsUserId
-	 * 
-	 * @return userId
+	 * @return the userId
 	 */
 	public String getUserId() {
 		return userId;
 	}
 
 	/**
-	 * 
 	 * @param userId
-	 *            sets the userId
+	 *            the userId to set
 	 */
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
 	/**
-	 * returns the BicycleId
-	 * 
-	 * @return bicycleId
+	 * @return the bicycleId
 	 */
 	public String getBicycleId() {
 		return bicycleId;
 	}
 
 	/**
-	 * Sets the bicycleId
-	 * 
 	 * @param bicycleId
+	 *            the bicycleId to set
 	 */
 	public void setBicycleId(String bicycleId) {
 		this.bicycleId = bicycleId;
 	}
 
 	/**
-	 * returns the TransactionId
-	 * 
-	 * @return TransactionId
+	 * @return the transactionId
 	 */
 	public String getTransactionId() {
 		return transactionId;
 	}
 
 	/**
-	 * sets the transactionId
-	 * 
 	 * @param transactionId
+	 *            the transactionId to set
 	 */
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
 	}
 
 	/**
-	 * returns the Booking Time
-	 * 
-	 * @return bookingTime
+	 * @return the bookingTime
 	 */
 	public Timestamp getBookingTime() {
 		return bookingTime;
 	}
 
 	/**
-	 * sets the Booking Time
-	 * 
 	 * @param bookingTime
+	 *            the bookingTime to set
 	 */
 	public void setBookingTime(Timestamp bookingTime) {
 		this.bookingTime = bookingTime;
 	}
 
 	/**
-	 * returns the actual time
-	 * 
-	 * @return actualOutTime
+	 * @return the actualOutTime
 	 */
 	public Timestamp getActualOutTime() {
 		return actualOutTime;
 	}
 
 	/**
-	 * sets the actual out time.
-	 * 
 	 * @param actualOutTime
+	 *            the actualOutTime to set
 	 */
 	public void setActualOutTime(Timestamp actualOutTime) {
 		this.actualOutTime = actualOutTime;
 	}
 
 	/**
-	 * returns the expected return time.
-	 * 
-	 * @return expectedInTime
+	 * @return the expectedInTime
 	 */
 	public Timestamp getExpectedInTime() {
 		return expectedInTime;
 	}
 
 	/**
-	 * sets the expected return time
-	 * 
 	 * @param expectedInTime
+	 *            the expectedInTime to set
 	 */
 	public void setExpectedInTime(Timestamp expectedInTime) {
 		this.expectedInTime = expectedInTime;
 	}
 
 	/**
-	 * returns the pickup point id from where bicycle is issued.
-	 * 
-	 * @return pickedUpFrom
+	 * @return the pickedUpFrom
 	 */
 	public String getPickedUpFrom() {
 		return pickedUpFrom;
 	}
 
 	/**
-	 * sets the pick up point id from where the bicycle is being issued.
-	 * 
 	 * @param pickedUpFrom
+	 *            the pickedUpFrom to set
 	 */
 	public void setPickedUpFrom(String pickedUpFrom) {
 		this.pickedUpFrom = pickedUpFrom;
 	}
-
 }

@@ -41,6 +41,7 @@ public class PickUpPointManagerService {
 	 * database
 	 * 
 	 * @param pickUpPointManager
+	 *            the PickUpPointManager object to be stored in the database
 	 * @return PickUpPointManager object
 	 */
 	public PickUpPointManager setPickUpPointToManager(PickUpPointManager pickUpPointManager) {

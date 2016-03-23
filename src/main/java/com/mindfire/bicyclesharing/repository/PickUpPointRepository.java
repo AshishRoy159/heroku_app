@@ -38,17 +38,34 @@ import com.mindfire.bicyclesharing.model.PickUpPoint;
 @Repository
 public interface PickUpPointRepository extends JpaRepository<PickUpPoint, Integer> {
 
+	/**
+	 * This method is used to get the details of all pickup points
+	 * 
+	 * @return PickUpPoint list
+	 */
 	public List<PickUpPoint> findAllByOrderByPickUpPointIdAsc();
 
+	/**
+	 * This method is used to find the details of a specific pickup point by its
+	 * id
+	 * 
+	 * @param pickUpPointId
+	 *            id of a pickup point
+	 * @return PickUpPoint object
+	 */
 	public PickUpPoint findByPickUpPointId(Integer pickUpPointId);
 
 	/**
 	 * This method is used for updating particular pickup point details.
 	 * 
 	 * @param location
+	 *            of the pickup point
 	 * @param maxCapacity
+	 *            of the pickup point
 	 * @param isActive
+	 *            status of the pickup point
 	 * @param pickUpPointId
+	 *            of the pickup point
 	 * @return Integer 0 or 1
 	 */
 	@Transactional
@@ -59,10 +76,12 @@ public interface PickUpPointRepository extends JpaRepository<PickUpPoint, Intege
 
 	/**
 	 * This method is used for updating the current availability of bicycle at
-	 * particular pickup point..
+	 * particular pickup point.
 	 * 
 	 * @param currentAvailability
+	 *            of the pickup point
 	 * @param pickUpPointId
+	 *            of the pickup point
 	 * @return Integer 0 or 1
 	 */
 	@Transactional

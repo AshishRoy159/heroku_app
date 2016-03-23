@@ -41,7 +41,7 @@ public class PickUpPointComponent {
 	 * This method is used for receiving the data from PickUpPointDto object and
 	 * set the data to the corresponding entity class
 	 * 
-	 * @param pickUpPointDto
+	 * @param pickUpPointDTO
 	 *            the data from the view
 	 * @return PickUpPoint object
 	 */
@@ -59,7 +59,7 @@ public class PickUpPointComponent {
 	 * This method is used for receiving the data from PickUpPointDto object and
 	 * set the data to the corresponding entity class
 	 * 
-	 * @param pickUpPointDto
+	 * @param pickUpPointDTO
 	 *            the data from the view
 	 * @return Integer 0 or 1
 	 */

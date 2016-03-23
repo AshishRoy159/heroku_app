@@ -29,5 +29,12 @@ import com.mindfire.bicyclesharing.model.RateGroup;
  */
 public interface RateGroupRepository extends JpaRepository<RateGroup, Long> {
 
+	/**
+	 * This method is used to get a RateGroup detail by groupType
+	 * 
+	 * @param rateGroup
+	 *            the groupType
+	 * @return RateGroup object
+	 */
 	public RateGroup findByGroupType(String rateGroup);
 }

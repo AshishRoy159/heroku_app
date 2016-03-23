@@ -78,10 +78,14 @@ public class UserService {
 	 * This method is used to save the user related data to the database
 	 * 
 	 * @param user
+	 *            the user details
 	 * @param proofDetail
-	 * @param userRole
-	 * @param rateGroup
-	 * @return User object
+	 *            user identification proof details
+	 * @param wallet
+	 *            Wallet details of the user
+	 * @param transaction
+	 *            WalletTransaction details of the user
+	 * @return WalletTransaction object
 	 */
 	public WalletTransaction saveUserDetails(User user, ProofDetail proofDetail, Wallet wallet,
 			WalletTransaction transaction) {
@@ -97,10 +101,10 @@ public class UserService {
 
 		wallet.setUser(user);
 		walletRepository.save(wallet);
-		
+
 		transaction.setWallet(wallet);
 		transactionRepository.save(transaction);
-		
+
 		return transaction;
 	}
 
@@ -108,7 +112,9 @@ public class UserService {
 	 * This method is for updating the password of the user
 	 * 
 	 * @param password
+	 *            the encrypted password
 	 * @param userEmail
+	 *            the email id of user
 	 * @return Integer 0 or 1
 	 */
 	public int savePassword(String password, String userEmail) {
@@ -119,11 +125,17 @@ public class UserService {
 	 * This method is for updating the user data
 	 * 
 	 * @param firstName
+	 *            of the user
 	 * @param lastName
+	 *            of the user
 	 * @param dateOfBirth
+	 *            of the user
 	 * @param mobileNo
+	 *            of the user
 	 * @param userAddress
+	 *            of the user
 	 * @param email
+	 *            of the user
 	 * @return Integer 0 or 1
 	 */
 	public int updateUserDetail(String firstName, String lastName, Date dateOfBirth, Long mobileNo, String userAddress,
@@ -135,7 +147,9 @@ public class UserService {
 	 * This method is used for storing a verification token for the user
 	 * 
 	 * @param user
+	 *            the User details
 	 * @param token
+	 *            the token generated for the User
 	 */
 	public void createVerificationTokenForUser(final User user, final String token) {
 		final VerificationToken myToken = new VerificationToken(token, user);
@@ -146,6 +160,7 @@ public class UserService {
 	 * This method is used for generating new verification token for the user
 	 * 
 	 * @param existingVerificationToken
+	 *            the existing expired token
 	 * @return VerificationToken object
 	 */
 	public VerificationToken generateNewVerificationToken(final String existingVerificationToken) {
@@ -159,6 +174,7 @@ public class UserService {
 	 * This method is used for getting user details from the verification token
 	 * 
 	 * @param verificationToken
+	 *            the received verification token
 	 * @return User object
 	 */
 	public User getUser(String verificationToken) {
@@ -170,6 +186,7 @@ public class UserService {
 	 * This method is used for getting Verification token details
 	 * 
 	 * @param verificationToken
+	 *            the respective VerificationToken
 	 * @return VerificationToken object
 	 */
 	public VerificationToken getVerificationToken(String verificationToken) {
@@ -180,6 +197,7 @@ public class UserService {
 	 * This method is used for saving the user details
 	 * 
 	 * @param user
+	 *            User object
 	 */
 	public void saveRegisteredUser(User user) {
 		userRepository.save(user);
@@ -189,6 +207,7 @@ public class UserService {
 	 * This method is used to get user details using user email
 	 * 
 	 * @param userEmail
+	 *            the email id of User
 	 * @return User object
 	 */
 	public User userDetails(String userEmail) {
@@ -198,17 +217,19 @@ public class UserService {
 	/**
 	 * This method is used to get user details using user id
 	 * 
-	 * @param userEmail
+	 * @param id
+	 *            userId of User
 	 * @return User object
 	 */
 	public User userDetails(Long id) {
 		return userRepository.findByUserId(id);
 	}
-	
+
 	/**
 	 * This method is used to get user details using user email
 	 * 
 	 * @param email
+	 *            the email id of User
 	 * @return User object
 	 */
 	public Optional<User> getUserByEmail(String email) {
@@ -219,23 +240,34 @@ public class UserService {
 	 * This method is used for storing a Password Reset token for the user
 	 * 
 	 * @param user
+	 *            User object
 	 * @param token
+	 *            the generated token
 	 */
 	public void createResetPasswordTokenForUser(final User user, final String token) {
 		final PasswordResetToken myToken = new PasswordResetToken(token, user);
 		passwordResetTokenRepository.save(myToken);
 	}
-	
+
 	/**
 	 * This method is used for getting all users detail.
 	 * 
-	 * @return List<User> 
+	 * @return User list
 	 */
-	public List<User> getAllUsers(){
+	public List<User> getAllUsers() {
 		return userRepository.findAllByOrderByUserId();
 	}
-	
-	public int updateUserRole(Long userId,Role userRoleId){
+
+	/**
+	 * This method is used to update the role of an User
+	 * 
+	 * @param userId
+	 *            of the respective User
+	 * @param userRoleId
+	 *            id of the Role to be set
+	 * @return Integer 0 or 1
+	 */
+	public int updateUserRole(Long userId, Role userRoleId) {
 		return userRepository.updateUserRole(userRoleId, userId);
 	}
 }

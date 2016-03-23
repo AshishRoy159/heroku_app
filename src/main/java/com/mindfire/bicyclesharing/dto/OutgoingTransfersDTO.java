@@ -30,75 +30,67 @@ import java.sql.Timestamp;
 public class OutgoingTransfersDTO {
 
 	private String transferredTo;
-
 	private Integer quantity;
-
 	private Timestamp dispatchedAt;
-
 	private String vehicleNo;
 
 	/**
-	 * returns the pick up point id where the transfer is being carried to.
-	 * @return transferredTo.
+	 * @return the transferredTo
 	 */
 	public String getTransferredTo() {
 		return transferredTo;
 	}
 
 	/**
-	 * sets the pick up point id where the transfer is being carried to.
 	 * @param transferredTo
+	 *            the transferredTo to set
 	 */
 	public void setTransferredTo(String transferredTo) {
 		this.transferredTo = transferredTo;
 	}
 
 	/**
-	 * returns the quantity of the bicycle transfers.
-	 * @return quantity
+	 * @return the quantity
 	 */
 	public Integer getQuantity() {
 		return quantity;
 	}
 
 	/**
-	 * sets the quantity of the bicycle being transferred.
 	 * @param quantity
+	 *            the quantity to set
 	 */
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 
 	/**
-	 * returns the time when the dispatch was made.
-	 * @return dispatchedAt
+	 * @return the dispatchedAt
 	 */
 	public Timestamp getDispatchedAt() {
 		return dispatchedAt;
 	}
 
 	/**
-	 * sets the dispatch time of the transfer.
 	 * @param dispatchedAt
+	 *            the dispatchedAt to set
 	 */
 	public void setDispatchedAt(Timestamp dispatchedAt) {
 		this.dispatchedAt = dispatchedAt;
 	}
 
 	/**
-	 * returns the vechicle no of the transport.
-	 * @return vehicleNo
+	 * @return the vehicleNo
 	 */
 	public String getVehicleNo() {
 		return vehicleNo;
 	}
 
 	/**
-	 * sets the vehicle no of the transport.
 	 * @param vehicleNo
+	 *            the vehicleNo to set
 	 */
 	public void setVehicleNo(String vehicleNo) {
 		this.vehicleNo = vehicleNo;
 	}
-
 }

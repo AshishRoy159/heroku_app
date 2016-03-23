@@ -36,10 +36,27 @@ import com.mindfire.bicyclesharing.model.Wallet;
 @Repository
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
 
+	/**
+	 * This method is used to update the balance in Wallet of the respective
+	 * User
+	 * 
+	 * @param balance
+	 *            the amount to be updated
+	 * @param user
+	 *            User object
+	 * @return Integer 0 or 1
+	 */
 	@Transactional
 	@Modifying(clearAutomatically = true)
 	@Query("update Wallet w set w.balance =:balance where w.user =:user")
 	public int updateBalance(@Param("balance") Double balance, @Param("user") User user);
 
+	/**
+	 * This method is used to find the Wallet corresponding to a User
+	 * 
+	 * @param user
+	 *            User object
+	 * @return Wallet object
+	 */
 	public Wallet findByUser(User user);
 }

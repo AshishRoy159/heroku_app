@@ -30,24 +30,27 @@ public class BiCycleService {
 
 	@Autowired
 	private BiCycleRepository biCycleRepository;
-	
+
 	/**
 	 * This method is used for saving the bicycle details.
 	 * 
 	 * @param biCycle
-	 * @return
+	 *            the BiCycle object to be stored in database
+	 * @return the stored BiCycle object
 	 */
 	public BiCycle saveBiCycle(BiCycle biCycle) {
 		return biCycleRepository.save(biCycle);
 	}
-	
+
 	/**
-	 * This method is used for finding all bicycle at any particular pickup point.
+	 * This method is used for finding all bicycle at any particular pickup
+	 * point.
 	 * 
 	 * @param pickUpPointId
-	 * @return List<BiCycle> list of bicycles
+	 *            the id of the respective pickup point
+	 * @return BiCycle list
 	 */
-	public List<BiCycle> findAllBiCycleByPickUpPointId(PickUpPoint pickUpPointId){
+	public List<BiCycle> findAllBiCycleByPickUpPointId(PickUpPoint pickUpPointId) {
 		return biCycleRepository.findAllByCurrentLocation(pickUpPointId);
 	}
 }

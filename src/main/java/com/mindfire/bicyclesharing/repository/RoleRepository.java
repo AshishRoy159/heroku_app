@@ -32,10 +32,31 @@ import com.mindfire.bicyclesharing.model.Role;
  */
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
+	/**
+	 * This method is used to find the role of the user by its email id
+	 * 
+	 * @param email
+	 *            the email id of User
+	 * @return Role of the user
+	 */
 	@Query("select a.userRole from Role a, User b where b.email = ?1 and a.roleId = b.role.roleId")
 	public List<String> findRoleByEmail(String email);
 
+	/**
+	 * This method is used to find the Role by roleID
+	 * 
+	 * @param roleId
+	 *            id of the Role
+	 * @return Role object
+	 */
 	public Role findByRoleId(Long roleId);
-	
+
+	/**
+	 * This method is used to find the Role object by userRole
+	 * 
+	 * @param role
+	 *            the userRole
+	 * @return Role object
+	 */
 	public Role findByUserRole(String role);
 }

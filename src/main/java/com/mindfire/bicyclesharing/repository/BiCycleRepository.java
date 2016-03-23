@@ -25,8 +25,7 @@ import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 
 /**
- * Repository for {@link BiCycle} Entity used for CRUD operation on
- * BiCycle.
+ * Repository for {@link BiCycle} Entity used for CRUD operation on BiCycle.
  * 
  * @author mindfire
  * @version 1.0
@@ -35,5 +34,12 @@ import com.mindfire.bicyclesharing.model.PickUpPoint;
 @Repository
 public interface BiCycleRepository extends JpaRepository<BiCycle, Integer> {
 
+	/**
+	 * This method is used to find all Bicycle records based on currentLocation
+	 * 
+	 * @param pickUpPointId
+	 *            id of pickup point to be referred as currentLocation
+	 * @return BiCycle list
+	 */
 	public List<BiCycle> findAllByCurrentLocation(PickUpPoint pickUpPointId);
 }

@@ -35,67 +35,62 @@ public class IncomingTransfersDTO {
 	private Timestamp arrivedOn;
 
 	/**
-	 * returns the pickup pint id from where the transfer is being done.
-	 * @return transferredFrom
+	 * @return the transferredFrom
 	 */
 	public String getTransferredFrom() {
 		return transferredFrom;
 	}
 
 	/**
-	 * sets the pick up point id from where the transfer is being done.
 	 * @param transferredFrom
+	 *            the transferredFrom to set
 	 */
 	public void setTransferredFrom(String transferredFrom) {
 		this.transferredFrom = transferredFrom;
 	}
 
 	/**
-	 * returns the quantity of cycles that are being transferred.
-	 * @return quantity
+	 * @return the quantity
 	 */
 	public Integer getQuantity() {
 		return quantity;
 	}
 
 	/**
-	 * sets the quantity of transferred cycles.
 	 * @param quantity
+	 *            the quantity to set
 	 */
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 
 	/**
-	 * returns the vehicle number of the transport vehicle
-	 * @return vehicleNo.
+	 * @return the vehicleNo
 	 */
 	public String getVehicleNo() {
 		return vehicleNo;
 	}
 
 	/**
-	 * sets the vehicle no of the transport.
 	 * @param vehicleNo
+	 *            the vehicleNo to set
 	 */
 	public void setVehicleNo(String vehicleNo) {
 		this.vehicleNo = vehicleNo;
 	}
 
 	/**
-	 * Return the time of the arrival.
-	 * @return arrivedOn
+	 * @return the arrivedOn
 	 */
 	public Timestamp getArrivedOn() {
 		return arrivedOn;
 	}
 
 	/**
-	 * sets the arriving time of the bicycle.
 	 * @param arrivedOn
+	 *            the arrivedOn to set
 	 */
 	public void setArrivedOn(Timestamp arrivedOn) {
 		this.arrivedOn = arrivedOn;
 	}
-
 }

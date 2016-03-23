@@ -41,6 +41,7 @@ public class PickUpPointService {
 	 * This method is used to save the pickup point related data to the database
 	 * 
 	 * @param pickUpPoint
+	 *            the PickUpPoint object to be stored in the database
 	 * @return PickUpPoint object
 	 */
 	public PickUpPoint savePickUpPoint(PickUpPoint pickUpPoint) {
@@ -60,6 +61,8 @@ public class PickUpPointService {
 	/**
 	 * This method is used to find pickup point by its id
 	 * 
+	 * @param pickUpPointId
+	 *            the id of the respective pickup point
 	 * @return PickUpPoint object
 	 */
 	public PickUpPoint getPickupPointById(int pickUpPointId) {
@@ -70,19 +73,25 @@ public class PickUpPointService {
 	 * This method is used to update pickup point details.
 	 * 
 	 * @param pickUpPoint
+	 *            the PickUpPoint data to be updated
 	 * @return Integer either 0 or 1
 	 */
 	public int updatePickUpPointDetails(PickUpPoint pickUpPoint) {
 		return pickUpPointRepository.updatePickUpPoint(pickUpPoint.getLocation(), pickUpPoint.getMaxCapacity(),
 				pickUpPoint.getIsActive(), pickUpPoint.getPickUpPointId());
 	}
-	
+
 	/**
+	 * This method is used to update the current number of bicycles available at
+	 * a pickup point
 	 * 
+	 * @param currentAvailability
+	 *            the updated value
 	 * @param pickUpPointId
-	 * @return
+	 *            id of the respective pickup point
+	 * @return Integer 0 or 1
 	 */
-	public int updateBicycleCurrentAvailability(int currentAvailability, int pickUpPointId){
+	public int updateBicycleCurrentAvailability(int currentAvailability, int pickUpPointId) {
 		return pickUpPointRepository.updateCurrentAvailability(currentAvailability, pickUpPointId);
 	}
 }
