@@ -45,7 +45,6 @@ public class WalletController {
 	 * This method is used to map the add wallet balance request. Simply render
 	 * the addWalletBalance view
 	 * 
-	 * @param walletBalance
 	 * @return addWalletBalance view
 	 */
 	@RequestMapping(value = { "/manager/addWalletBalance" }, method = RequestMethod.GET)
@@ -57,6 +56,9 @@ public class WalletController {
 	 * This method is used to add balance to the User's wallet.
 	 * 
 	 * @param walletBalanceDTO
+	 *            to receive the incoming data
+	 * @param redirectAttributes
+	 *            to map the model attributes
 	 * @return addWalletBalance view
 	 */
 	@RequestMapping(value = "/manager/wallet", method = RequestMethod.POST)

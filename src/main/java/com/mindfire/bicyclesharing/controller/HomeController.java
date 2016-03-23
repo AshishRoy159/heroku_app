@@ -67,13 +67,6 @@ public class HomeController {
 		return new ModelAndView("signIn", "error", error);
 	}
 
-	// This method is only for checking that all request to /users/** must have
-	// ADMIN authority to access.
-	@RequestMapping(value = { "users/userDetails" })
-	public String getUserDetails() {
-		return "userDetails";
-	}
-
 	/**
 	 * This method maps any request which is not authorized to the user. Simply
 	 * render the Access Denied view.

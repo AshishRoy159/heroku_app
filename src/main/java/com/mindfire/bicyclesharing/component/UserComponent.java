@@ -71,6 +71,9 @@ public class UserComponent {
 	 * the data to the corresponding entity classes
 	 * 
 	 * @param userDTO
+	 *            the data from the view
+	 * @param regPaymentDTO
+	 *            the data from the view
 	 * @return user Returns an User object
 	 */
 	public WalletTransaction mapUserComponent(UserDTO userDTO, RegistrationPaymentDTO regPaymentDTO) {
@@ -103,8 +106,11 @@ public class UserComponent {
 	 * This method receives the data from the SetPasswordDTO class and sets the
 	 * data to the corresponding entity class
 	 * 
-	 * @param setPasswordDTO
-	 * @return int either 0 or 1
+	 * @param password
+	 *            the password user entered
+	 * @param userEmail
+	 *            email id of the user
+	 * @return Integer either 0 or 1
 	 */
 	public int mapPassword(String password, String userEmail) {
 		BCryptPasswordEncoder passEncoder = new BCryptPasswordEncoder();
@@ -117,6 +123,7 @@ public class UserComponent {
 	 * the corresponding entity class
 	 * 
 	 * @param userDTO
+	 *            the data from the view
 	 * @return Integer 0 or 1
 	 */
 	public int mapUpdateUserDetail(UserDTO userDTO) {
@@ -129,6 +136,7 @@ public class UserComponent {
 	 * retrieves the user data corresponding to the email in the dto.
 	 * 
 	 * @param forgotPasswordDTO
+	 *            the data from the view
 	 * @return User Object
 	 */
 	public User retrieveUserPassword(ForgotPasswordDTO forgotPasswordDTO) {
@@ -141,6 +149,7 @@ public class UserComponent {
 	 * user role of the corresponding user id.
 	 * 
 	 * @param manageRoleDTO
+	 *            the data from the view
 	 * @return Integer 0 or 1
 	 */
 	public int mapUpdateRole(ManageRoleDTO manageRoleDTO) {
@@ -160,6 +169,7 @@ public class UserComponent {
 	 * the PickUpPointManager entity class
 	 * 
 	 * @param manageRoleDTO
+	 *            the data from the view
 	 * @return PickUpPointManager object
 	 */
 	public PickUpPointManager mapPickUpPointManagerDetails(ManageRoleDTO manageRoleDTO) {

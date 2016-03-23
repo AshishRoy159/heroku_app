@@ -55,7 +55,6 @@ public class PickupPointController {
 	 * This method maps the add new pick up point request. Simply render the
 	 * addNewPickupPoint view
 	 * 
-	 * @param model
 	 * @return addNewPickupPoint view
 	 */
 	@RequestMapping(value = "admin/addNewPickupPoint", method = RequestMethod.GET)
@@ -68,8 +67,11 @@ public class PickupPointController {
 	 * data to the corresponding component class
 	 * 
 	 * @param pickUpPointDTO
+	 *            to receive the incoming data
 	 * @param result
-	 * @param model
+	 *            to validate the incoming data
+	 * @param redirectAttributes
+	 *            to map the model attributes
 	 * @return addNewPickupPoint view
 	 */
 	@RequestMapping(value = "/admin/addPickupPoint", method = RequestMethod.POST)
@@ -91,6 +93,7 @@ public class PickupPointController {
 	 * the pickupPointDetails view.
 	 * 
 	 * @param model
+	 *            to map the model attributes
 	 * @return pickupPointDetails view
 	 */
 	@RequestMapping(value = "admin/pickupPointDetails", method = RequestMethod.GET)
@@ -104,6 +107,7 @@ public class PickupPointController {
 	 * the updatePickupPointDetails view.
 	 * 
 	 * @param pickUpPointId
+	 *            the id of the respective pickup point
 	 * @return updatePickupPointDetails view
 	 */
 	@RequestMapping(value = "admin/updatePickupPointDetails/{id}", method = RequestMethod.GET)
@@ -117,7 +121,7 @@ public class PickupPointController {
 	 * the data to the corresponding component class.
 	 * 
 	 * @param pickUpPointDTO
-	 * @param redirectAttributes
+	 *            to receive the incoming data
 	 * @return pickupPointDetails view
 	 */
 	@RequestMapping(value = "admin/updatePickupPointDetails", method = RequestMethod.POST)

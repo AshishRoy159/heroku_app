@@ -53,7 +53,9 @@ public class ManageRoleController {
 	 * This method maps requests for manageRole view
 	 * 
 	 * @param userId
+	 *            id of the respective user
 	 * @param model
+	 *            to map the model attribute
 	 * @return manageRole view
 	 */
 	@RequestMapping("/admin/manageRole/{id}")
@@ -67,6 +69,7 @@ public class ManageRoleController {
 	 * corresponding component classes
 	 * 
 	 * @param manageRoleDTO
+	 *            to receive the incoming data
 	 * @return searchUsers view
 	 */
 	@RequestMapping(value = "admin/setPickUpPoint", method = RequestMethod.POST)

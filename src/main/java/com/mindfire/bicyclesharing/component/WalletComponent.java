@@ -48,6 +48,7 @@ public class WalletComponent {
 	 * data to corresponding entity class.
 	 * 
 	 * @param walletBalanceDTO
+	 *            the data from the view
 	 * @return Integer 0 or 1
 	 */
 	public int mapWalletBalance(WalletBalanceDTO walletBalanceDTO) {
@@ -62,6 +63,7 @@ public class WalletComponent {
 	 * data to corresponding entity class.
 	 * 
 	 * @param walletBalanceDTO
+	 *            the data from the view
 	 * @return WalletTransaction object
 	 */
 	public WalletTransaction mapWalletTransactionDetail(WalletBalanceDTO walletBalanceDTO) {
@@ -73,5 +75,5 @@ public class WalletComponent {
 
 		return walletService.saveWalletTransactionDetail(walletTransaction);
 	}
-	
+
 }

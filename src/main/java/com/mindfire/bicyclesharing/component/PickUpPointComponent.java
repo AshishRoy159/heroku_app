@@ -42,6 +42,7 @@ public class PickUpPointComponent {
 	 * set the data to the corresponding entity class
 	 * 
 	 * @param pickUpPointDto
+	 *            the data from the view
 	 * @return PickUpPoint object
 	 */
 	public PickUpPoint mapPickUpPointDetails(PickUpPointDTO pickUpPointDTO) {
@@ -53,17 +54,18 @@ public class PickUpPointComponent {
 
 		return pickUpPointService.savePickUpPoint(pickUpPoint);
 	}
-	
+
 	/**
 	 * This method is used for receiving the data from PickUpPointDto object and
 	 * set the data to the corresponding entity class
 	 * 
 	 * @param pickUpPointDto
+	 *            the data from the view
 	 * @return Integer 0 or 1
 	 */
 	public int mapUpdatePickUpPointDetails(PickUpPointDTO pickUpPointDTO) {
 		PickUpPoint pickUpPoint = new PickUpPoint();
-		
+
 		pickUpPoint.setLocation(pickUpPointDTO.getLocation());
 		pickUpPoint.setMaxCapacity(pickUpPointDTO.getMaxCapacity());
 		pickUpPoint.setIsActive(pickUpPointDTO.getIsActive());
@@ -71,6 +73,5 @@ public class PickUpPointComponent {
 
 		return pickUpPointService.updatePickUpPointDetails(pickUpPoint);
 	}
-	
-	
+
 }

@@ -41,8 +41,11 @@ public class OnRegistrationCompleteEvent extends ApplicationEvent {
 	 * OnRegistrationCompleteEvent constructor
 	 * 
 	 * @param user
+	 *            User object of user just registered
 	 * @param locale
+	 *            to tailor information for the user
 	 * @param appUrl
+	 *            the context path
 	 */
 	public OnRegistrationCompleteEvent(final User user, final Locale locale, final String appUrl) {
 		super(user);

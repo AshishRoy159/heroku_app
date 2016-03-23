@@ -75,6 +75,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 	 * the verification email
 	 * 
 	 * @param event
+	 *            OnRegistrationCompleteEvent
 	 * @throws MessagingException
 	 */
 	private void confirmRegistration(final OnRegistrationCompleteEvent event) throws MessagingException {
@@ -90,8 +91,11 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 	 * This method constructs the verification email message
 	 * 
 	 * @param event
+	 *            OnRegistrationCompleteEvent
 	 * @param user
+	 *            User object
 	 * @param token
+	 *            to be send to the user's mail
 	 * @return Message object
 	 */
 	private final Message constructEmailMessage(final OnRegistrationCompleteEvent event, final User user,

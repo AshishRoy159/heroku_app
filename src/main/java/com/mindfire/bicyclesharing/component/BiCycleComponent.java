@@ -47,6 +47,7 @@ public class BiCycleComponent {
 	 * the data to the corresponding entity class
 	 * 
 	 * @param biCycleDTO
+	 *            the data from the view
 	 * @return BiCycle object
 	 */
 	public BiCycle mapBiCycleData(BiCycleDTO biCycleDTO) {
@@ -56,7 +57,7 @@ public class BiCycleComponent {
 		biCycle.setCurrentLocation(pickUpPoint);
 		pickUpPointService.updateBicycleCurrentAvailability(pickUpPoint.getCurrentAvailability() + 1,
 				pickUpPoint.getPickUpPointId());
-		
+
 		return biCycleService.saveBiCycle(biCycle);
 
 	}

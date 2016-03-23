@@ -53,6 +53,7 @@ public class BicycleController {
 	 * addNewBicycle view.
 	 * 
 	 * @param model
+	 *            to map model attributes
 	 * @return addNewBicycle view
 	 */
 	@RequestMapping(value = "admin/addNewBicycle", method = RequestMethod.GET)
@@ -66,8 +67,11 @@ public class BicycleController {
 	 * to the corresponding component class
 	 * 
 	 * @param biCycleDTO
+	 *            to receive the incoming data
 	 * @param result
-	 * @param model
+	 *            to validate the incoming data
+	 * @param redirectAttributes
+	 *            to map the model attributes
 	 * @return addNewBicycle view
 	 */
 	@RequestMapping(value = "admin/addBicycle", method = RequestMethod.POST)

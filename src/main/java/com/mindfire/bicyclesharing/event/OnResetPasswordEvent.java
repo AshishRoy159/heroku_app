@@ -41,8 +41,11 @@ public class OnResetPasswordEvent extends ApplicationEvent {
 	 * OnRegistrationCompleteEvent constructor
 	 * 
 	 * @param user
+	 *            User object
 	 * @param locale
+	 *            to tailor information for the user
 	 * @param appUrl
+	 *            the context path
 	 */
 	public OnResetPasswordEvent(final User user, final Locale locale, final String appUrl) {
 		super(user);

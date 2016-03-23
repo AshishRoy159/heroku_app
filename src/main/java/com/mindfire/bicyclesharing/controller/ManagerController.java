@@ -60,7 +60,9 @@ public class ManagerController {
 	 * render the managerPayment view
 	 * 
 	 * @param userDTO
+	 *            to receive the incoming data
 	 * @param session
+	 *            the current session
 	 * @return managerPayment view
 	 */
 	@RequestMapping(value = { "/manager/managerPayment" }, method = RequestMethod.POST)
@@ -74,7 +76,9 @@ public class ManagerController {
 	 * booking view
 	 * 
 	 * @param model
+	 *            to map the model attributes
 	 * @param id
+	 *            userId of the respective manager
 	 * @return booking view
 	 */
 	@RequestMapping(value = { "/manager/booking/{id}" }, method = RequestMethod.GET)

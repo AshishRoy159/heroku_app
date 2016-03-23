@@ -72,6 +72,7 @@ public class ResendVerificationTokenListener implements ApplicationListener<Rese
 	 * the verification email
 	 * 
 	 * @param event
+	 *            ResendVerificationTokenEvent
 	 * @throws MessagingException
 	 */
 	private void resendVerificationToken(final ResendVerificationTokenEvent event) throws MessagingException {
@@ -88,9 +89,13 @@ public class ResendVerificationTokenListener implements ApplicationListener<Rese
 	 * This method constructs the verification email message
 	 * 
 	 * @param contextPath
+	 *            the context path
 	 * @param locale
+	 *            to tailor information for the user
 	 * @param newToken
+	 *            new token generated
 	 * @param user
+	 *            User object
 	 * @return Message object
 	 */
 	private Message constructResendVerificationTokenEmail(String contextPath, Locale locale, VerificationToken newToken,

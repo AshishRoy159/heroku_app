@@ -43,9 +43,13 @@ public class ResendVerificationTokenEvent extends ApplicationEvent {
 	 * ResendVerificationTokenEvent constructor
 	 * 
 	 * @param appUrl
+	 *            the context path
 	 * @param locale
+	 *            to tailor information for the user
 	 * @param newToken
+	 *            the new token generated
 	 * @param user
+	 *            User object
 	 */
 	public ResendVerificationTokenEvent(final String appUrl, final Locale locale, final VerificationToken newToken,
 			final User user) {

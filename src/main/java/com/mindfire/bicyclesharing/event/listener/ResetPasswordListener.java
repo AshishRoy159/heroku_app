@@ -75,6 +75,7 @@ public class ResetPasswordListener implements ApplicationListener<OnResetPasswor
 	 * the verification email
 	 * 
 	 * @param event
+	 *            OnResetPasswordEvent
 	 * @throws MessagingException
 	 */
 	private void confirmRegistration(final OnResetPasswordEvent event) throws MessagingException {
@@ -90,8 +91,11 @@ public class ResetPasswordListener implements ApplicationListener<OnResetPasswor
 	 * This method constructs the verification email message
 	 * 
 	 * @param event
+	 *            OnResetPasswordEvent
 	 * @param user
+	 *            User object
 	 * @param token
+	 *            generated token
 	 * @return Message object
 	 */
 	private final Message constructEmailMessage(final OnResetPasswordEvent event, final User user, final String token) {
