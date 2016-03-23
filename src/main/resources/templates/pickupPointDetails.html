@@ -26,7 +26,10 @@
 
 			<div class="row">
 				<div class="col-md-12">
-					<h1 class="page-header">Pick up Point Details<small>(Click on location to update data)</small></h1>
+					<h1 class="page-header">
+						Pick up Point Details<small>(Click on location to update
+							data)</small>
+					</h1>
 				</div>
 			</div>
 			<!-- /. ROW  -->
@@ -57,7 +60,8 @@
 												th:href="@{/admin/updatePickupPointDetails/} + ${pickUpPoint.pickUpPointId}"
 												th:text="${pickUpPoint.location}"></a></td>
 											<td class="text-center" th:text="${pickUpPoint.maxCapacity}"></td>
-											<td class="text-center" th:text="${pickUpPoint.currentAvailability}"></td>
+											<td class="text-center"
+												th:text="${pickUpPoint.currentAvailability}"></td>
 											<td th:text="${pickUpPoint.addedOn}"></td>
 											<td class="text-center" th:if="${pickUpPoint.isOpen}">✔</td>
 											<td class="text-center" th:unless="${pickUpPoint.isOpen}">✘</td>

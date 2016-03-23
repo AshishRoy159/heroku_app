@@ -21,9 +21,9 @@
 	$(function() {
 		$('#select').change(function() {
 			if ($(this).val() == "2") {
-				$('#warning').show();
+				$('#choosePickupPoint').show();
 			} else {
-				$('#warning').hide();
+				$('#choosePickupPoint').hide();
 			}
 		});
 	});
@@ -65,7 +65,7 @@
 													<option value="3">USER</option>
 												</select>
 											</p>
-											<p id="warning" style="display: none;">
+											<p id="choosePickupPoint" style="display: none;">
 												<label>Set Pickup Point:</label> <select
 													class="form-control input-lg" name="pickUpPointId">
 													<option value="0">Select Pickup Point</option>

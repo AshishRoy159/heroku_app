@@ -27,10 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.mindfire.bicyclesharing.dto.IncomingTransfersDTO;
-import com.mindfire.bicyclesharing.dto.OutgoingTransfersDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
-import com.mindfire.bicyclesharing.dto.WalletBalanceDTO;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.service.UserService;
 
@@ -51,7 +48,7 @@ public class ManagerController {
 	 * This method is used to map the add new user request by the manager.
 	 * Simply render the addNewUser view
 	 * 
-	 * @return addNewUserView
+	 * @return addNewUser View
 	 */
 	@RequestMapping(value = { "/manager/addNewUser" }, method = RequestMethod.GET)
 	public ModelAndView addNewUser() {
@@ -76,8 +73,8 @@ public class ManagerController {
 	 * This method is used to map the booking of the bicycles. Simply render the
 	 * booking view
 	 * 
-	 * @param issueCycle
-	 * @param recieve
+	 * @param model
+	 * @param id
 	 * @return booking view
 	 */
 	@RequestMapping(value = { "/manager/booking/{id}" }, method = RequestMethod.GET)
@@ -87,18 +84,14 @@ public class ManagerController {
 		return new ModelAndView("booking");
 	}
 
-	
 	/**
 	 * This method is used to map the bicycle transfer request. Simply render
 	 * the bicycleTransfer view.
 	 * 
-	 * @param outgoingTransfers
-	 * @param incomingTransfers
-	 * @return bicycleTransfer
+	 * @return bicycleTransfer view
 	 */
 	@RequestMapping(value = { "/manager/bicycleTransfer" }, method = RequestMethod.GET)
-	public ModelAndView getTransfersView(@ModelAttribute("outgoingTransfer") OutgoingTransfersDTO outgoingTransfers,
-			@ModelAttribute("incomingTransfer") IncomingTransfersDTO incomingTransfers) {
+	public ModelAndView getTransfersView() {
 		return new ModelAndView("bicycleTransfer");
 	}
 

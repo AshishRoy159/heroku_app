@@ -91,7 +91,16 @@ public class UserController {
 	 * This method maps the registration request. Simply render the
 	 * successRegister view.
 	 * 
-	 * @return the successRegister view.
+	 * @param regPaymentDTO
+	 *            to receive the incoming data
+	 * @param result
+	 *            to validate the incoming data
+	 * @param session
+	 *            the current session
+	 * @param request
+	 *            to access general request meta data
+	 * @return successRegister view in case of successful registration else
+	 *         failure view
 	 */
 	@RequestMapping(value = "register", method = RequestMethod.POST)
 	public ModelAndView addUser(@ModelAttribute("paymentData") RegistrationPaymentDTO regPaymentDTO,
@@ -119,8 +128,11 @@ public class UserController {
 	 * Simply render the setPassword view.
 	 * 
 	 * @param model
+	 *            to map model attributes
 	 * @param token
-	 * @return ModelAndView object
+	 *            to validate the request
+	 * @return ModelAndView object, setPassword view in case of valid requests
+	 *         else badUser view
 	 */
 	@RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
 	public ModelAndView confirmRegistration(Model model, @RequestParam("token") String token) {
@@ -159,7 +171,9 @@ public class UserController {
 	 * resend the verification mail
 	 * 
 	 * @param request
+	 *            for request information
 	 * @param existingToken
+	 *            the expired token
 	 * @return the successRegister view.
 	 */
 	@RequestMapping(value = "resendRegistrationToken", method = RequestMethod.GET)
@@ -183,11 +197,10 @@ public class UserController {
 	 * This method is used to map the set password request. Simply render the
 	 * setPassword view
 	 * 
-	 * @param setPasswordDTO
 	 * @return the setPassword view
 	 */
 	@RequestMapping(value = "setPassword", method = RequestMethod.GET)
-	public ModelAndView returnSetPasswordPage(@ModelAttribute("setPasswordData") SetPasswordDTO setPasswordDTO) {
+	public ModelAndView returnSetPasswordPage() {
 		return new ModelAndView("setPassword");
 	}
 
@@ -196,8 +209,11 @@ public class UserController {
 	 * render the userProfile view.
 	 * 
 	 * @param setPasswordDTO
+	 *            to receive the incoming data
 	 * @param model
+	 *            to map model attributes
 	 * @param result
+	 *            to validate incoming data
 	 * @return the signIn view
 	 */
 	@RequestMapping(value = "/afterSetPassword", method = RequestMethod.POST)
@@ -228,7 +244,9 @@ public class UserController {
 	 * password.
 	 * 
 	 * @param forgotPasswordDTO
+	 *            to receive incoming data
 	 * @param request
+	 *            to access general request meta data
 	 * @return successRegister view
 	 */
 	@RequestMapping(value = "afterForgotPassword", method = RequestMethod.POST)
@@ -251,8 +269,11 @@ public class UserController {
 	 * the setPassword view.
 	 * 
 	 * @param model
+	 *            to map model attributes
 	 * @param token
-	 * @return ModelAndView object
+	 *            to validate the request
+	 * @return ModelAndView object, setPassword view in case of valid requests
+	 *         else badUser view
 	 */
 	@RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
 	public ModelAndView resetPassword(Model model, @RequestParam("token") String token) {
@@ -293,7 +314,7 @@ public class UserController {
 	 * @return changePassword view.
 	 */
 	@PreAuthorize("isAuthenticated()")
-	@RequestMapping(value = { "/user/changePassword"}, method = RequestMethod.GET)
+	@RequestMapping(value = { "/user/changePassword" }, method = RequestMethod.GET)
 	public String changePassword() {
 		return Constant.CHANGE_PASSWORD;
 	}
@@ -303,7 +324,10 @@ public class UserController {
 	 * to the component for update the password.
 	 * 
 	 * @param authentication
+	 *            token for an authentication request or for an authenticated
+	 *            principal
 	 * @param changePasswordDTO
+	 *            to receive the incoming data
 	 * @return signIn view
 	 */
 	@RequestMapping(value = "afterChangePassword", method = RequestMethod.POST)
@@ -322,14 +346,19 @@ public class UserController {
 	}
 
 	/**
-	 * This method map the request for view the user profile.
+	 * This method maps the request for user profile view
 	 * 
 	 * @param authentication
+	 *            token for an authentication request or for an authenticated
+	 *            principal
 	 * @param model
+	 *            to map the model attributes
+	 * @param id
+	 *            the id of the user whose details is to be shown
 	 * @return userProfile view
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
-	@RequestMapping(value = { "/user/userProfile/{id}"})
+	@RequestMapping(value = { "/user/userProfile/{id}" })
 	public ModelAndView userProfile(Authentication authentication, Model model, @PathVariable Long id) {
 
 		User userDetails = userService.userDetails(id);
@@ -341,12 +370,14 @@ public class UserController {
 	/**
 	 * This method map the request for view the update user details.
 	 * 
-	 * @param authentication
 	 * @param model
+	 *            to map model attributes
+	 * @param id
+	 *            the id of the user whose details is to be shown
 	 * @return updateUserDetails view
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
-	@RequestMapping(value = { "/user/updateUserDetails/{id}"}, method = RequestMethod.GET)
+	@RequestMapping(value = { "/user/updateUserDetails/{id}" }, method = RequestMethod.GET)
 	public ModelAndView updateUserDetails(Model model, @PathVariable("id") Long id) {
 		User user = userService.userDetails(id);
 		model.addAttribute("user", user);
@@ -359,12 +390,16 @@ public class UserController {
 	 * data to the UserComponent class for updating the user data.
 	 * 
 	 * @param userDTO
-	 * @param authentication
+	 *            to receive the incoming data
+	 * @param id
+	 *            the id of the user whose details is to be shown
 	 * @param model
-	 * @return
+	 *            to map model attributes
+	 * @return userProfile view in case of successful updation else
+	 *         updateUserDetails view
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
-	@RequestMapping(value = { "user/updateUserDetails/{id}"}, method = RequestMethod.POST)
+	@RequestMapping(value = { "user/updateUserDetails/{id}" }, method = RequestMethod.POST)
 	public ModelAndView afterUpdateUserDetails(@ModelAttribute("userDetailData") UserDTO userDTO,
 			@PathVariable("id") Long id, Model model) {
 		int success = userComponent.mapUpdateUserDetail(userDTO);
@@ -379,8 +414,12 @@ public class UserController {
 	}
 
 	/**
-	 * This method maps the request for the payment view.
+	 * This method is used to map payment request
 	 * 
+	 * @param userDTO
+	 *            to receive the incoming data
+	 * @param session
+	 *            the current session
 	 * @return payment view
 	 */
 	@RequestMapping(value = "payment", method = RequestMethod.POST)
@@ -392,8 +431,7 @@ public class UserController {
 	/**
 	 * This method maps the request for fetching all users detail.
 	 * 
-	 * @param model
-	 * @return
+	 * @return searchUsers view
 	 */
 	@RequestMapping("admin/userList")
 	public ModelAndView userList() {
