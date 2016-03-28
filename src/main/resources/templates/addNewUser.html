@@ -43,15 +43,19 @@
 											<div class="col-md-6">
 												<div class="form-group">
 													<input type="text" name="firstName"
-														class="form-control input-lg" placeholder="First Name"
-														tabindex="1" required="required" />
+														class="form-control input-lg" pattern="[a-zA-Z ]{2,20}"
+														title="Please enter alphabet only. Size{min=2 , max=20}"
+														placeholder="First Name" tabindex="1" maxlength="20"
+														required="required" />
 												</div>
 											</div>
 											<div class="col-md-6">
 												<div class="form-group">
 													<input type="text" name="lastName"
 														class="form-control input-lg" placeholder="Last Name"
-														tabindex="2" required="required" />
+														pattern="[a-zA-Z ]{2,20}"
+														title="Please enter alphabet only. Size{min=2 , max=20}"
+														tabindex="2" maxlength="20" required="required" />
 												</div>
 											</div>
 										</div>
@@ -61,14 +65,16 @@
 												<div class="form-group">
 													<input type="email" name="email" id="emailId"
 														class="form-control input-lg" placeholder="Enter Email"
-														tabindex="1" required="required" />
+														title="Please Enter valid email" tabindex="3"
+														maxlength="50" required="required" />
 												</div>
 											</div>
 											<div class="col-md-6">
 												<div class="form-group">
 													<input type="email" name="confirmUserEmail"
 														id="email_confirm" class="form-control input-lg"
-														placeholder="Confirm Email" tabindex="2"
+														maxlength="50" title="Please Enter valid email"
+														placeholder="Confirm Email" tabindex="4"
 														required="required" />
 												</div>
 											</div>
@@ -76,14 +82,15 @@
 										<div class="form-group">
 											<input type="text" name="mobileNo"
 												class="form-control input-lg" placeholder="Enter Mobile No"
-												tabindex="3" pattern="[0-9]{10}" title="Enter Numbers Only"
-												maxlength="10" required="required" />
+												tabindex="5" pattern="[0-9]{10}"
+												title="Enter 10 digits Number Only" maxlength="10"
+												required="required" />
 										</div>
 										<div class="row">
 											<div class="col-md-6">
 												<div class="form-group">
 													<select class="form-control input-lg" name="proofType"
-														required="required">
+														tabindex="6" required="required">
 														<option value="">Select Proof Type:</option>
 														<option value="Driving Licence">Driving Licence</option>
 														<option value="Voter ID">Voter ID</option>
@@ -96,7 +103,9 @@
 												<div class="form-group">
 													<input type="text" name="proofNo"
 														class="form-control input-lg" placeholder="Enter Proof Id"
-														tabindex="6" required="required" />
+														pattern="[a-zA-Z0-9]{2,20}"
+														title="please enter alphabet and digits only.Size[min=2,max=20]"
+														maxlength="20" tabindex="7" required="required" />
 												</div>
 											</div>
 										</div>
@@ -104,7 +113,7 @@
 											<div class="col-md-6">
 												<div class="form-group">
 													<input type="file" name="document"
-														class="form-control input-lg" tabindex="1"
+														class="form-control input-lg" tabindex="8"
 														title="Upload Proof Document" required="required" />
 												</div>
 											</div>
@@ -112,21 +121,21 @@
 												<div class="form-group">
 													<input type="date" name="dateOfBirth"
 														class="form-control input-lg"
-														placeholder="Enter Date Of Birth" tabindex="2"
+														placeholder="Enter Date Of Birth" tabindex="9"
 														required="required" />
 												</div>
 											</div>
 										</div>
 										<div class="form-group">
 											<textarea name="userAddress" class="form-control input-lg"
-												placeholder="Enter Address" tabindex="3" rows="5"
-												required="required"></textarea>
+												placeholder="Enter Address" tabindex="10" rows="5"
+												maxlength="250" required="required"></textarea>
 										</div>
 										<div class="row">
 											<div class="col-md-4"></div>
 											<div class="col-md-4">
 												<a href="/manager/managerPayment"> <input type="submit"
-													class="btn btn-primary btn-block btn-lg" tabindex="7" />
+													class="btn btn-primary btn-block btn-lg" tabindex="11" />
 												</a>
 											</div>
 											<div class="col-md-4"></div>

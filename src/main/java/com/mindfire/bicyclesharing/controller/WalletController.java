@@ -16,8 +16,11 @@
 
 package com.mindfire.bicyclesharing.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -48,7 +51,8 @@ public class WalletController {
 	 * @return addWalletBalance view
 	 */
 	@RequestMapping(value = { "/manager/addWalletBalance" }, method = RequestMethod.GET)
-	public ModelAndView getWalletView() {
+	public ModelAndView getWalletView(@Valid @ModelAttribute("addWalletBalance") WalletBalanceDTO walletBalanceDTO,
+			BindingResult bindingResult) {
 		return new ModelAndView("addWalletBalance");
 	}
 
@@ -64,6 +68,11 @@ public class WalletController {
 	@RequestMapping(value = "/manager/wallet", method = RequestMethod.POST)
 	public ModelAndView addWalletBalance(@ModelAttribute("addWalletBalance") WalletBalanceDTO walletBalanceDTO,
 			RedirectAttributes redirectAttributes) {
+		if (walletBalanceDTO.getBalance() < 100 || walletBalanceDTO.getBalance() > 999) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Balance must be between 100 and 999!!!");
+			return new ModelAndView("redirect:addWalletBalance");
+
+		}
 		if (walletComponent.mapWalletBalance(walletBalanceDTO) == 1) {
 			walletComponent.mapWalletTransactionDetail(walletBalanceDTO);
 			redirectAttributes.addFlashAttribute("successMessage", "Successfully Added!!!");
