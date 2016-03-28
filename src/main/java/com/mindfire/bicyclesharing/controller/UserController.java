@@ -136,7 +136,6 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
 	public ModelAndView confirmRegistration(Model model, @RequestParam("token") String token) {
-		System.out.println(token);
 		VerificationToken verificationToken = tokenRepository.findByToken(token);
 
 		if (verificationToken == null) {

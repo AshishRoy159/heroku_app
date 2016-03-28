@@ -95,10 +95,6 @@ public class UserService {
 		user.setRateGroup(rateGroupRepository.findByGroupType("USER"));
 		userRepository.save(user);
 
-		proofDetailRepository.save(proofDetail);
-		user.setProofDetail(proofDetail);
-		userRepository.save(user);
-
 		wallet.setUser(user);
 		walletRepository.save(wallet);
 

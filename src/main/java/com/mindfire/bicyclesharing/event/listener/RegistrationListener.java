@@ -106,8 +106,6 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 		final String message = messageBean.getRegSucc();
 		final String msg = message + "\r\n" + "<a href='" + confirmationUrl + "'>Click Here</a>";
 
-		System.out.println(confirmationUrl);
-
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");

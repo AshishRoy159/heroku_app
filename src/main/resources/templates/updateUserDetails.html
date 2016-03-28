@@ -107,7 +107,7 @@
 					<!-- SIDEBAR MENU -->
 					<div class="profile-usermenu">
 						<ul class="nav">
-							<li><a href="/user/userProfile"> <i
+							<li><a th:href="@{/user/userProfile/} + ${user.userId}"> <i
 									class="glyphicon glyphicon-home"></i> Overview
 							</a></li>
 							<li class="active"><a href="#"> <i
@@ -139,7 +139,7 @@
 											</div>
 											<div class="col-md-6">
 												<input class="form-control" type="text" name="firstName"
-													th:value="${user.firstName}" required="required" />
+													th:value="${user.firstName}" pattern="/^[a-zA-Z ]{2,30}$/" tabindex="1" maxlength="15" required="required" />
 											</div>
 										</div>
 										<br />
@@ -149,7 +149,7 @@
 											</div>
 											<div class="col-md-6">
 												<input class="form-control" type="text" name="lastName"
-													th:value="${user.lastName}" />
+													th:value="${user.lastName}" tabindex="2" maxlength="15" />
 											</div>
 										</div>
 										<br />
@@ -169,7 +169,7 @@
 											</div>
 											<div class="col-md-6">
 												<input class="form-control" type="date" name="dateOfBirth"
-													th:value="${user.dateOfBirth}" required="required" />
+													th:value="${user.dateOfBirth}" tabindex="3" required="required" />
 											</div>
 										</div>
 										<br />
@@ -179,7 +179,7 @@
 											</div>
 											<div class="col-md-6">
 												<input class="form-control" type="text" name="mobileNo"
-													maxlength="10" pattern="*[0-9]{10}"
+													maxlength="10" pattern="[0-9]{10}"
 													title="Enter only numbers" th:value="${user.mobileNo}"
 													required="required" />
 											</div>
@@ -190,8 +190,8 @@
 												<label>Address:</label>
 											</div>
 											<div class="col-md-6">
-												<textarea class="form-control" name="userAddress"
-													th:text="${user.userAddress}"></textarea>
+												<textarea class="form-control" name="userAddress" 
+													th:text="${user.userAddress}" tabindex="1" maxlength="250"></textarea>
 											</div>
 										</div>
 										<br />
