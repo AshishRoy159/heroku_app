@@ -48,17 +48,19 @@
 								<h3>Outgoing</h3>
 							</div>
 							<div class="panel-body">
-								<form action="#" th:action="@{/admin/setPickUpPoint}"
+								<form action="#" th:action="@{/admin/updateRole}"
 									th:object="${manageRoleData}" method="post">
 									<div class="col-md-8 col-sm-8 col-xs-8">
 										<fieldset>
 											<p>
-												<label>User Id</label> <input name="userId" th:value="${userId}"
-													class="form-control input-lg" readonly="readonly" required="required" />
+												<label>User Id</label> <input name="userId" tabindex="1"
+													th:value="${userId}" class="form-control input-lg"
+													readonly="readonly" required="required" />
 											</p>
 											<p>
 												<label>Role</label><select class="form-control input-lg"
-													id="select" name="userRoleId" required="required">
+													id="select" name="userRoleId" tabindex="2"
+													required="required">
 													<option value="">Select Role:</option>
 													<option value="1">ADMIN</option>
 													<option value="2">MANAGER</option>
@@ -67,7 +69,8 @@
 											</p>
 											<p id="choosePickupPoint" style="display: none;">
 												<label>Set Pickup Point:</label> <select
-													class="form-control input-lg" name="pickUpPointId">
+													class="form-control input-lg" name="pickUpPointId"
+													tabindex="3">
 													<option value="0">Select Pickup Point</option>
 													<option th:each="pickUpPoint : ${pickUpPoints}"
 														th:value="${pickUpPoint.pickUpPointId}"
@@ -77,8 +80,9 @@
 											<div style="height: 10px;"></div>
 										</fieldset>
 										<div>
-											<button type="submit" class="btn btn-primary">Submit &raquo;</button>
-											<input type="reset" class="btn btn-info" />
+											<button type="submit" tabindex="4" class="btn btn-primary">Submit
+												&raquo;</button>
+											<input type="reset" tabindex="5" class="btn btn-info" />
 										</div>
 									</div>
 								</form>

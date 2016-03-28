@@ -72,7 +72,7 @@ public class ManageRoleController {
 	 *            to receive the incoming data
 	 * @return searchUsers view
 	 */
-	@RequestMapping(value = "admin/setPickUpPoint", method = RequestMethod.POST)
+	@RequestMapping(value = "admin/updateRole", method = RequestMethod.POST)
 	public ModelAndView setPickUpPoint(@ModelAttribute("manageRoleData") ManageRoleDTO manageRoleDTO) {
 		if (userComponent.mapUpdateRole(manageRoleDTO) > 0) {
 			if (manageRoleDTO.getUserRoleId() == 2) {

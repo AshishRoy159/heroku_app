@@ -44,8 +44,9 @@
 										<div class="control-group">
 											<label class="control-label">Location</label>
 											<div class="controls">
-												<textarea rows="5" name="location" placeholder=""
-													class="input-xlarge form-control" required="required"></textarea>
+												<textarea tabindex="1" maxlength="250" rows="5" name="location"
+													placeholder="" class="input-xlarge form-control"
+													required="required"></textarea>
 												<span class="help-block">Location of the pick up
 													point</span>
 											</div>
@@ -54,7 +55,8 @@
 										<div class="control-group">
 											<label class="control-label">Max capacity</label>
 											<div class="controls">
-												<input type="text" name="maxCapacity" placeholder=""
+												<input type="number" tabindex="2" min="1" max="999"
+													name="maxCapacity" placeholder=""
 													class="input-xlarge form-control" required="required" /> <span
 													class="help-block">The maximum no. of bicycle this
 													pick up point can hold</span>
@@ -63,7 +65,7 @@
 
 										<div class="control-group">
 											<div class="controls">
-												<button type="submit" class="btn btn-primary">Add
+												<button type="submit" tabindex="3" class="btn btn-primary">Add
 													Pick up Point</button>
 											</div>
 										</div>

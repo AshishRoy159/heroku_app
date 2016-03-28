@@ -70,22 +70,22 @@
 						<h2>Please Sign In</h2>
 						<hr class="colorgraph"></hr>
 						<div class="form-group">
-							<input type="email" name="email" class="form-control input-lg"
-								placeholder="Enter Email Id" tabindex="1" maxlength="50"
+							<input type="email" name="email" maxlength="50" class="form-control input-lg"
+								placeholder="Enter Email Id" tabindex="1"
 								title="Enter Valid Email Id" required="required" />
 						</div>
 
 						<div class="form-group">
-							<input type="password" name="password"
-								class="form-control input-lg"  placeholder="Enter Password"
+							<input type="password" name="password" pattern="*{4,16}" maxlength="16"
+								class="form-control input-lg" placeholder="Enter Password"
 								tabindex="2" required="required" />
 						</div>
 
 						<div>
 							<span class="button-checkbox pull-left"> <input
-								type="checkbox" name="remember_me" id="remember_me" /> Remember
-								Me
-							</span> <span><a href="forgotPassword"
+								type="checkbox" tabindex="3" name="remember_me" id="remember_me" />
+								Remember Me
+							</span> <span><a href="forgotPassword" tabindex="4"
 								class="btn btn-link pull-right" style="font-size: 1.1em">Forgot
 									Password?</a></span>
 						</div>
@@ -94,11 +94,11 @@
 						<div class="row">
 							<div class="col-md-6">
 								<input type="submit" value="Login"
-									class="btn btn-primary btn-block btn-lg" tabindex="7" />
+									class="btn btn-primary btn-block btn-lg" tabindex="5" />
 							</div>
 							<div class="col-md-6">
 								<a href="register"> <input type="button" value="Register"
-									class="btn btn-success btn-block btn-lg" tabindex="7" />
+									class="btn btn-success btn-block btn-lg" tabindex="6" />
 								</a>
 							</div>
 						</div>
