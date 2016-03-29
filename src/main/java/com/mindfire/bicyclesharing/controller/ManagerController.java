@@ -17,12 +17,15 @@
 package com.mindfire.bicyclesharing.controller;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mindfire.bicyclesharing.dto.UserDTO;
 
@@ -58,7 +61,12 @@ public class ManagerController {
 	 * @return managerPayment view
 	 */
 	@RequestMapping(value = { "/manager/managerPayment" }, method = RequestMethod.POST)
-	public ModelAndView getPayment(@ModelAttribute("userData") UserDTO userDTO, HttpSession session) {
+	public ModelAndView getPayment(@Valid @ModelAttribute("userData") UserDTO userDTO, BindingResult result, 
+			HttpSession session, RedirectAttributes redirectAttributes) {
+		if(result.hasErrors()){
+			redirectAttributes.addFlashAttribute("errorMessage", "Invalid User Data ! Try Again.");
+			return new ModelAndView("redirect:addNewUser");
+		}
 		session.setAttribute("userDTO", userDTO);
 		return new ModelAndView("managerPayment");
 	}

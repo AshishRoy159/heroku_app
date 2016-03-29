@@ -16,6 +16,12 @@
 
 package com.mindfire.bicyclesharing.dto;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.NumberFormat;
+
 /**
  * WalletBalanceDTO class is used for taking data from the Add Wallet Balance
  * view.
@@ -26,7 +32,12 @@ package com.mindfire.bicyclesharing.dto;
  */
 public class WalletBalanceDTO {
 
+	@NotNull
+	@NumberFormat
 	private Long userId;
+	
+	@NotNull @NumberFormat 
+	@Min(100) @Max(999)
 	private Double balance;
 
 	/**

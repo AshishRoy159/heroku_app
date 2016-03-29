@@ -29,6 +29,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mindfire.bicyclesharing.component.WalletComponent;
 import com.mindfire.bicyclesharing.dto.WalletBalanceDTO;
+import com.mindfire.bicyclesharing.model.User;
+import com.mindfire.bicyclesharing.service.UserService;
 
 /**
  * This class contains all the Request Mappings related to the wallet balance
@@ -43,6 +45,9 @@ public class WalletController {
 
 	@Autowired
 	private WalletComponent walletComponent;
+
+	@Autowired
+	private UserService userService;
 
 	/**
 	 * This method is used to map the add wallet balance request. Simply render
@@ -66,14 +71,19 @@ public class WalletController {
 	 * @return addWalletBalance view
 	 */
 	@RequestMapping(value = "/manager/wallet", method = RequestMethod.POST)
-	public ModelAndView addWalletBalance(@ModelAttribute("addWalletBalance") WalletBalanceDTO walletBalanceDTO,
-			RedirectAttributes redirectAttributes) {
-		if (walletBalanceDTO.getBalance() < 100 || walletBalanceDTO.getBalance() > 999) {
+	public ModelAndView addWalletBalance(@Valid @ModelAttribute("addWalletBalance") WalletBalanceDTO walletBalanceDTO,
+			BindingResult result, RedirectAttributes redirectAttributes) {
+		if (result.hasErrors()) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Balance must be between 100 and 999!!!");
 			return new ModelAndView("redirect:addWalletBalance");
 
 		}
-		if (walletComponent.mapWalletBalance(walletBalanceDTO) == 1) {
+		User user = userService.userDetails(walletBalanceDTO.getUserId());
+		if (user == null) {
+			redirectAttributes.addFlashAttribute("errorMessage", "User not found!!!");
+			return new ModelAndView("redirect:addWalletBalance");
+
+		} else if (walletComponent.mapWalletBalance(walletBalanceDTO) == 1) {
 			walletComponent.mapWalletTransactionDetail(walletBalanceDTO);
 			redirectAttributes.addFlashAttribute("successMessage", "Successfully Added!!!");
 			return new ModelAndView("redirect:addWalletBalance");

@@ -22,6 +22,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
@@ -39,6 +40,7 @@ public class UserDTO {
 
 	@NotNull
 	@Pattern(regexp = "[a-zA-Z]{2,20}")
+	@Size(min = 2, max = 20)
 	private String firstName;
 
 	@NotNull
@@ -47,7 +49,6 @@ public class UserDTO {
 
 	@NotNull
 	@NumberFormat
-	@Length(min = 10, max = 10)
 	private Long mobileNo;
 
 	@NotNull
