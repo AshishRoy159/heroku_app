@@ -16,6 +16,8 @@
 
 package com.mindfire.bicyclesharing.controller.admin;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,8 +77,13 @@ public class BicycleController {
 	 * @return addNewBicycle view
 	 */
 	@RequestMapping(value = "admin/addBicycle", method = RequestMethod.POST)
-	public ModelAndView addedNewBicycle(@ModelAttribute("bicycleData") BiCycleDTO biCycleDTO, BindingResult result,
-			RedirectAttributes redirectAttributes) {
+	public ModelAndView addedNewBicycle(@Valid @ModelAttribute("bicycleData") BiCycleDTO biCycleDTO,
+			BindingResult result, RedirectAttributes redirectAttributes) {
+		if (result.hasErrors()) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Oops... Operation failed!!");
+			return new ModelAndView("redirect:addNewBicycle");
+		}
+
 		BiCycle biCycle = biCycleComponent.mapBiCycleData(biCycleDTO);
 
 		if (biCycle == null) {

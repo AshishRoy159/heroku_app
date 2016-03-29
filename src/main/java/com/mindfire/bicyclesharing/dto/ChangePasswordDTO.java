@@ -16,6 +16,11 @@
 
 package com.mindfire.bicyclesharing.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.Length;
+
 /**
  * ChangePasswordDTO class is used for taking data from changePassword view.
  * 
@@ -25,8 +30,16 @@ package com.mindfire.bicyclesharing.dto;
  */
 public class ChangePasswordDTO {
 
+	@NotNull
+	@Length(min = 4, max = 16)
 	private String oldPassword;
+
+	@NotNull
+	@Pattern(regexp = "[^ \t\n\f\r]{4,16}")
 	private String newPassword;
+
+	@NotNull
+	@Pattern(regexp = "[^ \t\n\f\r]{4,16}")
 	private String cnfPassword;
 
 	/**

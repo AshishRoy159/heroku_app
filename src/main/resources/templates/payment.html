@@ -68,10 +68,11 @@
 						<h2>Payment</h2>
 						<hr class="colorgraph"></hr>
 						<div class="row">
+						<div class="text-danger" th:text="${errorMessage}"></div>
 							<div class="col-md-12">
 								<div class="form-group">
 									<select id ="option" class="form-control input-lg" name="type"
-										required="required" onchange="payment()">
+										required="required" onchange="payment()" tabindex="1">
 										<option value="">Choose Plan:</option>
 										<option value="Starter">Starter</option>
 										<option value="Regular">Regular</option>
@@ -88,11 +89,11 @@
 									</div>
 									<div class="col-md-8">
 										<label class="radio-inline"> <input type="radio"
-											name="mode" value="cash" />Cash
+											name="mode" value="cash" tabindex="2" />Cash
 										</label> <label class="radio-inline"> <input type="radio"
-											name="mode" value="debitCard" />Debit Card
+											name="mode" value="debitCard" tabindex="3" />Debit Card
 										</label> <label class="radio-inline"> <input type="radio"
-											name="mode" value="internetBanking" />Internet Banking
+											name="mode" value="internetBanking" tabindex="4" />Internet Banking
 										</label>
 									</div>
 								</div>
@@ -107,7 +108,7 @@
 							<div class="col-md-8">
 								<div class="form-group">
 									<input id ="amount" type="text" name="amount" class="form-control input-lg"
-										tabindex="2" readonly="readonly" />
+										tabindex="5" readonly="readonly" />
 								</div>
 							</div>
 						</div>
@@ -115,7 +116,7 @@
 						<div class="row">
 							<div class="col-md-6">
 								<input type="submit" value="Pay Now"
-									class="btn btn-primary btn-block btn-lg" tabindex="7" />
+									class="btn btn-primary btn-block btn-lg" tabindex="6" />
 							</div>
 							<div class="col-md-6">
 								<a href="login"> <input type="button" value="Sign In"

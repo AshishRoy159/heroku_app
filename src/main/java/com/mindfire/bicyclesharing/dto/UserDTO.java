@@ -20,8 +20,13 @@ import java.util.Date;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 /**
  * UserDTO class is used for taking data from the registration view
@@ -31,16 +36,42 @@ import org.springframework.format.annotation.DateTimeFormat;
  * @since 10/03/2016
  */
 public class UserDTO {
+
+	@NotNull
+	@Pattern(regexp = "[a-zA-Z]{2,20}")
 	private String firstName;
+
+	@NotNull
+	@Pattern(regexp = "[a-zA-Z]{2,20}")
 	private String lastName;
+
+	@NotNull
+	@NumberFormat
+	@Length(min = 10, max = 10)
 	private Long mobileNo;
+
+	@NotNull
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dateOfBirth;
+
+	@NotNull
+	@Email
+	@Length(max = 50)
 	private String email;
+
+	@NotNull
+	@Length(max = 250)
 	private String userAddress;
+
+	@NotNull
 	private String proofType;
+
+	@NotNull
+	@Pattern(regexp = "[a-zA-Z0-9]{2,20}")
 	private String proofNo;
+
+	@NotNull
 	private String document;
 
 	/**

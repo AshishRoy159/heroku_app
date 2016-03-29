@@ -18,6 +18,8 @@ package com.mindfire.bicyclesharing.dto;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.format.annotation.NumberFormat;
+
 /**
  * RegistrationPaymentDTO class is used for taking data from payment view.
  * 
@@ -29,9 +31,12 @@ public class RegistrationPaymentDTO {
 
 	@NotNull
 	private String mode;
+
 	@NotNull
 	private String type;
+
 	@NotNull
+	@NumberFormat
 	private Double amount;
 
 	/**

@@ -16,6 +16,10 @@
 
 package com.mindfire.bicyclesharing.dto;
 
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.NumberFormat;
+
 /**
  * ManageRoleDTO class is used for taking data from manageRole view.
  * 
@@ -25,8 +29,15 @@ package com.mindfire.bicyclesharing.dto;
  */
 public class ManageRoleDTO {
 
+	@NotNull
+	@NumberFormat
 	private Long userId;
+
+	@NotNull
+	@NumberFormat
 	private Long userRoleId;
+
+	@NumberFormat
 	private int pickUpPointId;
 
 	/**

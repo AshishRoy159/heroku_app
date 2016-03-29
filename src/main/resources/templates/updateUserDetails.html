@@ -134,6 +134,7 @@
 										th:action="@{/user/updateUserDetails/} + ${user.userId}"
 										th:object="${userDetailData}" method="post">
 										<div class="row">
+										<h2 class="text-danger" th:text="${errorMessage}"></h2>
 											<div class="col-md-6">
 												<label>First Name:</label>
 											</div>

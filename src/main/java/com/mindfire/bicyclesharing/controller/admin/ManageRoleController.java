@@ -16,9 +16,12 @@
 
 package com.mindfire.bicyclesharing.controller.admin;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,7 +76,13 @@ public class ManageRoleController {
 	 * @return searchUsers view
 	 */
 	@RequestMapping(value = "admin/updateRole", method = RequestMethod.POST)
-	public ModelAndView setPickUpPoint(@ModelAttribute("manageRoleData") ManageRoleDTO manageRoleDTO) {
+	public ModelAndView setPickUpPoint(@Valid @ModelAttribute("manageRoleData") ManageRoleDTO manageRoleDTO,
+			BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			model.addAttribute("errorMessage", "Something went wrong. Operation failed.");
+			return new ModelAndView("searchUsers", "usersList", userService.getAllUsers());
+		}
+		
 		if (userComponent.mapUpdateRole(manageRoleDTO) > 0) {
 			if (manageRoleDTO.getUserRoleId() == 2) {
 				userComponent.mapPickUpPointManagerDetails(manageRoleDTO);

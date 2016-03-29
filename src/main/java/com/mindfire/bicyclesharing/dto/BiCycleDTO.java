@@ -16,6 +16,11 @@
 
 package com.mindfire.bicyclesharing.dto;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.NumberFormat;
+
 /**
  * BiCycleDTO class is used for taking data from addNewBicycle view.
  * 
@@ -25,7 +30,12 @@ package com.mindfire.bicyclesharing.dto;
  */
 public class BiCycleDTO {
 
+	@NotNull
+	@Length(max = 20)
 	private String chasisNo;
+
+	@NotNull
+	@NumberFormat
 	private int pickUpPoint;
 
 	/**

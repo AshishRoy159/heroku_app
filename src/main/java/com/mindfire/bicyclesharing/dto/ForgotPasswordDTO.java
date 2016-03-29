@@ -18,6 +18,8 @@ package com.mindfire.bicyclesharing.dto;
 
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Email;
+
 /**
  * ForgotPasswordDTO class is used for taking data from forgotPassword view.
  * 
@@ -28,6 +30,7 @@ import javax.validation.constraints.NotNull;
 public class ForgotPasswordDTO {
 
 	@NotNull
+	@Email
 	private String email;
 
 	/**

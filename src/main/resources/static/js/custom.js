@@ -140,3 +140,7 @@ function payment() {
 		document.getElementById("amount").value = 345;
 	}
 }
+
+function hideInvalidMessage() {
+	document.getElementById("invalidPasswordMessage").style.visibility = "hidden";
+}

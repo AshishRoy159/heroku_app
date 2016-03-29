@@ -18,6 +18,8 @@ package com.mindfire.bicyclesharing.controller.admin;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,8 +77,13 @@ public class PickupPointController {
 	 * @return addNewPickupPoint view
 	 */
 	@RequestMapping(value = "/admin/addPickupPoint", method = RequestMethod.POST)
-	public ModelAndView addedPickupPoint(@ModelAttribute("pickupPointData") PickUpPointDTO pickUpPointDTO,
+	public ModelAndView addedPickupPoint(@Valid @ModelAttribute("pickupPointData") PickUpPointDTO pickUpPointDTO,
 			BindingResult result, RedirectAttributes redirectAttributes) {
+		if (result.hasErrors()) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Oops... Operation failed!!");
+			return new ModelAndView("redirect:addNewPickupPoint");
+		}
+
 		PickUpPoint pickUpPoint = pickUpPointComponent.mapPickUpPointDetails(pickUpPointDTO);
 
 		if (pickUpPoint == null) {
@@ -125,7 +132,11 @@ public class PickupPointController {
 	 * @return pickupPointDetails view
 	 */
 	@RequestMapping(value = "admin/updatePickupPointDetails", method = RequestMethod.POST)
-	public ModelAndView updatePickUpPointDetails(@ModelAttribute("pickupPointData") PickUpPointDTO pickUpPointDTO) {
+	public ModelAndView updatePickUpPointDetails(@Valid @ModelAttribute("pickupPointData") PickUpPointDTO pickUpPointDTO, BindingResult result) {
+		if (result.hasErrors()) {
+			return new ModelAndView("redirect:pickupPointDetails");
+		}
+		
 		int updatedResult = pickUpPointComponent.mapUpdatePickUpPointDetails(pickUpPointDTO);
 
 		if (updatedResult != 0) {

@@ -16,7 +16,7 @@
 
 package com.mindfire.bicyclesharing.dto;
 
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -34,12 +34,12 @@ public class SetPasswordDTO {
 	@NotEmpty
 	private String email;
 
-	@Size(min = 1, max = 16)
 	@NotEmpty
+	@Pattern(regexp = "[^ \t\n\f\r]{4,16}")
 	private String password;
 
-	@Size(min = 1, max = 16)
 	@NotEmpty
+	@Pattern(regexp = "[^ \t\n\f\r]{4,16}")
 	private String cnfPassword;
 
 	/**

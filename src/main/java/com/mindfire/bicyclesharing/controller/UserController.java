@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.component.MessageBean;
@@ -103,8 +104,11 @@ public class UserController {
 	 *         failure view
 	 */
 	@RequestMapping(value = "register", method = RequestMethod.POST)
-	public ModelAndView addUser(@ModelAttribute("paymentData") RegistrationPaymentDTO regPaymentDTO,
+	public ModelAndView addUser(@Valid @ModelAttribute("paymentData") RegistrationPaymentDTO regPaymentDTO,
 			BindingResult result, HttpSession session, WebRequest request) {
+		if (result.hasErrors()) {
+			return new ModelAndView("payment", "errorMessage", "Invalid Payment data");
+		}
 
 		UserDTO userDTO = (UserDTO) session.getAttribute("userDTO");
 		WalletTransaction transaction = userComponent.mapUserComponent(userDTO, regPaymentDTO);
@@ -218,6 +222,10 @@ public class UserController {
 	@RequestMapping(value = "/afterSetPassword", method = RequestMethod.POST)
 	public ModelAndView setPassword(@ModelAttribute("setPasswordData") @Valid SetPasswordDTO setPasswordDTO,
 			Model model, BindingResult result) {
+		if (result.hasErrors()) {
+			return new ModelAndView("setPassword", "errorMessage", "Invalid password format");
+		}
+
 		int num = userComponent.mapPassword(setPasswordDTO.getPassword(), setPasswordDTO.getEmail());
 
 		if (num == 0) {
@@ -249,8 +257,13 @@ public class UserController {
 	 * @return successRegister view
 	 */
 	@RequestMapping(value = "afterForgotPassword", method = RequestMethod.POST)
-	public ModelAndView forgotOldPassword(@ModelAttribute("forgotPasswordData") ForgotPasswordDTO forgotPasswordDTO,
-			WebRequest request) {
+	public ModelAndView forgotOldPassword(
+			@Valid @ModelAttribute("forgotPasswordData") ForgotPasswordDTO forgotPasswordDTO, WebRequest request,
+			BindingResult result) {
+		if (result.hasErrors()) {
+			return new ModelAndView("forgotPassword", "errorMessage", "Invalid Email");
+		}
+		
 		User user = userComponent.retrieveUserPassword(forgotPasswordDTO);
 
 		try {
@@ -329,9 +342,15 @@ public class UserController {
 	 *            to receive the incoming data
 	 * @return signIn view
 	 */
-	@RequestMapping(value = "afterChangePassword", method = RequestMethod.POST)
+	@RequestMapping(value = "user/afterChangePassword", method = RequestMethod.POST)
 	public String afterChangePassword(Authentication authentication,
-			@ModelAttribute("changePasswordData") ChangePasswordDTO changePasswordDTO) {
+			@Valid @ModelAttribute("changePasswordData") ChangePasswordDTO changePasswordDTO, BindingResult result,
+			RedirectAttributes redirectAttributes) {
+		if (result.hasErrors()) {
+			redirectAttributes.addFlashAttribute("invalidPassword", "Password must be 4 to 16 characters long");
+			return "redirect:changePassword";
+		}
+		
 		BCryptPasswordEncoder passEncoder = new BCryptPasswordEncoder();
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
@@ -339,9 +358,11 @@ public class UserController {
 			if (userComponent.mapPassword(changePasswordDTO.getNewPassword(), currentUser.getUser().getEmail()) != 0) {
 				return "redirect:/logout";
 			}
+		} else {
+			redirectAttributes.addFlashAttribute("invalidPassword", "Incorrect Old Password");
 		}
 
-		return Constant.CHANGE_PASSWORD;
+		return "redirect:" + Constant.CHANGE_PASSWORD;
 	}
 
 	/**
@@ -399,14 +420,18 @@ public class UserController {
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = { "user/updateUserDetails/{id}" }, method = RequestMethod.POST)
-	public ModelAndView afterUpdateUserDetails(@ModelAttribute("userDetailData") UserDTO userDTO,
-			@PathVariable("id") Long id, Model model) {
+	public ModelAndView afterUpdateUserDetails(@Valid @ModelAttribute("userDetailData") UserDTO userDTO,
+			@PathVariable("id") Long id, Model model, BindingResult result) {
+		if (result.hasErrors()) {
+			return new ModelAndView("updateUserDetails", "errorMessage", "Invalid data. Updation failed.");
+		}
+		
 		int success = userComponent.mapUpdateUserDetail(userDTO);
 		User userDetails = userService.userDetails(id);
 		model.addAttribute("user", userDetails);
 
 		if (success == 0) {
-			return new ModelAndView("updateUserDetails");
+			return new ModelAndView("updateUserDetails", "errorMessage", "Invalid data. Updation failed.");
 		} else {
 			return new ModelAndView("userProfile");
 		}
@@ -422,7 +447,12 @@ public class UserController {
 	 * @return payment view
 	 */
 	@RequestMapping(value = "payment", method = RequestMethod.POST)
-	public ModelAndView getPayment(@ModelAttribute("userData") UserDTO userDTO, HttpSession session) {
+	public ModelAndView getPayment(@Valid @ModelAttribute("userData") UserDTO userDTO, HttpSession session,
+			BindingResult result) {
+		if (result.hasErrors()) {
+			return new ModelAndView("registration", "errorMessage", "Invalid User data");
+		}
+
 		session.setAttribute("userDTO", userDTO);
 		return new ModelAndView("payment");
 	}
