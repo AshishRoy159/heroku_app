@@ -45,7 +45,7 @@ public class BiCycle implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "bi_cycle_id")
-	private Integer biCycleId;
+	private Long biCycleId;
 
 	@Column(name = "added_on", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp addedOn;
@@ -69,7 +69,7 @@ public class BiCycle implements Serializable {
 	/**
 	 * @return the biCycleId
 	 */
-	public Integer getBiCycleId() {
+	public Long getBiCycleId() {
 		return biCycleId;
 	}
 
@@ -77,7 +77,7 @@ public class BiCycle implements Serializable {
 	 * @param biCycleId
 	 *            the biCycleId to set
 	 */
-	public void setBiCycleId(Integer biCycleId) {
+	public void setBiCycleId(Long biCycleId) {
 		this.biCycleId = biCycleId;
 	}
 

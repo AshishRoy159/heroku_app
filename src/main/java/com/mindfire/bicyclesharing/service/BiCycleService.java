@@ -25,6 +25,13 @@ import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.repository.BiCycleRepository;
 
+/**
+ * BiCycleService class contains methods for BiCycle related operations
+ * 
+ * @author mindfire
+ * @version 1.0
+ * @since 10/03/2016
+ */
 @Service
 public class BiCycleService {
 

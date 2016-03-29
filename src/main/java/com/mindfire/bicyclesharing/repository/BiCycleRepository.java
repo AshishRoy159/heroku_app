@@ -32,7 +32,7 @@ import com.mindfire.bicyclesharing.model.PickUpPoint;
  * @since 10/03/2016
  */
 @Repository
-public interface BiCycleRepository extends JpaRepository<BiCycle, Integer> {
+public interface BiCycleRepository extends JpaRepository<BiCycle, Long> {
 
 	/**
 	 * This method is used to find all Bicycle records based on currentLocation
@@ -42,4 +42,21 @@ public interface BiCycleRepository extends JpaRepository<BiCycle, Integer> {
 	 * @return BiCycle list
 	 */
 	public List<BiCycle> findAllByCurrentLocation(PickUpPoint pickUpPointId);
+	
+	/**
+	 * This method is used to find all Bicycle records based on currentLocation and availability
+	 * 
+	 * @param pickUpPoint
+	 * @param available
+	 * @return
+	 */
+	public List<BiCycle> findByCurrentLocationAndIsAvailable(PickUpPoint pickUpPoint, Boolean available);
+	
+	/**
+	 * This method is used to find bicyles by id.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public BiCycle findByBiCycleId(Long id);
 }

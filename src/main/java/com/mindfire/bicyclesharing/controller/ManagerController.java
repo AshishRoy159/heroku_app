@@ -18,18 +18,13 @@ package com.mindfire.bicyclesharing.controller;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mindfire.bicyclesharing.dto.UserDTO;
-import com.mindfire.bicyclesharing.model.User;
-import com.mindfire.bicyclesharing.service.UserService;
 
 /**
  * ManagerController contains all the mappings related to the manager.
@@ -40,9 +35,6 @@ import com.mindfire.bicyclesharing.service.UserService;
  */
 @Controller
 public class ManagerController {
-
-	@Autowired
-	private UserService userService;
 
 	/**
 	 * This method is used to map the add new user request by the manager.
@@ -69,23 +61,6 @@ public class ManagerController {
 	public ModelAndView getPayment(@ModelAttribute("userData") UserDTO userDTO, HttpSession session) {
 		session.setAttribute("userDTO", userDTO);
 		return new ModelAndView("managerPayment");
-	}
-
-	/**
-	 * This method is used to map the booking of the bicycles. Simply render the
-	 * booking view
-	 * 
-	 * @param model
-	 *            to map the model attributes
-	 * @param id
-	 *            userId of the respective manager
-	 * @return booking view
-	 */
-	@RequestMapping(value = { "/manager/booking/{id}" }, method = RequestMethod.GET)
-	public ModelAndView getBookingView(Model model, @PathVariable("id") Long id) {
-		User userDetails = userService.userDetails(id);
-		model.addAttribute("user", userDetails);
-		return new ModelAndView("booking");
 	}
 
 	/**

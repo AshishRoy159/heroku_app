@@ -16,10 +16,8 @@
 
 package com.mindfire.bicyclesharing.dto;
 
-import java.sql.Timestamp;
-
 /**
- * IssyeCycleDTO class is used for taking data from the Issue Cycle view
+ * IssueCycleDTO class is used for taking data from the Issue Cycle view
  * 
  * @author mindfire
  * @version 1.0
@@ -27,34 +25,14 @@ import java.sql.Timestamp;
  */
 public class IssueCycleDTO {
 
-	private String bookingId;
-	private String userId;
-	private String bicycleId;
-	private String transactionId;
-	private Timestamp bookingTime;
-	private Timestamp actualOutTime;
-	private Timestamp expectedInTime;
-	private String pickedUpFrom;
-
-	/**
-	 * @return the bookingId
-	 */
-	public String getBookingId() {
-		return bookingId;
-	}
-
-	/**
-	 * @param bookingId
-	 *            the bookingId to set
-	 */
-	public void setBookingId(String bookingId) {
-		this.bookingId = bookingId;
-	}
+	private Long userId;
+	private Long bicycleId;
+	private String expectedInTime;
 
 	/**
 	 * @return the userId
 	 */
-	public String getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
@@ -62,14 +40,14 @@ public class IssueCycleDTO {
 	 * @param userId
 	 *            the userId to set
 	 */
-	public void setUserId(String userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
 	/**
 	 * @return the bicycleId
 	 */
-	public String getBicycleId() {
+	public Long getBicycleId() {
 		return bicycleId;
 	}
 
@@ -77,59 +55,14 @@ public class IssueCycleDTO {
 	 * @param bicycleId
 	 *            the bicycleId to set
 	 */
-	public void setBicycleId(String bicycleId) {
+	public void setBicycleId(Long bicycleId) {
 		this.bicycleId = bicycleId;
-	}
-
-	/**
-	 * @return the transactionId
-	 */
-	public String getTransactionId() {
-		return transactionId;
-	}
-
-	/**
-	 * @param transactionId
-	 *            the transactionId to set
-	 */
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
-	}
-
-	/**
-	 * @return the bookingTime
-	 */
-	public Timestamp getBookingTime() {
-		return bookingTime;
-	}
-
-	/**
-	 * @param bookingTime
-	 *            the bookingTime to set
-	 */
-	public void setBookingTime(Timestamp bookingTime) {
-		this.bookingTime = bookingTime;
-	}
-
-	/**
-	 * @return the actualOutTime
-	 */
-	public Timestamp getActualOutTime() {
-		return actualOutTime;
-	}
-
-	/**
-	 * @param actualOutTime
-	 *            the actualOutTime to set
-	 */
-	public void setActualOutTime(Timestamp actualOutTime) {
-		this.actualOutTime = actualOutTime;
 	}
 
 	/**
 	 * @return the expectedInTime
 	 */
-	public Timestamp getExpectedInTime() {
+	public String getExpectedInTime() {
 		return expectedInTime;
 	}
 
@@ -137,22 +70,8 @@ public class IssueCycleDTO {
 	 * @param expectedInTime
 	 *            the expectedInTime to set
 	 */
-	public void setExpectedInTime(Timestamp expectedInTime) {
+	public void setExpectedInTime(String expectedInTime) {
 		this.expectedInTime = expectedInTime;
 	}
 
-	/**
-	 * @return the pickedUpFrom
-	 */
-	public String getPickedUpFrom() {
-		return pickedUpFrom;
-	}
-
-	/**
-	 * @param pickedUpFrom
-	 *            the pickedUpFrom to set
-	 */
-	public void setPickedUpFrom(String pickedUpFrom) {
-		this.pickedUpFrom = pickedUpFrom;
-	}
 }

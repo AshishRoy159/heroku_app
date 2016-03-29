@@ -36,7 +36,7 @@ public class Booking implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "booking_id")
-	private Integer bookingId;
+	private Long bookingId;
 
 	@Column(name = "actual_in")
 	private Timestamp actualIn;
@@ -62,12 +62,14 @@ public class Booking implements Serializable {
 	@Column(name = "is_open")
 	private Boolean isOpen;
 
-	@Column(name = "picked_up_from")
-	private String pickedUpFrom;
+	@ManyToOne
+	@JoinColumn(name = "picked_up_from")
+	private PickUpPoint pickedUpFrom;
 
-	@Column(name = "returned_at")
-	private String returnedAt;
-
+	@ManyToOne
+	@JoinColumn(name = "returnet_at")
+	private PickUpPoint returnedAt;
+	
 	@Column(name = "transaction_id")
 	private String transactionId;
 
@@ -82,7 +84,7 @@ public class Booking implements Serializable {
 	/**
 	 * @return the bookingId
 	 */
-	public Integer getBookingId() {
+	public Long getBookingId() {
 		return bookingId;
 	}
 
@@ -90,7 +92,7 @@ public class Booking implements Serializable {
 	 * @param bookingId
 	 *            the bookingId to set
 	 */
-	public void setBookingId(Integer bookingId) {
+	public void setBookingId(Long bookingId) {
 		this.bookingId = bookingId;
 	}
 
@@ -217,7 +219,7 @@ public class Booking implements Serializable {
 	/**
 	 * @return the pickedUpFrom
 	 */
-	public String getPickedUpFrom() {
+	public PickUpPoint getPickedUpFrom() {
 		return pickedUpFrom;
 	}
 
@@ -225,14 +227,14 @@ public class Booking implements Serializable {
 	 * @param pickedUpFrom
 	 *            the pickedUpFrom to set
 	 */
-	public void setPickedUpFrom(String pickedUpFrom) {
+	public void setPickedUpFrom(PickUpPoint pickedUpFrom) {
 		this.pickedUpFrom = pickedUpFrom;
 	}
 
 	/**
 	 * @return the returnedAt
 	 */
-	public String getReturnedAt() {
+	public PickUpPoint getReturnedAt() {
 		return returnedAt;
 	}
 
@@ -240,7 +242,7 @@ public class Booking implements Serializable {
 	 * @param returnedAt
 	 *            the returnedAt to set
 	 */
-	public void setReturnedAt(String returnedAt) {
+	public void setReturnedAt(PickUpPoint returnedAt) {
 		this.returnedAt = returnedAt;
 	}
 

@@ -10,6 +10,7 @@
 <link th:href="@{/css/font-awesome.css}" rel="stylesheet" />
 <!-- Custom Styles-->
 <link th:href="@{/css/admin-styles.css}" rel="stylesheet" />
+<link th:href="@{/css/jquery.datetimepicker.css}" rel="stylesheet" />
 <!-- Google Fonts-->
 <link th:href="@{http://fonts.googleapis.com/css?family=Open+Sans}"
 	rel="stylesheet" type="text/css" />
@@ -26,18 +27,21 @@
 				<div class="row">
 					<div class="col-md-12">
 						<h1 class="page-header">Bookings</h1>
+						<h4 class="text-success" th:text="*{bookingSuccess}"></h4>
+						<h4 class="text-danger" th:text="*{bookingFailure}"></h4>
 					</div>
+					
 				</div>
 				<div class="row">
 					<div class="col-md-6">
 						<div class="panel panel-info">
 							<div class="panel-heading">
-								<h3>Issue Bicycle By <strong th:text="${user.firstName}"></strong></h3>
+								<h3>Issue Bicycle By <strong th:text="${#authentication.principal.firstName}"></strong></h3>
 							</div>
 							<div class="panel-body">
 								<div class="col-md-8 col-sm-8 col-xs-8">
 									<form action="issueCycle" th:action="@{/issueCycle}"
-										th:object="${issueCycle}" method="POST">
+										th:object="${issueCycleData}" method="POST">
 										<div>
 											<label class="control-label"> UserId</label> <input
 												type="text" name="userId" class="form-control"
@@ -45,7 +49,7 @@
 										</div>
 										<div>
 											<label class="control-label">Select BiCycle</label> <select
-												class="input-xlarge form-control" name="biCycle"
+												class="input-xlarge form-control" name="bicycleId"
 												required="required">
 												<option value="">Select BiCycle</option>
 												<option th:each="biCycle : ${biCycles}"
@@ -55,7 +59,7 @@
 										</div>
 										<div>
 											<label class="control-label">Expected Return Time</label> <input
-												type="text" name="expectedInTime" class="form-control"
+												type="text" id="datetimepicker_mask" name="expectedInTime" class="form-control"
 												required="required" />
 										</div>
 
@@ -125,5 +129,11 @@
 	<script src="/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
 	<script src="/js/smoothscroll.js" th:src="@{js/smoothscroll.js}"></script>
 	<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
+	<script src="/js/jquery.datetimepicker.full.js" th:src="@{/js/jquery.datetimepicker.full.js}"></script>
+	<script type="text/javascript">
+	$('#datetimepicker_mask').datetimepicker({
+		mask:'9999-19-39 29:59'
+	});
+	</script>
 </body>
 </html>
