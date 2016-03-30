@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -27,8 +28,8 @@
 			<div class="row">
 				<div class="col-md-12">
 					<h1 class="page-header">
-						Pick up Point Details<small>(Click on location to update
-							data)</small>
+						Pick up Point Details<small sec:authorize="hasAuthority('ADMIN')">(Click
+							on location to update data)</small>
 					</h1>
 				</div>
 			</div>
@@ -56,9 +57,11 @@
 									<tbody>
 										<tr th:each="pickUpPoint : ${pickUpPointList}">
 											<td th:text="${pickUpPoint.pickUpPointId}"></td>
-											<td><a
+											<td sec:authorize="hasAuthority('ADMIN')"><a
 												th:href="@{/admin/updatePickupPointDetails/} + ${pickUpPoint.pickUpPointId}"
 												th:text="${pickUpPoint.location}"></a></td>
+											<td sec:authorize="hasAuthority('MANAGER')"><span
+												th:text="${pickUpPoint.location}"></span></td>
 											<td class="text-center" th:text="${pickUpPoint.maxCapacity}"></td>
 											<td class="text-center"
 												th:text="${pickUpPoint.currentAvailability}"></td>

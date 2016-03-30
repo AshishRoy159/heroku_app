@@ -40,13 +40,13 @@
 										th:object="${addWalletBalance}" method="post">
 										<div>
 											<label class="control-label"> UserId</label> <input
-												type="text" name="userId" class="form-control"
-												  maxlength="2" required="required" />
+												type="text" name="userId" class="form-control" maxlength="2"
+												required="required" />
 										</div>
 										<div>
 											<label class="control-label">Balance</label> <input
-												type="text" name="balance" class="form-control"
-												maxlength="3" required="required" />
+												type="number" min="100" max="999" step="10" name="balance"
+												class="form-control" maxlength="3" required="required" />
 
 										</div>
 										<div style="padding: 5px">

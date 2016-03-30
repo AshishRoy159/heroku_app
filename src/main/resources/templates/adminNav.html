@@ -129,16 +129,20 @@
 			<div class="sidebar-collapse">
 				<ul class="nav" id="main-menu">
 
-					<li><a th:href="@{/admin/adminHome}"><i
-							class="fa fa-dashboard "></i>Dashboard</a></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/managerHome}"><i class="fa fa-dashboard "></i>Dashboard</a></li>
+					<li sec:authorize="hasAuthority('ADMIN')"><a
+						th:href="@{/admin/adminHome}"><i class="fa fa-dashboard "></i>Dashboard</a></li>
 					<li><a th:href="@{#}"><i class="fa fa-desktop "></i>
 							Pricing and plans</a></li>
 					<li><a th:href="@{#}"><i class="fa fa-qrcode "></i>Requests</a></li>
-					<li><a th:href="@{/admin/userList}"><i
-							class="fa fa-table "></i>Users</a></li>
-					<li><a th:href="@{#}"><i class="fa fa-edit "></i>Forms</a></li>
-					<li><a th:href="@{#}"><i class="fa fa-sitemap "></i>Manage
-							Pickup points<span class="fa arrow "></span></a>
+					<li sec:authorize="hasAuthority('ADMIN')"><a
+						th:href="@{/admin/userList}"><i class="fa fa-table "></i>Users</a></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/userList}"><i class="fa fa-table "></i>Users</a></li>
+					<li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{#}"><i
+							class="fa fa-sitemap "></i>Manage Pickup points<span
+							class="fa arrow "></span></a>
 						<ul class="nav nav-second-level ">
 							<li><a th:href="@{/admin/addNewBicycle}">Add bicycle</a></li>
 							<li><a th:href="@{#}">Pickup points<span
@@ -152,16 +156,22 @@
 
 								</ul></li>
 						</ul></li>
-						<li sec:authorize="hasAuthority('MANAGER')"><a th:href="@{/manager/addNewUser}"><i
-								class="fa fa-fw fa-file "></i> Add New User</a></li>
-						<li sec:authorize="hasAuthority('MANAGER')"><a
-							th:href="@{/manager/booking/} + ${#authentication.principal.userId}"><i
-								class="fa fa-fw fa-file "></i> Booking</a></li>
-						<li sec:authorize="hasAuthority('MANAGER')"><a th:href="@{/manager/addWalletBalance}"><i
-								class="fa fa-fw fa-file "></i> Add Wallet balance</a></li>
-						<li sec:authorize="hasAuthority('MANAGER')"><a th:href="@{/manager/bicycleTransfer}"><i
-								class="fa fa-fw fa-file "></i> Transfers</a></li>
-					
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/pickupPointDetails}"><i
+							class="fa fa-sitemap "></i>Pickup point details</a></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/addNewUser}"><i class="fa fa-fw fa-file "></i>
+							Add New User</a></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/booking}"><i class="fa fa-edit "></i>
+							Booking</a></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/addWalletBalance}"><i
+							class="fa fa-fw fa-file "></i> Add Wallet balance</a></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/bicycleTransfer}"><i
+							class="fa fa-fw fa-file "></i> Transfers</a></li>
+
 				</ul>
 			</div>
 

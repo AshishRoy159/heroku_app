@@ -19,6 +19,7 @@ package com.mindfire.bicyclesharing.controller.admin;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.component.UserComponent;
 import com.mindfire.bicyclesharing.dto.ManageRoleDTO;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
@@ -62,7 +64,11 @@ public class ManageRoleController {
 	 * @return manageRole view
 	 */
 	@RequestMapping("/admin/manageRole/{id}")
-	public ModelAndView manageRole(@PathVariable("id") Long userId, Model model) {
+	public ModelAndView manageRole(@PathVariable("id") Long userId, Model model, Authentication authentication) {
+		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+		if (userId == currentUser.getUserId()) {
+			return new ModelAndView("searchUsers", "usersList", userService.getAllUsers());
+		}
 		model.addAttribute("userId", userId);
 		return new ModelAndView("manageRole", "pickUpPoints", pickUpPointService.getAllPickupPoints());
 	}
@@ -82,7 +88,7 @@ public class ManageRoleController {
 			model.addAttribute("errorMessage", "Something went wrong. Operation failed.");
 			return new ModelAndView("searchUsers", "usersList", userService.getAllUsers());
 		}
-		
+
 		if (userComponent.mapUpdateRole(manageRoleDTO) > 0) {
 			if (manageRoleDTO.getUserRoleId() == 2) {
 				userComponent.mapPickUpPointManagerDetails(manageRoleDTO);

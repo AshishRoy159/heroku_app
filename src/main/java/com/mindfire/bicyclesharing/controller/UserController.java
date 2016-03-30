@@ -463,7 +463,7 @@ public class UserController {
 	 * 
 	 * @return searchUsers view
 	 */
-	@RequestMapping("admin/userList")
+	@RequestMapping(value = { "admin/userList", "manager/userList" })
 	public ModelAndView userList() {
 		return new ModelAndView("searchUsers", "usersList", userService.getAllUsers());
 	}

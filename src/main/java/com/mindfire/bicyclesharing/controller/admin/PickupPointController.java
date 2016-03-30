@@ -103,7 +103,7 @@ public class PickupPointController {
 	 *            to map the model attributes
 	 * @return pickupPointDetails view
 	 */
-	@RequestMapping(value = "admin/pickupPointDetails", method = RequestMethod.GET)
+	@RequestMapping(value = { "admin/pickupPointDetails", "manager/pickupPointDetails" }, method = RequestMethod.GET)
 	public ModelAndView pickupPointDetails(Model model) {
 		List<PickUpPoint> pickUpPoints = pickUpPointService.getAllPickupPoints();
 		return new ModelAndView("pickupPointDetails", "pickUpPointList", pickUpPoints);
@@ -132,11 +132,12 @@ public class PickupPointController {
 	 * @return pickupPointDetails view
 	 */
 	@RequestMapping(value = "admin/updatePickupPointDetails", method = RequestMethod.POST)
-	public ModelAndView updatePickUpPointDetails(@Valid @ModelAttribute("pickupPointData") PickUpPointDTO pickUpPointDTO, BindingResult result) {
+	public ModelAndView updatePickUpPointDetails(
+			@Valid @ModelAttribute("pickupPointData") PickUpPointDTO pickUpPointDTO, BindingResult result) {
 		if (result.hasErrors()) {
 			return new ModelAndView("redirect:pickupPointDetails");
 		}
-		
+
 		int updatedResult = pickUpPointComponent.mapUpdatePickUpPointDetails(pickUpPointDTO);
 
 		if (updatedResult != 0) {

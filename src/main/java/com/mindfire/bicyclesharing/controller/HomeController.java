@@ -85,7 +85,7 @@ public class HomeController {
 	 * 
 	 * @return adminHome view
 	 */
-	@RequestMapping(value = { "admin", "admin/adminHome", "manager/adminHome" })
+	@RequestMapping(value = { "admin", "admin/adminHome", "manager/managerHome" })
 	public ModelAndView adminHome() {
 		return new ModelAndView("adminHome");
 	}

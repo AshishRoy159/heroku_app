@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -29,6 +30,9 @@
 						User Details<br /> <small>(Click on User's Name to view
 							user profile or click on User's role to change role)</small>
 					</h1>
+					<h2>
+						<small>(You cannot change your own role.)</small>
+					</h2>
 				</div>
 			</div>
 			<div class="row" style="margin-bottom: 10px">
@@ -58,15 +62,20 @@
 									<tbody>
 										<tr th:each="user : ${usersList}">
 											<td class="text-center" th:text="${user.userId}"></td>
-											<td class="text-center"><a
+											<td sec:authorize="hasAuthority('ADMIN')" class="text-center"><a
 												th:href="@{/user/userProfile/} + ${user.userId}"
 												th:text="${user.firstName} + *{' '} + ${user.lastName}"></a></td>
+											<td sec:authorize="hasAuthority('MANAGER')"
+												class="text-center"
+												th:text="${user.firstName} + *{' '} + ${user.lastName}"></td>
 											<td class="text-center" th:text="${user.userAddress}"></td>
 											<td class="text-center" th:text="${user.mobileNo}"></td>
 											<td class="text-center" th:text="${user.registrationTime}"></td>
-											<td class="text-center"><a
+											<td sec:authorize="hasAuthority('ADMIN')" class="text-center"><a
 												th:href="@{/admin/manageRole/} + ${user.userId}"
 												th:text="${user.role.userRole}"></a></td>
+											<td sec:authorize="hasAuthority('MANAGER')"
+												class="text-center" th:text="${user.role.userRole}"></td>
 											<td class="text-center" th:if="${user.isApproved}">✔</td>
 											<td class="text-center" th:unless="${user.isApproved}">✘</td>
 											<td class="text-center" th:if="${user.enabled}">✔</td>
