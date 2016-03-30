@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,6 +21,9 @@
 			</div>
 
 			<ul class="nav navbar-top-links navbar-right">
+				<h2 class="text-success pull-left">HELLO,</h2>
+				<h2 class="text-success pull-left"
+					th:text="${#authentication.principal.authorities[0]}"></h2>
 				<li class="dropdown"><a class="dropdown-toggle"
 					data-toggle="dropdown" th:href="@{#}" aria-expanded="false"> <i
 						class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
@@ -56,80 +60,6 @@
 									All Messages</strong> <i class="fa fa-angle-right"></i>
 						</a></li>
 					</ul> <!-- /.dropdown-messages --></li>
-				<!-- /.dropdown -->
-				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown" th:href="@{#}" aria-expanded="false"> <i
-						class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
-				</a>
-					<ul class="dropdown-menu dropdown-tasks">
-						<li><a th:href="@{#}">
-								<div>
-									<p>
-										<strong>Task 1</strong> <span class="pull-right text-muted">60%
-											Complete</span>
-									</p>
-									<div class="progress progress-striped active">
-										<div class="progress-bar progress-bar-success"
-											role="progressbar" aria-valuenow="60" aria-valuemin="0"
-											aria-valuemax="100" style="width: 60%">
-											<span class="sr-only">60% Complete (success)</span>
-										</div>
-									</div>
-								</div>
-						</a></li>
-						<li class="divider"></li>
-						<li><a th:href="@{#}">
-								<div>
-									<p>
-										<strong>Task 2</strong> <span class="pull-right text-muted">28%
-											Complete</span>
-									</p>
-									<div class="progress progress-striped active">
-										<div class="progress-bar progress-bar-info" role="progressbar"
-											aria-valuenow="28" aria-valuemin="0" aria-valuemax="100"
-											style="width: 28%">
-											<span class="sr-only">28% Complete</span>
-										</div>
-									</div>
-								</div>
-						</a></li>
-						<li class="divider"></li>
-						<li><a th:href="@{#}">
-								<div>
-									<p>
-										<strong>Task 3</strong> <span class="pull-right text-muted">60%
-											Complete</span>
-									</p>
-									<div class="progress progress-striped active">
-										<div class="progress-bar progress-bar-warning"
-											role="progressbar" aria-valuenow="60" aria-valuemin="0"
-											aria-valuemax="100" style="width: 60%">
-											<span class="sr-only">60% Complete (warning)</span>
-										</div>
-									</div>
-								</div>
-						</a></li>
-						<li class="divider"></li>
-						<li><a th:href="@{#}">
-								<div>
-									<p>
-										<strong>Task 4</strong> <span class="pull-right text-muted">85%
-											Complete</span>
-									</p>
-									<div class="progress progress-striped active">
-										<div class="progress-bar progress-bar-danger"
-											role="progressbar" aria-valuenow="85" aria-valuemin="0"
-											aria-valuemax="100" style="width: 85%">
-											<span class="sr-only">85% Complete (danger)</span>
-										</div>
-									</div>
-								</div>
-						</a></li>
-						<li class="divider"></li>
-						<li><a class="text-center" th:href="@{#}"> <strong>See
-									All Tasks</strong> <i class="fa fa-angle-right"></i>
-						</a></li>
-					</ul> <!-- /.dropdown-tasks --></li>
 				<!-- /.dropdown -->
 				<li class="dropdown"><a class="dropdown-toggle"
 					data-toggle="dropdown" th:href="@{#}" aria-expanded="false"> <i
@@ -201,10 +131,9 @@
 
 					<li><a th:href="@{/admin/adminHome}"><i
 							class="fa fa-dashboard "></i>Dashboard</a></li>
-					<li><a th:href="@{#}"><i
-							class="fa fa-desktop "></i> Pricing and plans</a></li>
-					<li><a th:href="@{#}"><i
-							class="fa fa-qrcode "></i>Requests</a></li>
+					<li><a th:href="@{#}"><i class="fa fa-desktop "></i>
+							Pricing and plans</a></li>
+					<li><a th:href="@{#}"><i class="fa fa-qrcode "></i>Requests</a></li>
 					<li><a th:href="@{/admin/userList}"><i
 							class="fa fa-table "></i>Users</a></li>
 					<li><a th:href="@{#}"><i class="fa fa-edit "></i>Forms</a></li>
@@ -223,16 +152,17 @@
 
 								</ul></li>
 						</ul></li>
-					<li><a th:href="@{/manager/addNewUser}"><i
-							class="fa fa-fw fa-file "></i> Add New User</a></li>
-					<li><a th:href="@{/manager/booking}"><i
-							class="fa fa-fw fa-file "></i> Booking</a></li>
-					<li><a th:href="@{/manager/addWalletBalance}"><i
-							class="fa fa-fw fa-file "></i> Add Wallet balance</a></li>
-					<li><a th:href="@{/manager/bicycleTransfer}"><i
-							class="fa fa-fw fa-file "></i> Transfers</a></li>
+						<li sec:authorize="hasAuthority('MANAGER')"><a th:href="@{/manager/addNewUser}"><i
+								class="fa fa-fw fa-file "></i> Add New User</a></li>
+						<li sec:authorize="hasAuthority('MANAGER')"><a
+							th:href="@{/manager/booking/} + ${#authentication.principal.userId}"><i
+								class="fa fa-fw fa-file "></i> Booking</a></li>
+						<li sec:authorize="hasAuthority('MANAGER')"><a th:href="@{/manager/addWalletBalance}"><i
+								class="fa fa-fw fa-file "></i> Add Wallet balance</a></li>
+						<li sec:authorize="hasAuthority('MANAGER')"><a th:href="@{/manager/bicycleTransfer}"><i
+								class="fa fa-fw fa-file "></i> Transfers</a></li>
+					
 				</ul>
-
 			</div>
 
 		</nav>

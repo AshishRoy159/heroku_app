@@ -73,7 +73,7 @@
 							class="caret"></strong></a>
 						<ul class="dropdown-menu">
 							<li><a
-								th:href="@{/userProfile/} + ${#authentication.principal.userId}"
+								th:href="@{/user/userProfile/} + ${#authentication.principal.userId}"
 								style="color: black;"><i class="fa fa-user fa-fw"></i>View
 									Profile<br /> [<small sec:authentication="name">[email]</small>]
 							</a></li>
