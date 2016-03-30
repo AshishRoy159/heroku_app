@@ -107,8 +107,8 @@
 					<!-- SIDEBAR MENU -->
 					<div class="profile-usermenu">
 						<ul class="nav">
-							<li><a th:href="@{/user/userProfile/} + ${user.userId}"> <i
-									class="glyphicon glyphicon-home"></i> Overview
+							<li><a th:href="@{/user/userProfile/} + ${user.userId}">
+									<i class="glyphicon glyphicon-home"></i> Overview
 							</a></li>
 							<li class="active"><a href="#"> <i
 									class="fa fa-user fa-fw"></i> Edit Account
@@ -134,13 +134,14 @@
 										th:action="@{/user/updateUserDetails/} + ${user.userId}"
 										th:object="${userDetailData}" method="post">
 										<div class="row">
-										<h2 class="text-danger" th:text="${errorMessage}"></h2>
+											<h2 class="text-danger" th:text="${errorMessage}"></h2>
 											<div class="col-md-6">
 												<label>First Name:</label>
 											</div>
 											<div class="col-md-6">
 												<input class="form-control" type="text" name="firstName"
-													th:value="${user.firstName}" pattern="/^[a-zA-Z ]{2,30}$/" tabindex="1" maxlength="15" required="required" />
+													th:value="${user.firstName}" pattern="[a-zA-Z ]{2,30}"
+													tabindex="1" maxlength="15" required="required" />
 											</div>
 										</div>
 										<br />
@@ -170,7 +171,8 @@
 											</div>
 											<div class="col-md-6">
 												<input class="form-control" type="date" name="dateOfBirth"
-													th:value="${user.dateOfBirth}" tabindex="3" required="required" />
+													th:value="${user.dateOfBirth}" tabindex="3"
+													required="required" />
 											</div>
 										</div>
 										<br />
@@ -191,7 +193,7 @@
 												<label>Address:</label>
 											</div>
 											<div class="col-md-6">
-												<textarea class="form-control" name="userAddress" 
+												<textarea class="form-control" name="userAddress"
 													th:text="${user.userAddress}" tabindex="1" maxlength="250"></textarea>
 											</div>
 										</div>

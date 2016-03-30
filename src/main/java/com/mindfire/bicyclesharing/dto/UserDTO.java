@@ -65,14 +65,11 @@ public class UserDTO {
 	@Length(max = 250)
 	private String userAddress;
 
-	@NotNull
 	private String proofType;
 
-	@NotNull
 	@Pattern(regexp = "[a-zA-Z0-9]{2,20}")
 	private String proofNo;
 
-	@NotNull
 	private String document;
 
 	/**

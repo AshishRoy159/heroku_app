@@ -263,7 +263,7 @@ public class UserController {
 		if (result.hasErrors()) {
 			return new ModelAndView("forgotPassword", "errorMessage", "Invalid Email");
 		}
-		
+
 		User user = userComponent.retrieveUserPassword(forgotPasswordDTO);
 
 		try {
@@ -347,10 +347,11 @@ public class UserController {
 			@Valid @ModelAttribute("changePasswordData") ChangePasswordDTO changePasswordDTO, BindingResult result,
 			RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("invalidPassword", "Password must be 4 to 16 characters long");
+			redirectAttributes.addFlashAttribute("invalidPassword",
+					"Password must be 4 to 16 characters long without any spaces");
 			return "redirect:changePassword";
 		}
-		
+
 		BCryptPasswordEncoder passEncoder = new BCryptPasswordEncoder();
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
@@ -425,7 +426,7 @@ public class UserController {
 		if (result.hasErrors()) {
 			return new ModelAndView("updateUserDetails", "errorMessage", "Invalid data. Updation failed.");
 		}
-		
+
 		int success = userComponent.mapUpdateUserDetail(userDTO);
 		User userDetails = userService.userDetails(id);
 		model.addAttribute("user", userDetails);
