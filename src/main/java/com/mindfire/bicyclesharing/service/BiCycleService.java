@@ -60,4 +60,19 @@ public class BiCycleService {
 	public List<BiCycle> findAllBiCycleByPickUpPointId(PickUpPoint pickUpPointId) {
 		return biCycleRepository.findAllByCurrentLocation(pickUpPointId);
 	}
+
+	/**
+	 * This method is used for updating the bicycle availability.
+	 * 
+	 * @param id
+	 *            this is biCycleId
+	 * @return BiCycle object
+	 */
+	public BiCycle updateBiCycleDetails(Long id) {
+		BiCycle biCycle = biCycleRepository.findByBiCycleId(id);
+		biCycle.setIsAvailable(false);
+		biCycleRepository.save(biCycle);
+
+		return biCycle;
+	}
 }

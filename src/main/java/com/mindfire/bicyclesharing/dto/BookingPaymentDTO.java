@@ -17,14 +17,16 @@
 package com.mindfire.bicyclesharing.dto;
 
 /**
- * IssueCycleDTO class is used for taking data from the Issue Cycle view
+ * BookingPaymentDTO class is used for taking data from Booking Payment view.
  * 
  * @author mindfire
  * @version 1.0
  * @since 10/03/2016
  */
-public class IssueCycleDTO {
+public class BookingPaymentDTO {
 
+	private Double amount;
+	private String mode;
 	private Long userId;
 	private Long bicycleId;
 	private int expectedInTime;
@@ -72,6 +74,36 @@ public class IssueCycleDTO {
 	 */
 	public void setExpectedInTime(int expectedInTime) {
 		this.expectedInTime = expectedInTime;
+	}
+
+	/**
+	 * @return the amount
+	 */
+	public Double getAmount() {
+		return amount;
+	}
+
+	/**
+	 * @param amount
+	 *            the amount to set
+	 */
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
+
+	/**
+	 * @return the mode
+	 */
+	public String getMode() {
+		return mode;
+	}
+
+	/**
+	 * @param mode
+	 *            the mode to set
+	 */
+	public void setMode(String mode) {
+		this.mode = mode;
 	}
 
 }

@@ -16,12 +16,14 @@
 
 package com.mindfire.bicyclesharing.service;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.component.BookingComponent;
-import com.mindfire.bicyclesharing.dto.IssueCycleDTO;
+import com.mindfire.bicyclesharing.dto.BookingPaymentDTO;
 import com.mindfire.bicyclesharing.model.Booking;
 
 /**
@@ -41,10 +43,13 @@ public class BookingService {
 	 * This method is used to add a new booking entry to the database.
 	 * 
 	 * @param authentication
+	 *            this object is used for retrieving the current user details.
 	 * @param issueCycleDTO
-	 * @return
+	 *            IssueCycleDTO object for issue BiCycle data
+	 * @return Booking object.
 	 */
-	public Booking addNewBooking(Authentication authentication, IssueCycleDTO issueCycleDTO){
-		return bookingComponent.mapNewBooking(authentication, issueCycleDTO);
+	public Booking addNewBooking(Authentication authentication, BookingPaymentDTO bookingPaymentDTO,
+			HttpSession session) {
+		return bookingComponent.mapNewBooking(authentication, bookingPaymentDTO, session);
 	}
 }

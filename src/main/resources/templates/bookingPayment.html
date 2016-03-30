@@ -25,88 +25,65 @@
 			<div id="page-inner">
 				<div class="row">
 					<div class="col-md-12">
-						<h1 class="page-header">Bookings</h1>
+						<h1 class="page-header">Payment</h1>
 						<h4 class="text-success" th:text="*{bookingSuccess}"></h4>
 						<h4 class="text-danger" th:text="*{bookingFailure}"></h4>
+
 					</div>
-					
+
 				</div>
 				<div class="row">
 					<div class="col-md-6">
 						<div class="panel panel-info">
-							<div class="panel-heading">
-								<h3>Issue Bicycle By <strong th:text="${#authentication.principal.firstName}"></strong></h3>
-							</div>
 							<div class="panel-body">
 								<div class="col-md-8 col-sm-8 col-xs-8">
-									<form action="bookingPayment" th:action="@{/bookingPayment}"
-										th:object="${issueCycleData}" method="GET">
+									<form action="issueCyclePayment"
+										th:action="@{/issueCyclePayment}"
+										th:object="${issueCyclePaymentData}" method="POST">
 										<div>
 											<label class="control-label"> UserId</label> <input
 												type="text" name="userId" class="form-control"
+												th:value="${issueCycleData.userId}" readonly="readonly"
 												required="required" />
 										</div>
 										<div>
-											<label class="control-label">Select BiCycle</label> <select
-												class="input-xlarge form-control" name="bicycleId"
-												required="required">
-												<option value="">Select BiCycle</option>
-												<option th:each="biCycle : ${biCycles}"
-													th:value="${biCycle.biCycleId}"
-													th:text="${biCycle.chasisNo}"></option>
-											</select>
+											<label class="control-label">Select BiCycle</label> <input
+												type="text" name="bicycleId" class="form-control"
+												th:value="${issueCycleData.bicycleId}" readonly="readonly"
+												required="required" />
 										</div>
 										<div>
-											<label class="control-label">Expected Return(In Hours)</label> <input
-												type="number" name="expectedInTime" class="form-control"
-												required="required" max="15" min="1"/>
+											<label class="control-label">Expected Return(In
+												Hours)</label> <input type="text" name="expectedInTime"
+												class="form-control"
+												th:value="${issueCycleData.expectedInTime}"
+												readonly="readonly" required="required" />
+										</div>
+										<div>
+											<label class="control-label">Fare</label> <input
+												type="number" name="amount" class="form-control"
+												th:value="${baseFare}" readonly="readonly"
+												required="required" />
+										</div>
+										<div>
+											<label class="control-label">Payment Type</label>
+										</div>
+										<div>
+											<label class="radio-inline"> <input type="radio"
+												name="mode" value="cash" tabindex="1" required="required" />Cash
+											</label> <label class="radio-inline"> <input type="radio"
+												name="mode" value="wallet" tabindex="2" required="required" />Wallet
+											</label>
 										</div>
 										<div style="padding: 5px">
-											<button class="btn btn-primary">OK</button>
+											<button class="btn btn-primary">Pay</button>
 											<input type="reset" class="btn btn-info" />
 										</div>
 									</form>
-
 								</div>
 							</div>
 						</div>
 					</div>
-					<!-- panel-->
-					<div class="col-md-6">
-						<div class="panel panel-info">
-							<div class="panel-heading">
-								<h3>Recieve Bicycle</h3>
-							</div>
-							<div class="panel-body">
-								<form action="recieveCycle" th:action="@{/recieveCycle}"
-									th:object="${recieveCycle}" method="POST">
-									<div>
-										<label class="control-label">Booking Id</label> <input
-											type="text" name="bookingId" class="form-control"
-											required="required" />
-									</div>
-									<div>
-										<label class="control-label">Payment (if applicable)</label> <input
-											type="text" name="amount" class="form-control"
-											required="required" />
-									</div>
-
-									<div>
-										<label>Bicycle Condition (Is Active?) </label> <select
-											class="form-control" required="required" name="isActive">
-											<option value="true" th:value="${'true'}">Yes</option>
-											<option value="false" th:value="${'false'}">No</option>
-										</select>
-									</div>
-									<div style="padding: 5px">
-										<button class="btn btn-primary">OK</button>
-										<input type="reset" class="btn btn-info" />
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-					<!-- panel end -->
 				</div>
 			</div>
 		</div>

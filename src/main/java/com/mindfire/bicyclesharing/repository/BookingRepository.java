@@ -20,6 +20,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.mindfire.bicyclesharing.model.Booking;
+import com.mindfire.bicyclesharing.model.User;
 
 /**
  * Repository for {@link Booking} Entity used for CRUD operation on Booking.
@@ -30,5 +31,16 @@ import com.mindfire.bicyclesharing.model.Booking;
  */
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
+
+	/**
+	 * This method is used for Booking status is open or not.
+	 * 
+	 * @param user
+	 *            User object
+	 * @param open
+	 *            Boolean value
+	 * @return Booking
+	 */
+	public Booking findByUserAndIsOpen(User user, Boolean open);
 
 }
