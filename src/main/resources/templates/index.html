@@ -126,7 +126,7 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-md-12">
-								<div class="slider-caption">
+								<div sec:authorize="isAnonymous()" class="slider-caption">
 									<h2>Plan your trip</h2>
 									<p class="color-white wow bounceIn">
 										You <span class="color-yellow">create</span> the <span
@@ -134,13 +134,24 @@
 											class="color-yellow">service</span>.
 									</p>
 								</div>
+								<div sec:authorize="isAuthenticated()"
+									class="slider-caption caption-form">
+									<form action="" class="form-inline"
+										style="width: 100%; padding-top: 5px;">
+										<input type="text" class="form-control"
+											placeholder="Booking Date and Time" /> <input type="text"
+											class="form-control" placeholder="Pick-up Point" /> <input
+											type="text" class="form-control" placeholder="Return Time" />
+										<input type="submit" class="btn btn-success" value="Book Now" />
+									</form>
+								</div>
 							</div>
 						</div>
 					</div></li>
 				<li><img src="images/slider/slide2.jpg"
 					th:src="@{images/slider/slide2.jpg}" alt="slider image 2" />
 					<div class="container caption-wrapper">
-						<div class="slider-caption">
+						<div sec:authorize="isAnonymous()" class="slider-caption">
 							<h2>Plan your trip</h2>
 							<p class="color-white wow bounceIn">
 								You <span class="color-yellow">create</span> the <span
@@ -148,19 +159,41 @@
 									class="color-yellow">service</span>.
 							</p>
 						</div>
+						<div sec:authorize="isAuthenticated()"
+							class="slider-caption caption-form">
+							<form action="" class="form-inline"
+								style="width: 100%; padding-top: 5px;">
+								<input type="text" class="form-control"
+									placeholder="Booking Date and Time" /> <input type="text"
+									class="form-control" placeholder="Pick-up Point" /> <input
+									type="text" class="form-control" placeholder="Return Time" />
+								<input type="submit" class="btn btn-success" value="Book Now" />
+							</form>
+						</div>
 					</div></li>
 				<li><img src="images/slider/slide3.jpg"
 					th:src="@{images/slider/slide3.jpg}" alt="slider image 3" />
 					<div class="container">
 						<div class="row">
 							<div class="col-md-12">
-								<div class="slider-caption">
+								<div sec:authorize="isAnonymous()" class="slider-caption">
 									<h2>Plan your trip</h2>
 									<p class="color-white wow bounceIn">
 										You <span class="color-yellow">create</span> the <span
 											class="color-yellow">journey,</span> we provide the <span
 											class="color-yellow">service</span>.
 									</p>
+								</div>
+								<div sec:authorize="isAuthenticated()"
+									class="slider-caption caption-form">
+									<form action="" class="form-inline"
+										style="width: 100%; padding-top: 5px;">
+										<input type="text" class="form-control"
+											placeholder="Booking Date and Time" /> <input type="text"
+											class="form-control" placeholder="Pick-up Point" /> <input
+											type="text" class="form-control" placeholder="Return Time" />
+										<input type="submit" class="btn btn-success" value="Book Now" />
+									</form>
 								</div>
 							</div>
 						</div>
@@ -170,13 +203,24 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-md-12">
-								<div class="slider-caption">
+								<div sec:authorize="isAnonymous()" class="slider-caption">
 									<h2>Plan your trip</h2>
 									<p class="color-white wow bounceIn">
 										You <span class="color-yellow">create</span> the <span
 											class="color-yellow">journey,</span> we provide the <span
 											class="color-yellow">service</span>.
 									</p>
+								</div>
+								<div sec:authorize="isAuthenticated()"
+									class="slider-caption caption-form">
+									<form action="" class="form-inline"
+										style="width: 100%; padding-top: 5px;">
+										<input type="text" class="form-control"
+											placeholder="Booking Date and Time" /> <input type="text"
+											class="form-control" placeholder="Pick-up Point" /> <input
+											type="text" class="form-control" placeholder="Return Time" />
+										<input type="submit" class="btn btn-success" value="Book Now" />
+									</form>
 								</div>
 							</div>
 						</div>
@@ -186,13 +230,24 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-md-12">
-								<div class="slider-caption">
+								<div sec:authorize="isAnonymous()" class="slider-caption">
 									<h2>Plan your trip</h2>
 									<p class="color-white wow bounceIn">
 										You <span class="color-yellow">create</span> the <span
 											class="color-yellow">journey,</span> we provide the <span
 											class="color-yellow">service</span>.
 									</p>
+								</div>
+								<div sec:authorize="isAuthenticated()"
+									class="slider-caption caption-form">
+									<form action="" class="form-inline"
+										style="width: 100%; padding-top: 5px;">
+										<input type="text" class="form-control"
+											placeholder="Booking Date and Time" /> <input type="text"
+											class="form-control" placeholder="Pick-up Point" /> <input
+											type="text" class="form-control" placeholder="Return Time" />
+										<input type="submit" class="btn btn-success" value="Book Now" />
+									</form>
 								</div>
 							</div>
 						</div>
@@ -202,13 +257,24 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-md-12">
-								<div class="slider-caption">
+								<div sec:authorize="isAnonymous()" class="slider-caption">
 									<h2>Plan your trip</h2>
 									<p class="color-white wow bounceIn">
 										You <span class="color-yellow">create</span> the <span
 											class="color-yellow">journey,</span> we provide the <span
 											class="color-yellow">service</span>.
 									</p>
+								</div>
+								<div sec:authorize="isAuthenticated()"
+									class="slider-caption caption-form">
+									<form action="" class="form-inline"
+										style="width: 100%; padding-top: 5px;">
+										<input type="text" class="form-control"
+											placeholder="Booking Date and Time" /> <input type="text"
+											class="form-control" placeholder="Pick-up Point" /> <input
+											type="text" class="form-control" placeholder="Return Time" />
+										<input type="submit" class="btn btn-success" value="Book Now" />
+									</form>
 								</div>
 							</div>
 						</div>
@@ -218,13 +284,24 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-md-12">
-								<div class="slider-caption">
+								<div sec:authorize="isAnonymous()" class="slider-caption">
 									<h2>Plan your trip</h2>
 									<p class="color-white wow bounceIn">
 										You <span class="color-yellow">create</span> the <span
 											class="color-yellow">journey,</span> we provide the <span
 											class="color-yellow">service</span>.
 									</p>
+								</div>
+								<div sec:authorize="isAuthenticated()"
+									class="slider-caption caption-form">
+									<form action="" class="form-inline"
+										style="width: 100%; padding-top: 5px;">
+										<input type="text" class="form-control"
+											placeholder="Booking Date and Time" /> <input type="text"
+											class="form-control" placeholder="Pick-up Point" /> <input
+											type="text" class="form-control" placeholder="Return Time" />
+										<input type="submit" class="btn btn-success" value="Book Now" />
+									</form>
 								</div>
 							</div>
 						</div>
@@ -235,36 +312,29 @@
 				<div class="container-fluid">
 					<div class="row-fluid">
 						<div class="col-md-12">
-						<div>
-						<form action="" class="form-inline" style="width:100%; padding-top: 5px;">
-							<input type="text" class="form-control input-lg" placeholder="Booking Date and Time"/>
-							<input type="text" class="form-control input-lg" placeholder="Pick-up Point"/>
-							<input type="text" class="form-control input-lg" placeholder="Return Time"/>
-							<input type="submit" class="btn btn-success btn-lg" value="Book Now"/>
-							</form>
-							</div>
 							<div id="bx-pager">
 								<a data-slide-index="0" href=""><img
 									src="images/slider/thumb1.jpg"
-									th:src="@{images/slider/thumb1.jpg}" alt="thumbnail 1" height="70" width="120"/></a> <a
-									data-slide-index="1" href=""><img
+									th:src="@{images/slider/thumb1.jpg}" alt="thumbnail 1"
+									height="70" width="120" /></a> <a data-slide-index="1" href=""><img
 									src="images/slider/thumb2.jpg"
-									th:src="@{images/slider/thumb2.jpg}" alt="thumbnail 2" height="70" width="120" /></a> <a
-									data-slide-index="2" href=""><img
+									th:src="@{images/slider/thumb2.jpg}" alt="thumbnail 2"
+									height="70" width="120" /></a> <a data-slide-index="2" href=""><img
 									src="images/slider/thumb3.jpg"
-									th:src="@{images/slider/thumb3.jpg}" alt="thumbnail 3" height="70" width="120" /></a> <a
-									data-slide-index="3" href=""><img
+									th:src="@{images/slider/thumb3.jpg}" alt="thumbnail 3"
+									height="70" width="120" /></a> <a data-slide-index="3" href=""><img
 									src="images/slider/thumb4.jpg"
-									th:src="@{images/slider/thumb4.jpg}" alt="thumbnail 4" height="70" width="120" /></a> <a
-									data-slide-index="4" href=""><img
+									th:src="@{images/slider/thumb4.jpg}" alt="thumbnail 4"
+									height="70" width="120" /></a> <a data-slide-index="4" href=""><img
 									src="images/slider/thumb5.jpg"
-									th:src="@{images/slider/thumb5.jpg}" alt="thumbnail 5" height="70" width="120" /></a> <a
-									data-slide-index="5" href=""><img
+									th:src="@{images/slider/thumb5.jpg}" alt="thumbnail 5"
+									height="70" width="120" /></a> <a data-slide-index="5" href=""><img
 									src="images/slider/thumb6.jpg"
-									th:src="@{images/slider/thumb6.jpg}" alt="thumbnail 5" height="70" width="120" /></a> <a
-									data-slide-index="6" href=""><img
+									th:src="@{images/slider/thumb6.jpg}" alt="thumbnail 5"
+									height="70" width="120" /></a> <a data-slide-index="6" href=""><img
 									src="images/slider/thumb7.jpg"
-									th:src="@{images/slider/thumb7.jpg}" alt="thumbnail 5" height="70" width="120" /></a>
+									th:src="@{images/slider/thumb7.jpg}" alt="thumbnail 5"
+									height="70" width="120" /></a>
 							</div>
 						</div>
 					</div>
@@ -274,6 +344,30 @@
 		<!-- /.site-slider -->
 	</div>
 
+	<!-- Booking form
+================================================== -->
+	<div class="booking-form parallax-section"
+		sec:authorize="isAuthenticated()">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-offset-2 col-md-8 col-sm-offset-2 col-sm-8">
+					<div class="section-title">
+						<h5 class="wow bounceIn">Bicycle Sharing Service</h5>
+						<h1 class="heading wow bounceIn">BOOK NOW</h1>
+						<hr />
+						<form action="" class="form-inline"
+							style="width: 100%; padding-top: 5px;">
+							<input type="text" class="form-control"
+								placeholder="Booking Date and Time" /> <input type="text"
+								class="form-control" placeholder="Pick-up Point" /> <input
+								type="text" class="form-control" placeholder="Return Time" /> <input
+								type="submit" class="btn btn-success" value="Book Now" />
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!-- How It Work section
 ================================================== -->
