@@ -16,6 +16,12 @@
 
 package com.mindfire.bicyclesharing.dto;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.NumberFormat;
+
 /**
  * BookingPaymentDTO class is used for taking data from Booking Payment view.
  * 
@@ -25,10 +31,21 @@ package com.mindfire.bicyclesharing.dto;
  */
 public class BookingPaymentDTO {
 
+	@NotNull
+	@Min(5) @NumberFormat 
 	private Double amount;
+	
+	@NotNull
 	private String mode;
+	
+	@NotNull
 	private Long userId;
+	
+	@NotNull
 	private Long bicycleId;
+	
+	@NotNull @NumberFormat
+	@Min(1) @Max(15)
 	private int expectedInTime;
 
 	/**

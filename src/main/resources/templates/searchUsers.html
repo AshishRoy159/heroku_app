@@ -27,11 +27,11 @@
 			<div class="row">
 				<div class="col-md-12">
 					<h1 class="page-header">
-						User Details<br /> <small>(Click on User's Name to view
+						User Details<br /> <small sec:authorize="hasAuthority('ADMIN')">(Click on User's Name to view
 							user profile or click on User's role to change role)</small>
 					</h1>
 					<h2>
-						<small>(You cannot change your own role.)</small>
+						<small  sec:authorize="hasAuthority('ADMIN')">(You cannot change your own role.)</small>
 					</h2>
 				</div>
 			</div>
