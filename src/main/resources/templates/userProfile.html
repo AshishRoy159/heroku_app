@@ -77,7 +77,6 @@
 								style="color: black;"><i class="fa fa-user fa-fw"></i>View
 									Profile<br /> [<small sec:authentication="name">[email]</small>]
 							</a></li>
-							<li class="divider"></li>
 							<li><a href="/user/changePassword" style="color: black;"><i
 									class="fa fa-gear fa-fw"></i>Change Password</a></li>
 							<li class="divider"></li>
@@ -108,6 +107,14 @@
 					<!-- SIDEBAR MENU -->
 					<div class="profile-usermenu">
 						<ul class="nav">
+							<li sec:authorize="hasAuthority('MANAGER')"><a
+								th:href="@{/manager/managerHome}"><i class="fa fa-home"></i>Home<br />
+							</a></li>
+							<li class="divider"></li>
+							<li sec:authorize="hasAuthority('ADMIN')"><a
+								th:href="@{/admin/adminHome}"><i class="fa fa-home"></i>Home<br />
+							</a></li>
+							<li class="divider"></li>
 							<li class="active"><a href="#"> <i
 									class="glyphicon glyphicon-home"></i> Overview
 							</a></li>
@@ -128,85 +135,69 @@
 				<div class="profile-content">
 					<div class="row">
 						<div class="col-md-2"></div>
-						<div class="col-md-8">
+						<div class="col-md-10">
 							<div class="row">
 								<div class="col-md-12">
 									<div class="row">
-										<div class="col-md-6">
-											<label>First Name:</label>
+										<div class="col-md-4">
+											<label class="text-primary">Name -</label>
 										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.firstName}"></span>
-										</div>
-									</div>
-									<br />
-									<div class="row">
-										<div class="col-md-6">
-											<label>Last Name:</label>
-										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.lastName}"></span>
+										<div class="col-md-8">
+											<span class="text-info" th:text="*{user.firstName}"></span> <span
+												class="text-info" th:text="*{user.lastName}"></span>
 										</div>
 									</div>
 									<br />
 									<div class="row">
-										<div class="col-md-6">
-											<label>Email:</label>
+										<div class="col-md-4">
+											<label class="text-primary">Address -</label>
 										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.email}"></span>
-										</div>
-									</div>
-									<br />
-									<div class="row">
-										<div class="col-md-6">
-											<label>DateOfBirth:</label>
-										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.dateOfBirth}"></span>
+										<div class="col-md-8">
+											<span class="text-info" th:text="*{user.userAddress}"></span>
 										</div>
 									</div>
 									<br />
 									<div class="row">
-										<div class="col-md-6">
-											<label>Phone.No:</label>
+										<div class="col-md-4">
+											<label class="text-primary">Phone.No -</label>
 										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.mobileNo}"></span>
-										</div>
-									</div>
-									<br />
-									<div class="row">
-										<div class="col-md-6">
-											<label>Address:</label>
-										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.userAddress}"></span>
+										<div class="col-md-8">
+											<span class="text-info" th:text="*{user.mobileNo}"></span>
 										</div>
 									</div>
 									<br />
 									<div class="row">
-										<div class="col-md-6">
-											<label>Proof Type:</label>
+										<div class="col-md-4">
+											<label class="text-primary">Email -</label>
 										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.proofDetail.proofType}"></span>
+										<div class="col-md-8">
+											<span class="text-info" th:text="*{user.email}"></span>
 										</div>
 									</div>
 									<br />
 									<div class="row">
-										<div class="col-md-6">
-											<label>ProofNo:</label>
+										<div class="col-md-4">
+											<label class="text-primary">Date Of Birth -</label>
 										</div>
-										<div class="col-md-6">
-											<span th:text="*{user.proofDetail.proofNo}"></span>
+										<div class="col-md-8">
+											<span class="text-info" th:text="*{user.dateOfBirth}"></span>
+										</div>
+									</div>
+									<br />
+									<div class="row">
+										<div class="col-md-4">
+											<label class="text-primary">Valid ID Proof(s) -</label>
+										</div>
+										<div class="col-md-8">
+											<span class="text-primary"
+												th:text="*{user.proofDetail.proofType}"></span> - <span
+												class="text-info" th:text="*{user.proofDetail.proofNo}"></span>
 										</div>
 									</div>
 									<br />
 								</div>
 							</div>
 						</div>
-						<div class="col-md-2"></div>
 					</div>
 				</div>
 			</div>
