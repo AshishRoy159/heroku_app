@@ -26,13 +26,17 @@ import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.dto.BookingPaymentDTO;
+import com.mindfire.bicyclesharing.dto.ReceiveBicyclePaymentDTO;
+import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.Booking;
+import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
 import com.mindfire.bicyclesharing.repository.BiCycleRepository;
 import com.mindfire.bicyclesharing.repository.BookingRepository;
 import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
+import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
 import com.mindfire.bicyclesharing.repository.UserRepository;
 import com.mindfire.bicyclesharing.repository.WalletRepository;
 import com.mindfire.bicyclesharing.repository.WalletTransactionRepository;
@@ -66,6 +70,12 @@ public class BookingComponent {
 	@Autowired
 	private WalletTransactionRepository walletTransactionRepository;
 
+	@Autowired
+	private PickUpPointManagerRepository pickUpPointManagerRepository;
+
+	@Autowired
+	private PickUpPointRepository pickUpPointRepository;
+
 	/**
 	 * This method is used for receiving the data from IssueCycleDTO object and
 	 * set the data to the corresponding entity class
@@ -79,37 +89,48 @@ public class BookingComponent {
 			HttpSession session) {
 		User user = userRepository.findByUserId(bookingPaymentDTO.getUserId());
 		Wallet userWallet = walletRepository.findByUser(user);
+
+		String transactionType = "BOOKING";
 		if (bookingPaymentDTO.getMode().equals("wallet")) {
 			if (userWallet.getBalance() < bookingPaymentDTO.getAmount()) {
 				return null;
 			} else {
 				userWallet.setBalance(userWallet.getBalance() - bookingPaymentDTO.getAmount());
 				walletRepository.save(userWallet);
-				createWalletTransaction(bookingPaymentDTO, userWallet);
+				createWalletTransaction(bookingPaymentDTO.getAmount(), bookingPaymentDTO.getMode(), transactionType,
+						userWallet);
 
 			}
 		} else {
-			createWalletTransaction(bookingPaymentDTO, userWallet);
+			createWalletTransaction(bookingPaymentDTO.getAmount(), bookingPaymentDTO.getMode(), transactionType,
+					userWallet);
 		}
 
 		return createNewBooking(authentication, bookingPaymentDTO, session);
 	}
 
 	/**
-	 * This method is used to create the wallet transaction details.
+	 * This method is used to create a wallet transaction details.
 	 * 
-	 * @param bookingPaymentDTO
-	 *            BookingPaymentDTO object for bookingPayment related Data.
+	 * @param amount
+	 *            fare
+	 * @param mode
+	 *            payment mode
+	 * @param type
+	 *            payment type
 	 * @param userWallet
 	 *            this object contains UserWallet information.
+	 * @return WalletTransaction object
 	 */
-	private void createWalletTransaction(BookingPaymentDTO bookingPaymentDTO, Wallet userWallet) {
+	private WalletTransaction createWalletTransaction(Double amount, String mode, String type, Wallet userWallet) {
 		WalletTransaction walletTransaction = new WalletTransaction();
-		walletTransaction.setAmount(bookingPaymentDTO.getAmount());
-		walletTransaction.setMode(bookingPaymentDTO.getMode());
-		walletTransaction.setType("BOOKING");
+		walletTransaction.setAmount(amount);
+		walletTransaction.setMode(mode);
+		walletTransaction.setType(type);
 		walletTransaction.setWallet(userWallet);
 		walletTransactionRepository.save(walletTransaction);
+
+		return walletTransaction;
 	}
 
 	/**
@@ -141,5 +162,48 @@ public class BookingComponent {
 		Booking bookSuccess = bookingRepository.save(newBooking);
 
 		return bookSuccess;
+	}
+
+	public Booking mapReceiveBicycle(Long id, Authentication authentication) {
+		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+
+		Booking booking = bookingRepository.findByBookingId(id);
+		booking.setActualIn(new Timestamp(System.currentTimeMillis()));
+		booking.setReturnedAt(pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint());
+		booking.setIsOpen(false);
+
+		bookingRepository.save(booking);
+
+		BiCycle biCycle = bicycleRepository.findByBiCycleId(booking.getBiCycleId().getBiCycleId());
+		biCycle.setCurrentLocation(booking.getReturnedAt());
+		biCycle.setIsAvailable(true);
+		bicycleRepository.save(biCycle);
+
+		PickUpPoint pickUpPoint = pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint();
+		pickUpPoint.setCurrentAvailability(
+				bicycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size());
+		pickUpPointRepository.save(pickUpPoint);
+
+		return booking;
+	}
+
+	public WalletTransaction mapReceiveBicyclePayment(ReceiveBicyclePaymentDTO receiveBicyclePaymentDTO,
+			Wallet userWallet) {
+		String transactionType = "RECEIVEBICYCLE";
+
+		if (receiveBicyclePaymentDTO.getMode().equals("cash")) {
+			WalletTransaction walletTransaction = createWalletTransaction(receiveBicyclePaymentDTO.getFare(),
+					receiveBicyclePaymentDTO.getMode(), transactionType, userWallet);
+			return walletTransaction;
+		} else if (userWallet.getBalance() < receiveBicyclePaymentDTO.getFare()) {
+			return null;
+		} else {
+			userWallet.setBalance(userWallet.getBalance() - receiveBicyclePaymentDTO.getFare());
+			walletRepository.save(userWallet);
+			WalletTransaction walletTransaction = createWalletTransaction(receiveBicyclePaymentDTO.getFare(),
+					receiveBicyclePaymentDTO.getMode(), transactionType, userWallet);
+			return walletTransaction;
+
+		}
 	}
 }

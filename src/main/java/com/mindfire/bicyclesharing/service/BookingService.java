@@ -52,4 +52,18 @@ public class BookingService {
 			HttpSession session) {
 		return bookingComponent.mapNewBooking(authentication, bookingPaymentDTO, session);
 	}
+
+	/**
+	 * This method is used to execute receive operation of a bicycle.
+	 * 
+	 * @param id
+	 *            bicycleId
+	 * @param authentication
+	 *            authentication object for current manager.
+	 * @return Booking Object
+	 */
+	public Booking receiveBicycle(Long id, Authentication authentication) {
+		return bookingComponent.mapReceiveBicycle(id, authentication);
+	}
+
 }

@@ -39,7 +39,7 @@
 							</div>
 							<div class="panel-body">
 								<div class="col-md-8 col-sm-8 col-xs-8">
-									<form action="bookingPayment" th:action="@{/bookingPayment}"
+									<form action="manager/bookingPayment" th:action="@{/manager/bookingPayment}"
 										th:object="${issueCycleData}" method="GET">
 										<div>
 											<label class="control-label"> UserId</label> <input
@@ -78,29 +78,16 @@
 								<h3>Recieve Bicycle</h3>
 							</div>
 							<div class="panel-body">
-								<form action="recieveCycle" th:action="@{/recieveCycle}"
-									th:object="${recieveCycle}" method="POST">
+								<form action="manager/receiveCycle" th:action="@{/manager/receiveCycle}"
+									th:object="${receiveCycleData}" method="POST">
 									<div>
 										<label class="control-label">Booking Id</label> <input
 											type="text" name="bookingId" class="form-control"
 											required="required" />
 									</div>
-									<div>
-										<label class="control-label">Payment (if applicable)</label> <input
-											type="text" name="amount" class="form-control"
-											required="required" />
-									</div>
-
-									<div>
-										<label>Bicycle Condition (Is Active?) </label> <select
-											class="form-control" required="required" name="isActive">
-											<option value="true" th:value="${'true'}">Yes</option>
-											<option value="false" th:value="${'false'}">No</option>
-										</select>
-									</div>
 									<div style="padding: 5px">
-										<button class="btn btn-primary">OK</button>
-										<input type="reset" class="btn btn-info" />
+										<input type="submit" class="btn btn-primary" value="OK"/>
+										<input type="reset" class="btn btn-info" value="Reset"/>
 									</div>
 								</form>
 							</div>

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 import com.mindfire.bicyclesharing.dto.BiCycleDTO;
 import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
+import com.mindfire.bicyclesharing.repository.BiCycleRepository;
 import com.mindfire.bicyclesharing.service.BiCycleService;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
 
@@ -41,6 +42,9 @@ public class BiCycleComponent {
 
 	@Autowired
 	private PickUpPointService pickUpPointService;
+	
+	@Autowired
+	private BiCycleRepository biCycleRepository;
 
 	/**
 	 * This method is used for receiving the data from BiCycleDTO object and set
@@ -55,10 +59,11 @@ public class BiCycleComponent {
 		PickUpPoint pickUpPoint = pickUpPointService.getPickupPointById(biCycleDTO.getPickUpPoint());
 		biCycle.setChasisNo(biCycleDTO.getChasisNo());
 		biCycle.setCurrentLocation(pickUpPoint);
-		pickUpPointService.updateBicycleCurrentAvailability(pickUpPoint.getCurrentAvailability() + 1,
+		biCycleService.saveBiCycle(biCycle);
+		pickUpPointService.updateBicycleCurrentAvailability(biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size(),
 				pickUpPoint.getPickUpPointId());
 
-		return biCycleService.saveBiCycle(biCycle);
+		return biCycle;
 
 	}
 

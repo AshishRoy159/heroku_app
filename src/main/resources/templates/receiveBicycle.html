@@ -25,59 +25,53 @@
 			<div id="page-inner">
 				<div class="row">
 					<div class="col-md-12">
-						<h1 class="page-header">Payment</h1>
-						<h4 class="text-success" th:text="*{bookingSuccess}"></h4>
-						<h4 class="text-danger" th:text="*{bookingFailure}"></h4>
+						<h1 class="page-header">Receive Bicycle Details</h1>
+						<h4 class="text-success" th:text="*{receiveSuccess}"></h4>
+						<h4 class="text-danger" th:text="*{receiveFailure}"></h4>
 
 					</div>
-
 				</div>
 				<div class="row">
 					<div class="col-md-6">
 						<div class="panel panel-info">
 							<div class="panel-body">
 								<div class="col-md-8 col-sm-8 col-xs-8">
-									<form action="manager/issueCyclePayment"
-										th:action="@{/manager/issueCyclePayment}"
-										th:object="${issueCyclePaymentData}" method="POST">
+									<form action="manager/receiveBicycle"
+										th:action="@{/manager/receiveBicycle}"
+										th:object="${receiveCycleData}" method="POST">
+										<div>
+											<label class="control-label"> Booking Id</label> <input
+												type="text" name="bookingId" class="form-control"
+												th:value="${bookingDetails.bookingId}" readonly="readonly"
+												required="required" />
+										</div>
 										<div>
 											<label class="control-label"> UserId</label> <input
 												type="text" name="userId" class="form-control"
-												th:value="${issueCycleData.userId}" readonly="readonly"
+												th:value="${bookingDetails.user.userId}" disabled="disabled"
 												required="required" />
 										</div>
 										<div>
-											<label class="control-label">Select BiCycle</label> <input
+											<label class="control-label">BiCycle Id</label> <input
 												type="text" name="bicycleId" class="form-control"
-												th:value="${issueCycleData.bicycleId}" readonly="readonly"
+												th:value="${bookingDetails.biCycleId.biCycleId}" disabled="disabled"
 												required="required" />
 										</div>
 										<div>
-											<label class="control-label">Expected Return(In
-												Hours)</label> <input type="text" name="expectedInTime"
+											<label class="control-label">Expected Return Time</label> <input type="text" name="expectedInTime"
 												class="form-control"
-												th:value="${issueCycleData.expectedInTime}"
-												readonly="readonly" required="required" />
+												th:value="${bookingDetails.expectedIn}"
+												disabled="disabled" required="required" />
 										</div>
 										<div>
-											<label class="control-label">Fare</label> <input
-												type="number" name="amount" class="form-control"
-												th:value="${baseFare}" readonly="readonly"
-												required="required" />
-										</div>
-										<div>
-											<label class="control-label">Payment Type</label>
-										</div>
-										<div>
-											<label class="radio-inline"> <input type="radio"
-												name="mode" value="cash" tabindex="1" required="required" />Cash
-											</label> <label class="radio-inline"> <input type="radio"
-												name="mode" value="wallet" tabindex="2" required="required" />Wallet
-											</label>
+											<label class="control-label">Actual Return Time</label> <input type="text" name="expectedInTime"
+												class="form-control"
+												th:value="${currentTime}"
+												disabled="disabled" required="required" />
 										</div>
 										<div style="padding: 5px">
-											<button class="btn btn-primary">Pay</button>
-											<input type="reset" class="btn btn-info" />
+											<input type="submit" class="btn btn-primary" value="Ok"/>
+											<input type="reset" class="btn btn-info" value = "Reset" />
 										</div>
 									</form>
 								</div>

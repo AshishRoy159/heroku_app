@@ -37,32 +37,38 @@
 						<div class="panel panel-info">
 							<div class="panel-body">
 								<div class="col-md-8 col-sm-8 col-xs-8">
-									<form action="manager/issueCyclePayment"
-										th:action="@{/manager/issueCyclePayment}"
-										th:object="${issueCyclePaymentData}" method="POST">
+									<form action="manager/receiveCyclePayment"
+										th:action="@{/manager/receiveCyclePayment}"
+										th:object="${receiveCyclePaymentData}" method="POST">
 										<div>
-											<label class="control-label"> UserId</label> <input
-												type="text" name="userId" class="form-control"
-												th:value="${issueCycleData.userId}" readonly="readonly"
+											<label class="control-label"> Booking Id</label> <input
+												type="text" name="bookingId" class="form-control"
+												th:value="${bookingDetails.bookingId}" readonly="readonly"
 												required="required" />
 										</div>
 										<div>
-											<label class="control-label">Select BiCycle</label> <input
-												type="text" name="bicycleId" class="form-control"
-												th:value="${issueCycleData.bicycleId}" readonly="readonly"
+											<label class="control-label"> UserId</label> <input
+												type="text" name="userId" class="form-control"
+												th:value="${bookingDetails.user.userId}" disabled="disabled"
+												required="required" />
+										</div>
+										<div>
+											<label class="control-label">BiCycle Id</label> <input
+												type="text" name="biCycleId" class="form-control"
+												th:value="${bookingDetails.biCycleId.biCycleId}" disabled="disabled"
 												required="required" />
 										</div>
 										<div>
 											<label class="control-label">Expected Return(In
 												Hours)</label> <input type="text" name="expectedInTime"
 												class="form-control"
-												th:value="${issueCycleData.expectedInTime}"
-												readonly="readonly" required="required" />
+												th:value="${bookingDetails.expectedIn}"
+												disabled="disabled" required="required" />
 										</div>
 										<div>
 											<label class="control-label">Fare</label> <input
-												type="number" name="amount" class="form-control"
-												th:value="${baseFare}" readonly="readonly"
+												type="number" name="fare" class="form-control"
+												th:value="${fare}" readonly="readonly"
 												required="required" />
 										</div>
 										<div>
