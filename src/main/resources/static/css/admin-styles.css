@@ -64,6 +64,13 @@ p {
 	line-height: 25px;
 	padding-top: 20px;
 }
+
+.greeting-text {
+	display: inline;
+	font-family: Georgia, serif;
+	color: white;
+	padding-top: 7px;
+}
 /*----------------------------------------------
    DASHBOARD STYLES    
 ------------------------------------------------*/

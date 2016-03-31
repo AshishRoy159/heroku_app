@@ -21,9 +21,9 @@
 			</div>
 
 			<ul class="nav navbar-top-links navbar-right">
-				<h2 class="text-success pull-left">HELLO,</h2>
-				<h2 class="text-success pull-left"
-					th:text="${#authentication.principal.authorities[0]}"></h2>
+				<h3 class="greeting-text">HELLO,</h3>
+				<h3 class="greeting-text"
+					th:text="${#authentication.principal.authorities[0]}"></h3>
 				<li class="dropdown"><a class="dropdown-toggle"
 					data-toggle="dropdown" th:href="@{#}" aria-expanded="false"> <i
 						class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
@@ -135,7 +135,17 @@
 						th:href="@{/admin/adminHome}"><i class="fa fa-dashboard "></i>Dashboard</a></li>
 					<li><a th:href="@{#}"><i class="fa fa-desktop "></i>
 							Pricing and plans</a></li>
-					<li><a th:href="@{#}"><i class="fa fa-qrcode "></i>Requests</a></li>
+					<li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/admin/requests/?page=1}"><i
+							class="fa fa-qrcode "></i> Requests and Notifications</a></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a th:href="@{#}"><i
+							class="fa fa-qrcode "></i>Transfer Requests<span
+							class="fa arrow "></span></a>
+						<ul class="nav nav-second-level ">
+							<li><a th:href="@{/manager/transferRequest}">Request for
+									Bicycles</a></li>
+							<li><a th:href="@{/manager/transferOrders}">Transfer
+									Orders</a></li>
+						</ul></li>
 					<li sec:authorize="hasAuthority('ADMIN')"><a
 						th:href="@{/admin/userList}"><i class="fa fa-table "></i>Users</a></li>
 					<li sec:authorize="hasAuthority('MANAGER')"><a
@@ -157,7 +167,6 @@
 								</ul></li>
 						</ul></li>
 					<li sec:authorize="hasAuthority('MANAGER')"><a
-
 						th:href="@{/manager/pickupPointDetails}"><i
 							class="fa fa-sitemap "></i>Pickup point details</a></li>
 					<li sec:authorize="hasAuthority('MANAGER')"><a

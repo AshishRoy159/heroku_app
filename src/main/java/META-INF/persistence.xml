@@ -10,6 +10,7 @@
 		<class>com.mindfire.bicyclesharing.model.RateGroup</class>
 		<class>com.mindfire.bicyclesharing.model.Role</class>
 		<class>com.mindfire.bicyclesharing.model.Transfer</class>
+		<class>com.mindfire.bicyclesharing.model.TransferRequest</class>
 		<class>com.mindfire.bicyclesharing.model.UserLog</class>
 		<class>com.mindfire.bicyclesharing.model.User</class>
 		<class>com.mindfire.bicyclesharing.model.VerificationToken</class>

@@ -44,6 +44,7 @@ public class Transfer implements Serializable {
 	@Column(name = "dispatched_at")
 	private Timestamp dispatchedAt;
 
+	@Column(name = "quantity")
 	private Integer quantity;
 
 	@Column(name = "transferred_from")
@@ -54,6 +55,9 @@ public class Transfer implements Serializable {
 
 	@Column(name = "vehicle_no")
 	private String vehicleNo;
+
+	@Column(name = "is_open")
+	private Boolean isOpen;
 
 	public Transfer() {
 	}
@@ -162,4 +166,20 @@ public class Transfer implements Serializable {
 	public void setVehicleNo(String vehicleNo) {
 		this.vehicleNo = vehicleNo;
 	}
+
+	/**
+	 * @return the isOpen
+	 */
+	public Boolean getIsOpen() {
+		return isOpen;
+	}
+
+	/**
+	 * @param isOpen
+	 *            the isOpen to set
+	 */
+	public void setIsOpen(Boolean isOpen) {
+		this.isOpen = isOpen;
+	}
+
 }

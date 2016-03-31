@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,33 +26,26 @@
 			<div id="page-inner">
 				<div class="row">
 					<div class="col-md-12">
-						<h1 class="page-header">Wallet</h1>
+						<h1 class="page-header">Transfer request</h1>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-6">
 						<div class="panel panel-info">
 							<div class="panel-heading">
-								<h3>Add Balance</h3>
+								<h3>Request details</h3>
 							</div>
 							<div class="panel-body">
 								<div class="col-md-8 col-sm-8 col-xs-8">
-									<form action="#" th:action="@{/manager/wallet}"
-										th:object="${addWalletBalance}" method="post">
+									<form action="#" th:action="@{/manager/sendRequest}"
+										th:object="${transferData}" method="post">
 										<div>
-											<label class="control-label"> UserId</label> <input
-												type="text" name="userId" class="form-control" maxlength="2"
-												required="required" />
-										</div>
-										<div>
-											<label class="control-label">Balance</label> <input
-												type="number" min="100" max="999" step="10" name="balance"
-												class="form-control" maxlength="3" required="required" />
-
+											<label class="control-label">Quantity</label> <input
+												type="number" min="5" step="5" name="quantity"
+												class="form-control" required="required" />
 										</div>
 										<div style="padding: 5px">
-											<input type="submit" value="Add Balance" class="btn btn-primary" />
-											<input type="reset" class="btn btn-info" />
+											<input type="submit" value="Send Request" class="btn btn-primary" />
 										</div>
 									</form>
 								</div>
