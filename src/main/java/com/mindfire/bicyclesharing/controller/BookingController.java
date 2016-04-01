@@ -258,14 +258,14 @@ public class BookingController {
 	public ModelAndView receiveBicycleDetails(@ModelAttribute("receiveCycleData") ReceiveCycleDTO receiveCycleDTO,
 			Model model, Authentication auth, RedirectAttributes redirectAttributes) {
 		Long bookingId = receiveCycleDTO.getBookingId();
-
+		double fare = 0.0;
 		Booking book = bookingRepository.findByBookingId(receiveCycleDTO.getBookingId());
 		if (null == book) {
 			redirectAttributes.addFlashAttribute("bookingFailure", "Your Booking Id is Incorrect!!");
 			return new ModelAndView("redirect:/manager/booking");
 		} else {
 			if (book.getIsOpen()) {
-				Booking booking = bookingService.receiveBicycle(bookingId, auth);
+				Booking booking = bookingService.receiveBicycle(bookingId, fare, auth);
 				if (null == booking) {
 					redirectAttributes.addFlashAttribute("bookingFailure",
 							"Your receive request cannot be processed. Try again Later!!");
@@ -314,7 +314,7 @@ public class BookingController {
 						"Your receive request cannot be processed due to low balance. Try again Later!!");
 				return new ModelAndView("redirect:/manager/booking");
 			} else {
-				Booking booking = bookingService.receiveBicycle(bookingId, auth);
+				Booking booking = bookingService.receiveBicycle(bookingId,receiveBicyclePaymentDTO.getFare(), auth);
 				if (null == booking) {
 					redirectAttributes.addFlashAttribute("bookingFailure",
 							"Your receive request cannot be processed. Try again Later!!");

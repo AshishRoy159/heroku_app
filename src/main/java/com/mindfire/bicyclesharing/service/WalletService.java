@@ -17,8 +17,11 @@
 package com.mindfire.bicyclesharing.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.mindfire.bicyclesharing.component.UserBookingComponent;
+import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
@@ -41,6 +44,9 @@ public class WalletService {
 
 	@Autowired
 	private WalletTransactionRepository walletTransactionRepository;
+
+	@Autowired
+	private UserBookingComponent userBookingComponent;
 
 	/**
 	 * This method is used to add balance to the User's wallet
@@ -79,4 +85,16 @@ public class WalletService {
 
 	}
 
+	/**
+	 * This method is used for saving the payment on user booking.
+	 * 
+	 * @param userBookingPaymentDTO
+	 *            user booking payment data
+	 * @param authentication
+	 * @return {@link WalletTransaction}
+	 */
+	public WalletTransaction saveUserBookingPayment(UserBookingPaymentDTO userBookingPaymentDTO,
+			Authentication authentication) {
+		return userBookingComponent.mapUserBookingPayment(userBookingPaymentDTO, authentication);
+	}
 }

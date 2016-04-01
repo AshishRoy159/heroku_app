@@ -23,7 +23,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.component.BookingComponent;
+import com.mindfire.bicyclesharing.component.UserBookingComponent;
 import com.mindfire.bicyclesharing.dto.BookingPaymentDTO;
+import com.mindfire.bicyclesharing.dto.UserBookingDTO;
 import com.mindfire.bicyclesharing.model.Booking;
 
 /**
@@ -38,6 +40,9 @@ public class BookingService {
 
 	@Autowired
 	private BookingComponent bookingComponent;
+
+	@Autowired
+	private UserBookingComponent userBookingComponent;
 
 	/**
 	 * This method is used to add a new booking entry to the database.
@@ -60,10 +65,21 @@ public class BookingService {
 	 *            bicycleId
 	 * @param authentication
 	 *            authentication object for current manager.
-	 * @return Booking Object
+	 * @return {@link Booking}
 	 */
-	public Booking receiveBicycle(Long id, Authentication authentication) {
-		return bookingComponent.mapReceiveBicycle(id, authentication);
+	public Booking receiveBicycle(Long id, double fare, Authentication authentication) {
+		return bookingComponent.mapReceiveBicycle(id, fare, authentication);
 	}
 
+	/**
+	 * This method is used for saving the user booking details.
+	 * 
+	 * @param userBookingDTO
+	 *            user booking data
+	 * @param authentication
+	 * @return {@link Booking}
+	 */
+	public Booking saveUserBookingDetails(UserBookingDTO userBookingDTO, Authentication authentication) {
+		return userBookingComponent.setUserBookingDetails(userBookingDTO, authentication);
+	}
 }

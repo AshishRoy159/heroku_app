@@ -16,14 +16,20 @@
 
 package com.mindfire.bicyclesharing.controller;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.mindfire.bicyclesharing.model.PickUpPoint;
+import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
 
 /**
  * This class contains all the Request Mappings related to the navigation of the
@@ -36,14 +42,20 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class HomeController {
 
+	@Autowired
+	private PickUpPointRepository pickUpPointRepository;
+
 	/**
-	 * This method maps all root request. Simply render the index view.
+	 * This method maps all root request and find all pickup points and Simply
+	 * render the index view along with the pickup point list.
 	 * 
 	 * @return the index view.
 	 */
 	@RequestMapping(value = { "/", "index" })
-	public String getHomePage() {
-		return "index";
+	public ModelAndView getHomePage(Model model) {
+		List<PickUpPoint> pickUpPoints = pickUpPointRepository.findAllByOrderByPickUpPointIdAsc();
+		model.addAttribute("pickUpPoints", pickUpPoints);
+		return new ModelAndView("index");
 	}
 
 	/**

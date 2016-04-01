@@ -38,19 +38,23 @@
 
 <!-- Owl Carousel CSS
    ================================================== -->
-<link rel="stylesheet" href="css/owl.theme.css"
-	th:href="@{css/owl.theme.css}" />
-<link rel="stylesheet" href="css/owl.carousel.css"
-	th:href="@{css/owl.carousel.css}" />
+<link rel="stylesheet" href="/css/owl.theme.css"
+	th:href="@{/css/owl.theme.css}" />
+<link rel="stylesheet" href="/css/owl.carousel.css"
+	th:href="@{/css/owl.carousel.css}" />
 
 <!-- BxSlider CSS
    ================================================== -->
 <link rel="stylesheet" href="css/bxslider.css"
 	th:href="@{css/bxslider.css}" />
 
+<!-- CSS for jquery datetime picker -->
+<link rel="stylesheet" href="/css/jquery.datetimepicker.css"
+	th:href="@{/css/jquery.datetimepicker.css}" />
+
 <!-- Main CSS
    	================================================== -->
-<link rel="stylesheet" href="css/style.css" th:href="@{css/style.css}" />
+<link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}" />
 
 <!-- Google web font
    ================================================== -->
@@ -136,13 +140,24 @@
 								</div>
 								<div sec:authorize="isAuthenticated()"
 									class="slider-caption caption-form">
-									<form action="" class="form-inline"
+									<div class="text-danger" th:text="${errorMessage}"></div>
+										<div style="color: white;" th:text="${message}"></div>
+									<form action="/user/booking" th:action="@{/user/booking}"
+										class="form-inline" th:object="${userBookingData}" method="POST"
 										style="width: 100%; padding-top: 5px;">
-										<input type="text" class="form-control"
-											placeholder="Booking Date and Time" /> <input type="text"
-											class="form-control" placeholder="Pick-up Point" /> <input
-											type="text" class="form-control" placeholder="Return Time" />
-										<input type="submit" class="btn btn-success" value="Book Now" />
+										<input type="text" name="bookingTime"
+											class="form-control input-md datetimepicker_mask" tabindex="1"
+											placeholder="Booking Date and Time" required="required"/> <select tabindex="2"
+											class="input-md form-control" name="pickUpPoint"
+											required="required">
+											<option value="">Select Pickup Point</option>
+											<option th:each="pickUpPoint : ${pickUpPoints}"
+												th:value="${pickUpPoint.pickUpPointId}"
+												th:text="${pickUpPoint.location}"></option>
+										</select> <input type="text" name="returnTime"
+											class="form-control input-md datetimepicker_mask"
+											placeholder="Return Date and Time" tabindex="3" required="required" /> <input
+											type="submit" class="btn btn-success btn-md" value="Book Now" />
 									</form>
 								</div>
 							</div>
@@ -161,13 +176,24 @@
 						</div>
 						<div sec:authorize="isAuthenticated()"
 							class="slider-caption caption-form">
-							<form action="" class="form-inline"
+							<div class="text-danger" th:text="${errorMessage}"></div>
+								<div class="text-success" th:text="${message}"></div>
+							<form action="/user/booking" th:action="@{/user/booking}"
+								class="form-inline" th:object="${userBookingData}" method="POST"
 								style="width: 100%; padding-top: 5px;">
-								<input type="text" class="form-control"
-									placeholder="Booking Date and Time" /> <input type="text"
-									class="form-control" placeholder="Pick-up Point" /> <input
-									type="text" class="form-control" placeholder="Return Time" />
-								<input type="submit" class="btn btn-success" value="Book Now" />
+								<input type="text" name="bookingTime"
+									class="form-control datetimepicker_mask" tabindex="1"
+									placeholder="Booking Date and Time" required="required"/> <select tabindex="2"
+									class="input-xlarge form-control" name="pickUpPoint"
+									required="required">
+									<option value="">Select Pickup Point</option>
+									<option th:each="pickUpPoint : ${pickUpPoints}"
+										th:value="${pickUpPoint.pickUpPointId}"
+										th:text="${pickUpPoint.location}"></option>
+								</select> <input type="text" name="returnTime"
+									class="form-control datetimepicker_mask"
+									placeholder="Return Date and Time" tabindex="3" required="required"/> <input
+									type="submit" class="btn btn-success" value="Book Now" />
 							</form>
 						</div>
 					</div></li>
@@ -186,13 +212,24 @@
 								</div>
 								<div sec:authorize="isAuthenticated()"
 									class="slider-caption caption-form">
-									<form action="" class="form-inline"
+									<div class="text-danger" th:text="${errorMessage}"></div>
+										<div class="text-success" th:text="${message}"></div>
+									<form action="/user/booking" th:action="@{/user/booking}"
+										class="form-inline" th:object="${userBookingData}" method="POST"
 										style="width: 100%; padding-top: 5px;">
-										<input type="text" class="form-control"
-											placeholder="Booking Date and Time" /> <input type="text"
-											class="form-control" placeholder="Pick-up Point" /> <input
-											type="text" class="form-control" placeholder="Return Time" />
-										<input type="submit" class="btn btn-success" value="Book Now" />
+										<input type="text" name="bookingTime"
+											class="form-control datetimepicker_mask" tabindex="1"
+											placeholder="Booking Date and Time" required="required"/> <select tabindex="2"
+											class="input-xlarge form-control" name="pickUpPoint"
+											required="required">
+											<option value="">Select Pickup Point</option>
+											<option th:each="pickUpPoint : ${pickUpPoints}"
+												th:value="${pickUpPoint.pickUpPointId}"
+												th:text="${pickUpPoint.location}"></option>
+										</select> <input type="text" name="returnTime"
+											class="form-control datetimepicker_mask"
+											placeholder="Return Date and Time" tabindex="3" required="required"/> <input
+											type="submit" class="btn btn-success" value="Book Now" />
 									</form>
 								</div>
 							</div>
@@ -213,13 +250,24 @@
 								</div>
 								<div sec:authorize="isAuthenticated()"
 									class="slider-caption caption-form">
-									<form action="" class="form-inline"
+									<div class="text-danger" th:text="${errorMessage}"></div>
+										<div class="text-success" th:text="${message}"></div>
+									<form action="/user/booking" th:action="@{/user/booking}"
+										class="form-inline" th:object="${userBookingData}" method="POST"
 										style="width: 100%; padding-top: 5px;">
-										<input type="text" class="form-control"
-											placeholder="Booking Date and Time" /> <input type="text"
-											class="form-control" placeholder="Pick-up Point" /> <input
-											type="text" class="form-control" placeholder="Return Time" />
-										<input type="submit" class="btn btn-success" value="Book Now" />
+										<input type="text" name="bookingTime"
+											class="form-control datetimepicker_mask" tabindex="1"
+											placeholder="Booking Date and Time" required="required"/> <select tabindex="2"
+											class="input-xlarge form-control" name="pickUpPoint"
+											required="required">
+											<option value="">Select Pickup Point</option>
+											<option th:each="pickUpPoint : ${pickUpPoints}"
+												th:value="${pickUpPoint.pickUpPointId}"
+												th:text="${pickUpPoint.location}"></option>
+										</select> <input type="text" name="returnTime"
+											class="form-control datetimepicker_mask"
+											placeholder="Return Date and Time" tabindex="3" required="required"/> <input
+											type="submit" class="btn btn-success" value="Book Now" />
 									</form>
 								</div>
 							</div>
@@ -240,13 +288,24 @@
 								</div>
 								<div sec:authorize="isAuthenticated()"
 									class="slider-caption caption-form">
-									<form action="" class="form-inline"
+									<div class="text-danger" th:text="${errorMessage}"></div>
+										<div class="text-success" th:text="${message}"></div>
+									<form action="/user/booking" th:action="@{/user/booking}"
+										class="form-inline" th:object="${userBookingData}" method="POST"
 										style="width: 100%; padding-top: 5px;">
-										<input type="text" class="form-control"
-											placeholder="Booking Date and Time" /> <input type="text"
-											class="form-control" placeholder="Pick-up Point" /> <input
-											type="text" class="form-control" placeholder="Return Time" />
-										<input type="submit" class="btn btn-success" value="Book Now" />
+										<input type="text" name="bookingTime"
+											class="form-control datetimepicker_mask" tabindex="1"
+											placeholder="Booking Date and Time" required="required"/> <select tabindex="2"
+											class="input-xlarge form-control" name="pickUpPoint"
+											required="required">
+											<option value="">Select Pickup Point</option>
+											<option th:each="pickUpPoint : ${pickUpPoints}"
+												th:value="${pickUpPoint.pickUpPointId}"
+												th:text="${pickUpPoint.location}"></option>
+										</select> <input type="text" name="returnTime"
+											class="form-control datetimepicker_mask"
+											placeholder="Return Date and Time" tabindex="3" required="required"/> <input
+											type="submit" class="btn btn-success" value="Book Now" />
 									</form>
 								</div>
 							</div>
@@ -267,13 +326,24 @@
 								</div>
 								<div sec:authorize="isAuthenticated()"
 									class="slider-caption caption-form">
-									<form action="" class="form-inline"
+									<div class="text-danger" th:text="${errorMessage}"></div>
+										<div class="text-success" th:text="${message}"></div>
+									<form action="/user/booking" th:action="@{/user/booking}"
+										class="form-inline" th:object="${userBookingData}" method="POST"
 										style="width: 100%; padding-top: 5px;">
-										<input type="text" class="form-control"
-											placeholder="Booking Date and Time" /> <input type="text"
-											class="form-control" placeholder="Pick-up Point" /> <input
-											type="text" class="form-control" placeholder="Return Time" />
-										<input type="submit" class="btn btn-success" value="Book Now" />
+										<input type="text" name="bookingTime"
+											class="form-control datetimepicker_mask" tabindex="1"
+											placeholder="Booking Date and Time" required="required"/> <select tabindex="2"
+											class="input-xlarge form-control" name="pickUpPoint"
+											required="required">
+											<option value="">Select Pickup Point</option>
+											<option th:each="pickUpPoint : ${pickUpPoints}"
+												th:value="${pickUpPoint.pickUpPointId}"
+												th:text="${pickUpPoint.location}"></option>
+										</select> <input type="text" name="returnTime"
+											class="form-control datetimepicker_mask"
+											placeholder="Return Date and Time" tabindex="3" required="required"/> <input
+											type="submit" class="btn btn-success" value="Book Now" />
 									</form>
 								</div>
 							</div>
@@ -294,13 +364,24 @@
 								</div>
 								<div sec:authorize="isAuthenticated()"
 									class="slider-caption caption-form">
-									<form action="" class="form-inline"
+									<div class="text-danger" th:text="${errorMessage}"></div>
+										<div class="text-success" th:text="${message}"></div>
+									<form action="/user/booking" th:action="@{/user/booking}"
+										class="form-inline" th:object="${userBookingData}" method="POST"
 										style="width: 100%; padding-top: 5px;">
-										<input type="text" class="form-control"
-											placeholder="Booking Date and Time" /> <input type="text"
-											class="form-control" placeholder="Pick-up Point" /> <input
-											type="text" class="form-control" placeholder="Return Time" />
-										<input type="submit" class="btn btn-success" value="Book Now" />
+										<input type="text" name="bookingTime"
+											class="form-control datetimepicker_mask" tabindex="1"
+											placeholder="Booking Date and Time" required="required"/> <select tabindex="2"
+											class="input-xlarge form-control" name="pickUpPoint"
+											required="required">
+											<option value="">Select Pickup Point</option>
+											<option th:each="pickUpPoint : ${pickUpPoints}"
+												th:value="${pickUpPoint.pickUpPointId}"
+												th:text="${pickUpPoint.location}"></option>
+										</select> <input type="text" name="returnTime"
+											class="form-control datetimepicker_mask"
+											placeholder="Return Date and Time" tabindex="3" required="required"/> <input
+											type="submit" class="btn btn-success" value="Book Now" />
 									</form>
 								</div>
 							</div>
@@ -348,6 +429,8 @@
 ================================================== -->
 	<div class="booking-form parallax-section"
 		sec:authorize="isAuthenticated()">
+		<div class="text-danger" th:text="${errorMessage}"></div>
+		<div class="text-success" th:text="${message}"></div>
 		<div class="container">
 			<div class="row">
 				<div class="col-md-offset-2 col-md-8 col-sm-offset-2 col-sm-8">
@@ -355,12 +438,21 @@
 						<h5 class="wow bounceIn">Bicycle Sharing Service</h5>
 						<h1 class="heading wow bounceIn">BOOK NOW</h1>
 						<hr />
-						<form action="" class="form-inline"
+						<form action="/user/booking" th:action="@{/user/booking}"
+							class="form-inline" th:object="${userBookingData}" method="POST"
 							style="width: 100%; padding-top: 5px;">
-							<input type="text" class="form-control"
-								placeholder="Booking Date and Time" /> <input type="text"
-								class="form-control" placeholder="Pick-up Point" /> <input
-								type="text" class="form-control" placeholder="Return Time" /> <input
+							<input type="text" name="bookingTime"
+								class="form-control datetimepicker_mask" tabindex="1"
+								placeholder="Booking Date and Time" required="required"/> <select tabindex="2"
+								class="input-xlarge form-control" name="pickUpPoint"
+								required="required">
+								<option value="">Select Pickup Point</option>
+								<option th:each="pickUpPoint : ${pickUpPoints}"
+									th:value="${pickUpPoint.pickUpPointId}"
+									th:text="${pickUpPoint.location}"></option>
+							</select> <input type="text" name="returnTime"
+								class="form-control datetimepicker_mask"
+								placeholder="Return Date and Time" tabindex="3" required="required"/> <input
 								type="submit" class="btn btn-success" value="Book Now" />
 						</form>
 					</div>
@@ -946,6 +1038,10 @@
 	<script src="js/jquery.parallax.js" th:src="@{js/jquery.parallax.js}"></script>
 	<script src="js/wow.min.js" th:src="@{js/wow.min.js}"></script>
 	<script src="js/custom.js" th:src="@{js/custom.js}"></script>
-
+	<script src="js/jquery.datetimepicker.full.js"
+		th:src="@{js/jquery.datetimepicker.full.js}"></script>
+	<script>
+		$('.datetimepicker_mask').datetimepicker();
+	</script>
 </body>
 </html>

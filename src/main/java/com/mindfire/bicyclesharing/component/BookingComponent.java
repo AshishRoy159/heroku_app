@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.dto.BookingPaymentDTO;
 import com.mindfire.bicyclesharing.dto.ReceiveBicyclePaymentDTO;
+import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
 import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.Booking;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
@@ -164,13 +165,24 @@ public class BookingComponent {
 		return bookSuccess;
 	}
 
-	public Booking mapReceiveBicycle(Long id, Authentication authentication) {
+	/**
+	 * This method is used for mapping receive bicycle data and update into the
+	 * booking details field along with the booking status.
+	 * 
+	 * @param id
+	 *            this id is booking id
+	 * @param fare
+	 * @param authentication
+	 * @return Booking object
+	 */
+	public Booking mapReceiveBicycle(Long id, double fare, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
 		Booking booking = bookingRepository.findByBookingId(id);
 		booking.setActualIn(new Timestamp(System.currentTimeMillis()));
 		booking.setReturnedAt(pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint());
 		booking.setIsOpen(false);
+		booking.setFare(booking.getFare() + fare);
 
 		bookingRepository.save(booking);
 
@@ -187,6 +199,16 @@ public class BookingComponent {
 		return booking;
 	}
 
+	/**
+	 * This method is used for mapping the receive bicycle payment data at the
+	 * time of bicycle receive.
+	 * 
+	 * @param receiveBicyclePaymentDTO
+	 *            receive bicycle payment data
+	 * @param userWallet
+	 *            UserWallet object related to corresponding user.
+	 * @return WalletTransaction object
+	 */
 	public WalletTransaction mapReceiveBicyclePayment(ReceiveBicyclePaymentDTO receiveBicyclePaymentDTO,
 			Wallet userWallet) {
 		String transactionType = "RECEIVEBICYCLE";
@@ -205,5 +227,22 @@ public class BookingComponent {
 			return walletTransaction;
 
 		}
+	}
+
+	/**
+	 * This method is used for creating a wallet transaction for user booking.
+	 * 
+	 * @param userBookingPaymentDTO
+	 *            User Booking Payment data
+	 * @param userWallet
+	 *            UserWallet object related to corresponding user.
+	 * @param type
+	 *            payment Type
+	 * @return WalletTransaction object
+	 */
+	public WalletTransaction userBookingWalletTransaction(UserBookingPaymentDTO userBookingPaymentDTO,
+			Wallet userWallet, String type) {
+		return createWalletTransaction(userBookingPaymentDTO.getFare(), userBookingPaymentDTO.getMode(), type,
+				userWallet);
 	}
 }
