@@ -135,14 +135,16 @@
 						th:href="@{/admin/adminHome}"><i class="fa fa-dashboard "></i>Dashboard</a></li>
 					<li><a th:href="@{#}"><i class="fa fa-desktop "></i>
 							Pricing and plans</a></li>
-					<li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/admin/requests/?page=1}"><i
-							class="fa fa-qrcode "></i> Requests and Notifications</a></li>
+					<li sec:authorize="hasAuthority('ADMIN')"><a
+						th:href="@{/admin/requests}"><i class="fa fa-qrcode "></i>
+							Requests and Notifications</a></li>
 					<li sec:authorize="hasAuthority('MANAGER')"><a th:href="@{#}"><i
 							class="fa fa-qrcode "></i>Transfer Requests<span
 							class="fa arrow "></span></a>
 						<ul class="nav nav-second-level ">
 							<li><a th:href="@{/manager/transferRequest}">Request for
 									Bicycles</a></li>
+							<li><a th:href="@{/manager/requests}">Other's Requests</a></li>
 							<li><a th:href="@{/manager/transferOrders}">Transfer
 									Orders</a></li>
 						</ul></li>

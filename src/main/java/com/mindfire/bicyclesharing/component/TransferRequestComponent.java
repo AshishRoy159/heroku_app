@@ -16,15 +16,15 @@
 
 package com.mindfire.bicyclesharing.component;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.dto.TransferRequestDTO;
+import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.TransferRequest;
 import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
 import com.mindfire.bicyclesharing.repository.TransferRequestRepository;
@@ -66,10 +66,18 @@ public class TransferRequestComponent {
 
 		return transferRequestRepository.save(transferRequest);
 	}
+
+	public List<TransferRequest> getAllRequests() {
+		return transferRequestRepository.findAll();
+	}
+
+	public List<TransferRequest> getOthersRequest(CurrentUser currentUser) {
+		PickUpPoint pickUpPoint = pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint();
+		return transferRequestRepository.findByPickUpPointNot(pickUpPoint);
+	}
 	
-	public Page<TransferRequest> getAllRequests(Integer page) {
-		Pageable pageable = new PageRequest(page - 1, 10);
-		return transferRequestRepository.findAll(pageable);
+	public TransferRequest getTransferRequest(Long requestId) {
+		return transferRequestRepository.findByRequestId(requestId);
 	}
 
 }

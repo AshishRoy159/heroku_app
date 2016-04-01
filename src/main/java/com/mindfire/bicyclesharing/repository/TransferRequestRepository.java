@@ -16,11 +16,12 @@
 
 package com.mindfire.bicyclesharing.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.TransferRequest;
 
 /**
@@ -34,5 +35,9 @@ import com.mindfire.bicyclesharing.model.TransferRequest;
 @Repository
 public interface TransferRequestRepository extends JpaRepository<TransferRequest, Long> {
 
-	public Page<TransferRequest> findAll(Pageable pageable);
+	public List<TransferRequest> findAll();
+	
+	public TransferRequest findByRequestId(Long requestId);
+	
+	public List<TransferRequest> findByPickUpPointNot(PickUpPoint pickUpPoint);
 }

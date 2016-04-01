@@ -90,6 +90,7 @@ public class UserService {
 	public WalletTransaction saveUserDetails(User user, ProofDetail proofDetail, Wallet wallet,
 			WalletTransaction transaction) {
 		proofDetailRepository.save(proofDetail);
+		
 		user.setProofDetail(proofDetail);
 		user.setRole(roleRepository.findByUserRole("USER"));
 		user.setRateGroup(rateGroupRepository.findByGroupType("USER"));
@@ -215,7 +216,7 @@ public class UserService {
 	 * 
 	 * @param id
 	 *            userId of User
-	 * @return User object
+	 * @return {@link User}
 	 */
 	public User userDetails(Long id) {
 		return userRepository.findByUserId(id);

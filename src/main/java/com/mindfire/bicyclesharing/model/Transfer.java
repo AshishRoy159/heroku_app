@@ -17,8 +17,17 @@
 package com.mindfire.bicyclesharing.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.sql.Timestamp;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+import com.mindfire.bicyclesharing.enums.TransferStatusEnum;
 
 /**
  * The persistent class for the transfers database table.
@@ -56,8 +65,8 @@ public class Transfer implements Serializable {
 	@Column(name = "vehicle_no")
 	private String vehicleNo;
 
-	@Column(name = "is_open")
-	private Boolean isOpen;
+	@Column(name = "status", nullable = false, insertable = false)
+	private TransferStatusEnum status;
 
 	public Transfer() {
 	}
@@ -167,19 +176,12 @@ public class Transfer implements Serializable {
 		this.vehicleNo = vehicleNo;
 	}
 
-	/**
-	 * @return the isOpen
-	 */
-	public Boolean getIsOpen() {
-		return isOpen;
+	public TransferStatusEnum getStatus() {
+		return status;
 	}
 
-	/**
-	 * @param isOpen
-	 *            the isOpen to set
-	 */
-	public void setIsOpen(Boolean isOpen) {
-		this.isOpen = isOpen;
+	public void setStatus(TransferStatusEnum status) {
+		this.status = status;
 	}
 
 }

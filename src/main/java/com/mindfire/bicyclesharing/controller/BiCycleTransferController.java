@@ -16,21 +16,27 @@
 
 package com.mindfire.bicyclesharing.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mindfire.bicyclesharing.CurrentUser;
+import com.mindfire.bicyclesharing.dto.TransferRensponseDTO;
 import com.mindfire.bicyclesharing.dto.TransferRequestDTO;
+import com.mindfire.bicyclesharing.dto.TransferRequestRespondedDTO;
 import com.mindfire.bicyclesharing.model.TransferRequest;
+import com.mindfire.bicyclesharing.model.TransferResponse;
 import com.mindfire.bicyclesharing.service.TransferRequestService;
+import com.mindfire.bicyclesharing.service.TransferResponseService;
 
 /**
  * BiCycleTransferController contains all the mappings related to the bicycle
@@ -45,6 +51,9 @@ public class BiCycleTransferController {
 
 	@Autowired
 	private TransferRequestService transferRequestService;
+
+	@Autowired
+	private TransferResponseService transferResponseService;
 
 	/**
 	 * This method maps the request for bicycle transfer request page. Simply
@@ -78,16 +87,56 @@ public class BiCycleTransferController {
 
 		return new ModelAndView("redirect:transferRequest");
 	}
-	
+
+	/**
+	 * 
+	 * @param page
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "admin/requests", method = RequestMethod.GET)
-	public ModelAndView viewRequests(@RequestParam(value = "page") Integer page, Model model) {
-		Page<TransferRequest> allrequests = transferRequestService.findAllRequests(page);
-		int endIndex = allrequests.getTotalPages();
+	public ModelAndView viewRequests(Model model) {
+		List<TransferRequest> allrequests = transferRequestService.findAllRequests();
 		model.addAttribute("requests", allrequests);
-		model.addAttribute("currentIndex", page);
-		model.addAttribute("endIndex", endIndex);
-		
+
 		return new ModelAndView("requestsAndNotificatons");
+	}
+
+	/**
+	 * 
+	 * @param page
+	 * @param model
+	 * @param authentication
+	 * @return
+	 */
+	@RequestMapping(value = "manager/requests", method = RequestMethod.GET)
+	public ModelAndView viewOthersRequests(Model model, Authentication authentication) {
+		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+		List<TransferRequestRespondedDTO> allrequests = transferRequestService.findOtherRequest(currentUser);
+		model.addAttribute("requests", allrequests);
+
+		return new ModelAndView("requestsAndNotificatons");
+	}
+
+	/**
+	 * 
+	 * @param requestId
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "manager/respond/{id}", method = RequestMethod.GET)
+	public ModelAndView managerResponse(@PathVariable("id") Long requestId, Model model) {
+		TransferRequest request = transferRequestService.findTransferRequest(requestId);
+		model.addAttribute("request", request);
+		return new ModelAndView("transferResponseManager");
+	}
+
+	@RequestMapping(value = "manager/sendResponse", method = RequestMethod.POST)
+	public ModelAndView sendResponse(@ModelAttribute("responseData") TransferRensponseDTO transferResponseDTO,
+			Authentication authentication) {
+		TransferResponse transferResponse = transferResponseService.addNewResponse(transferResponseDTO, authentication);
+		return new ModelAndView("redirect:requests/?page=1");
+
 	}
 
 }
