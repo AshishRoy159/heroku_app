@@ -21,7 +21,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.NumberFormat;
 
 /**
- * BicycleTransferDTO class is used for receiving data from transferRequest
+ * TransferRequestDTO class is used for receiving data from transferRequest
  * view.
  * 
  * @author mindfire

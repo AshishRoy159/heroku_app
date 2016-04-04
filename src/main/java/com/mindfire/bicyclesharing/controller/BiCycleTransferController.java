@@ -67,13 +67,16 @@ public class BiCycleTransferController {
 	}
 
 	/**
-	 * This method is used to handle incoming bicycle transfer requests.
+	 * This method is used to handle incoming bicycle transfer requests from
+	 * transferRequest view.
 	 * 
-	 * @param quantity
-	 *            the amount requested
+	 * @param transferRequestDTO
+	 *            the incoming transfer request data
 	 * @param redirectAttributes
 	 *            to map the model attributes
-	 * @return tranferRequest view
+	 * @param authentication
+	 *            to get the current logged in user information
+	 * @return transferRequest view
 	 */
 	@RequestMapping(value = "manager/sendRequest", method = RequestMethod.POST)
 	public ModelAndView sendRequest(@ModelAttribute("transferData") TransferRequestDTO transferRequestDTO,
@@ -89,10 +92,12 @@ public class BiCycleTransferController {
 	}
 
 	/**
+	 * This method is used to map request for the requestsAndNotificatons page
+	 * from admin. Simply renders the requestsAndNotificatons view.
 	 * 
-	 * @param page
 	 * @param model
-	 * @return
+	 *            to map the model attributes
+	 * @return requestsAndNotificatons view
 	 */
 	@RequestMapping(value = "admin/requests", method = RequestMethod.GET)
 	public ModelAndView viewRequests(Model model) {
@@ -103,11 +108,14 @@ public class BiCycleTransferController {
 	}
 
 	/**
+	 * This method is used to map request for the requestsAndNotificatons page
+	 * from manager. Simply renders the requestsAndNotificatons view.
 	 * 
-	 * @param page
 	 * @param model
+	 *            to map the model attributes
 	 * @param authentication
-	 * @return
+	 *            to get the current logged in user information
+	 * @return requestsAndNotificatons view
 	 */
 	@RequestMapping(value = "manager/requests", method = RequestMethod.GET)
 	public ModelAndView viewOthersRequests(Model model, Authentication authentication) {
@@ -119,10 +127,14 @@ public class BiCycleTransferController {
 	}
 
 	/**
+	 * This method is used to map the requests for response view from manager.
+	 * Simply renders the transferResponseManager view.
 	 * 
 	 * @param requestId
+	 *            the id of the request to be responded
 	 * @param model
-	 * @return
+	 *            to map the model attributes
+	 * @return transferResponseManager view
 	 */
 	@RequestMapping(value = "manager/respond/{id}", method = RequestMethod.GET)
 	public ModelAndView managerResponse(@PathVariable("id") Long requestId, Model model) {
@@ -131,11 +143,22 @@ public class BiCycleTransferController {
 		return new ModelAndView("transferResponseManager");
 	}
 
+	/**
+	 * This method is used to handle the incoming response details from the
+	 * transferResponseManager view.
+	 * 
+	 * @param transferResponseDTO
+	 *            the incoming response data
+	 * @param authentication
+	 *            to get the current logged in user information
+	 * @return
+	 */
 	@RequestMapping(value = "manager/sendResponse", method = RequestMethod.POST)
 	public ModelAndView sendResponse(@ModelAttribute("responseData") TransferRensponseDTO transferResponseDTO,
 			Authentication authentication) {
-		TransferResponse transferResponse = transferResponseService.addNewResponse(transferResponseDTO, authentication);
-		return new ModelAndView("redirect:requests/?page=1");
+		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+		TransferResponse transferResponse = transferResponseService.addNewResponse(transferResponseDTO, currentUser);
+		return new ModelAndView("redirect:requests");
 
 	}
 

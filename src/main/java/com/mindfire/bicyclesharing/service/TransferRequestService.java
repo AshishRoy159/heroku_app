@@ -18,7 +18,6 @@ package com.mindfire.bicyclesharing.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -63,17 +62,21 @@ public class TransferRequestService {
 	}
 
 	/**
+	 * This method is used to retrieve details all transfer requests'
 	 * 
-	 * @return
+	 * @return {@link TransferRequest} List
 	 */
 	public List<TransferRequest> findAllRequests() {
 		return transferRequestComponent.getAllRequests();
 	}
 
 	/**
+	 * This method is used to retrieve transfer request details from other
+	 * pickup points.
 	 * 
 	 * @param currentUser
-	 * @return
+	 *            to get the current logged in manager details
+	 * @return {@link TransferRequestRespondedDTO} List
 	 */
 	public List<TransferRequestRespondedDTO> findOtherRequest(CurrentUser currentUser) {
 		List<TransferRequest> requests = transferRequestComponent.getOthersRequest(currentUser);
@@ -82,42 +85,49 @@ public class TransferRequestService {
 	}
 
 	/**
+	 * This method is used to retrieve details of transfer request from its id.
 	 * 
 	 * @param requestId
-	 * @return
+	 *            the id of the transfer request
+	 * @return {@link TransferRequest} object
 	 */
 	public TransferRequest findTransferRequest(Long requestId) {
 		return transferRequestComponent.getTransferRequest(requestId);
 	}
 
+	/**
+	 * This method is used to check if the transfer requests are responded by
+	 * current pickup point or not
+	 * 
+	 * @param requests
+	 *            the transfer requests from other pickup points
+	 * @param responses
+	 *            the responses from current pickup point
+	 * @return {@link TransferRequestRespondedDTO} List
+	 */
 	public List<TransferRequestRespondedDTO> setIsRespondedOrNot(List<TransferRequest> requests,
 			List<TransferResponse> responses) {
 		List<TransferRequestRespondedDTO> allRequests = new ArrayList<TransferRequestRespondedDTO>();
-		ListIterator<TransferRequest> requestIterator = requests.listIterator();
-		ListIterator<TransferResponse> responseIterator = responses.listIterator();
-		Boolean responded = false;
-		
-		while (requestIterator.hasNext()) {
-			TransferRequest transferRequest = requestIterator.next();
+
+		for (TransferRequest request : requests) {
 			TransferRequestRespondedDTO transferRequestRespondedDTO = new TransferRequestRespondedDTO();
-			transferRequestRespondedDTO.setRequestId(transferRequest.getRequestId());
-			transferRequestRespondedDTO.setPickUpPoint(transferRequest.getPickUpPoint());
-			transferRequestRespondedDTO.setManager(transferRequest.getManager());
-			transferRequestRespondedDTO.setQuantity(transferRequest.getQuantity());
-			transferRequestRespondedDTO.setRequestedOn(transferRequest.getRequestedOn());
-			transferRequestRespondedDTO.setIsApproved(transferRequest.getIsApproved());
-			
-			while (responseIterator.hasNext()) {
-				TransferResponse transferResponse = responseIterator.next();
-				if (transferRequest.getRequestId() == transferResponse.getRequest().getRequestId()) {
-					responded = true;
+			transferRequestRespondedDTO.setRequestId(request.getRequestId());
+			transferRequestRespondedDTO.setPickUpPoint(request.getPickUpPoint());
+			transferRequestRespondedDTO.setManager(request.getManager());
+			transferRequestRespondedDTO.setQuantity(request.getQuantity());
+			transferRequestRespondedDTO.setRequestedOn(request.getRequestedOn());
+			transferRequestRespondedDTO.setIsApproved(request.getIsApproved());
+			transferRequestRespondedDTO.setIsResponded(false);
+
+			for (TransferResponse response : responses) {
+				if (response.getRequest().getRequestId() == request.getRequestId()) {
+					transferRequestRespondedDTO.setIsResponded(true);
 					break;
 				}
 			}
-			transferRequestRespondedDTO.setIsResponded(responded);
 			allRequests.add(transferRequestRespondedDTO);
 		}
-		
+
 		return allRequests;
 	}
 }

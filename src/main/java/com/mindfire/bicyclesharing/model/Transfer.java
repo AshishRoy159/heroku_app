@@ -176,10 +176,17 @@ public class Transfer implements Serializable {
 		this.vehicleNo = vehicleNo;
 	}
 
+	/**
+	 * @return the status
+	 */
 	public TransferStatusEnum getStatus() {
 		return status;
 	}
 
+	/**
+	 * @param status
+	 *            the status to set
+	 */
 	public void setStatus(TransferStatusEnum status) {
 		this.status = status;
 	}

@@ -39,7 +39,8 @@
 						<div class="panel-heading">Requests</div>
 						<div class="panel-body">
 							<div class="table-responsive">
-								<table class="table table-hover table-striped">
+								<table class="table table-hover table-striped table-bordered"
+									id="dataTables-example">
 									<thead>
 										<tr>
 											<th>Id</th>
@@ -63,14 +64,12 @@
 											<td sec:authorize="hasAuthority('ADMIN')"><span
 												th:if="${request.isApproved}">Already Approved</span><a
 												th:unless="${request.isApproved}"
-												th:href="@{/admin/respond/} + ${request.requestId}"
-												th:text="${request.location}">Respond</a></td>
+												th:href="@{/admin/respond/} + ${request.requestId}">Respond</a></td>
 											<td sec:authorize="hasAuthority('MANAGER')"
-												th:if="${request.isResponded}"><span
-												th:if="${request.isResponded}">Already Responded</span></td>
+												th:if="${request.isResponded}"><span>Already
+													Responded</span></td>
 											<td sec:authorize="hasAuthority('MANAGER')"
 												th:unless="${request.isResponded}"><a
-												th:unless="${request.isResponded}"
 												th:href="@{/manager/respond/} + ${request.requestId}">Respond</a></td>
 										</tr>
 									</tbody>

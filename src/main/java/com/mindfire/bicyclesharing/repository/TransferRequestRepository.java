@@ -35,9 +35,29 @@ import com.mindfire.bicyclesharing.model.TransferRequest;
 @Repository
 public interface TransferRequestRepository extends JpaRepository<TransferRequest, Long> {
 
+	/**
+	 * This method is used to retrieve all transfer requests from the database
+	 * 
+	 * @return {@link TransferRequest} List
+	 */
 	public List<TransferRequest> findAll();
-	
+
+	/**
+	 * this method is used retrieve transfer request details from its id.
+	 * 
+	 * @param requestId
+	 *            the id of the {@link TransferRequest} object
+	 * @return {@link TransferRequest} object
+	 */
 	public TransferRequest findByRequestId(Long requestId);
-	
+
+	/**
+	 * This method is used to retrieve transfer requests from pickup points
+	 * other than the current one.
+	 * 
+	 * @param pickUpPoint
+	 *            the current pickup point
+	 * @return {@link TransferRequest} List
+	 */
 	public List<TransferRequest> findByPickUpPointNot(PickUpPoint pickUpPoint);
 }

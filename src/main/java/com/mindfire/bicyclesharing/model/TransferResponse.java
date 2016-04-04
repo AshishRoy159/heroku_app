@@ -29,7 +29,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
- * The persistent class for the tranfer_requests database table.
+ * The persistent class for the tranfer_responses database table.
  * 
  * @author mindfire
  * @version 1.0

@@ -67,15 +67,36 @@ public class TransferRequestComponent {
 		return transferRequestRepository.save(transferRequest);
 	}
 
+	/**
+	 * This method is used to retrieve all transfer requests from the database
+	 * 
+	 * @return {@link TransferRequest} List
+	 */
 	public List<TransferRequest> getAllRequests() {
 		return transferRequestRepository.findAll();
 	}
 
+	/**
+	 * This method is used to retrieve transfer requests from other pickup
+	 * points
+	 * 
+	 * @param currentUser
+	 *            the current logged in manager
+	 * @return {@link TransferRequest} List
+	 */
 	public List<TransferRequest> getOthersRequest(CurrentUser currentUser) {
 		PickUpPoint pickUpPoint = pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint();
 		return transferRequestRepository.findByPickUpPointNot(pickUpPoint);
 	}
-	
+
+	/**
+	 * This method is used to retrieve the transfer request record from
+	 * requestId
+	 * 
+	 * @param requestId
+	 *            the id of the request object
+	 * @return {@link TransferRequest} object
+	 */
 	public TransferRequest getTransferRequest(Long requestId) {
 		return transferRequestRepository.findByRequestId(requestId);
 	}

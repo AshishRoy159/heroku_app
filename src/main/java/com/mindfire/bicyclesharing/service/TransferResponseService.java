@@ -3,7 +3,6 @@ package com.mindfire.bicyclesharing.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.CurrentUser;
@@ -17,11 +16,11 @@ public class TransferResponseService {
 	@Autowired
 	private TransferResponseComponent transferResponseComponent;
 
-	public TransferResponse addNewResponse(TransferRensponseDTO transferResponseDTO, Authentication authentication) {
-		return transferResponseComponent.mapNewTransferResponse(transferResponseDTO, authentication);
+	public TransferResponse addNewResponse(TransferRensponseDTO transferResponseDTO, CurrentUser currentUser) {
+		return transferResponseComponent.mapNewTransferResponse(transferResponseDTO, currentUser);
 
 	}
-	
+
 	public List<TransferResponse> findResponses(CurrentUser currentUser) {
 		return transferResponseComponent.getResponses(currentUser);
 	}
