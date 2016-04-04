@@ -45,7 +45,7 @@ public class TransferResponse implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "response_id")
-	private Long reponseId;
+	private Long responseId;
 
 	@ManyToOne
 	@JoinColumn(name = "request_id")
@@ -62,19 +62,22 @@ public class TransferResponse implements Serializable {
 	@JoinColumn(name = "manager_id")
 	private User manager;
 
+	@Column(name = "is_approved", insertable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+	private Boolean isApproved;
+
 	/**
-	 * @return the reponseId
+	 * @return the responseId
 	 */
-	public Long getReponseId() {
-		return reponseId;
+	public Long getResponseId() {
+		return responseId;
 	}
 
 	/**
-	 * @param reponseId
-	 *            the reponseId to set
+	 * @param responseId
+	 *            the responseId to set
 	 */
-	public void setReponseId(Long reponseId) {
-		this.reponseId = reponseId;
+	public void setResponseId(Long responseId) {
+		this.responseId = responseId;
 	}
 
 	/**
@@ -135,6 +138,21 @@ public class TransferResponse implements Serializable {
 	 */
 	public void setManager(User manager) {
 		this.manager = manager;
+	}
+
+	/**
+	 * @return the isApproved
+	 */
+	public Boolean getIsApproved() {
+		return isApproved;
+	}
+
+	/**
+	 * @param isApproved
+	 *            the isApproved to set
+	 */
+	public void setIsApproved(Boolean isApproved) {
+		this.isApproved = isApproved;
 	}
 
 }

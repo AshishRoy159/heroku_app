@@ -27,8 +27,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.mindfire.bicyclesharing.enums.TransferStatusEnum;
-
 /**
  * The persistent class for the transfers database table.
  * 
@@ -45,28 +43,28 @@ public class Transfer implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "transfer_id")
-	private Integer transferId;
+	private Long transferId;
 
-	@Column(name = "arrived_on")
+	@Column(name = "arrived_on", insertable = false)
 	private Timestamp arrivedOn;
 
-	@Column(name = "dispatched_at")
+	@Column(name = "dispatched_at", insertable = false)
 	private Timestamp dispatchedAt;
 
-	@Column(name = "quantity")
+	@Column(name = "quantity", updatable = false)
 	private Integer quantity;
 
-	@Column(name = "transferred_from")
-	private String transferredFrom;
+	@Column(name = "transferred_from", updatable = false)
+	private PickUpPoint transferredFrom;
 
-	@Column(name = "transferred_to")
-	private String transferredTo;
+	@Column(name = "transferred_to", updatable = false)
+	private PickUpPoint transferredTo;
 
-	@Column(name = "vehicle_no")
+	@Column(name = "vehicle_no", insertable = false)
 	private String vehicleNo;
 
-	@Column(name = "status", nullable = false, insertable = false)
-	private TransferStatusEnum status;
+	@Column(name = "status", columnDefinition = "TRANSFERSTATUS")
+	private String status;
 
 	public Transfer() {
 	}
@@ -74,7 +72,7 @@ public class Transfer implements Serializable {
 	/**
 	 * @return the transferId
 	 */
-	public Integer getTransferId() {
+	public Long getTransferId() {
 		return transferId;
 	}
 
@@ -82,7 +80,7 @@ public class Transfer implements Serializable {
 	 * @param transferId
 	 *            the transferId to set
 	 */
-	public void setTransferId(Integer transferId) {
+	public void setTransferId(Long transferId) {
 		this.transferId = transferId;
 	}
 
@@ -134,7 +132,7 @@ public class Transfer implements Serializable {
 	/**
 	 * @return the transferredFrom
 	 */
-	public String getTransferredFrom() {
+	public PickUpPoint getTransferredFrom() {
 		return transferredFrom;
 	}
 
@@ -142,14 +140,14 @@ public class Transfer implements Serializable {
 	 * @param transferredFrom
 	 *            the transferredFrom to set
 	 */
-	public void setTransferredFrom(String transferredFrom) {
+	public void setTransferredFrom(PickUpPoint transferredFrom) {
 		this.transferredFrom = transferredFrom;
 	}
 
 	/**
 	 * @return the transferredTo
 	 */
-	public String getTransferredTo() {
+	public PickUpPoint getTransferredTo() {
 		return transferredTo;
 	}
 
@@ -157,7 +155,7 @@ public class Transfer implements Serializable {
 	 * @param transferredTo
 	 *            the transferredTo to set
 	 */
-	public void setTransferredTo(String transferredTo) {
+	public void setTransferredTo(PickUpPoint transferredTo) {
 		this.transferredTo = transferredTo;
 	}
 
@@ -179,7 +177,7 @@ public class Transfer implements Serializable {
 	/**
 	 * @return the status
 	 */
-	public TransferStatusEnum getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
@@ -187,7 +185,7 @@ public class Transfer implements Serializable {
 	 * @param status
 	 *            the status to set
 	 */
-	public void setStatus(TransferStatusEnum status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 

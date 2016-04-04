@@ -101,4 +101,17 @@ public class TransferRequestComponent {
 		return transferRequestRepository.findByRequestId(requestId);
 	}
 
+	/**
+	 * This method is used to update the approved quantity field of the request.
+	 * 
+	 * @param approvedQuantity
+	 *            the updated amount
+	 * @param requestId
+	 *            the id of the request
+	 * @return Integer 0 or 1
+	 */
+	public int updateApprovedQuantity(Integer approvedQuantity, Long requestId) {
+		return transferRequestRepository.updateCurrentApprovedQuantity(approvedQuantity, requestId);
+	}
+
 }

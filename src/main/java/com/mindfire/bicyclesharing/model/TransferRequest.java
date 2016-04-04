@@ -58,10 +58,13 @@ public class TransferRequest implements Serializable {
 	@Column(name = "quantity")
 	private Integer quantity;
 
+	@Column(name = "approved_quantity", insertable = false, columnDefinition = "INTEGER DEFAULT 0")
+	private Integer approvedQuantity;
+
 	@Column(name = "requested_on", nullable = false, insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp requestedOn;
 
-	@Column(name = "is_approved", columnDefinition="BOOLEAN DEFAULT FALSE")
+	@Column(name = "is_approved", columnDefinition = "BOOLEAN DEFAULT FALSE")
 	private Boolean isApproved;
 
 	/**
@@ -122,6 +125,21 @@ public class TransferRequest implements Serializable {
 	 */
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
+	}
+
+	/**
+	 * @return the approvedQuantity
+	 */
+	public Integer getApprovedQuantity() {
+		return approvedQuantity;
+	}
+
+	/**
+	 * @param approvedQuantity
+	 *            the approvedQuantity to set
+	 */
+	public void setApprovedQuantity(Integer approvedQuantity) {
+		this.approvedQuantity = approvedQuantity;
 	}
 
 	/**

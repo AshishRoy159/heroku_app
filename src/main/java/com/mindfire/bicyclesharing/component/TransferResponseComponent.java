@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.dto.TransferRensponseDTO;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
+import com.mindfire.bicyclesharing.model.TransferRequest;
 import com.mindfire.bicyclesharing.model.TransferResponse;
 import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
 import com.mindfire.bicyclesharing.repository.TransferRequestRepository;
@@ -82,6 +83,42 @@ public class TransferResponseComponent {
 	public List<TransferResponse> getResponses(CurrentUser currentUser) {
 		PickUpPoint pickUpPoint = pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint();
 		return transferResponseRepository.findByPickUpPoint(pickUpPoint);
+	}
+
+	/**
+	 * This method is used to retrieve responses for a specific request.
+	 * 
+	 * @param transferRequest
+	 *            the transfer request
+	 * @return {@link TransferResponse} List
+	 */
+	public List<TransferResponse> getTransferResponsesForRequest(TransferRequest transferRequest) {
+		return transferResponseRepository.findByRequest(transferRequest);
+	}
+
+	/**
+	 * This method is used to retrieve details of a transfer response from its
+	 * id.
+	 * 
+	 * @param responseId
+	 *            the id of the transfer response
+	 * @return {@link TransferResponse} object
+	 */
+	public TransferResponse getTransferResponse(Long responseId) {
+		return transferResponseRepository.findByResponseId(responseId);
+	}
+
+	/**
+	 * This method is used to update if the response is approved or not
+	 * 
+	 * @param isApproved
+	 *            the boolean value
+	 * @param responseId
+	 *            id of the response
+	 * @return Integer 0 or 1
+	 */
+	public int updateIsApproved(Boolean isApproved, Long responseId) {
+		return transferResponseRepository.updateIsApproved(isApproved, responseId);
 	}
 
 }

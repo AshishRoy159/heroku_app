@@ -37,6 +37,7 @@ import com.mindfire.bicyclesharing.model.TransferRequest;
 import com.mindfire.bicyclesharing.model.TransferResponse;
 import com.mindfire.bicyclesharing.service.TransferRequestService;
 import com.mindfire.bicyclesharing.service.TransferResponseService;
+import com.mindfire.bicyclesharing.service.TransferService;
 
 /**
  * BiCycleTransferController contains all the mappings related to the bicycle
@@ -54,6 +55,9 @@ public class BiCycleTransferController {
 
 	@Autowired
 	private TransferResponseService transferResponseService;
+
+	@Autowired
+	private TransferService transferService;
 
 	/**
 	 * This method maps the request for bicycle transfer request page. Simply
@@ -160,6 +164,44 @@ public class BiCycleTransferController {
 		TransferResponse transferResponse = transferResponseService.addNewResponse(transferResponseDTO, currentUser);
 		return new ModelAndView("redirect:requests");
 
+	}
+
+	/**
+	 * This method is used to map requests for showing pickup point's responses
+	 * to a specific transfer request. Simply renders the transferResponseAdmin
+	 * view.
+	 * 
+	 * @param requestId
+	 *            id of the transfer request
+	 * @param model
+	 *            to map the model attributes
+	 * @return transferResponseAdmin view
+	 */
+	@RequestMapping(value = "admin/respond/{id}", method = RequestMethod.GET)
+	public ModelAndView adminResponse(@PathVariable("id") Long requestId, Model model) {
+		TransferRequest transferRequest = transferRequestService.findTransferRequest(requestId);
+		List<TransferResponse> responses = transferResponseService.findresponsesForRequest(transferRequest);
+		model.addAttribute("request", transferRequest);
+		model.addAttribute("responses", responses);
+		return new ModelAndView("transferResponseAdmin");
+	}
+
+	/**
+	 * This method is used to approve one response from a pickup point to a
+	 * transfer request.
+	 * 
+	 * @param responseId
+	 *            id of the response
+	 * @return transferResponseAdmin view
+	 */
+	@RequestMapping(value = "admin/approveResponse/{id}", method = RequestMethod.GET)
+	public ModelAndView approveResponse(@PathVariable("id") Long responseId) {
+		TransferResponse transferResponse = transferResponseService.findResponseById(responseId);
+		transferResponseService.updateApproval(true, responseId);
+		transferRequestService.updateQuantityApproved(transferResponse.getQuantity(),
+				transferResponse.getRequest().getRequestId());
+		transferService.addNewTransfer(transferResponse);
+		return new ModelAndView();
 	}
 
 }

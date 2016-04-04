@@ -19,9 +19,14 @@ package com.mindfire.bicyclesharing.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mindfire.bicyclesharing.model.PickUpPoint;
+import com.mindfire.bicyclesharing.model.TransferRequest;
 import com.mindfire.bicyclesharing.model.TransferResponse;
 
 /**
@@ -36,5 +41,14 @@ import com.mindfire.bicyclesharing.model.TransferResponse;
 public interface TransferResponseRepository extends JpaRepository<TransferResponse, Long> {
 
 	public List<TransferResponse> findByPickUpPoint(PickUpPoint pickUpPoint);
+
+	public List<TransferResponse> findByRequest(TransferRequest request);
+
+	public TransferResponse findByResponseId(Long responseId);
+
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query("update TransferResponse ts set ts.isApproved =:isApproved where ts.responseId =:responseId")
+	public int updateIsApproved(@Param("isApproved") Boolean isApproved, @Param("responseId") long responseId);
 
 }

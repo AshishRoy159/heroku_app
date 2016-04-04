@@ -19,7 +19,11 @@ package com.mindfire.bicyclesharing.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.TransferRequest;
@@ -60,4 +64,19 @@ public interface TransferRequestRepository extends JpaRepository<TransferRequest
 	 * @return {@link TransferRequest} List
 	 */
 	public List<TransferRequest> findByPickUpPointNot(PickUpPoint pickUpPoint);
+
+	/**
+	 * This method is used to update the approvedQuantity field
+	 * 
+	 * @param approvedQuantity
+	 *            the new approvedQuantity
+	 * @param requestId
+	 *            id of the request
+	 * @return Integer 0 or 1
+	 */
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query("update TransferRequest tr set tr.approvedQuantity = :approvedQuantity where tr.requestId = :requestId")
+	public int updateCurrentApprovedQuantity(@Param("approvedQuantity") Integer approvedQuantity,
+			@Param("requestId") Long requestId);
 }

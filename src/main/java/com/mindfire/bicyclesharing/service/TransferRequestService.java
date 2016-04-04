@@ -96,6 +96,19 @@ public class TransferRequestService {
 	}
 
 	/**
+	 * This method is used to update the approved quantity field of the request.
+	 * 
+	 * @param approvedQuantity
+	 *            the updated amount
+	 * @param requestId
+	 *            the id of the request
+	 * @return Integer 0 or 1
+	 */
+	public int updateQuantityApproved(Integer approvedQuantity, Long requestId) {
+		return transferRequestComponent.updateApprovedQuantity(approvedQuantity, requestId);
+	}
+
+	/**
 	 * This method is used to check if the transfer requests are responded by
 	 * current pickup point or not
 	 * 
