@@ -29,17 +29,21 @@
 						<h4 class="text-success" th:text="*{bookingSuccess}"></h4>
 						<h4 class="text-danger" th:text="*{bookingFailure}"></h4>
 					</div>
-					
+
 				</div>
 				<div class="row">
 					<div class="col-md-6">
 						<div class="panel panel-info">
 							<div class="panel-heading">
-								<h3>Issue Bicycle By <strong th:text="${#authentication.principal.firstName}"></strong></h3>
+								<h3>
+									Issue Bicycle By <strong
+										th:text="${#authentication.principal.firstName}"></strong>
+								</h3>
 							</div>
 							<div class="panel-body">
 								<div class="col-md-8 col-sm-8 col-xs-8">
-									<form action="manager/bookingPayment" th:action="@{/manager/bookingPayment}"
+									<form action="manager/bookingPayment"
+										th:action="@{/manager/bookingPayment}"
 										th:object="${issueCycleData}" method="GET">
 										<div>
 											<label class="control-label"> UserId</label> <input
@@ -57,9 +61,9 @@
 											</select>
 										</div>
 										<div>
-											<label class="control-label">Expected Return(In Hours)</label> <input
-												type="number" name="expectedInTime" class="form-control"
-												required="required" max="15" min="1"/>
+											<label class="control-label">Expected Return(In
+												Hours)</label> <input type="number" name="expectedInTime"
+												class="form-control" required="required" max="15" min="1" />
 										</div>
 										<div style="padding: 5px">
 											<button class="btn btn-primary">OK</button>
@@ -75,26 +79,65 @@
 					<div class="col-md-6">
 						<div class="panel panel-info">
 							<div class="panel-heading">
-								<h3>Recieve Bicycle</h3>
+								<h3>Issue Bicycle For Online Booking</h3>
 							</div>
 							<div class="panel-body">
-								<form action="manager/receiveCycle" th:action="@{/manager/receiveCycle}"
-									th:object="${receiveCycleData}" method="POST">
-									<div>
-										<label class="control-label">Booking Id</label> <input
-											type="text" name="bookingId" class="form-control"
-											required="required" />
-									</div>
-									<div style="padding: 5px">
-										<input type="submit" class="btn btn-primary" value="OK"/>
-										<input type="reset" class="btn btn-info" value="Reset"/>
-									</div>
-								</form>
+								<div class="col-md-8 col-sm-8 col-xs-8">
+									<form action="manager/printBookingDetails"
+										th:action="@{/manager/printBookingDetails}"
+										th:object="${issueBookingData}" method="POST">
+										<div>
+											<label class="control-label"> Booking Id</label> <input
+												type="text" name="bookingId" class="form-control"
+												required="required" />
+										</div>
+										<div>
+											<label class="control-label">Select BiCycle</label> <select
+												class="input-xlarge form-control" name="bicycleId"
+												required="required">
+												<option value="">Select BiCycle</option>
+												<option th:each="biCycle : ${biCycles}"
+													th:value="${biCycle.biCycleId}"
+													th:text="${biCycle.chasisNo}"></option>
+											</select>
+										</div>
+										<div style="padding: 5px">
+											<input type="submit" class="btn btn-primary" value="OK" />
+											<input type="reset" class="btn btn-info" />
+										</div>
+									</form>
+								</div>
 							</div>
 						</div>
 					</div>
-					<!-- panel end -->
 				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="panel panel-info">
+							<div class="panel-heading">
+								<h3>Recieve Bicycle</h3>
+							</div>
+							<div class="panel-body">
+								<div class="col-md-8 col-sm-8 col-xs-8">
+									<form action="manager/receiveCycle"
+										th:action="@{/manager/receiveCycle}"
+										th:object="${receiveCycleData}" method="POST">
+										<div>
+											<label class="control-label">Booking Id</label> <input
+												type="text" name="bookingId" class="form-control"
+												required="required" />
+										</div>
+										<div style="padding: 5px">
+											<input type="submit" class="btn btn-primary" value="OK" /> <input
+												type="reset" class="btn btn-info" value="Reset" />
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- panel end -->
 			</div>
 		</div>
 	</div>

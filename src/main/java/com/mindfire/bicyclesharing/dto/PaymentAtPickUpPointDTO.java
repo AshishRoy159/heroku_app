@@ -16,43 +16,48 @@
 
 package com.mindfire.bicyclesharing.dto;
 
-import javax.validation.constraints.NotNull;
-
-import org.springframework.format.annotation.NumberFormat;
-
 /**
- * UserBookingPaymentDTO class is used for taking data from user booking payment
- * view.
+ * PaymentAtPickUpPointDTO class is used for taking data from user booking
+ * payment view.
  * 
  * @author mindfire
  * @version 1.0
  * @since 10/03/2016
  */
-public class UserBookingPaymentDTO {
+public class PaymentAtPickUpPointDTO {
 
-	@NotNull
-	private String mode;
-
-	@NotNull
 	private Long bookingId;
-
-	@NotNull
-	@NumberFormat
+	private Long bicycleId;
 	private Double fare;
 
 	/**
-	 * @return the mode
+	 * @return the bookingId
 	 */
-	public String getMode() {
-		return mode;
+	public Long getBookingId() {
+		return bookingId;
 	}
 
 	/**
-	 * @param mode
-	 *            the mode to set
+	 * @param bookingId
+	 *            the bookingId to set
 	 */
-	public void setMode(String mode) {
-		this.mode = mode;
+	public void setBookingId(Long bookingId) {
+		this.bookingId = bookingId;
+	}
+
+	/**
+	 * @return the bicycleId
+	 */
+	public Long getBicycleId() {
+		return bicycleId;
+	}
+
+	/**
+	 * @param bicycleId
+	 *            the bicycleId to set
+	 */
+	public void setBicycleId(Long bicycleId) {
+		this.bicycleId = bicycleId;
 	}
 
 	/**
@@ -68,21 +73,6 @@ public class UserBookingPaymentDTO {
 	 */
 	public void setFare(Double fare) {
 		this.fare = fare;
-	}
-
-	/**
-	 * @return the bookingId
-	 */
-	public Long getBookingId() {
-		return bookingId;
-	}
-
-	/**
-	 * @param bookingId
-	 *            the bookingId to set
-	 */
-	public void setBookingId(Long bookingId) {
-		this.bookingId = bookingId;
 	}
 
 }

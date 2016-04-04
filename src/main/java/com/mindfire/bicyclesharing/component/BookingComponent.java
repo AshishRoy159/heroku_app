@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.dto.BookingPaymentDTO;
+import com.mindfire.bicyclesharing.dto.PaymentAtPickUpPointDTO;
 import com.mindfire.bicyclesharing.dto.ReceiveBicyclePaymentDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
 import com.mindfire.bicyclesharing.model.BiCycle;
@@ -244,5 +245,21 @@ public class BookingComponent {
 			Wallet userWallet, String type) {
 		return createWalletTransaction(userBookingPaymentDTO.getFare(), userBookingPaymentDTO.getMode(), type,
 				userWallet);
+	}
+
+	/**
+	 *  This method is used for creating a wallet transaction for user booking.
+	 * 
+	 * @param paymentAtPickUpPointDTO
+	 *            User Booking Payment data
+	 * 
+	 * @return WalletTransaction object
+	 */
+	public WalletTransaction mapUserPaymentTransaction(PaymentAtPickUpPointDTO paymentAtPickUpPointDTO) {
+		String paymentType = "ONLINE BOOKING";
+		String mode = "cash";
+		Wallet userWallet = walletRepository
+				.findByUser(bookingRepository.findByBookingId(paymentAtPickUpPointDTO.getBookingId()).getUser());
+		return createWalletTransaction(paymentAtPickUpPointDTO.getFare(), mode, paymentType, userWallet);
 	}
 }

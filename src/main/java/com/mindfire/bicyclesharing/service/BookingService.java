@@ -25,8 +25,11 @@ import org.springframework.stereotype.Service;
 import com.mindfire.bicyclesharing.component.BookingComponent;
 import com.mindfire.bicyclesharing.component.UserBookingComponent;
 import com.mindfire.bicyclesharing.dto.BookingPaymentDTO;
+import com.mindfire.bicyclesharing.dto.IssueCycleForOnlineDTO;
+import com.mindfire.bicyclesharing.dto.PaymentAtPickUpPointDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingDTO;
 import com.mindfire.bicyclesharing.model.Booking;
+import com.mindfire.bicyclesharing.model.WalletTransaction;
 
 /**
  * BookingService class contains methods for Booking related operations
@@ -81,5 +84,57 @@ public class BookingService {
 	 */
 	public Booking saveUserBookingDetails(UserBookingDTO userBookingDTO, Authentication authentication) {
 		return userBookingComponent.setUserBookingDetails(userBookingDTO, authentication);
+	}
+
+	/**
+	 * This method is used for sending the control and data to the corresponding
+	 * component class for updating the issue bicycle details.
+	 * 
+	 * @param issueCycleForOnlineDTO
+	 *            this object holds the issue bicycle details data.
+	 * @param fare
+	 *            booking fare
+	 * @return {@link Booking}
+	 */
+	public Booking updateIssueBicycleDetails(IssueCycleForOnlineDTO issueCycleForOnlineDTO, Double fare) {
+		return userBookingComponent.mapIssueBicycleDetails(issueCycleForOnlineDTO.getBookingId(),
+				issueCycleForOnlineDTO.getBicycleId(), fare);
+	}
+
+	/**
+	 * This method is used for sending the control and data to the corresponding
+	 * component class for updating the issue bicycle details along with
+	 * payment.
+	 * 
+	 * @param paymentAtPickUpPointDTO
+	 *            this object holds the issue bicycle payment related data.
+	 * @return {@link Booking}
+	 */
+	public Booking updateIssueBicycleDetailsWithPayment(PaymentAtPickUpPointDTO paymentAtPickUpPointDTO) {
+		return userBookingComponent.mapIssueBicycleDetails(paymentAtPickUpPointDTO.getBookingId(),
+				paymentAtPickUpPointDTO.getBicycleId(), paymentAtPickUpPointDTO.getFare());
+	}
+
+	/**
+	 * This method is used for sending the control and data to the corresponding
+	 * component class for creating the payment transaction for the user booking
+	 * 
+	 * @param paymentAtPickUpPointDTO
+	 *            payment related data
+	 * @return {@link WalletTransaction}
+	 */
+	public WalletTransaction createUserPaymentTransaction(PaymentAtPickUpPointDTO paymentAtPickUpPointDTO) {
+		return bookingComponent.mapUserPaymentTransaction(paymentAtPickUpPointDTO);
+	}
+
+	/**
+	 * This method is used for getting the booking details by booking id.
+	 * 
+	 * @param bookingId
+	 *            this is booking id
+	 * @return {@link Booking}
+	 */
+	public Booking getBookingById(Long bookingId) {
+		return userBookingComponent.getBooking(bookingId);
 	}
 }

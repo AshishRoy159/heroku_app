@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.model.PickUpPointManager;
+import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
 
 /**
@@ -46,5 +47,16 @@ public class PickUpPointManagerService {
 	 */
 	public PickUpPointManager setPickUpPointToManager(PickUpPointManager pickUpPointManager) {
 		return pickUpPointManagerRepository.save(pickUpPointManager);
+	}
+
+	/**
+	 * This method used for getting the pickup point manager.
+	 * 
+	 * @param user
+	 *            this is User object
+	 * @return {@link PickUpPointManager}
+	 */
+	public PickUpPointManager getPickupPointManager(User user) {
+		return pickUpPointManagerRepository.findByUser(user);
 	}
 }
