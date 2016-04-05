@@ -49,15 +49,17 @@ public class TransferComponent {
 	public Transfer mapNewTransfer(TransferResponse transferResponse) {
 		Transfer transfer = new Transfer();
 
-		if (transferResponse.getQuantity() >= transferResponse.getRequest().getApprovedQuantity()) {
-			transfer.setQuantity(transferResponse.getQuantity());
+		if (transferResponse.getQuantity() >= (transferResponse.getRequest().getQuantity()
+				- transferResponse.getRequest().getApprovedQuantity())) {
+			transfer.setQuantity(transferResponse.getRequest().getQuantity()
+					- transferResponse.getRequest().getApprovedQuantity());
 		} else {
-			transfer.setQuantity(transferResponse.getRequest().getQuantity());
+			transfer.setQuantity(transferResponse.getQuantity());
 		}
 
 		transfer.setTransferredFrom(transferResponse.getPickUpPoint());
 		transfer.setTransferredTo(transferResponse.getRequest().getPickUpPoint());
-		transfer.setStatus(TransferStatusEnum.PENDING.toString());
+		transfer.setStatus(TransferStatusEnum.PENDING);
 
 		return transferRepository.save(transfer);
 	}

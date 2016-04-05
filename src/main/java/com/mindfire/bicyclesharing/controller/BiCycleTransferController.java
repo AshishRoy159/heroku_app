@@ -201,7 +201,7 @@ public class BiCycleTransferController {
 		transferRequestService.updateQuantityApproved(transferResponse.getQuantity(),
 				transferResponse.getRequest().getRequestId());
 		transferService.addNewTransfer(transferResponse);
-		return new ModelAndView();
+		return new ModelAndView("redirect:/admin/respond/"+transferResponse.getRequest().getRequestId());
 	}
 
 }

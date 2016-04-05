@@ -20,12 +20,18 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
+import com.mindfire.bicyclesharing.enums.TransferStatusEnum;
+import com.mindfire.bicyclesharing.enums.TransferStatusEnumConverter;
 
 /**
  * The persistent class for the transfers database table.
@@ -54,18 +60,22 @@ public class Transfer implements Serializable {
 	@Column(name = "quantity", updatable = false)
 	private Integer quantity;
 
-	@Column(name = "transferred_from", updatable = false)
+	@ManyToOne
+	@JoinColumn(name = "transferred_from", updatable = false)
 	private PickUpPoint transferredFrom;
 
-	@Column(name = "transferred_to", updatable = false)
+	@ManyToOne
+	@JoinColumn(name = "transferred_to", updatable = false)
 	private PickUpPoint transferredTo;
 
 	@Column(name = "vehicle_no", insertable = false)
 	private String vehicleNo;
 
-	@Column(name = "status", columnDefinition = "TRANSFERSTATUS")
-	private String status;
+	@Column(name = "status", nullable = false)
+	@Convert(converter = TransferStatusEnumConverter.class)
+	private TransferStatusEnum status;
 
+	
 	public Transfer() {
 	}
 
@@ -177,7 +187,7 @@ public class Transfer implements Serializable {
 	/**
 	 * @return the status
 	 */
-	public String getStatus() {
+	public TransferStatusEnum getStatus() {
 		return status;
 	}
 
@@ -185,7 +195,7 @@ public class Transfer implements Serializable {
 	 * @param status
 	 *            the status to set
 	 */
-	public void setStatus(String status) {
+	public void setStatus(TransferStatusEnum status) {
 		this.status = status;
 	}
 

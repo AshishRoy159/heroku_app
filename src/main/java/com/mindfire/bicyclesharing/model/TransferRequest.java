@@ -64,7 +64,7 @@ public class TransferRequest implements Serializable {
 	@Column(name = "requested_on", nullable = false, insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp requestedOn;
 
-	@Column(name = "is_approved", columnDefinition = "BOOLEAN DEFAULT FALSE")
+	@Column(name = "is_approved", insertable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
 	private Boolean isApproved;
 
 	/**
