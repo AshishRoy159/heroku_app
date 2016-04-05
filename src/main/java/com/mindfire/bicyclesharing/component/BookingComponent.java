@@ -17,6 +17,7 @@
 package com.mindfire.bicyclesharing.component;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -261,5 +262,9 @@ public class BookingComponent {
 		Wallet userWallet = walletRepository
 				.findByUser(bookingRepository.findByBookingId(paymentAtPickUpPointDTO.getBookingId()).getUser());
 		return createWalletTransaction(paymentAtPickUpPointDTO.getFare(), mode, paymentType, userWallet);
+	}
+	
+	public List<Booking> getAllBookingByUser(User user){
+		return bookingRepository.findAllByUser(user);
 	}
 }

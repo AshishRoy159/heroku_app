@@ -16,6 +16,11 @@
 
 package com.mindfire.bicyclesharing.dto;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.NumberFormat;
+
 /**
  * IssueCycleForOnlineDTO class is used for taking data from issue bicycle view.
  * 
@@ -25,7 +30,12 @@ package com.mindfire.bicyclesharing.dto;
  */
 public class IssueCycleForOnlineDTO {
 
+	@NotNull @Min(1)
+	@NumberFormat
 	private Long bookingId;
+	
+	@NotNull @Min(1)
+	@NumberFormat 
 	private Long bicycleId;
 
 	/**

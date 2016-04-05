@@ -16,6 +16,7 @@
 
 package com.mindfire.bicyclesharing.dto;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.NumberFormat;
@@ -30,7 +31,7 @@ import org.springframework.format.annotation.NumberFormat;
 public class ReceiveCycleDTO {
 
 	@NotNull
-	@NumberFormat
+	@NumberFormat @Min(1)
 	private Long bookingId;
 
 	/**

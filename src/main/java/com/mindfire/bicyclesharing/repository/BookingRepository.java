@@ -16,6 +16,8 @@
 
 package com.mindfire.bicyclesharing.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -51,5 +53,15 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	 * @return Booking Object
 	 */
 	public Booking findByBookingId(Long id);
-
+	
+	/**
+	 * This method is used for find all Booking.
+	 * 
+	 * @param user
+	 *            User object
+	 * @param open
+	 *            Boolean value
+	 * @return Booking
+	 */
+	public List<Booking> findAllByUser(User user);
 }

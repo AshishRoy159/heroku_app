@@ -16,11 +16,16 @@
 
 package com.mindfire.bicyclesharing.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,6 +37,7 @@ import com.mindfire.bicyclesharing.dto.PaymentAtPickUpPointDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
 import com.mindfire.bicyclesharing.model.Booking;
+import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
 import com.mindfire.bicyclesharing.repository.BookingRepository;
 import com.mindfire.bicyclesharing.repository.RateGroupRepository;
@@ -183,34 +189,45 @@ public class UserBookingController {
 	 */
 	@RequestMapping(value = "/manager/printBookingDetails", method = RequestMethod.POST)
 	public ModelAndView issueOnlineBookingBicycle(
-			@ModelAttribute("issueBookingData") IssueCycleForOnlineDTO issueCycleForOnlineDTO,
-			RedirectAttributes redirectAttributes, Authentication authentication) {
+			@Valid @ModelAttribute("issueBookingData") IssueCycleForOnlineDTO issueCycleForOnlineDTO,
+			BindingResult result, RedirectAttributes redirectAttributes, Authentication authentication) {
+		if (result.hasErrors()) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Invalid data !!");
+			return new ModelAndView("redirect:/manager/booking");
+		}
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-		Booking bookingStatus = bookingRepository.findByBookingId(issueCycleForOnlineDTO.getBookingId());
-		if (bookingStatus.getPickedUpFrom().getPickUpPointId() != pickupPointManagerService
-				.getPickupPointManager(currentUser.getUser()).getPickUpPoint().getPickUpPointId()) {
-			redirectAttributes.addFlashAttribute("bookingFailure", "Your PickUp place is Not valid..!");
+		Booking bookingStatus = bookingRepository.findByUserAndIsOpen(
+				bookingRepository.findByBookingId(issueCycleForOnlineDTO.getBookingId()).getUser(), true);
+		if (null == bookingStatus) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Your Booking Id is not valid !!");
 			return new ModelAndView("redirect:/manager/booking");
 		} else {
-			if (bookingStatus.getFare() == 0) {
-				long actualTime = (bookingStatus.getExpectedIn().getTime() - bookingStatus.getExpectedOut().getTime());
-				long hour = (actualTime / (60 * 1000)) / 60;
-				double baseRate = rateGroupRepository.findByGroupType(
-						userRepository.findByUserId(bookingStatus.getUser().getUserId()).getRateGroup().getGroupType())
-						.getBaseRate();
-				double fare = (hour * baseRate);
-				redirectAttributes.addFlashAttribute("fare", fare);
-				redirectAttributes.addFlashAttribute("bicycleId", issueCycleForOnlineDTO.getBicycleId());
-				redirectAttributes.addFlashAttribute("bookingStatus", bookingStatus);
-				return new ModelAndView("redirect:/manager/paymentAtPickupPoint");
+			if (bookingStatus.getPickedUpFrom().getPickUpPointId() != pickupPointManagerService
+					.getPickupPointManager(currentUser.getUser()).getPickUpPoint().getPickUpPointId()) {
+				redirectAttributes.addFlashAttribute("bookingFailure", "Your PickUp place is Not valid..!");
+				return new ModelAndView("redirect:/manager/booking");
 			} else {
-				Booking bookingDetails = bookingSevice.updateIssueBicycleDetails(issueCycleForOnlineDTO,
-						bookingStatus.getFare());
-				if (null == bookingDetails) {
-					return new ModelAndView("booking", "bookingFailure", "Sorry ..!! Your Operation Failed.");
+				if (bookingStatus.getFare() == 0) {
+					long actualTime = (bookingStatus.getExpectedIn().getTime()
+							- bookingStatus.getExpectedOut().getTime());
+					long hour = (actualTime / (60 * 1000)) / 60;
+					double baseRate = rateGroupRepository.findByGroupType(userRepository
+							.findByUserId(bookingStatus.getUser().getUserId()).getRateGroup().getGroupType())
+							.getBaseRate();
+					double fare = (hour * baseRate);
+					redirectAttributes.addFlashAttribute("fare", fare);
+					redirectAttributes.addFlashAttribute("bicycleId", issueCycleForOnlineDTO.getBicycleId());
+					redirectAttributes.addFlashAttribute("bookingStatus", bookingStatus);
+					return new ModelAndView("redirect:/manager/paymentAtPickupPoint");
 				} else {
-					redirectAttributes.addFlashAttribute("bookingDetails", bookingDetails);
-					return new ModelAndView("redirect:/manager/printIssueBicycleDetails");
+					Booking bookingDetails = bookingSevice.updateIssueBicycleDetails(issueCycleForOnlineDTO,
+							bookingStatus.getFare());
+					if (null == bookingDetails) {
+						return new ModelAndView("booking", "bookingFailure", "Sorry ..!! Your Operation Failed.");
+					} else {
+						redirectAttributes.addFlashAttribute("bookingDetails", bookingDetails);
+						return new ModelAndView("redirect:/manager/printIssueBicycleDetails");
+					}
 				}
 			}
 		}
@@ -250,5 +267,13 @@ public class UserBookingController {
 			redirectAttributes.addFlashAttribute("bookingDetails", bookingDetails);
 			return new ModelAndView("redirect:/manager/printIssueBicycleDetails");
 		}
+	}
+
+	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
+	@RequestMapping(value = "/user/bookingHistory/{id}", method = RequestMethod.GET)
+	public ModelAndView userBookingHistory(Model model, @PathVariable("id") Long id) {
+		model.addAttribute("user", userRepository.findByUserId(id));
+		model.addAttribute("bookingHistory",bookingSevice.getAllBooking(userRepository.findByUserId(id)));
+		return new ModelAndView("userBookingHistory");
 	}
 }

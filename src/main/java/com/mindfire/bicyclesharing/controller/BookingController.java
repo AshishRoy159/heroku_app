@@ -22,12 +22,14 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -174,8 +176,12 @@ public class BookingController {
 	 * @return bookingPayment or booking view.
 	 */
 	@RequestMapping(value = { "/manager/bookingPayment" }, method = RequestMethod.GET)
-	public ModelAndView bookingPayment(@ModelAttribute("issueCycleData") IssueCycleDTO issueCycleDTO,
-			HttpSession session, Model model, RedirectAttributes redirectAttributes) {
+	public ModelAndView bookingPayment(@Valid @ModelAttribute("issueCycleData") IssueCycleDTO issueCycleDTO,
+			BindingResult result, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
+		if (result.hasErrors()) {
+			redirectAttributes.addFlashAttribute("issueCycleErrorMessage", "Please enter valid data !");
+			return new ModelAndView("redirect:/manager/booking");
+		}
 		model.addAttribute("issueCycleData", issueCycleDTO);
 		final Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(new Date().getTime());
@@ -205,8 +211,13 @@ public class BookingController {
 	 * @return Payment View.
 	 */
 	@RequestMapping(value = "/manager/receiveCycle", method = RequestMethod.POST)
-	public ModelAndView receiveBicyclePayment(@ModelAttribute("receiveCycleData") ReceiveCycleDTO receiveCycleDTO,
+	public ModelAndView receiveBicyclePayment(
+			@Valid @ModelAttribute("receiveCycleData") ReceiveCycleDTO receiveCycleDTO, BindingResult result,
 			Model model, RedirectAttributes redirectAttributes) {
+		if (result.hasErrors()) {
+			redirectAttributes.addFlashAttribute("receiveCycleErrorMessage", "Enter a valid Booking Id");
+			return new ModelAndView("redirect:/manager/booking");
+		}
 		Booking booking = bookingRepository.findByBookingId(receiveCycleDTO.getBookingId());
 		if (null == booking) {
 			redirectAttributes.addFlashAttribute("bookingFailure", "Your Booking Id is Incorrect!!");
@@ -314,7 +325,7 @@ public class BookingController {
 						"Your receive request cannot be processed due to low balance. Try again Later!!");
 				return new ModelAndView("redirect:/manager/booking");
 			} else {
-				Booking booking = bookingService.receiveBicycle(bookingId,receiveBicyclePaymentDTO.getFare(), auth);
+				Booking booking = bookingService.receiveBicycle(bookingId, receiveBicyclePaymentDTO.getFare(), auth);
 				if (null == booking) {
 					redirectAttributes.addFlashAttribute("bookingFailure",
 							"Your receive request cannot be processed. Try again Later!!");

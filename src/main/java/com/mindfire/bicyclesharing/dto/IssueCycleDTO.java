@@ -16,6 +16,12 @@
 
 package com.mindfire.bicyclesharing.dto;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.NumberFormat;
+
 /**
  * IssueCycleDTO class is used for taking data from the Issue Cycle view
  * 
@@ -25,8 +31,16 @@ package com.mindfire.bicyclesharing.dto;
  */
 public class IssueCycleDTO {
 
+	@NotNull @Min(1)
+	@NumberFormat
 	private Long userId;
+	
+	@NotNull @Min(1)
+	@NumberFormat
 	private Long bicycleId;
+	
+	@NotNull @Min(1) @Max(15)
+	@NumberFormat
 	private int expectedInTime;
 
 	/**

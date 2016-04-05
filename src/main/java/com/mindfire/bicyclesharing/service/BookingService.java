@@ -16,6 +16,8 @@
 
 package com.mindfire.bicyclesharing.service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ import com.mindfire.bicyclesharing.dto.IssueCycleForOnlineDTO;
 import com.mindfire.bicyclesharing.dto.PaymentAtPickUpPointDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingDTO;
 import com.mindfire.bicyclesharing.model.Booking;
+import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
 
 /**
@@ -136,5 +139,9 @@ public class BookingService {
 	 */
 	public Booking getBookingById(Long bookingId) {
 		return userBookingComponent.getBooking(bookingId);
+	}
+	
+	public List<Booking> getAllBooking(User user){
+		return bookingComponent.getAllBookingByUser(user);
 	}
 }

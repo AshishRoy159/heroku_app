@@ -289,7 +289,6 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
 	public ModelAndView resetPassword(Model model, @RequestParam("token") String token) {
-		System.out.println(token);
 		PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
 
 		if (passwordResetToken == null) {
@@ -402,7 +401,6 @@ public class UserController {
 	public ModelAndView updateUserDetails(Model model, @PathVariable("id") Long id) {
 		User user = userService.userDetails(id);
 		model.addAttribute("user", user);
-
 		return new ModelAndView("updateUserDetails");
 	}
 
