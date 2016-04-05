@@ -16,13 +16,21 @@
 
 package com.mindfire.bicyclesharing.component;
 
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.BiCycleDTO;
 import com.mindfire.bicyclesharing.model.BiCycle;
+import com.mindfire.bicyclesharing.model.BiCycleTransfer;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
+import com.mindfire.bicyclesharing.model.Transfer;
 import com.mindfire.bicyclesharing.repository.BiCycleRepository;
+import com.mindfire.bicyclesharing.repository.BiCycleTransferRepository;
 import com.mindfire.bicyclesharing.service.BiCycleService;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
 
@@ -42,9 +50,12 @@ public class BiCycleComponent {
 
 	@Autowired
 	private PickUpPointService pickUpPointService;
-	
+
 	@Autowired
 	private BiCycleRepository biCycleRepository;
+
+	@Autowired
+	private BiCycleTransferRepository biCycleTransferRepository;
 
 	/**
 	 * This method is used for receiving the data from BiCycleDTO object and set
@@ -60,11 +71,37 @@ public class BiCycleComponent {
 		biCycle.setChasisNo(biCycleDTO.getChasisNo());
 		biCycle.setCurrentLocation(pickUpPoint);
 		biCycleService.saveBiCycle(biCycle);
-		pickUpPointService.updateBicycleCurrentAvailability(biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size(),
+		pickUpPointService.updateBicycleCurrentAvailability(
+				biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size(),
 				pickUpPoint.getPickUpPointId());
 
 		return biCycle;
 
+	}
+
+	/**
+	 * 
+	 * @param pickUpPoint
+	 * @param isAvailable
+	 * @param pageable
+	 * @return
+	 */
+	public List<BiCycle> getAvailableBicycles(PickUpPoint pickUpPoint, Boolean isAvailable, Pageable pageable) {
+		return biCycleRepository.findByCurrentLocationAndIsAvailableOrderByChasisNoAsc(pickUpPoint, isAvailable,
+				pageable);
+	}
+
+	public void bicyclesInTransition(HttpSession session, Transfer transfer) {
+		List<BiCycle> biCycles = (List<BiCycle>) session.getAttribute("bicycles");
+		for (BiCycle biCycle : biCycles) {
+			BiCycleTransfer biCycleTransfer = new BiCycleTransfer();
+
+			biCycle.setIsAvailable(false);
+			biCycleRepository.save(biCycle);
+			biCycleTransfer.setBiCycle(biCycle);
+			biCycleTransfer.setTransfer(transfer);
+			biCycleTransferRepository.save(biCycleTransfer);
+		}
 	}
 
 }

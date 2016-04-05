@@ -16,10 +16,18 @@
 
 package com.mindfire.bicyclesharing.service;
 
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mindfire.bicyclesharing.CurrentUser;
+import com.mindfire.bicyclesharing.component.BiCycleComponent;
 import com.mindfire.bicyclesharing.component.TransferComponent;
+import com.mindfire.bicyclesharing.dto.TransferDataDTO;
+import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.Transfer;
 import com.mindfire.bicyclesharing.model.TransferResponse;
 
@@ -36,6 +44,12 @@ public class TransferService {
 	@Autowired
 	private TransferComponent transferComponent;
 
+	@Autowired
+	private PickUpPointManagerService pickUpPointManagerService;
+
+	@Autowired
+	private BiCycleComponent biCycleComponent;
+
 	/**
 	 * This method is used to add new transfer entry to the database.
 	 * 
@@ -46,4 +60,52 @@ public class TransferService {
 	public Transfer addNewTransfer(TransferResponse transferResponse) {
 		return transferComponent.mapNewTransfer(transferResponse);
 	}
+
+	/**
+	 * 
+	 * @param currentUser
+	 * @return
+	 */
+	public List<Transfer> findOutgoingTransfers(CurrentUser currentUser) {
+		PickUpPoint pickUpPoint = pickUpPointManagerService.getPickupPointManager(currentUser.getUser())
+				.getPickUpPoint();
+		return transferComponent.getOutgoingTransfers(pickUpPoint);
+	}
+
+	/**
+	 * 
+	 * @param currentUser
+	 * @return
+	 */
+	public List<Transfer> findIncomingTransfers(CurrentUser currentUser) {
+		PickUpPoint pickUpPoint = pickUpPointManagerService.getPickupPointManager(currentUser.getUser())
+				.getPickUpPoint();
+		return transferComponent.getIncomingTransfers(pickUpPoint);
+	}
+
+	/**
+	 * 
+	 * @param transferId
+	 * @return
+	 */
+	public Transfer findTransferDetails(Long transferId) {
+		return transferComponent.getTransferDetails(transferId);
+	}
+
+	/**
+	 * 
+	 * @param transferDataDTO
+	 * @return
+	 */
+	public Transfer confirmTransfer(TransferDataDTO transferDataDTO, HttpSession session) {
+		Transfer transfer = transferComponent.updateTransferDetails(transferDataDTO);
+
+		if (transfer == null) {
+			return null;
+		} else {
+			biCycleComponent.bicyclesInTransition(session, transfer);
+			return transfer;
+		}
+	}
+
 }

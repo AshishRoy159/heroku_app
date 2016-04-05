@@ -45,8 +45,7 @@ public class PickUpPointService {
 	 * @return PickUpPoint object
 	 */
 	public PickUpPoint savePickUpPoint(PickUpPoint pickUpPoint) {
-		PickUpPoint addedPickUpPoint = pickUpPointRepository.save(pickUpPoint);
-		return addedPickUpPoint;
+		return pickUpPointRepository.save(pickUpPoint);
 	}
 
 	/**

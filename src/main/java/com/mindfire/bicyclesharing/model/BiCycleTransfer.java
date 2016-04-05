@@ -17,7 +17,16 @@
 package com.mindfire.bicyclesharing.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the bi_cycle_transfer database table.
@@ -34,42 +43,63 @@ public class BiCycleTransfer implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "bi_cycle_id")
-	private Integer biCycleId;
+	@Column(name = "bicycle_transfer_id")
+	private Long biCycleTransferId;
 
-	@Column(name = "transfer_id")
-	private String transferId;
+	@ManyToOne
+	@JoinColumn(name = "bi_cycle_id")
+	private BiCycle biCycle;
+
+	@ManyToOne
+	@JoinColumn(name = "transfer_id")
+	private Transfer transfer;
 
 	public BiCycleTransfer() {
 	}
 
 	/**
-	 * @return the biCycleId
+	 * @return the biCycleTransferId
 	 */
-	public Integer getBiCycleId() {
-		return biCycleId;
+	public Long getBiCycleTransferId() {
+		return biCycleTransferId;
 	}
 
 	/**
-	 * @param biCycleId
-	 *            the biCycleId to set
+	 * @param biCycleTransferId
+	 *            the biCycleTransferId to set
 	 */
-	public void setBiCycleId(Integer biCycleId) {
-		this.biCycleId = biCycleId;
+	public void setBiCycleTransferId(Long biCycleTransferId) {
+		this.biCycleTransferId = biCycleTransferId;
 	}
 
 	/**
-	 * @return the transferId
+	 * @return the biCycle
 	 */
-	public String getTransferId() {
-		return transferId;
+	public BiCycle getBiCycle() {
+		return biCycle;
 	}
 
 	/**
-	 * @param transferId
-	 *            the transferId to set
+	 * @param biCycle
+	 *            the biCycle to set
 	 */
-	public void setTransferId(String transferId) {
-		this.transferId = transferId;
+	public void setBiCycle(BiCycle biCycle) {
+		this.biCycle = biCycle;
 	}
+
+	/**
+	 * @return the transfer
+	 */
+	public Transfer getTransfer() {
+		return transfer;
+	}
+
+	/**
+	 * @param transfer
+	 *            the transfer to set
+	 */
+	public void setTransfer(Transfer transfer) {
+		this.transfer = transfer;
+	}
+
 }

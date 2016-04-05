@@ -59,4 +59,13 @@ public class PickUpPointManagerService {
 	public PickUpPointManager getPickupPointManager(User user) {
 		return pickUpPointManagerRepository.findByUser(user);
 	}
+
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public int getCurrentAvailability(User user) {
+		return pickUpPointManagerRepository.findByUser(user).getPickUpPoint().getCurrentAvailability();
+	}
 }

@@ -79,4 +79,15 @@ public interface TransferRequestRepository extends JpaRepository<TransferRequest
 	@Query("update TransferRequest tr set tr.approvedQuantity = :approvedQuantity where tr.requestId = :requestId")
 	public int updateCurrentApprovedQuantity(@Param("approvedQuantity") Integer approvedQuantity,
 			@Param("requestId") Long requestId);
+
+	/**
+	 * 
+	 * @param isApproved
+	 * @param requestId
+	 * @return
+	 */
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query("update TransferRequest tr set tr.isApproved = :isApproved where tr.requestId = :requestId")
+	public int updateIsApproved(@Param("isApproved") Boolean isApproved, @Param("requestId") Long requestId);
 }

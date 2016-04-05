@@ -16,14 +16,16 @@
 
 package com.mindfire.bicyclesharing.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.Transfer;
 
 /**
- * Repository for {@link Transfer} Entity used for CRUD operation on
- * Transfer.
+ * Repository for {@link Transfer} Entity used for CRUD operation on Transfer.
  * 
  * @author mindfire
  * @version 1.0
@@ -32,4 +34,9 @@ import com.mindfire.bicyclesharing.model.Transfer;
 @Repository
 public interface TransferRepository extends JpaRepository<Transfer, Long> {
 
+	public Transfer findByTransferId(Long transferId);
+	
+	public List<Transfer> findByTransferredFrom(PickUpPoint transferredFrom);
+
+	public List<Transfer> findByTransferredTo(PickUpPoint transferredTo);
 }

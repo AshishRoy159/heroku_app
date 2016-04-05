@@ -19,10 +19,14 @@ package com.mindfire.bicyclesharing.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.mindfire.bicyclesharing.component.BiCycleComponent;
 import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
+import com.mindfire.bicyclesharing.model.Transfer;
 import com.mindfire.bicyclesharing.repository.BiCycleRepository;
 
 /**
@@ -37,6 +41,9 @@ public class BiCycleService {
 
 	@Autowired
 	private BiCycleRepository biCycleRepository;
+
+	@Autowired
+	private BiCycleComponent biCycleComponent;
 
 	/**
 	 * This method is used for saving the bicycle details.
@@ -74,5 +81,15 @@ public class BiCycleService {
 		biCycleRepository.save(biCycle);
 
 		return biCycle;
+	}
+
+	/**
+	 * 
+	 * @param transfer
+	 * @return
+	 */
+	public List<BiCycle> findBicyclesForShipment(Transfer transfer) {
+		Pageable pageable = new PageRequest(0, transfer.getQuantity());
+		return biCycleComponent.getAvailableBicycles(transfer.getTransferredFrom(), true, pageable);
 	}
 }

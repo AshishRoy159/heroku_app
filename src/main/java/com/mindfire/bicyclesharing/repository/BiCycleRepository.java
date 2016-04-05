@@ -18,6 +18,7 @@ package com.mindfire.bicyclesharing.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -42,16 +43,17 @@ public interface BiCycleRepository extends JpaRepository<BiCycle, Long> {
 	 * @return BiCycle list
 	 */
 	public List<BiCycle> findAllByCurrentLocation(PickUpPoint pickUpPointId);
-	
+
 	/**
-	 * This method is used to find all Bicycle records based on currentLocation and availability
+	 * This method is used to find all Bicycle records based on currentLocation
+	 * and availability
 	 * 
 	 * @param pickUpPoint
 	 * @param available
 	 * @return
 	 */
 	public List<BiCycle> findByCurrentLocationAndIsAvailable(PickUpPoint pickUpPoint, Boolean available);
-	
+
 	/**
 	 * This method is used to find bicyles by id.
 	 * 
@@ -59,4 +61,14 @@ public interface BiCycleRepository extends JpaRepository<BiCycle, Long> {
 	 * @return
 	 */
 	public BiCycle findByBiCycleId(Long id);
+
+	/**
+	 * 
+	 * @param pickUpPoint
+	 * @param available
+	 * @param pageable
+	 * @return
+	 */
+	public List<BiCycle> findByCurrentLocationAndIsAvailableOrderByChasisNoAsc(PickUpPoint pickUpPoint,
+			Boolean isAvailable, Pageable pageable);
 }

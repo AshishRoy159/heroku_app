@@ -114,4 +114,14 @@ public class TransferRequestComponent {
 		return transferRequestRepository.updateCurrentApprovedQuantity(approvedQuantity, requestId);
 	}
 
+	/**
+	 * 
+	 * @param isApproved
+	 * @param requestId
+	 * @return
+	 */
+	public int uppdateIsApproved(Boolean isApproved, Long requestId) {
+		return transferRequestRepository.updateIsApproved(isApproved, requestId);
+	}
+
 }

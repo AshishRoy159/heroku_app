@@ -18,6 +18,8 @@ package com.mindfire.bicyclesharing.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -30,11 +32,16 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mindfire.bicyclesharing.CurrentUser;
+import com.mindfire.bicyclesharing.dto.TransferDataDTO;
 import com.mindfire.bicyclesharing.dto.TransferRensponseDTO;
 import com.mindfire.bicyclesharing.dto.TransferRequestDTO;
 import com.mindfire.bicyclesharing.dto.TransferRequestRespondedDTO;
+import com.mindfire.bicyclesharing.model.BiCycle;
+import com.mindfire.bicyclesharing.model.Transfer;
 import com.mindfire.bicyclesharing.model.TransferRequest;
 import com.mindfire.bicyclesharing.model.TransferResponse;
+import com.mindfire.bicyclesharing.service.BiCycleService;
+import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
 import com.mindfire.bicyclesharing.service.TransferRequestService;
 import com.mindfire.bicyclesharing.service.TransferResponseService;
 import com.mindfire.bicyclesharing.service.TransferService;
@@ -58,6 +65,12 @@ public class BiCycleTransferController {
 
 	@Autowired
 	private TransferService transferService;
+
+	@Autowired
+	private PickUpPointManagerService pickUpPointManagerService;
+
+	@Autowired
+	private BiCycleService bicycleService;
 
 	/**
 	 * This method maps the request for bicycle transfer request page. Simply
@@ -141,9 +154,13 @@ public class BiCycleTransferController {
 	 * @return transferResponseManager view
 	 */
 	@RequestMapping(value = "manager/respond/{id}", method = RequestMethod.GET)
-	public ModelAndView managerResponse(@PathVariable("id") Long requestId, Model model) {
+	public ModelAndView managerResponse(@PathVariable("id") Long requestId, Model model,
+			Authentication authentication) {
+		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+		int currentAvailable = pickUpPointManagerService.getCurrentAvailability(currentUser.getUser());
 		TransferRequest request = transferRequestService.findTransferRequest(requestId);
 		model.addAttribute("request", request);
+		model.addAttribute("max", Math.min(request.getQuantity(), currentAvailable));
 		return new ModelAndView("transferResponseManager");
 	}
 
@@ -161,7 +178,7 @@ public class BiCycleTransferController {
 	public ModelAndView sendResponse(@ModelAttribute("responseData") TransferRensponseDTO transferResponseDTO,
 			Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-		TransferResponse transferResponse = transferResponseService.addNewResponse(transferResponseDTO, currentUser);
+		transferResponseService.addNewResponse(transferResponseDTO, currentUser);
 		return new ModelAndView("redirect:requests");
 
 	}
@@ -198,10 +215,52 @@ public class BiCycleTransferController {
 	public ModelAndView approveResponse(@PathVariable("id") Long responseId) {
 		TransferResponse transferResponse = transferResponseService.findResponseById(responseId);
 		transferResponseService.updateApproval(true, responseId);
-		transferRequestService.updateQuantityApproved(transferResponse.getQuantity(),
-				transferResponse.getRequest().getRequestId());
 		transferService.addNewTransfer(transferResponse);
-		return new ModelAndView("redirect:/admin/respond/"+transferResponse.getRequest().getRequestId());
+		return new ModelAndView("redirect:/admin/respond/" + transferResponse.getRequest().getRequestId());
+	}
+
+	/**
+	 * 
+	 * @param model
+	 * @param authentication
+	 * @return
+	 */
+	@RequestMapping(value = "manager/transfers", method = RequestMethod.GET)
+	public ModelAndView viewTransfers(Model model, Authentication authentication) {
+		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+		List<Transfer> outgoingTransfers = transferService.findOutgoingTransfers(currentUser);
+		List<Transfer> incomingTransfers = transferService.findIncomingTransfers(currentUser);
+		model.addAttribute("outgoings", outgoingTransfers);
+		model.addAttribute("incomings", incomingTransfers);
+		return new ModelAndView("transfers");
+	}
+
+	/**
+	 * 
+	 * @param transferId
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "manager/sendShipment/{id}", method = RequestMethod.GET)
+	public ModelAndView sendShipment(@PathVariable("id") Long transferId, Model model, HttpSession session) {
+		Transfer transfer = transferService.findTransferDetails(transferId);
+		List<BiCycle> biCycles = bicycleService.findBicyclesForShipment(transfer);
+		session.setAttribute("bicycles", biCycles);
+
+		return new ModelAndView("transferConfirm", "transfer", transfer);
+	}
+
+	/**
+	 * 
+	 * @param transferDataDTO
+	 * @return
+	 */
+	@RequestMapping(value = "manager/confirmShipment", method = RequestMethod.POST)
+	public ModelAndView confirmShipment(@ModelAttribute("transferData") TransferDataDTO transferDataDTO,
+			HttpSession session) {
+		transferService.confirmTransfer(transferDataDTO, session);
+		return new ModelAndView("redirect:transfers");
 	}
 
 }
