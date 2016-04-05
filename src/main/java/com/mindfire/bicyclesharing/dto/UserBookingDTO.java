@@ -29,7 +29,7 @@ import org.springframework.format.annotation.NumberFormat;
  */
 public class UserBookingDTO {
 
-	@NotNull
+	@NotNull 
 	private String bookingTime;
 	
 	@NotNull

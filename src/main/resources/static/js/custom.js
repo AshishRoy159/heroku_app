@@ -144,3 +144,57 @@ function payment() {
 function hideInvalidMessage() {
 	document.getElementById("invalidPasswordMessage").style.visibility = "hidden";
 }
+
+/*
+ * This function validates the booking date and time provided by the user.
+ */
+function userBookingValidation(form) {
+	var bookingTime = document.getElementById("bookingId").value;
+	var returnTime = document.getElementById("returnId").value;
+	var currentDate = new Date();
+	var res = bookingTime.split(/[\s, "/",":"]+/);
+	var rtnRes = returnTime.split(/[\s, "/",":"]+/);
+	if ((currentDate.getYear() + 1900) == parseInt(res[0])
+			&& (currentDate.getMonth() + 1) == parseInt(res[1])
+			&& parseInt(res[0]) == parseInt(rtnRes[0])
+			&& parseInt(res[1]) == parseInt(rtnRes[1])) {
+		if (currentDate.getDate() == parseInt(res[2])
+				&& currentDate.getHours() == parseInt(res[3])
+				&& parseInt(res[2]) == parseInt(rtnRes[2])) {
+			if (currentDate.getMinutes() < parseInt(res[4])
+					&& parseInt(res[4]) < parseInt(rtnRes[4])) {
+				document.getElementById('errorMessage').innerHTML = "";
+				return true;
+			} else {
+				alert("Please select valid booking Time.");
+				return false;
+			}
+		} else {
+			if (currentDate.getDate() <= parseInt(res[2])
+					&& currentDate.getHours() <= parseInt(res[3])
+					&& parseInt(res[2]) <= parseInt(rtnRes[2])
+					&& parseInt(res[3]) < parseInt(rtnRes[3])) {
+				document.getElementById('errorMessage').innerHTML = "";
+				return true;
+			} else {
+				if (parseInt(res[3]) == parseInt(rtnRes[3])) {
+					if (parseInt(res[4]) < parseInt(rtnRes[4])) {
+						document.getElementById('errorMessage').innerHTML = "";
+						return true;
+					} else {
+						alert("Please select valid booking Time");
+						return false;
+					}
+				}else{
+					alert("Please select valid booking Time");
+					return false;
+				}
+				alert("Please select valid booking Time");
+				return false;
+			}
+		}
+	} else {
+		alert("Please select valid booking date and time");
+		return false;
+	}
+}
