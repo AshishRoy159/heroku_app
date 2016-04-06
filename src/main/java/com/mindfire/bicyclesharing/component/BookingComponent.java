@@ -249,7 +249,7 @@ public class BookingComponent {
 	}
 
 	/**
-	 *  This method is used for creating a wallet transaction for user booking.
+	 * This method is used for creating a wallet transaction for user booking.
 	 * 
 	 * @param paymentAtPickUpPointDTO
 	 *            User Booking Payment data
@@ -263,8 +263,29 @@ public class BookingComponent {
 				.findByUser(bookingRepository.findByBookingId(paymentAtPickUpPointDTO.getBookingId()).getUser());
 		return createWalletTransaction(paymentAtPickUpPointDTO.getFare(), mode, paymentType, userWallet);
 	}
-	
-	public List<Booking> getAllBookingByUser(User user,Boolean isOpen){
+
+	/**
+	 * This method is used for getting all booking details for particular user
+	 * where booking status is false
+	 * 
+	 * @param user
+	 *            {@link User}
+	 * @param isOpen
+	 *            this is Boolean type value
+	 * @return {@link List<Booking>}
+	 */
+	public List<Booking> getAllBookingByUser(User user, Boolean isOpen) {
 		return bookingRepository.findByUserAndIsOpen(user, isOpen);
+	}
+
+	/**
+	 * This method is used for getting all Booking based on booking status.
+	 * 
+	 * @param isOpen
+	 *            this is Boolean type value
+	 * @return {@link List<Booking>}
+	 */
+	public List<Booking> getAllBooking(Boolean isOpen) {
+		return bookingRepository.findByIsOpen(isOpen);
 	}
 }

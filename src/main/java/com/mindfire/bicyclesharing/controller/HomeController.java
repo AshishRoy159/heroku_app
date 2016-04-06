@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mindfire.bicyclesharing.model.PickUpPoint;
-import com.mindfire.bicyclesharing.model.PickUpPointManager;
 import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
+import com.mindfire.bicyclesharing.service.BookingService;
 import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
 
 /**
@@ -49,6 +49,10 @@ public class HomeController {
 
 	@Autowired
 	private PickUpPointManagerService pickUpPointManagerService;
+
+	@Autowired
+	private BookingService bookingService;
+
 	/**
 	 * This method maps all root request and find all pickup points and Simply
 	 * render the index view along with the pickup point list.
@@ -97,14 +101,15 @@ public class HomeController {
 	}
 
 	/**
-	 * This method maps request for admin home page.
+	 * This method maps request for admin home page and retrieve all booking
+	 * where booking status is false and pickup point manager details.
 	 * 
 	 * @return adminHome view
 	 */
 	@RequestMapping(value = { "admin", "admin/adminHome", "manager/managerHome" })
 	public ModelAndView adminHome(Model model) {
-		List<PickUpPointManager> pickUpPointManagers = pickUpPointManagerService.getAllPickUpPointManager();
-		model.addAttribute("pickUpPointManagers", pickUpPointManagers);
+		model.addAttribute("bookings", bookingService.getAllBookingDetails(false));
+		model.addAttribute("pickUpPointManagers", pickUpPointManagerService.getAllPickUpPointManager());
 		return new ModelAndView("adminHome");
 	}
 }

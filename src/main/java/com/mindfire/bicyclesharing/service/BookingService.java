@@ -140,8 +140,30 @@ public class BookingService {
 	public Booking getBookingById(Long bookingId) {
 		return userBookingComponent.getBooking(bookingId);
 	}
-	
-	public List<Booking> getAllBooking(User user,Boolean isOpen){
-		return bookingComponent.getAllBookingByUser(user,isOpen);
+
+	/**
+	 * This method is used for getting all booking details based or particular
+	 * user and their booking status.
+	 * 
+	 * @param user
+	 *            User object
+	 * @param isOpen
+	 *            this is Boolean value
+	 * @return {@link List<booking>}
+	 */
+	public List<Booking> getAllBooking(User user, Boolean isOpen) {
+		return bookingComponent.getAllBookingByUser(user, isOpen);
+	}
+
+	/**
+	 * This method is used for getting all booking details based on booking
+	 * status.
+	 * 
+	 * @param isOpen
+	 *            this is Boolean value
+	 * @return {@link List<Booking>}
+	 */
+	public List<Booking> getAllBookingDetails(Boolean isOpen) {
+		return bookingComponent.getAllBooking(isOpen);
 	}
 }
