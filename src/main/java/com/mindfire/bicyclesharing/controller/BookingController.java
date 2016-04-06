@@ -139,8 +139,8 @@ public class BookingController {
 			HttpSession session) {
 		CurrentUser currentUser = (CurrentUser) auth.getPrincipal();
 		User user = userRepository.findByUserId(bookingPaymentDTO.getUserId());
-		Booking existingBooking = bookingRepository.findByUserAndIsOpen(user, true);
-		if (null != existingBooking) {
+		List<Booking> existingBooking = bookingRepository.findByUserAndIsOpen(user, true);
+		if (!existingBooking.isEmpty()) {
 			redirectAttributes.addFlashAttribute("bookingFailure", "Oops..!! Your booking status is open..!");
 			return new ModelAndView("redirect:/manager/booking");
 		}

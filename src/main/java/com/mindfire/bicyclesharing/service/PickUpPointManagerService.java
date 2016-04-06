@@ -16,9 +16,12 @@
 
 package com.mindfire.bicyclesharing.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mindfire.bicyclesharing.component.PickUpPointManagerComponent;
 import com.mindfire.bicyclesharing.model.PickUpPointManager;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
@@ -37,6 +40,9 @@ public class PickUpPointManagerService {
 	@Autowired
 	private PickUpPointManagerRepository pickUpPointManagerRepository;
 
+	@Autowired
+	private PickUpPointManagerComponent pickUpPointManagerComponent;
+	
 	/**
 	 * This method is used to save the pickup point manager related data to the
 	 * database
@@ -67,5 +73,9 @@ public class PickUpPointManagerService {
 	 */
 	public int getCurrentAvailability(User user) {
 		return pickUpPointManagerRepository.findByUser(user).getPickUpPoint().getCurrentAvailability();
+	}
+	
+	public List<PickUpPointManager> getAllPickUpPointManager(){
+		return pickUpPointManagerComponent.getAllManager();
 	}
 }

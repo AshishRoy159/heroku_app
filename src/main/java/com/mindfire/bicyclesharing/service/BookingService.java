@@ -141,7 +141,7 @@ public class BookingService {
 		return userBookingComponent.getBooking(bookingId);
 	}
 	
-	public List<Booking> getAllBooking(User user){
-		return bookingComponent.getAllBookingByUser(user);
+	public List<Booking> getAllBooking(User user,Boolean isOpen){
+		return bookingComponent.getAllBookingByUser(user,isOpen);
 	}
 }

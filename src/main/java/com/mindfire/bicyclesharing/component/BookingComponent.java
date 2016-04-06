@@ -264,7 +264,7 @@ public class BookingComponent {
 		return createWalletTransaction(paymentAtPickUpPointDTO.getFare(), mode, paymentType, userWallet);
 	}
 	
-	public List<Booking> getAllBookingByUser(User user){
-		return bookingRepository.findAllByUser(user);
+	public List<Booking> getAllBookingByUser(User user,Boolean isOpen){
+		return bookingRepository.findByUserAndIsOpen(user, isOpen);
 	}
 }

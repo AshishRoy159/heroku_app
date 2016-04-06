@@ -43,7 +43,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	 *            Boolean value
 	 * @return Booking
 	 */
-	public Booking findByUserAndIsOpen(User user, Boolean open);
+	public List<Booking> findByUserAndIsOpen(User user, Boolean open);
 
 	/**
 	 * This method is used to find booking details using bookingId.

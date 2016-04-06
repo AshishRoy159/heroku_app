@@ -161,13 +161,18 @@ function userBookingValidation(form) {
 		if (currentDate.getDate() == parseInt(res[2])
 				&& currentDate.getHours() == parseInt(res[3])
 				&& parseInt(res[2]) == parseInt(rtnRes[2])) {
-			if (currentDate.getMinutes() < parseInt(res[4])
-					&& parseInt(res[4]) < parseInt(rtnRes[4])) {
+			if (parseInt(res[3]) < parseInt(rtnRes[3])) {
 				document.getElementById('errorMessage').innerHTML = "";
 				return true;
 			} else {
-				alert("Please select valid booking Time.");
-				return false;
+				if (currentDate.getMinutes() < parseInt(res[4])
+						&& parseInt(res[4]) < parseInt(rtnRes[4])) {
+					document.getElementById('errorMessage').innerHTML = "";
+					return true;
+				} else {
+					alert("Please select valid booking Time.");
+					return false;
+				}
 			}
 		} else {
 			if (currentDate.getDate() <= parseInt(res[2])
@@ -185,7 +190,7 @@ function userBookingValidation(form) {
 						alert("Please select valid booking Time");
 						return false;
 					}
-				}else{
+				} else {
 					alert("Please select valid booking Time");
 					return false;
 				}

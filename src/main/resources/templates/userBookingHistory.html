@@ -146,9 +146,7 @@
 													<th>Actual Out Time</th>
 													<th>Picked Up From</th>
 													<th>Returned At</th>
-													<th>Fare</th>
-													<th>Is Open?</th>
-												</tr>
+													<th>Fare</th>												</tr>
 											</thead>
 											<tbody class="tblFontSize">
 												<tr th:each="booking : ${bookingHistory}">
@@ -161,7 +159,6 @@
 													<td class="text-center" th:text="${booking.pickedUpFrom.location}"></td>
 													<td class="text-center" th:text="${booking.returnedAt.location}"></td>
 													<td class="text-center" th:text="${booking.fare}"></td>
-													<td class="text-center" th:text="${booking.isOpen}"></td>
 												</tr>
 											</tbody>
 										</table>

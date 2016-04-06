@@ -27,6 +27,7 @@ import com.mindfire.bicyclesharing.dto.UserBookingDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
 import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.Booking;
+import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
 import com.mindfire.bicyclesharing.repository.BiCycleRepository;
@@ -135,6 +136,10 @@ public class UserBookingComponent {
 		userBooking.setBiCycleId(biCycleRepository.save(bicycle));
 		userBooking.setIsOpen(true);
 		userBooking.setFare(fare);
+		PickUpPoint pickUpPoint = pickUpPointRepository.findByPickUpPointId(bicycle.getCurrentLocation().getPickUpPointId());
+		pickUpPoint.setCurrentAvailability(
+				biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size());
+		pickUpPointRepository.save(pickUpPoint);
 		return bookingRepository.save(userBooking);
 	}
 

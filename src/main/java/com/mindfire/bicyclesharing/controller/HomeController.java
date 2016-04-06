@@ -29,7 +29,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mindfire.bicyclesharing.model.PickUpPoint;
+import com.mindfire.bicyclesharing.model.PickUpPointManager;
 import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
+import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
 
 /**
  * This class contains all the Request Mappings related to the navigation of the
@@ -45,6 +47,8 @@ public class HomeController {
 	@Autowired
 	private PickUpPointRepository pickUpPointRepository;
 
+	@Autowired
+	private PickUpPointManagerService pickUpPointManagerService;
 	/**
 	 * This method maps all root request and find all pickup points and Simply
 	 * render the index view along with the pickup point list.
@@ -98,7 +102,9 @@ public class HomeController {
 	 * @return adminHome view
 	 */
 	@RequestMapping(value = { "admin", "admin/adminHome", "manager/managerHome" })
-	public ModelAndView adminHome() {
+	public ModelAndView adminHome(Model model) {
+		List<PickUpPointManager> pickUpPointManagers = pickUpPointManagerService.getAllPickUpPointManager();
+		model.addAttribute("pickUpPointManagers", pickUpPointManagers);
 		return new ModelAndView("adminHome");
 	}
 }
