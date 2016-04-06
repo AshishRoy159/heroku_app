@@ -34,9 +34,30 @@ import com.mindfire.bicyclesharing.model.Transfer;
 @Repository
 public interface TransferRepository extends JpaRepository<Transfer, Long> {
 
+	/**
+	 * This method is retrieve the transfer details from its id
+	 * 
+	 * @param transferId
+	 *            id of the transfer
+	 * @return {@link Transfer} object
+	 */
 	public Transfer findByTransferId(Long transferId);
-	
+
+	/**
+	 * This method is used to retrieve details of transfers from a pickup point.
+	 * 
+	 * @param transferredFrom
+	 *            concerned pickup point
+	 * @return {@link Transfer} List
+	 */
 	public List<Transfer> findByTransferredFrom(PickUpPoint transferredFrom);
 
+	/**
+	 * This method is used to retrieve details of transfers from a pickup point.
+	 * 
+	 * @param transferredTo
+	 *            concerned pickup point
+	 * @return {@link Transfer} List
+	 */
 	public List<Transfer> findByTransferredTo(PickUpPoint transferredTo);
 }

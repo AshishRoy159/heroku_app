@@ -49,8 +49,10 @@ public interface BiCycleRepository extends JpaRepository<BiCycle, Long> {
 	 * and availability
 	 * 
 	 * @param pickUpPoint
+	 *            current location of the bicycle
 	 * @param available
-	 * @return
+	 *            availability of the bicycle
+	 * @return {@link BiCycle} List
 	 */
 	public List<BiCycle> findByCurrentLocationAndIsAvailable(PickUpPoint pickUpPoint, Boolean available);
 
@@ -58,16 +60,22 @@ public interface BiCycleRepository extends JpaRepository<BiCycle, Long> {
 	 * This method is used to find bicyles by id.
 	 * 
 	 * @param id
-	 * @return
+	 *            id of the bicycle
+	 * @return {@link BiCycle} object
 	 */
 	public BiCycle findByBiCycleId(Long id);
 
 	/**
+	 * This method is used to find a certain number of Bicycle records based on
+	 * currentLocation and availability
 	 * 
 	 * @param pickUpPoint
+	 *            current location of the bicycle
 	 * @param available
+	 *            availability of the bicycle
 	 * @param pageable
-	 * @return
+	 *            to set the number of record retrieved
+	 * @return {@link BiCycle} List
 	 */
 	public List<BiCycle> findByCurrentLocationAndIsAvailableOrderByChasisNoAsc(PickUpPoint pickUpPoint,
 			Boolean isAvailable, Pageable pageable);

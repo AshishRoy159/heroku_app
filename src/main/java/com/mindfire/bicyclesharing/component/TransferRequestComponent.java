@@ -115,10 +115,14 @@ public class TransferRequestComponent {
 	}
 
 	/**
+	 * This method is used to update the approval of the current transfer
+	 * request
 	 * 
 	 * @param isApproved
+	 *            approval statud. <code>true</code> or <code>false</code>
 	 * @param requestId
-	 * @return
+	 *            id of the request
+	 * @return {@link Integer} 0 or 1
 	 */
 	public int uppdateIsApproved(Boolean isApproved, Long requestId) {
 		return transferRequestRepository.updateIsApproved(isApproved, requestId);

@@ -37,7 +37,6 @@ import com.mindfire.bicyclesharing.dto.PaymentAtPickUpPointDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
 import com.mindfire.bicyclesharing.model.Booking;
-import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
 import com.mindfire.bicyclesharing.repository.BookingRepository;
 import com.mindfire.bicyclesharing.repository.RateGroupRepository;
@@ -269,11 +268,21 @@ public class UserBookingController {
 		}
 	}
 
+	/**
+	 * This method is used to map the requests for viewing a user's booking
+	 * history. Renders the userBookingHistory view.
+	 * 
+	 * @param modelto
+	 *            map the model attributes
+	 * @param id
+	 *            user's id
+	 * @return userBookingHistory view
+	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = "/user/bookingHistory/{id}", method = RequestMethod.GET)
 	public ModelAndView userBookingHistory(Model model, @PathVariable("id") Long id) {
 		model.addAttribute("user", userRepository.findByUserId(id));
-		model.addAttribute("bookingHistory",bookingSevice.getAllBooking(userRepository.findByUserId(id)));
+		model.addAttribute("bookingHistory", bookingSevice.getAllBooking(userRepository.findByUserId(id)));
 		return new ModelAndView("userBookingHistory");
 	}
 }

@@ -83,36 +83,47 @@ public class TransferComponent {
 	}
 
 	/**
+	 * This method is used to retrieve the details of transfers from a pickup
+	 * point.
 	 * 
 	 * @param pickUpPoint
-	 * @return
+	 *            concerned pickup point
+	 * @return {@link Transfer} List
 	 */
 	public List<Transfer> getOutgoingTransfers(PickUpPoint pickUpPoint) {
 		return transferRepository.findByTransferredFrom(pickUpPoint);
 	}
 
 	/**
+	 * This method is used to retrieve the details of transfers to a pickup
+	 * point.
 	 * 
 	 * @param pickUpPoint
-	 * @return
+	 *            concerned pickup point
+	 * @return {@link Transfer} List
 	 */
 	public List<Transfer> getIncomingTransfers(PickUpPoint pickUpPoint) {
 		return transferRepository.findByTransferredTo(pickUpPoint);
 	}
 
 	/**
+	 * This method is used to get the details of a transfer from its id.
 	 * 
 	 * @param transferId
-	 * @return
+	 *            id of the transfer
+	 * @return {@link Transfer} object
 	 */
 	public Transfer getTransferDetails(Long transferId) {
 		return transferRepository.findByTransferId(transferId);
 	}
 
 	/**
+	 * This method is used to update the transfer details when the dispatcher
+	 * pickup point confirms transfer
 	 * 
 	 * @param transferDataDTO
-	 * @return
+	 *            the incoming transfer details
+	 * @return {@link Transfer} object
 	 */
 	public Transfer updateTransferDetails(TransferDataDTO transferDataDTO) {
 		Transfer transfer = getTransferDetails(transferDataDTO.getTransferId());
@@ -120,6 +131,18 @@ public class TransferComponent {
 		transfer.setVehicleNo(transferDataDTO.getVehicleNo());
 		transfer.setStatus(TransferStatusEnum.IN_TRANSITION);
 
+		return transferRepository.save(transfer);
+	}
+
+	/**
+	 * This method is used to update the transfer details when the receiving
+	 * pickup point confirms delivery
+	 * 
+	 * @param transfer
+	 *            the transfer details
+	 * @return {@link Transfer} object
+	 */
+	public Transfer closeTransfer(Transfer transfer) {
 		return transferRepository.save(transfer);
 	}
 

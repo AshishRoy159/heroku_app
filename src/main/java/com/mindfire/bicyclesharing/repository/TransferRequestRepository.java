@@ -81,10 +81,13 @@ public interface TransferRequestRepository extends JpaRepository<TransferRequest
 			@Param("requestId") Long requestId);
 
 	/**
+	 * This method is update the status of a transfer request
 	 * 
 	 * @param isApproved
+	 *            status <code>true</code> or <code>false</code>
 	 * @param requestId
-	 * @return
+	 *            id of the request
+	 * @return {@link Integer} 0 or 1
 	 */
 	@Transactional
 	@Modifying(clearAutomatically = true)

@@ -14,34 +14,40 @@
  * limitations under the License.
  */
 
-package com.mindfire.bicyclesharing.repository;
+package com.mindfire.bicyclesharing.component;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.BiCycleTransfer;
 import com.mindfire.bicyclesharing.model.Transfer;
+import com.mindfire.bicyclesharing.repository.BiCycleTransferRepository;
 
 /**
- * Repository for {@link BiCycle} Entity used for CRUD operation on BiCycle.
+ * BicycleTransferComponent class is used to interact with the corresponding
+ * repository.
  * 
  * @author mindfire
  * @version 1.0
  * @since 10/03/2016
  */
-@Repository
-public interface BiCycleTransferRepository extends JpaRepository<BiCycleTransfer, Long> {
+@Component
+public class BicycleTransferComponent {
+
+	@Autowired
+	private BiCycleTransferRepository biCycleTransferRepository;
 
 	/**
-	 * This method is used to retrieve the bicycles dispatched on a specific
-	 * transfer.
+	 * This method is used to retrieve the data of bicycles of a particular
+	 * transfer
 	 * 
 	 * @param transfer
-	 *            concerned transfer
+	 *            the transfer for which data is retrieved
 	 * @return {@link BiCycleTransfer} List
 	 */
-	public List<BiCycleTransfer> findByTransfer(Transfer transfer);
+	public List<BiCycleTransfer> receiveTransferredBicycles(Transfer transfer) {
+		return biCycleTransferRepository.findByTransfer(transfer);
+	}
 }

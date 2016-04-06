@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.PickUpPointDTO;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
+import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
 
 /**
@@ -36,6 +37,9 @@ public class PickUpPointComponent {
 
 	@Autowired
 	private PickUpPointService pickUpPointService;
+
+	@Autowired
+	private PickUpPointRepository pickUpPointRepository;
 
 	/**
 	 * This method is used for receiving the data from PickUpPointDto object and
@@ -72,6 +76,17 @@ public class PickUpPointComponent {
 		pickUpPoint.setPickUpPointId(pickUpPointDTO.getPickUpPointId());
 
 		return pickUpPointService.updatePickUpPointDetails(pickUpPoint);
+	}
+
+	/**
+	 * This method is used to update the details of an existing PickUpPoint
+	 * 
+	 * @param pickUpPoint
+	 *            the pickup point to be updated
+	 * @return {@link PickUpPoint} object
+	 */
+	public PickUpPoint updatePickupPoint(PickUpPoint pickUpPoint) {
+		return pickUpPointRepository.save(pickUpPoint);
 	}
 
 }

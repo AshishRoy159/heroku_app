@@ -40,12 +40,43 @@ import com.mindfire.bicyclesharing.model.TransferResponse;
 @Repository
 public interface TransferResponseRepository extends JpaRepository<TransferResponse, Long> {
 
+	/**
+	 * This method is used to retrieve responses to transfer requests from a
+	 * specific pickup point
+	 * 
+	 * @param pickUpPoint
+	 *            concerned pickup point
+	 * @return {@link TransferResponse} List
+	 */
 	public List<TransferResponse> findByPickUpPoint(PickUpPoint pickUpPoint);
 
+	/**
+	 * This method is used to retrieve responses to a specific transfer request.
+	 * 
+	 * @param request
+	 *            concerned transfer request
+	 * @return {@link TransferResponse} List
+	 */
 	public List<TransferResponse> findByRequest(TransferRequest request);
 
+	/**
+	 * This method is used to retrieve details of a response from its id.
+	 * 
+	 * @param responseId
+	 *            id of the transfer response
+	 * @return {@link TransferResponse} object
+	 */
 	public TransferResponse findByResponseId(Long responseId);
 
+	/**
+	 * This method is used to update the status of the response
+	 * 
+	 * @param isApproved
+	 *            status <code>true</code> or <code>false</code>
+	 * @param responseId
+	 *            id of the response
+	 * @return {@link Integer} 0 or 1
+	 */
 	@Transactional
 	@Modifying(clearAutomatically = true)
 	@Query("update TransferResponse ts set ts.isApproved =:isApproved where ts.responseId =:responseId")

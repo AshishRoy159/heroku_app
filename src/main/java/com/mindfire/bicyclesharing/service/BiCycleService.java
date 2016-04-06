@@ -84,9 +84,12 @@ public class BiCycleService {
 	}
 
 	/**
+	 * This method is used to retrieve a certain number of bicycles based on
+	 * current location and availability.
 	 * 
 	 * @param transfer
-	 * @return
+	 *            concerned transfer record
+	 * @return {@link BiCycle} List
 	 */
 	public List<BiCycle> findBicyclesForShipment(Transfer transfer) {
 		Pageable pageable = new PageRequest(0, transfer.getQuantity());

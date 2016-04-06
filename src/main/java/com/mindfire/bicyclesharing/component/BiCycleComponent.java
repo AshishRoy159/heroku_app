@@ -80,18 +80,33 @@ public class BiCycleComponent {
 	}
 
 	/**
+	 * This method is used to find a certain number of available bicycles on a
+	 * specific pickup point
 	 * 
 	 * @param pickUpPoint
+	 *            the concerned pickup point
 	 * @param isAvailable
+	 *            availability of bicycle. true or false
 	 * @param pageable
-	 * @return
+	 *            the number of record to be fetched
+	 * @return {@link BiCycle} List
 	 */
 	public List<BiCycle> getAvailableBicycles(PickUpPoint pickUpPoint, Boolean isAvailable, Pageable pageable) {
 		return biCycleRepository.findByCurrentLocationAndIsAvailableOrderByChasisNoAsc(pickUpPoint, isAvailable,
 				pageable);
 	}
 
+	/**
+	 * This method is used set the bicycles to be transfered.
+	 * 
+	 * @param session
+	 *            {@link HttpSession} object to get the list of bicycles
+	 *            selected for transfer
+	 * @param transfer
+	 *            the current transfer in transition
+	 */
 	public void bicyclesInTransition(HttpSession session, Transfer transfer) {
+		@SuppressWarnings("unchecked")
 		List<BiCycle> biCycles = (List<BiCycle>) session.getAttribute("bicycles");
 		for (BiCycle biCycle : biCycles) {
 			BiCycleTransfer biCycleTransfer = new BiCycleTransfer();
@@ -102,6 +117,40 @@ public class BiCycleComponent {
 			biCycleTransfer.setTransfer(transfer);
 			biCycleTransferRepository.save(biCycleTransfer);
 		}
+	}
+
+	/**
+	 * This method is used to change the location of the bicycles after they are
+	 * transferred.
+	 * 
+	 * @param session
+	 *            the {@link HttpSession} object to get list of bicycles
+	 *            received
+	 * @param transfer
+	 *            the current transfer in transition
+	 */
+	public void bicyclesTransferred(HttpSession session, Transfer transfer) {
+		@SuppressWarnings("unchecked")
+		List<BiCycle> biCycles = (List<BiCycle>) session.getAttribute("bicycles");
+		for (BiCycle biCycle : biCycles) {
+			biCycle.setIsAvailable(true);
+			biCycle.setCurrentLocation(transfer.getTransferredTo());
+			biCycleRepository.save(biCycle);
+		}
+	}
+
+	/**
+	 * This method is used to get the number of available bicycles on a specific
+	 * pickup point
+	 * 
+	 * @param pickUpPoint
+	 *            the concerned pickup point
+	 * @param isAvailable
+	 *            availability of bicycle. True of false
+	 * @return {@link Integer} the quantity
+	 */
+	public int findByCurrentLocationAndIsAvailable(PickUpPoint pickUpPoint, Boolean isAvailable) {
+		return biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size();
 	}
 
 }

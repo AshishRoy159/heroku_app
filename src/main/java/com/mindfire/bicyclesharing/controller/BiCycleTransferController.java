@@ -43,6 +43,7 @@ import com.mindfire.bicyclesharing.model.Transfer;
 import com.mindfire.bicyclesharing.model.TransferRequest;
 import com.mindfire.bicyclesharing.model.TransferResponse;
 import com.mindfire.bicyclesharing.service.BiCycleService;
+import com.mindfire.bicyclesharing.service.BiCycleTransferService;
 import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
 import com.mindfire.bicyclesharing.service.TransferRequestService;
 import com.mindfire.bicyclesharing.service.TransferResponseService;
@@ -73,6 +74,9 @@ public class BiCycleTransferController {
 
 	@Autowired
 	private BiCycleService bicycleService;
+
+	@Autowired
+	private BiCycleTransferService biCycleTransferService;
 
 	/**
 	 * This method maps the request for bicycle transfer request page. Simply
@@ -227,10 +231,14 @@ public class BiCycleTransferController {
 	}
 
 	/**
+	 * This method is used to map requests for outgoing and incoming transfer
+	 * from a pickup point. Simply renders the transfer view.
 	 * 
 	 * @param model
+	 *            to map model attributes
 	 * @param authentication
-	 * @return
+	 *            to get the current logged in user details
+	 * @return transfers view
 	 */
 	@RequestMapping(value = "manager/transfers", method = RequestMethod.GET)
 	public ModelAndView viewTransfers(Model model, Authentication authentication) {
@@ -243,11 +251,16 @@ public class BiCycleTransferController {
 	}
 
 	/**
+	 * This method is used to map the request for sending bicycle transfer
+	 * shipment. Renders the transferConfirm view.
 	 * 
 	 * @param transferId
+	 *            id of the transfer record
 	 * @param model
+	 *            to map model attributes
 	 * @param session
-	 * @return
+	 *            for session attributes
+	 * @return transferConfirm view
 	 */
 	@RequestMapping(value = "manager/sendShipment/{id}", method = RequestMethod.GET)
 	public ModelAndView sendShipment(@PathVariable("id") Long transferId, Model model, HttpSession session) {
@@ -259,15 +272,62 @@ public class BiCycleTransferController {
 	}
 
 	/**
+	 * This method is used to map requests for confirming transfer from a pickup
+	 * point. Renders the transfers view.
 	 * 
 	 * @param transferDataDTO
-	 * @return
+	 *            the transfer details
+	 * @param session
+	 *            for session attributes
+	 * @return transfers view
 	 */
 	@RequestMapping(value = "manager/confirmShipment", method = RequestMethod.POST)
 	public ModelAndView confirmShipment(@ModelAttribute("transferData") TransferDataDTO transferDataDTO,
 			HttpSession session) {
 		transferService.confirmTransfer(transferDataDTO, session);
 		return new ModelAndView("redirect:transfers");
+	}
+
+	/**
+	 * This method is used to map requests for receiving a transfer shipment.
+	 * Renders the receiveConfirm view.
+	 * 
+	 * @param transferId
+	 *            id of the transfer record
+	 * @param session
+	 *            for session attributes
+	 * @return receiveConfirm view
+	 */
+	@RequestMapping(value = "manager/receiveShipment/{id}", method = RequestMethod.GET)
+	public ModelAndView receiveShipment(@PathVariable("id") Long transferId, HttpSession session) {
+		Transfer transfer = transferService.findTransferDetails(transferId);
+		List<BiCycle> biCycles = biCycleTransferService.findBicyclesInTransition(transfer);
+		session.setAttribute("bicycles", biCycles);
+
+		return new ModelAndView("receiveConfirm", "transfer", transfer);
+	}
+
+	/**
+	 * This method is used to map the requests for confirming delivery of
+	 * shipment. Renders the transfers view.
+	 * 
+	 * @param transferId
+	 *            id of the transfer record
+	 * @param session
+	 *            for session attributes
+	 * @param model
+	 *            to map model attributes
+	 * @return transfers view
+	 */
+	@RequestMapping(value = "manager/confirmShipmentReceive/{id}", method = RequestMethod.GET)
+	public ModelAndView confirmShipmentReceive(@PathVariable("id") Long transferId, HttpSession session, Model model) {
+		Transfer transfer = transferService.confirmReceiveTransfer(transferId, session);
+		if (null == transfer) {
+			model.addAttribute("errorMessage", "Error Receiving Transfer!!");
+			return new ModelAndView("receiveShipment/" + transferId);
+		} else {
+			return new ModelAndView("redirect:/manager/transfers");
+		}
 	}
 
 }

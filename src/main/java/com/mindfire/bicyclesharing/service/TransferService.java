@@ -16,6 +16,7 @@
 
 package com.mindfire.bicyclesharing.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -25,8 +26,10 @@ import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.component.BiCycleComponent;
+import com.mindfire.bicyclesharing.component.PickUpPointComponent;
 import com.mindfire.bicyclesharing.component.TransferComponent;
 import com.mindfire.bicyclesharing.dto.TransferDataDTO;
+import com.mindfire.bicyclesharing.enums.TransferStatusEnum;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.Transfer;
 import com.mindfire.bicyclesharing.model.TransferResponse;
@@ -50,6 +53,9 @@ public class TransferService {
 	@Autowired
 	private BiCycleComponent biCycleComponent;
 
+	@Autowired
+	private PickUpPointComponent pickUpPointComponent;
+
 	/**
 	 * This method is used to add new transfer entry to the database.
 	 * 
@@ -62,9 +68,11 @@ public class TransferService {
 	}
 
 	/**
+	 * This method is used to retrieve details of transfers from a pickup point.
 	 * 
 	 * @param currentUser
-	 * @return
+	 *            the current logged in manager
+	 * @return {@link Transfer} List
 	 */
 	public List<Transfer> findOutgoingTransfers(CurrentUser currentUser) {
 		PickUpPoint pickUpPoint = pickUpPointManagerService.getPickupPointManager(currentUser.getUser())
@@ -73,9 +81,11 @@ public class TransferService {
 	}
 
 	/**
+	 * This method is used to retrieve details of transfers to a pickup point.
 	 * 
 	 * @param currentUser
-	 * @return
+	 *            the current logged in manager
+	 * @return {@link Transfer} List
 	 */
 	public List<Transfer> findIncomingTransfers(CurrentUser currentUser) {
 		PickUpPoint pickUpPoint = pickUpPointManagerService.getPickupPointManager(currentUser.getUser())
@@ -84,18 +94,25 @@ public class TransferService {
 	}
 
 	/**
+	 * This method is retrieve the transfer details from its id
 	 * 
 	 * @param transferId
-	 * @return
+	 *            id of the transfer
+	 * @return {@link Transfer} object
 	 */
 	public Transfer findTransferDetails(Long transferId) {
 		return transferComponent.getTransferDetails(transferId);
 	}
 
 	/**
+	 * This method is used to update the transfer details and details of
+	 * bicycles involved on confirmation from dispatcher pickup point.
 	 * 
 	 * @param transferDataDTO
-	 * @return
+	 *            the incoming transfer details
+	 * @param session
+	 *            to get the list of bicycles to be transferred
+	 * @return {@link Transfer} object
 	 */
 	public Transfer confirmTransfer(TransferDataDTO transferDataDTO, HttpSession session) {
 		Transfer transfer = transferComponent.updateTransferDetails(transferDataDTO);
@@ -104,7 +121,37 @@ public class TransferService {
 			return null;
 		} else {
 			biCycleComponent.bicyclesInTransition(session, transfer);
+			PickUpPoint pickUpPoint = transfer.getTransferredFrom();
+			pickUpPoint.setCurrentAvailability(biCycleComponent.findByCurrentLocationAndIsAvailable(pickUpPoint, true));
+			pickUpPointComponent.updatePickupPoint(pickUpPoint);
 			return transfer;
+		}
+	}
+
+	/**
+	 * This method is used to update the transfer details and details of
+	 * bicycles involved on confirmation from receiving pickup point.
+	 * 
+	 * @param transferId
+	 *            id of the transfer record
+	 * @param session
+	 *            to get the list of bicycles transferred
+	 * @return {@link Transfer} object
+	 */
+	public Transfer confirmReceiveTransfer(Long transferId, HttpSession session) {
+		Transfer transfer = findTransferDetails(transferId);
+		transfer.setArrivedOn(new Timestamp(System.currentTimeMillis()));
+		transfer.setStatus(TransferStatusEnum.CLOSED);
+
+		Transfer closedTransfer = transferComponent.closeTransfer(transfer);
+		if (closedTransfer == null) {
+			return null;
+		} else {
+			biCycleComponent.bicyclesTransferred(session, closedTransfer);
+			PickUpPoint pickUpPoint = transfer.getTransferredTo();
+			pickUpPoint.setCurrentAvailability(biCycleComponent.findByCurrentLocationAndIsAvailable(pickUpPoint, true));
+			pickUpPointComponent.updatePickupPoint(pickUpPoint);
+			return closedTransfer;
 		}
 	}
 
