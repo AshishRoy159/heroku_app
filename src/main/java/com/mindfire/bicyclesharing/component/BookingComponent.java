@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 import com.mindfire.bicyclesharing.dto.BookingPaymentDTO;
 import com.mindfire.bicyclesharing.dto.PaymentAtPickUpPointDTO;
 import com.mindfire.bicyclesharing.dto.ReceiveBicyclePaymentDTO;
+import com.mindfire.bicyclesharing.dto.ReceiveCycleDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
 import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.Booking;
@@ -189,6 +190,7 @@ public class BookingComponent {
 		booking.setActualIn(new Timestamp(System.currentTimeMillis()));
 		booking.setReturnedAt(pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint());
 		booking.setIsOpen(false);
+		booking.setIsUsed(true);
 		booking.setFare(booking.getFare() + fare);
 
 		bookingRepository.save(booking);
@@ -286,11 +288,29 @@ public class BookingComponent {
 	/**
 	 * This method is used for getting all Booking based on booking status.
 	 * 
-	 * @param isOpen
+	 * @param isUsed
 	 *            this is Boolean type value
 	 * @return {@link Booking} List
 	 */
-	public List<Booking> getAllBooking(Boolean isOpen) {
-		return bookingRepository.findByIsOpen(isOpen);
+	public List<Booking> getAllBooking(Boolean isUsed) {
+		return bookingRepository.findByIsUsed(isUsed);
+	}
+
+	/**
+	 * This method is used for closing the booking based on the booking id
+	 * 
+	 * @param receiveCycleDTO
+	 * @return {@link Booking}
+	 */
+	public Booking mapCloseBooking(ReceiveCycleDTO receiveCycleDTO) {
+		Booking booking = bookingRepository.findByBookingId(receiveCycleDTO.getBookingId());
+		if (null != booking && booking.getIsOpen()) {
+			booking.setIsOpen(false);
+			booking.setReturnedAt(booking.getPickedUpFrom());
+
+			return bookingRepository.save(booking);
+		} else {
+			return null;
+		}
 	}
 }

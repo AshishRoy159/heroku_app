@@ -180,12 +180,12 @@ public class BookingController {
 	 */
 	@RequestMapping(value = { "/manager/bookingPayment" }, method = RequestMethod.GET)
 	public ModelAndView bookingPayment(@Valid @ModelAttribute("issueCycleData") IssueCycleDTO issueCycleDTO,
-			BindingResult result, HttpSession session, RedirectAttributes redirectAttributes) {
+			BindingResult result, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
 		if (result.hasErrors()) {
 			redirectAttributes.addFlashAttribute("issueCycleErrorMessage", "Please enter valid data !");
 			return new ModelAndView("redirect:/manager/booking");
 		} else {
-			redirectAttributes.addAttribute("issueCycleData", issueCycleDTO);
+			redirectAttributes.addFlashAttribute("issueCycleData", issueCycleDTO);
 
 			final Calendar cal = Calendar.getInstance();
 			cal.setTimeInMillis(new Date().getTime());
@@ -198,7 +198,9 @@ public class BookingController {
 				return new ModelAndView("redirect:/manager/booking");
 			}
 			Double fare = (user.getRateGroup().getBaseRate() * issueCycleDTO.getExpectedInTime());
-			redirectAttributes.addAttribute("baseFare", fare);
+			redirectAttributes.addFlashAttribute("baseFare", fare);
+			model.addAttribute("baseFare", fare);
+
 			if (user.getIsApproved() == true && user.getEnabled() == true) {
 				return new ModelAndView("bookingPayment");
 			} else {
@@ -236,15 +238,16 @@ public class BookingController {
 		} else {
 			if (null != booking.getBiCycleId()) {
 				if (booking.getIsOpen()) {
-					redirectAttributes.addAttribute("bookingDetails", booking);
+
+					redirectAttributes.addFlashAttribute("bookingDetails", booking);
 					Calendar cal = Calendar.getInstance();
 					cal.setTimeInMillis(new Date().getTime());
 					long time = cal.getTimeInMillis() - booking.getExpectedIn().getTime();
 					long actualTime = time - 600000; // we are giving 10 minute
 														// relaxation.
 					if (actualTime <= 0) {
-						redirectAttributes.addAttribute("currentTime", new Timestamp(new Date().getTime()));
-						return new ModelAndView("receiveBicycle");
+						redirectAttributes.addFlashAttribute("currentTime", new Timestamp(new Date().getTime()));
+						return new ModelAndView("redirect:/manager/receiveBicycle");
 					} else {
 						long hour = (actualTime / (60 * 1000)) / 60;
 						long remainder = (actualTime / (60 * 1000)) % 60;
@@ -255,8 +258,8 @@ public class BookingController {
 								.findByUserId(booking.getUser().getUserId()).getRateGroup().getGroupType())
 								.getBaseRate();
 						double fare = hour * (baseRate + ((baseRate * 10) / 100));
-						redirectAttributes.addAttribute("fare", fare);
-						return new ModelAndView("receiveBicyclePayment");
+						redirectAttributes.addFlashAttribute("fare", fare);
+						return new ModelAndView("redirect:/manager/receiveBicyclePayment");
 					}
 
 				} else {
@@ -359,6 +362,55 @@ public class BookingController {
 					return new ModelAndView("redirect:/manager/booking");
 				}
 			}
+		}
+	}
+
+	/**
+	 * This method is used to map the receive bicycle along with payment request
+	 * and simply render the receiveBicyclePayment view related to current
+	 * booking of the user.
+	 * 
+	 * @return receiveBicyclePayment view
+	 */
+	@RequestMapping(value = "/manager/receiveBicyclePayment", method = RequestMethod.GET)
+	public ModelAndView receiveBicyclePayment() {
+		return new ModelAndView("receiveBicyclePayment");
+	}
+
+	/**
+	 * This method is used to map the receive bicycle and simply render the
+	 * receiveBicycle view related to current booking of the user.
+	 * 
+	 * @return receiveBicycle view
+	 */
+	@RequestMapping(value = "/manager/receiveBicycle", method = RequestMethod.GET)
+	public ModelAndView receiveBicycle() {
+		return new ModelAndView("receiveBicycle");
+	}
+
+	/**
+	 * This method is used to map the close booking request
+	 * 
+	 * @param receiveCycleDTO
+	 *            this parameter holds the receive bicycle data
+	 * @param result
+	 *            for validating incoming data
+	 * @param redirectAttributes
+	 *            to map model attributes
+	 * @return booking view
+	 */
+	@RequestMapping(value = "/manager/closeBooking", method = RequestMethod.POST)
+	public ModelAndView closeCurrentBooking(@Valid @ModelAttribute("closeBookingData") ReceiveCycleDTO receiveCycleDTO,
+			BindingResult result, RedirectAttributes redirectAttributes) {
+		if (result.hasErrors()) {
+			redirectAttributes.addFlashAttribute("closeMessage", "Invalid Booking Id.");
+			return new ModelAndView("redirect:/manager/booking");
+		} else if (null != bookingService.closeBooking(receiveCycleDTO)) {
+			redirectAttributes.addFlashAttribute("closeMessage", "Your booking has been successfully closed.");
+			return new ModelAndView("redirect:/manager/booking");
+		} else {
+			redirectAttributes.addFlashAttribute("closeMessage", "Your booking status is not valid..");
+			return new ModelAndView("redirect:/manager/booking");
 		}
 	}
 }

@@ -119,9 +119,9 @@ public class UserBookingController {
 					if (fare == 0.0) {
 						fare = baseRate;
 					}
-					redirectAttributes.addAttribute("fare", fare);
-
-					return new ModelAndView("userBookingPayment", "userBookingDetails", userBooking);
+					redirectAttributes.addFlashAttribute("fare", fare);
+                    redirectAttributes.addFlashAttribute("userBookingDetails", userBooking);
+					return new ModelAndView("redirect:/user/userPayment");
 				}
 			} else {
 				redirectAttributes.addFlashAttribute("errorMessage", "You have a boooking still open!!");
@@ -131,6 +131,17 @@ public class UserBookingController {
 
 	}
 
+	/**
+	 * This method maps the request for payment page for user and simply
+	 * render the view.
+	 * 
+	 * @return userBookingPayment view
+	 */
+	@RequestMapping(value = "/user/userPayment", method = RequestMethod.GET)
+	public ModelAndView userPayment() {
+		return new ModelAndView("userBookingPayment");
+	}
+	
 	/**
 	 * This method is used for saving the user booking payment details.
 	 * 
@@ -221,7 +232,10 @@ public class UserBookingController {
 				redirectAttributes.addFlashAttribute("errorMessage", "Your Booking Id is not valid !!");
 				return new ModelAndView("redirect:/manager/booking");
 			} else {
-				if (!bookingStatus.get(0).getExpectedOut().before(new Timestamp(System.currentTimeMillis()))) {
+				// giving 30(1800000 millisecond) minute relaxation for taking bicycle before booking
+				// time.
+				if (!bookingStatus.get(0).getExpectedOut()
+						.before(new Timestamp(System.currentTimeMillis() + 1800000))) {
 					redirectAttributes.addFlashAttribute("errorMessage",
 							"Your expected out time is:-" + bookingStatus.get(0).getExpectedOut());
 					return new ModelAndView("redirect:/manager/booking");

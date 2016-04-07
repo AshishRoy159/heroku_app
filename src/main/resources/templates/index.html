@@ -140,7 +140,8 @@
 								</div>
 								<div sec:authorize="isAuthenticated()"
 									class="slider-caption caption-form">
-									<div style="color: white;" id="errorMessage" th:text="${errorMessage}"></div>
+									<div style="color: white;" id="errorMessage"
+										th:text="${errorMessage}"></div>
 									<div style="color: white;" th:text="${message}"></div>
 									<form action="/user/booking" th:action="@{/user/booking}"
 										class="form-inline" th:object="${userBookingData}"
@@ -149,7 +150,7 @@
 										<input type="text" id="bookingId" name="bookingTime"
 											class="form-control input-md datetimepicker_mask"
 											tabindex="1" placeholder="Booking Date and Time"
-											required="required" /> <select tabindex="2"
+											required="required" maxlength="20" /> <select tabindex="2"
 											class="input-md form-control" name="pickUpPoint"
 											required="required">
 											<option value="">Select Pickup Point</option>
@@ -159,7 +160,7 @@
 										</select> <input type="text" name="returnTime" id="returnId"
 											class="form-control input-md datetimepicker_mask"
 											placeholder="Return Date and Time" tabindex="3"
-											required="required" /> <input type="submit"
+											required="required" maxlength="20" /> <input type="submit"
 											class="btn btn-success btn-md" value="Book Now" />
 									</form>
 								</div>
@@ -187,9 +188,10 @@
 								style="width: 100%; padding-top: 5px;">
 								<input type="text" name="bookingTime"
 									class="form-control datetimepicker_mask" tabindex="1"
-									placeholder="Booking Date and Time" required="required" /> <select
-									tabindex="2" class="input-xlarge form-control"
-									name="pickUpPoint" required="required">
+									placeholder="Booking Date and Time" required="required"
+									maxlength="20" /> <select tabindex="2"
+									class="input-xlarge form-control" name="pickUpPoint"
+									required="required">
 									<option value="">Select Pickup Point</option>
 									<option th:each="pickUpPoint : ${pickUpPoints}"
 										th:value="${pickUpPoint.pickUpPointId}"
@@ -197,7 +199,7 @@
 								</select> <input type="text" name="returnTime"
 									class="form-control datetimepicker_mask"
 									placeholder="Return Date and Time" tabindex="3"
-									required="required" /> <input type="submit"
+									required="required" maxlength="20" /> <input type="submit"
 									class="btn btn-success" value="Book Now" />
 							</form>
 						</div>
@@ -225,9 +227,10 @@
 										style="width: 100%; padding-top: 5px;">
 										<input type="text" name="bookingTime"
 											class="form-control datetimepicker_mask" tabindex="1"
-											placeholder="Booking Date and Time" required="required" /> <select
-											tabindex="2" class="input-xlarge form-control"
-											name="pickUpPoint" required="required">
+											placeholder="Booking Date and Time" required="required"
+											maxlength="20" /> <select tabindex="2"
+											class="input-xlarge form-control" name="pickUpPoint"
+											required="required">
 											<option value="">Select Pickup Point</option>
 											<option th:each="pickUpPoint : ${pickUpPoints}"
 												th:value="${pickUpPoint.pickUpPointId}"
@@ -235,7 +238,7 @@
 										</select> <input type="text" name="returnTime"
 											class="form-control datetimepicker_mask"
 											placeholder="Return Date and Time" tabindex="3"
-											required="required" /> <input type="submit"
+											required="required" maxlength="20" /> <input type="submit"
 											class="btn btn-success" value="Book Now" />
 									</form>
 								</div>
@@ -265,9 +268,10 @@
 										style="width: 100%; padding-top: 5px;">
 										<input type="text" name="bookingTime"
 											class="form-control datetimepicker_mask" tabindex="1"
-											placeholder="Booking Date and Time" required="required" /> <select
-											tabindex="2" class="input-xlarge form-control"
-											name="pickUpPoint" required="required">
+											placeholder="Booking Date and Time" required="required"
+											maxlength="20" /> <select tabindex="2"
+											class="input-xlarge form-control" name="pickUpPoint"
+											required="required">
 											<option value="">Select Pickup Point</option>
 											<option th:each="pickUpPoint : ${pickUpPoints}"
 												th:value="${pickUpPoint.pickUpPointId}"
@@ -275,7 +279,7 @@
 										</select> <input type="text" name="returnTime"
 											class="form-control datetimepicker_mask"
 											placeholder="Return Date and Time" tabindex="3"
-											required="required" /> <input type="submit"
+											required="required" maxlength="20" /> <input type="submit"
 											class="btn btn-success" value="Book Now" />
 									</form>
 								</div>
@@ -305,9 +309,10 @@
 										style="width: 100%; padding-top: 5px;">
 										<input type="text" name="bookingTime"
 											class="form-control datetimepicker_mask" tabindex="1"
-											placeholder="Booking Date and Time" required="required" /> <select
-											tabindex="2" class="input-xlarge form-control"
-											name="pickUpPoint" required="required">
+											placeholder="Booking Date and Time" required="required"
+											maxlength="20" /> <select tabindex="2"
+											class="input-xlarge form-control" name="pickUpPoint"
+											required="required">
 											<option value="">Select Pickup Point</option>
 											<option th:each="pickUpPoint : ${pickUpPoints}"
 												th:value="${pickUpPoint.pickUpPointId}"
@@ -315,7 +320,7 @@
 										</select> <input type="text" name="returnTime"
 											class="form-control datetimepicker_mask"
 											placeholder="Return Date and Time" tabindex="3"
-											required="required" /> <input type="submit"
+											required="required" maxlength="20" /> <input type="submit"
 											class="btn btn-success" value="Book Now" />
 									</form>
 								</div>
@@ -345,9 +350,10 @@
 										style="width: 100%; padding-top: 5px;">
 										<input type="text" name="bookingTime"
 											class="form-control datetimepicker_mask" tabindex="1"
-											placeholder="Booking Date and Time" required="required" /> <select
-											tabindex="2" class="input-xlarge form-control"
-											name="pickUpPoint" required="required">
+											placeholder="Booking Date and Time" required="required"
+											maxlength="20" /> <select tabindex="2"
+											class="input-xlarge form-control" name="pickUpPoint"
+											required="required">
 											<option value="">Select Pickup Point</option>
 											<option th:each="pickUpPoint : ${pickUpPoints}"
 												th:value="${pickUpPoint.pickUpPointId}"
@@ -355,7 +361,7 @@
 										</select> <input type="text" name="returnTime"
 											class="form-control datetimepicker_mask"
 											placeholder="Return Date and Time" tabindex="3"
-											required="required" /> <input type="submit"
+											required="required" maxlength="20" /> <input type="submit"
 											class="btn btn-success" value="Book Now" />
 									</form>
 								</div>
@@ -385,9 +391,10 @@
 										style="width: 100%; padding-top: 5px;">
 										<input type="text" name="bookingTime"
 											class="form-control datetimepicker_mask" tabindex="1"
-											placeholder="Booking Date and Time" required="required" /> <select
-											tabindex="2" class="input-xlarge form-control"
-											name="pickUpPoint" required="required">
+											placeholder="Booking Date and Time" required="required"
+											maxlength="20" /> <select tabindex="2"
+											class="input-xlarge form-control" name="pickUpPoint"
+											required="required">
 											<option value="">Select Pickup Point</option>
 											<option th:each="pickUpPoint : ${pickUpPoints}"
 												th:value="${pickUpPoint.pickUpPointId}"
@@ -395,7 +402,7 @@
 										</select> <input type="text" name="returnTime"
 											class="form-control datetimepicker_mask"
 											placeholder="Return Date and Time" tabindex="3"
-											required="required" /> <input type="submit"
+											required="required" maxlength="20" /> <input type="submit"
 											class="btn btn-success" value="Book Now" />
 									</form>
 								</div>
@@ -1051,7 +1058,8 @@
 	<script src="/js/jquery.easing-1.3.js"
 		th:src="@{/js/jquery.easing-1.3.js}"></script>
 	<script src="/js/plugins.js" th:src="@{/js/plugins.js}"></script>
-	<script src="/js/owl.carousel.min.js" th:src="@{/js/owl.carousel.min.js}"></script>
+	<script src="/js/owl.carousel.min.js"
+		th:src="@{/js/owl.carousel.min.js}"></script>
 	<script src="/js/jquery.parallax.js" th:src="@{/js/jquery.parallax.js}"></script>
 	<script src="/js/wow.min.js" th:src="@{/js/wow.min.js}"></script>
 	<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>

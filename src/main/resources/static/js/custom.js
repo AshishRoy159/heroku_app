@@ -176,15 +176,16 @@ function userBookingValidation(form) {
 				}
 			}
 		} else {
-			if (currentDate.getDate() <= parseInt(res[2])
-					&& currentDate.getHours() <= parseInt(res[3])
-					&& parseInt(res[2]) <= parseInt(rtnRes[2])
-					&& parseInt(res[3]) < parseInt(rtnRes[3])
-					&& currentDate.getMinutes() < parseInt(res[4])) {
-				document.getElementById('errorMessage').innerHTML = "";
+			if (currentDate.getDate() == parseInt(res[2])
+					&& currentDate.getHours() < parseInt(res[3])
+					&& parseInt(res[2]) == parseInt(rtnRes[2])
+					&& parseInt(res[3]) < parseInt(rtnRes[3])) {
 				return true;
 			} else {
-				if (parseInt(res[3]) == parseInt(rtnRes[3])) {
+				if (currentDate.getDate() == parseInt(res[2])
+						&& parseInt(res[3]) == parseInt(rtnRes[3])
+						&& parseInt(res[2]) == parseInt(rtnRes[2])
+						&& currentDate.getHours() == parseInt(res[3])) {
 					if (currentDate.getMinutes() < parseInt(res[4])
 							&& parseInt(res[4]) < parseInt(rtnRes[4])) {
 						document.getElementById('errorMessage').innerHTML = "";
@@ -194,6 +195,9 @@ function userBookingValidation(form) {
 						return false;
 					}
 				} else {
+					if(currentDate.getHours()<= parseInt(res[4]) && parseInt(res[4]) < parseInt(rtnRes[4])){
+						return true;
+					}
 					alert("Please select valid booking Time");
 					return false;
 				}

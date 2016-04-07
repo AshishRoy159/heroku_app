@@ -17,8 +17,17 @@
 package com.mindfire.bicyclesharing.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.sql.Timestamp;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the bookings database table.
@@ -62,6 +71,9 @@ public class Booking implements Serializable {
 	@Column(name = "is_open")
 	private Boolean isOpen;
 
+	@Column(name = "is_used", insertable=false , columnDefinition = "BOOLEAN DEFAULT FALSE")
+	private Boolean isUsed;
+
 	@ManyToOne
 	@JoinColumn(name = "picked_up_from")
 	private PickUpPoint pickedUpFrom;
@@ -69,7 +81,7 @@ public class Booking implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "returnet_at")
 	private PickUpPoint returnedAt;
-	
+
 	@Column(name = "transaction_id")
 	private String transactionId;
 
@@ -274,5 +286,13 @@ public class Booking implements Serializable {
 	 */
 	public void setUser(User user) {
 		this.user = user;
+	}
+	
+	public Boolean getIsUsed() {
+		return isUsed;
+	}
+
+	public void setIsUsed(Boolean isUsed) {
+		this.isUsed = isUsed;
 	}
 }

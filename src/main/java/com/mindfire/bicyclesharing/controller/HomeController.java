@@ -112,7 +112,7 @@ public class HomeController {
 	 */
 	@RequestMapping(value = { "admin", "admin/adminHome", "manager/managerHome" })
 	public ModelAndView adminHome(Model model) {
-		model.addAttribute("bookings", bookingService.getAllBookingDetails(false));
+		model.addAttribute("bookings", bookingService.getAllBookingDetails(true));
 		model.addAttribute("pickUpPointManagers", pickUpPointManagerService.getAllPickUpPointManager());
 		return new ModelAndView("adminHome");
 	}

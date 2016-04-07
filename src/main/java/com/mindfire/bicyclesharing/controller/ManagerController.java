@@ -74,16 +74,4 @@ public class ManagerController {
 		session.setAttribute("userDTO", userDTO);
 		return new ModelAndView("managerPayment");
 	}
-
-	/**
-	 * This method is used to map the bicycle transfer request. Simply render
-	 * the bicycleTransfer view.
-	 * 
-	 * @return bicycleTransfer view
-	 */
-	@RequestMapping(value = { "/manager/bicycleTransfer" }, method = RequestMethod.GET)
-	public ModelAndView getTransfersView() {
-		return new ModelAndView("bicycleTransfer");
-	}
-
 }
