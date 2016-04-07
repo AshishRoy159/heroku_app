@@ -148,8 +148,8 @@ public class BookingController {
 			return new ModelAndView("redirect:/manager/booking");
 		}
 
-		Booking booking = bookingService.addNewBooking(auth, bookingPaymentDTO, session);
-		if (null == booking) {
+		Booking bookingDetails = bookingService.addNewBooking(auth, bookingPaymentDTO, session);
+		if (null == bookingDetails) {
 			redirectAttributes.addFlashAttribute("bookingFailure", "Oops..!! You do not have sufficient balance");
 			return new ModelAndView("redirect:/manager/booking");
 		} else {
@@ -158,9 +158,8 @@ public class BookingController {
 			pickUpPoint.setCurrentAvailability(
 					bicycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size());
 			pickUpPointRepository.save(pickUpPoint);
-			redirectAttributes.addFlashAttribute("bookingSuccess",
-					"Booking Successfull. Your Booking Id is : " + booking.getBookingId());
-			return new ModelAndView("redirect:/manager/booking");
+			redirectAttributes.addFlashAttribute("bookingDetails", bookingDetails);
+			return new ModelAndView("redirect:/manager/printIssueBicycleDetails");
 		}
 	}
 
@@ -185,22 +184,28 @@ public class BookingController {
 		if (result.hasErrors()) {
 			redirectAttributes.addFlashAttribute("issueCycleErrorMessage", "Please enter valid data !");
 			return new ModelAndView("redirect:/manager/booking");
-		}
-		redirectAttributes.addAttribute("issueCycleData", issueCycleDTO);
-		final Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(new Date().getTime());
-		cal.add(Calendar.HOUR, issueCycleDTO.getExpectedInTime());
-
-		session.setAttribute("expectedIn", new Timestamp(cal.getTimeInMillis()));
-		User user = userRepository.findByUserId(issueCycleDTO.getUserId());
-		Double fare = (user.getRateGroup().getBaseRate() * issueCycleDTO.getExpectedInTime());
-		redirectAttributes.addAttribute("baseFare", fare);
-		if (user.getIsApproved() == true && user.getEnabled() == true) {
-			return new ModelAndView("bookingPayment");
 		} else {
-			redirectAttributes.addFlashAttribute("bookingFailure",
-					"It seems your verification is still pending. you need to get approved to book a bicycle.");
-			return new ModelAndView("redirect:/manager/booking");
+			redirectAttributes.addAttribute("issueCycleData", issueCycleDTO);
+
+			final Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(new Date().getTime());
+			cal.add(Calendar.HOUR, issueCycleDTO.getExpectedInTime());
+
+			session.setAttribute("expectedIn", new Timestamp(cal.getTimeInMillis()));
+			User user = userRepository.findByUserId(issueCycleDTO.getUserId());
+			if (null == user) {
+				redirectAttributes.addFlashAttribute("bookingFailure", "Invalid UserId...");
+				return new ModelAndView("redirect:/manager/booking");
+			}
+			Double fare = (user.getRateGroup().getBaseRate() * issueCycleDTO.getExpectedInTime());
+			redirectAttributes.addAttribute("baseFare", fare);
+			if (user.getIsApproved() == true && user.getEnabled() == true) {
+				return new ModelAndView("bookingPayment");
+			} else {
+				redirectAttributes.addFlashAttribute("bookingFailure",
+						"It seems your verification is still pending. you need to get approved to book a bicycle.");
+				return new ModelAndView("redirect:/manager/booking");
+			}
 		}
 	}
 
@@ -229,34 +234,42 @@ public class BookingController {
 			redirectAttributes.addFlashAttribute("bookingFailure", "Your Booking Id is Incorrect!!");
 			return new ModelAndView("redirect:/manager/booking");
 		} else {
-			if (booking.getIsOpen()) {
-				redirectAttributes.addAttribute("bookingDetails", booking);
-				Calendar cal = Calendar.getInstance();
-				cal.setTimeInMillis(new Date().getTime());
-				long time = cal.getTimeInMillis() - booking.getExpectedIn().getTime();
-				long actualTime = time - 600000; // we are giving 10 minute
-													// relaxation.
-				if (actualTime <= 0) {
-					redirectAttributes.addAttribute("currentTime", new Timestamp(new Date().getTime()));
-					return new ModelAndView("receiveBicycle");
-				} else {
-					long hour = (actualTime / (60 * 1000)) / 60;
-					long remainder = (actualTime / (60 * 1000)) % 60;
-					if (remainder > 0) {
-						hour++;
+			if (null != booking.getBiCycleId()) {
+				if (booking.getIsOpen()) {
+					redirectAttributes.addAttribute("bookingDetails", booking);
+					Calendar cal = Calendar.getInstance();
+					cal.setTimeInMillis(new Date().getTime());
+					long time = cal.getTimeInMillis() - booking.getExpectedIn().getTime();
+					long actualTime = time - 600000; // we are giving 10 minute
+														// relaxation.
+					if (actualTime <= 0) {
+						redirectAttributes.addAttribute("currentTime", new Timestamp(new Date().getTime()));
+						return new ModelAndView("receiveBicycle");
+					} else {
+						long hour = (actualTime / (60 * 1000)) / 60;
+						long remainder = (actualTime / (60 * 1000)) % 60;
+						if (remainder > 0) {
+							hour++;
+						}
+						double baseRate = rateGroupRepository.findByGroupType(userRepository
+								.findByUserId(booking.getUser().getUserId()).getRateGroup().getGroupType())
+								.getBaseRate();
+						double fare = hour * (baseRate + ((baseRate * 10) / 100));
+						redirectAttributes.addAttribute("fare", fare);
+						return new ModelAndView("receiveBicyclePayment");
 					}
-					double baseRate = rateGroupRepository.findByGroupType(
-							userRepository.findByUserId(booking.getUser().getUserId()).getRateGroup().getGroupType())
-							.getBaseRate();
-					double fare = hour * (baseRate + ((baseRate * 10) / 100));
-					redirectAttributes.addAttribute("fare", fare);
-					return new ModelAndView("receiveBicyclePayment");
+
+				} else {
+					redirectAttributes.addFlashAttribute("bookingFailure", "Your Booking is already received!!");
+					return new ModelAndView("redirect:/manager/booking");
+
 				}
+
 			} else {
-				redirectAttributes.addFlashAttribute("bookingFailure", "Your Booking is already received!!");
+				redirectAttributes.addFlashAttribute("bookingFailure",
+						"You have not been assigned any bicycle on this booking Id!!");
 				return new ModelAndView("redirect:/manager/booking");
 			}
-
 		}
 	}
 

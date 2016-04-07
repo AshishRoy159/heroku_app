@@ -123,6 +123,9 @@
 									class=" fa fa-user fa-fw"></i>Edit Account</a></li>
 							<li><a href="/user/changePassword"><i
 									class="fa fa-gear fa-fw"></i>Change Password</a></li>
+							<li><a th:href="@{/user/walletTransaction/} + ${user.userId}">
+									<i class="fa fa-inr"></i> Wallet Details
+							</a></li>
 							<li><a th:href="@{/user/bookingHistory/} + ${user.userId}">
 									<i class="fa fa-history"></i> Booking History
 							</a></li>
@@ -203,6 +206,8 @@
 			</div>
 		</div>
 	</div>
+	<div style="height: 110px"></div>
+
 	<div class="footer">
 		<div class="container">
 			<div class="row">
@@ -214,13 +219,11 @@
 				<div class="col-md-6"></div>
 				<div class="col-md-3" align="right">
 					<h4>
-						Developed by <a href="/index.html#home">Java Interns</a>
+						Developed by <a href="index.html#home">Java Interns</a>
 					</h4>
 				</div>
 			</div>
 		</div>
 	</div>
-	<br />
-	<br />
 </body>
 </html>

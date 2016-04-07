@@ -140,7 +140,7 @@
 								</div>
 								<div sec:authorize="isAuthenticated()"
 									class="slider-caption caption-form">
-									<div class="text-danger" id="errorMessage" th:text="${errorMessage}"></div>
+									<div style="color: white;" id="errorMessage" th:text="${errorMessage}"></div>
 									<div style="color: white;" th:text="${message}"></div>
 									<form action="/user/booking" th:action="@{/user/booking}"
 										class="form-inline" th:object="${userBookingData}"
@@ -179,8 +179,8 @@
 						</div>
 						<div sec:authorize="isAuthenticated()"
 							class="slider-caption caption-form">
-							<div class="text-danger" th:text="${errorMessage}"></div>
-							<div class="text-success" th:text="${message}"></div>
+							<div style="color: white;" th:text="${errorMessage}"></div>
+							<div style="color: white;" th:text="${message}"></div>
 							<form action="/user/booking" th:action="@{/user/booking}"
 								class="form-inline" th:object="${userBookingData}"
 								onsubmit="return userBookingValidation(this);" method="POST"
@@ -217,8 +217,8 @@
 								</div>
 								<div sec:authorize="isAuthenticated()"
 									class="slider-caption caption-form">
-									<div class="text-danger" th:text="${errorMessage}"></div>
-									<div class="text-success" th:text="${message}"></div>
+									<div style="color: white;" th:text="${errorMessage}"></div>
+									<div style="color: white;" th:text="${message}"></div>
 									<form action="/user/booking" th:action="@{/user/booking}"
 										class="form-inline" th:object="${userBookingData}"
 										method="POST" onsubmit="userBookingValidation(this);"
@@ -257,8 +257,8 @@
 								</div>
 								<div sec:authorize="isAuthenticated()"
 									class="slider-caption caption-form">
-									<div class="text-danger" th:text="${errorMessage}"></div>
-									<div class="text-success" th:text="${message}"></div>
+									<div style="color: white;" th:text="${errorMessage}"></div>
+									<div style="color: white;" th:text="${message}"></div>
 									<form action="/user/booking" th:action="@{/user/booking}"
 										class="form-inline" th:object="${userBookingData}"
 										method="POST" onsubmit="userBookingValidation(this);"
@@ -337,8 +337,8 @@
 								</div>
 								<div sec:authorize="isAuthenticated()"
 									class="slider-caption caption-form">
-									<div class="text-danger" th:text="${errorMessage}"></div>
-									<div class="text-success" th:text="${message}"></div>
+									<div style="color: white;" th:text="${errorMessage}"></div>
+									<div style="color: white;" th:text="${message}"></div>
 									<form action="/user/booking" th:action="@{/user/booking}"
 										class="form-inline" th:object="${userBookingData}"
 										method="POST" onsubmit="userBookingValidation(this);"
@@ -377,8 +377,8 @@
 								</div>
 								<div sec:authorize="isAuthenticated()"
 									class="slider-caption caption-form">
-									<div class="text-danger" th:text="${errorMessage}"></div>
-									<div class="text-success" th:text="${message}"></div>
+									<div style="color: white;" th:text="${errorMessage}"></div>
+									<div style="color: white;" th:text="${message}"></div>
 									<form action="/user/booking" th:action="@{/user/booking}"
 										class="form-inline" th:object="${userBookingData}"
 										method="POST" onsubmit="userBookingValidation(this);"
@@ -444,8 +444,8 @@
 ================================================== -->
 	<div class="booking-form parallax-section"
 		sec:authorize="isAuthenticated()">
-		<div class="text-danger" th:text="${errorMessage}"></div>
-		<div class="text-success" th:text="${message}"></div>
+		<div style="color: white;" th:text="${errorMessage}"></div>
+		<div style="color: white;" th:text="${message}"></div>
 		<div class="container">
 			<div class="row">
 				<div class="col-md-offset-2 col-md-8 col-sm-offset-2 col-sm-8">

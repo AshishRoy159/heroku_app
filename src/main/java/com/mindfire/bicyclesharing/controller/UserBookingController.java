@@ -94,13 +94,13 @@ public class UserBookingController {
 	public ModelAndView userBooking(@ModelAttribute("userBookingData") UserBookingDTO userBookingDTO,
 			RedirectAttributes redirectAttributes, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-		List<Booking> existing = bookingRepository.findByUserAndIsOpen(currentUser.getUser(), true);
 		Timestamp bookingTime = Timestamp.valueOf(userBookingDTO.getBookingTime().replace("/", "-").concat(":00.000"));
 		Timestamp returnTime = Timestamp.valueOf(userBookingDTO.getReturnTime().replace("/", "-").concat(":00.000"));
 		if (bookingTime.after(returnTime) || bookingTime.before(new Timestamp(System.currentTimeMillis()))) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Please Enter Valid booking date and time..!!");
 			return new ModelAndView("redirect:/index");
 		} else {
+			List<Booking> existing = bookingRepository.findByUserAndIsOpen(currentUser.getUser(), true);
 			if (existing.isEmpty()) {
 				Booking userBooking = bookingSevice.saveUserBookingDetails(userBookingDTO, authentication);
 				if (null == userBooking) {
@@ -115,7 +115,12 @@ public class UserBookingController {
 							.findByUserId(userBooking.getUser().getUserId()).getRateGroup().getGroupType())
 							.getBaseRate();
 					double fare = (hour * baseRate);
+
+					if (fare == 0.0) {
+						fare = baseRate;
+					}
 					redirectAttributes.addAttribute("fare", fare);
+
 					return new ModelAndView("userBookingPayment", "userBookingDetails", userBooking);
 				}
 			} else {
@@ -206,8 +211,12 @@ public class UserBookingController {
 			return new ModelAndView("redirect:/manager/booking");
 		} else {
 			CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-			List<Booking> bookingStatus = bookingRepository.findByUserAndIsOpen(
-					bookingRepository.findByBookingId(issueCycleForOnlineDTO.getBookingId()).getUser(), true);
+			Booking booking = bookingRepository.findByBookingId(issueCycleForOnlineDTO.getBookingId());
+			if (null == booking) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Invalid data !!");
+				return new ModelAndView("redirect:/manager/booking");
+			}
+			List<Booking> bookingStatus = bookingRepository.findByUserAndIsOpen(booking.getUser(), true);
 			if (bookingStatus.isEmpty()) {
 				redirectAttributes.addFlashAttribute("errorMessage", "Your Booking Id is not valid !!");
 				return new ModelAndView("redirect:/manager/booking");
@@ -232,6 +241,9 @@ public class UserBookingController {
 												.getRateGroup().getGroupType())
 										.getBaseRate();
 								double fare = (hour * baseRate);
+								if (fare == 0.0) {
+									fare = baseRate;
+								}
 								redirectAttributes.addFlashAttribute("fare", fare);
 								redirectAttributes.addFlashAttribute("bicycleId",
 										issueCycleForOnlineDTO.getBicycleId());

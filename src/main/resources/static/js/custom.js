@@ -160,6 +160,7 @@ function userBookingValidation(form) {
 			&& parseInt(res[1]) == parseInt(rtnRes[1])) {
 		if (currentDate.getDate() == parseInt(res[2])
 				&& currentDate.getHours() == parseInt(res[3])
+				&& currentDate.getMinutes() < parseInt(res[4])
 				&& parseInt(res[2]) == parseInt(rtnRes[2])) {
 			if (parseInt(res[3]) < parseInt(rtnRes[3])) {
 				document.getElementById('errorMessage').innerHTML = "";
@@ -178,12 +179,14 @@ function userBookingValidation(form) {
 			if (currentDate.getDate() <= parseInt(res[2])
 					&& currentDate.getHours() <= parseInt(res[3])
 					&& parseInt(res[2]) <= parseInt(rtnRes[2])
-					&& parseInt(res[3]) < parseInt(rtnRes[3])) {
+					&& parseInt(res[3]) < parseInt(rtnRes[3])
+					&& currentDate.getMinutes() < parseInt(res[4])) {
 				document.getElementById('errorMessage').innerHTML = "";
 				return true;
 			} else {
 				if (parseInt(res[3]) == parseInt(rtnRes[3])) {
-					if (parseInt(res[4]) < parseInt(rtnRes[4])) {
+					if (currentDate.getMinutes() < parseInt(res[4])
+							&& parseInt(res[4]) < parseInt(rtnRes[4])) {
 						document.getElementById('errorMessage').innerHTML = "";
 						return true;
 					} else {

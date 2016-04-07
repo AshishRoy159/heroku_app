@@ -117,8 +117,8 @@
 							</a></li>
 							<li><a href="/user/changePassword"><i
 									class="fa fa-gear fa-fw"></i>Change Password</a></li>
-							<li><a href="#"> <i class="glyphicon glyphicon-flag"></i>
-									Help
+							<li><a th:href="@{/user/walletTransaction/} + ${user.userId}">
+									<i class="fa fa-inr"></i> Wallet Details
 							</a></li>
 						</ul>
 					</div>
@@ -126,7 +126,7 @@
 				</div>
 			</div>
 			<div class="col-md-9">
-				<div class="profile-content">
+				<div class="bookingHistoryDiv">
 					<div class="row">
 						<div class="col-sm-12">
 							<!-- Advanced Tables -->
@@ -174,7 +174,8 @@
 			</div>
 		</div>
 	</div>
-	<div style="height: 100px;"></div>
+	<div style="height: 110px"></div>
+
 	<div class="footer">
 		<div class="container">
 			<div class="row">
@@ -186,14 +187,12 @@
 				<div class="col-md-6"></div>
 				<div class="col-md-3" align="right">
 					<h4>
-						Developed by <a href="/index.html#home">Java Interns</a>
+						Developed by <a href="index.html#home">Java Interns</a>
 					</h4>
 				</div>
 			</div>
 		</div>
 	</div>
-	<br />
-	<br />
 	<!-- DATA TABLE SCRIPTS -->
 	<script th:src="@{/js/jquery.dataTables.js}" type="text/javascript"></script>
 	<script th:src="@{/js/dataTables.bootstrap.js}" type="text/javascript"></script>
