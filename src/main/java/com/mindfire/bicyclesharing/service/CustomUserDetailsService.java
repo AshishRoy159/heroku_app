@@ -22,8 +22,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.model.User;
+import com.mindfire.bicyclesharing.security.CurrentUser;
 
 /**
  * This class implements {@link UserDetailsService} which is predefined in
@@ -39,10 +39,19 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Autowired
 	private UserService userService;
 
+	/**
+	 * Default constructor of the service class
+	 */
 	public CustomUserDetailsService() {
 
 	}
 
+	/**
+	 * Parameterized constructor of the service class
+	 * 
+	 * @param userService
+	 *            {@link UserService} object
+	 */
 	public CustomUserDetailsService(UserService userService) {
 		this.userService = userService;
 	}

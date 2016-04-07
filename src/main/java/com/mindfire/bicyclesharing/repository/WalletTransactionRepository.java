@@ -25,7 +25,8 @@ import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
 
 /**
- * Repository for {@link WalletTransaction} Entity used for CRUD operation on User.
+ * Repository for {@link WalletTransaction} Entity used for CRUD operation on
+ * User.
  * 
  * @author mindfire
  * @version 1.0
@@ -34,5 +35,12 @@ import com.mindfire.bicyclesharing.model.WalletTransaction;
 @Repository
 public interface WalletTransactionRepository extends JpaRepository<WalletTransaction, Long> {
 
+	/**
+	 * This method returns wallet transactions from a specific wallet
+	 * 
+	 * @param wallet
+	 *            concerned wallet
+	 * @return {@link WalletTransaction} List
+	 */
 	public List<WalletTransaction> findByWallet(Wallet wallet);
 }

@@ -40,7 +40,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.component.MessageBean;
 import com.mindfire.bicyclesharing.component.UserComponent;
 import com.mindfire.bicyclesharing.constant.Constant;
@@ -58,6 +57,7 @@ import com.mindfire.bicyclesharing.model.VerificationToken;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
 import com.mindfire.bicyclesharing.repository.PasswordResetTokenRepository;
 import com.mindfire.bicyclesharing.repository.VerificationTokenRepository;
+import com.mindfire.bicyclesharing.security.CurrentUser;
 import com.mindfire.bicyclesharing.service.UserService;
 
 /**

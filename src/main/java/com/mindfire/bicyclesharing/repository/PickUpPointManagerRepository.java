@@ -56,5 +56,10 @@ public interface PickUpPointManagerRepository extends JpaRepository<PickUpPointM
 	@Transactional
 	public Long deleteByUser(User user);
 
+	/**
+	 * This method is used to get all pickup point manager records
+	 * 
+	 * @return {@link PickUpPointManager} List
+	 */
 	public List<PickUpPointManager> findAll();
 }

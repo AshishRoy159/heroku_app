@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mindfire.bicyclesharing;
+package com.mindfire.bicyclesharing.security;
 
 import org.springframework.security.core.authority.AuthorityUtils;
 

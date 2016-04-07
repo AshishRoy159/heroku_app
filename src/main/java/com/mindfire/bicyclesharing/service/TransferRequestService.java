@@ -23,13 +23,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.component.TransferRequestComponent;
 import com.mindfire.bicyclesharing.component.TransferResponseComponent;
 import com.mindfire.bicyclesharing.dto.TransferRequestDTO;
 import com.mindfire.bicyclesharing.dto.TransferRequestRespondedDTO;
 import com.mindfire.bicyclesharing.model.TransferRequest;
 import com.mindfire.bicyclesharing.model.TransferResponse;
+import com.mindfire.bicyclesharing.security.CurrentUser;
 
 /**
  * TransferRequestService class contains methods for Transfer Request related

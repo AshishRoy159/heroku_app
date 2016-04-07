@@ -22,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.dto.TransferDataDTO;
 import com.mindfire.bicyclesharing.dto.TransferRensponseDTO;
 import com.mindfire.bicyclesharing.dto.TransferRequestDTO;
@@ -42,6 +42,7 @@ import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.Transfer;
 import com.mindfire.bicyclesharing.model.TransferRequest;
 import com.mindfire.bicyclesharing.model.TransferResponse;
+import com.mindfire.bicyclesharing.security.CurrentUser;
 import com.mindfire.bicyclesharing.service.BiCycleService;
 import com.mindfire.bicyclesharing.service.BiCycleTransferService;
 import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
@@ -168,7 +169,8 @@ public class BiCycleTransferController {
 	 *            to get current logged in user details
 	 * @return transferResponseManager view
 	 */
-	@RequestMapping(value = "manager/respond/{id}", method = RequestMethod.GET)
+	@PostAuthorize("@currentUserService.canAccessManagerResponse(principal, #requestId)")
+	@RequestMapping(value = "/manager/respond/{id}", method = RequestMethod.GET)
 	public ModelAndView managerResponse(@PathVariable("id") Long requestId, Model model,
 			Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
@@ -266,6 +268,7 @@ public class BiCycleTransferController {
 	 *            for session attributes
 	 * @return transferConfirm view
 	 */
+	@PostAuthorize("@currentUserService.canAccessManagerSender(principal, #transferId)")
 	@RequestMapping(value = "manager/sendShipment/{id}", method = RequestMethod.GET)
 	public ModelAndView sendShipment(@PathVariable("id") Long transferId, Model model, HttpSession session) {
 		Transfer transfer = transferService.findTransferDetails(transferId);
@@ -302,6 +305,7 @@ public class BiCycleTransferController {
 	 *            for session attributes
 	 * @return receiveConfirm view
 	 */
+	@PostAuthorize("@currentUserService.canAccessManagerReceiver(principal, #transferId)")
 	@RequestMapping(value = "manager/receiveShipment/{id}", method = RequestMethod.GET)
 	public ModelAndView receiveShipment(@PathVariable("id") Long transferId, HttpSession session) {
 		Transfer transfer = transferService.findTransferDetails(transferId);
@@ -323,6 +327,7 @@ public class BiCycleTransferController {
 	 *            to map model attributes
 	 * @return transfers view
 	 */
+	@PostAuthorize("@currentUserService.canAccessManagerReceiver(principal, #transferId)")
 	@RequestMapping(value = "manager/confirmShipmentReceive/{id}", method = RequestMethod.GET)
 	public ModelAndView confirmShipmentReceive(@PathVariable("id") Long transferId, HttpSession session, Model model) {
 		Transfer transfer = transferService.confirmReceiveTransfer(transferId, session);

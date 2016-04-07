@@ -23,6 +23,9 @@ import java.sql.Timestamp;
 /**
  * The persistent class for the wallet_transactions database table.
  * 
+ * @author mindfire
+ * @version 1.0
+ * @since 10/03/2016
  */
 @Entity
 @Table(name = "wallet_transactions")

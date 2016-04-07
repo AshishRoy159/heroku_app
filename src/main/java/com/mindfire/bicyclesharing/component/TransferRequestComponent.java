@@ -22,12 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.dto.TransferRequestDTO;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.TransferRequest;
 import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
 import com.mindfire.bicyclesharing.repository.TransferRequestRepository;
+import com.mindfire.bicyclesharing.security.CurrentUser;
 
 /**
  * TransferRequestComponent class is used to get the data from the

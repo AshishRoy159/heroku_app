@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.NumberFormat;
 
 /**
- * RecieveDTO class is used for taking data from Receive Bicycle view.
+ * ReceiveCycleDTO class is used for taking data from Receive Bicycle view.
  * 
  * @author mindfire
  * @version 1.0

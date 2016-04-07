@@ -20,31 +20,33 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.List;
 
-
 /**
  * The persistent class for the wallets database table.
  * 
+ * @author mindfire
+ * @version 1.0
+ * @since 10/03/2016
  */
 @Entity
-@Table(name="wallets")
-@NamedQuery(name="Wallet.findAll", query="SELECT w FROM Wallet w")
+@Table(name = "wallets")
+@NamedQuery(name = "Wallet.findAll", query = "SELECT w FROM Wallet w")
 public class Wallet implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="wallet_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "wallet_id")
 	private Integer walletId;
 
 	private double balance;
 
-	//bi-directional many-to-one association to WalletTransaction
-	@OneToMany(mappedBy="wallet")
+	// bi-directional many-to-one association to WalletTransaction
+	@OneToMany(mappedBy = "wallet")
 	private List<WalletTransaction> walletTransactions;
 
-	//bi-directional many-to-one association to User
+	// bi-directional many-to-one association to User
 	@ManyToOne
-	@JoinColumn(name="user_id")
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	public Wallet() {

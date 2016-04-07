@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.dto.BookingPaymentDTO;
 import com.mindfire.bicyclesharing.dto.PaymentAtPickUpPointDTO;
 import com.mindfire.bicyclesharing.dto.ReceiveBicyclePaymentDTO;
@@ -43,6 +42,7 @@ import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
 import com.mindfire.bicyclesharing.repository.UserRepository;
 import com.mindfire.bicyclesharing.repository.WalletRepository;
 import com.mindfire.bicyclesharing.repository.WalletTransactionRepository;
+import com.mindfire.bicyclesharing.security.CurrentUser;
 
 /**
  * BookingComponent class is used to get the data from the IssueCycleDTO class

@@ -24,7 +24,8 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.NumberFormat;
 
 /**
- * ForgotPasswordDTO class is used for taking data from forgotPassword view.
+ * PickUpPointDTO class is used for taking data from add new pickup point and
+ * update pickup point details view.
  * 
  * @author mindfire
  * @version 1.0

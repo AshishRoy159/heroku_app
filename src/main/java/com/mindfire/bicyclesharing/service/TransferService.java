@@ -24,7 +24,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.component.BiCycleComponent;
 import com.mindfire.bicyclesharing.component.PickUpPointComponent;
 import com.mindfire.bicyclesharing.component.TransferComponent;
@@ -33,6 +32,7 @@ import com.mindfire.bicyclesharing.enums.TransferStatusEnum;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.Transfer;
 import com.mindfire.bicyclesharing.model.TransferResponse;
+import com.mindfire.bicyclesharing.security.CurrentUser;
 
 /**
  * TransferService class contains methods for Transfer related operations

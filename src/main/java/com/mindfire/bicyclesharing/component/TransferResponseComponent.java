@@ -21,7 +21,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.mindfire.bicyclesharing.CurrentUser;
 import com.mindfire.bicyclesharing.dto.TransferRensponseDTO;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.TransferRequest;
@@ -29,6 +28,7 @@ import com.mindfire.bicyclesharing.model.TransferResponse;
 import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
 import com.mindfire.bicyclesharing.repository.TransferRequestRepository;
 import com.mindfire.bicyclesharing.repository.TransferResponseRepository;
+import com.mindfire.bicyclesharing.security.CurrentUser;
 
 /**
  * TransferResponseComponent class is used to get the data from the
