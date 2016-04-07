@@ -95,6 +95,8 @@ public class BiCycleTransferController {
 	 * 
 	 * @param transferRequestDTO
 	 *            the incoming transfer request data
+	 * @param result
+	 *            for validation of incoming data
 	 * @param redirectAttributes
 	 *            to map the model attributes
 	 * @param authentication
@@ -162,6 +164,8 @@ public class BiCycleTransferController {
 	 *            the id of the request to be responded
 	 * @param model
 	 *            to map the model attributes
+	 * @param authentication
+	 *            to get current logged in user details
 	 * @return transferResponseManager view
 	 */
 	@RequestMapping(value = "manager/respond/{id}", method = RequestMethod.GET)
@@ -183,7 +187,7 @@ public class BiCycleTransferController {
 	 *            the incoming response data
 	 * @param authentication
 	 *            to get the current logged in user information
-	 * @return
+	 * @return requests view
 	 */
 	@RequestMapping(value = "manager/sendResponse", method = RequestMethod.POST)
 	public ModelAndView sendResponse(@ModelAttribute("responseData") TransferRensponseDTO transferResponseDTO,

@@ -88,12 +88,11 @@ public class UserBookingController {
 	 *            this object redirect the required messages to the views.
 	 * @param authentication
 	 *            this object is used to retrieve the current user.
-	 * @param model
 	 * @return index or user payment view
 	 */
 	@RequestMapping(value = "/user/booking", method = RequestMethod.POST)
 	public ModelAndView userBooking(@ModelAttribute("userBookingData") UserBookingDTO userBookingDTO,
-			RedirectAttributes redirectAttributes, Authentication authentication, Model model) {
+			RedirectAttributes redirectAttributes, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		List<Booking> existing = bookingRepository.findByUserAndIsOpen(currentUser.getUser(), true);
 		Timestamp bookingTime = Timestamp.valueOf(userBookingDTO.getBookingTime().replace("/", "-").concat(":00.000"));
@@ -116,7 +115,7 @@ public class UserBookingController {
 							.findByUserId(userBooking.getUser().getUserId()).getRateGroup().getGroupType())
 							.getBaseRate();
 					double fare = (hour * baseRate);
-					model.addAttribute("fare", fare);
+					redirectAttributes.addAttribute("fare", fare);
 					return new ModelAndView("userBookingPayment", "userBookingDetails", userBooking);
 				}
 			} else {
@@ -190,6 +189,8 @@ public class UserBookingController {
 	 * 
 	 * @param issueCycleForOnlineDTO
 	 *            this object holds issue bicycle related data
+	 * @param result
+	 *            for validating incoming data
 	 * @param redirectAttributes
 	 *            used for displaying required messages
 	 * @param authentication
@@ -300,8 +301,8 @@ public class UserBookingController {
 	 * This method is used to map the requests for viewing a user's booking
 	 * history. Renders the userBookingHistory view.
 	 * 
-	 * @param modelto
-	 *            map the model attributes
+	 * @param model
+	 *            to map the model attributes
 	 * @param id
 	 *            user's id
 	 * @return userBookingHistory view

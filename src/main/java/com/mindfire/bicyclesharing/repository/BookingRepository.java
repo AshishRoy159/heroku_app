@@ -59,9 +59,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	 * 
 	 * @param user
 	 *            User object
-	 * @param open
-	 *            Boolean value
-	 * @return Booking
+	 * @return {@link Booking} List
 	 */
 	public List<Booking> findAllByUser(User user);
 
@@ -70,7 +68,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	 * 
 	 * @param isOpen
 	 *            Boolean value
-	 * @return {@link List<Booking>}
+	 * @return {@link Booking} List
 	 */
 	public List<Booking> findByIsOpen(Boolean isOpen);
 }

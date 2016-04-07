@@ -254,6 +254,8 @@ public class UserController {
 	 *            to receive incoming data
 	 * @param request
 	 *            to access general request meta data
+	 * @param result
+	 *            for validating incoming data
 	 * @return successRegister view
 	 */
 	@RequestMapping(value = "afterForgotPassword", method = RequestMethod.POST)
@@ -337,8 +339,12 @@ public class UserController {
 	 * @param authentication
 	 *            token for an authentication request or for an authenticated
 	 *            principal
+	 * @param result
+	 *            for validating incoming data
 	 * @param changePasswordDTO
 	 *            to receive the incoming data
+	 * @param redirectAttributes
+	 *            to map model attributes
 	 * @return signIn view
 	 */
 	@RequestMapping(value = "user/afterChangePassword", method = RequestMethod.POST)
@@ -414,6 +420,8 @@ public class UserController {
 	 *            the id of the user whose details is to be shown
 	 * @param model
 	 *            to map model attributes
+	 * @param result
+	 *            for validating incoming data
 	 * @return userProfile view in case of successful updation else
 	 *         updateUserDetails view
 	 */
@@ -443,6 +451,8 @@ public class UserController {
 	 *            to receive the incoming data
 	 * @param session
 	 *            the current session
+	 * @param result
+	 *            for validating incoming data
 	 * @return payment view
 	 */
 	@RequestMapping(value = "payment", method = RequestMethod.POST)

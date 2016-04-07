@@ -55,8 +55,10 @@ public class BookingService {
 	 * 
 	 * @param authentication
 	 *            this object is used for retrieving the current user details.
-	 * @param issueCycleDTO
-	 *            IssueCycleDTO object for issue BiCycle data
+	 * @param bookingPaymentDTO
+	 *            BookingPaymentDTO object for issue BiCycle data
+	 * @param session
+	 *            for session data
 	 * @return Booking object.
 	 */
 	public Booking addNewBooking(Authentication authentication, BookingPaymentDTO bookingPaymentDTO,
@@ -69,9 +71,11 @@ public class BookingService {
 	 * 
 	 * @param id
 	 *            bicycleId
+	 * @param fare
+	 *            total fare amount
 	 * @param authentication
 	 *            authentication object for current manager.
-	 * @return {@link Booking}
+	 * @return {@link Booking} object
 	 */
 	public Booking receiveBicycle(Long id, double fare, Authentication authentication) {
 		return bookingComponent.mapReceiveBicycle(id, fare, authentication);
@@ -83,7 +87,8 @@ public class BookingService {
 	 * @param userBookingDTO
 	 *            user booking data
 	 * @param authentication
-	 * @return {@link Booking}
+	 *            to get current logged in user data
+	 * @return {@link Booking} object
 	 */
 	public Booking saveUserBookingDetails(UserBookingDTO userBookingDTO, Authentication authentication) {
 		return userBookingComponent.setUserBookingDetails(userBookingDTO, authentication);
@@ -97,7 +102,7 @@ public class BookingService {
 	 *            this object holds the issue bicycle details data.
 	 * @param fare
 	 *            booking fare
-	 * @return {@link Booking}
+	 * @return {@link Booking} object
 	 */
 	public Booking updateIssueBicycleDetails(IssueCycleForOnlineDTO issueCycleForOnlineDTO, Double fare) {
 		return userBookingComponent.mapIssueBicycleDetails(issueCycleForOnlineDTO.getBookingId(),
@@ -111,7 +116,7 @@ public class BookingService {
 	 * 
 	 * @param paymentAtPickUpPointDTO
 	 *            this object holds the issue bicycle payment related data.
-	 * @return {@link Booking}
+	 * @return {@link Booking} object
 	 */
 	public Booking updateIssueBicycleDetailsWithPayment(PaymentAtPickUpPointDTO paymentAtPickUpPointDTO) {
 		return userBookingComponent.mapIssueBicycleDetails(paymentAtPickUpPointDTO.getBookingId(),
@@ -124,7 +129,7 @@ public class BookingService {
 	 * 
 	 * @param paymentAtPickUpPointDTO
 	 *            payment related data
-	 * @return {@link WalletTransaction}
+	 * @return {@link WalletTransaction} object
 	 */
 	public WalletTransaction createUserPaymentTransaction(PaymentAtPickUpPointDTO paymentAtPickUpPointDTO) {
 		return bookingComponent.mapUserPaymentTransaction(paymentAtPickUpPointDTO);
@@ -135,7 +140,7 @@ public class BookingService {
 	 * 
 	 * @param bookingId
 	 *            this is booking id
-	 * @return {@link Booking}
+	 * @return {@link Booking} object
 	 */
 	public Booking getBookingById(Long bookingId) {
 		return userBookingComponent.getBooking(bookingId);
@@ -149,7 +154,7 @@ public class BookingService {
 	 *            User object
 	 * @param isOpen
 	 *            this is Boolean value
-	 * @return {@link List<booking>}
+	 * @return {@link Booking} List
 	 */
 	public List<Booking> getAllBooking(User user, Boolean isOpen) {
 		return bookingComponent.getAllBookingByUser(user, isOpen);
@@ -161,7 +166,7 @@ public class BookingService {
 	 * 
 	 * @param isOpen
 	 *            this is Boolean value
-	 * @return {@link List<Booking>}
+	 * @return {@link Booking} List
 	 */
 	public List<Booking> getAllBookingDetails(Boolean isOpen) {
 		return bookingComponent.getAllBooking(isOpen);

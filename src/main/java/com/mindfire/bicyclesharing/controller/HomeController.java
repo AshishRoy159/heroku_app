@@ -57,6 +57,8 @@ public class HomeController {
 	 * This method maps all root request and find all pickup points and Simply
 	 * render the index view along with the pickup point list.
 	 * 
+	 * @param model
+	 *            to map model attributes
 	 * @return the index view.
 	 */
 	@RequestMapping(value = { "/", "index" })
@@ -104,6 +106,8 @@ public class HomeController {
 	 * This method maps request for admin home page and retrieve all booking
 	 * where booking status is false and pickup point manager details.
 	 * 
+	 * @param model
+	 *            to map model attributes
 	 * @return adminHome view
 	 */
 	@RequestMapping(value = { "admin", "admin/adminHome", "manager/managerHome" })

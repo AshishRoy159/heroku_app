@@ -71,7 +71,7 @@ public interface BiCycleRepository extends JpaRepository<BiCycle, Long> {
 	 * 
 	 * @param pickUpPoint
 	 *            current location of the bicycle
-	 * @param available
+	 * @param isAvailable
 	 *            availability of the bicycle
 	 * @param pageable
 	 *            to set the number of record retrieved

@@ -129,6 +129,8 @@ public class PickupPointController {
 	 * 
 	 * @param pickUpPointDTO
 	 *            to receive the incoming data
+	 * @param result
+	 *            for validation of incoming data
 	 * @return pickupPointDetails view
 	 */
 	@RequestMapping(value = "admin/updatePickupPointDetails", method = RequestMethod.POST)

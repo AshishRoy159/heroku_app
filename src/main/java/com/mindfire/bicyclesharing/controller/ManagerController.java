@@ -56,14 +56,18 @@ public class ManagerController {
 	 * 
 	 * @param userDTO
 	 *            to receive the incoming data
+	 * @param result
+	 *            for validating incoming data
 	 * @param session
 	 *            the current session
+	 * @param redirectAttributes
+	 *            to map model attributes
 	 * @return managerPayment view
 	 */
 	@RequestMapping(value = { "/manager/managerPayment" }, method = RequestMethod.POST)
-	public ModelAndView getPayment(@Valid @ModelAttribute("userData") UserDTO userDTO, BindingResult result, 
+	public ModelAndView getPayment(@Valid @ModelAttribute("userData") UserDTO userDTO, BindingResult result,
 			HttpSession session, RedirectAttributes redirectAttributes) {
-		if(result.hasErrors()){
+		if (result.hasErrors()) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Invalid User Data ! Try Again.");
 			return new ModelAndView("redirect:addNewUser");
 		}

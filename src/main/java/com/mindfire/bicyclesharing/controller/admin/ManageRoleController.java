@@ -61,6 +61,8 @@ public class ManageRoleController {
 	 *            id of the respective user
 	 * @param model
 	 *            to map the model attribute
+	 * @param authentication
+	 *            to get the current logged in user details
 	 * @return manageRole view
 	 */
 	@RequestMapping("/admin/manageRole/{id}")
@@ -79,6 +81,10 @@ public class ManageRoleController {
 	 * 
 	 * @param manageRoleDTO
 	 *            to receive the incoming data
+	 * @param result
+	 *            for validation of incoming data
+	 * @param model
+	 *            to map model attributes
 	 * @return searchUsers view
 	 */
 	@RequestMapping(value = "admin/updateRole", method = RequestMethod.POST)

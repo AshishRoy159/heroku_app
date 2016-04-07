@@ -84,8 +84,11 @@ public class BookingComponent {
 	 * set the data to the corresponding entity class
 	 * 
 	 * @param authentication
-	 * @param issueCycleDTO
+	 *            to get current logged in user details
+	 * @param bookingPaymentDTO
 	 *            the data from the view
+	 * @param session
+	 *            for session data
 	 * @return Booking object
 	 */
 	public Booking mapNewBooking(Authentication authentication, BookingPaymentDTO bookingPaymentDTO,
@@ -174,7 +177,9 @@ public class BookingComponent {
 	 * @param id
 	 *            this id is booking id
 	 * @param fare
+	 *            total fare amount
 	 * @param authentication
+	 *            to get current logged in user details
 	 * @return Booking object
 	 */
 	public Booking mapReceiveBicycle(Long id, double fare, Authentication authentication) {
@@ -272,7 +277,7 @@ public class BookingComponent {
 	 *            {@link User}
 	 * @param isOpen
 	 *            this is Boolean type value
-	 * @return {@link List<Booking>}
+	 * @return {@link Booking} List
 	 */
 	public List<Booking> getAllBookingByUser(User user, Boolean isOpen) {
 		return bookingRepository.findByUserAndIsOpen(user, isOpen);
@@ -283,7 +288,7 @@ public class BookingComponent {
 	 * 
 	 * @param isOpen
 	 *            this is Boolean type value
-	 * @return {@link List<Booking>}
+	 * @return {@link Booking} List
 	 */
 	public List<Booking> getAllBooking(Boolean isOpen) {
 		return bookingRepository.findByIsOpen(isOpen);

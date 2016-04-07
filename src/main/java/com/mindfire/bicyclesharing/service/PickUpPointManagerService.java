@@ -42,7 +42,7 @@ public class PickUpPointManagerService {
 
 	@Autowired
 	private PickUpPointManagerComponent pickUpPointManagerComponent;
-	
+
 	/**
 	 * This method is used to save the pickup point manager related data to the
 	 * database
@@ -67,15 +67,23 @@ public class PickUpPointManagerService {
 	}
 
 	/**
+	 * This method is used to get the current availability of bicycles at a
+	 * pickup point
 	 * 
 	 * @param user
-	 * @return
+	 *            {@link User} details
+	 * @return {@link Integer} current availability amount
 	 */
 	public int getCurrentAvailability(User user) {
 		return pickUpPointManagerRepository.findByUser(user).getPickUpPoint().getCurrentAvailability();
 	}
-	
-	public List<PickUpPointManager> getAllPickUpPointManager(){
+
+	/**
+	 * This method is used to get all pickup point manager records
+	 * 
+	 * @return {@link PickUpPointManager} List
+	 */
+	public List<PickUpPointManager> getAllPickUpPointManager() {
 		return pickUpPointManagerComponent.getAllManager();
 	}
 }
