@@ -57,21 +57,19 @@
 					<li><a href="/index.html#portfolio" class="smoothScroll">GALLERY</a></li>
 					<li><a href="/index.html#plan" class="smoothScroll">PLANS</a></li>
 					<li><a href="/index.html#contact" class="smoothScroll">CONTACT</a></li>
-					<li class="dropdown pull-right" sec:authorize="isAuthenticated()"><a
-						href="#" data-toggle="dropdown" class="dropdown-toggle"><i
-							class="fa fa-user fa-fw"></i><span>ACCOUNT</span><strong
+					<li class="dropdown"><a href="#" data-toggle="dropdown"
+						class="dropdown-toggle"><i class="fa fa-user fa-fw"></i><span>ACCOUNT</span><strong
 							class="caret"></strong></a>
-						<ul class="dropdown-menu">
+						<ul class="dropdown-menu black-and-white">
 							<li><a
-								th:href="@{/user/userProfile/} + ${#authentication.principal.userId}"
-								style="color: black;"><i class="fa fa-user fa-fw"></i>View
-									Profile<br /> [<small sec:authentication="name">[email]</small>]</a></li>
+								th:href="@{/user/userProfile/} + ${#authentication.principal.userId}"><i
+									class="fa fa-user fa-fw"></i>View Profile<br /> [<small
+									sec:authentication="name">[email]</small>] </a></li>
 							<li class="divider"></li>
-							<li><a href="/user/changePassword" style="color: black;"><i
+							<li><a href="/user/changePassword"><i
 									class="fa fa-gear fa-fw"></i>Change Password</a></li>
 							<li class="divider"></li>
-							<li><a href="/logout" style="color: black;"><i
-									class="fa fa-sign-out fa-fw"></i>Logout</a></li>
+							<li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i>Logout</a></li>
 						</ul></li>
 				</ul>
 			</div>
@@ -135,7 +133,8 @@
 								</div>
 								<div class="panel-footer">
 									<div style="padding: 5px" class="text-center">
-										<input type="submit" class="btn btn-primary" value="PRINT" onclick="print();"/>
+										<input type="submit" class="btn btn-primary" value="PRINT"
+											onclick="print();" />
 									</div>
 								</div>
 							</div>
@@ -170,14 +169,18 @@
 	<script src="/js/jquery.js" th:src="@{/js/jquery.js}"></script>
 	<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
 	<script src="/js/smoothscroll.js" th:src="@{/js/smoothscroll.js}"></script>
-	<script>  function print(){
-	 var prtContent = document.getElementById("printId");
-	 var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-	 WinPrint.document.write(prtContent.innerHTML);
-	 WinPrint.document.close();
-	 WinPrint.focus();
-	 WinPrint.print();
-	 WinPrint.close();}
+	<script>
+		function print() {
+			var prtContent = document.getElementById("printId");
+			var WinPrint = window
+					.open('', '',
+							'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+			WinPrint.document.write(prtContent.innerHTML);
+			WinPrint.document.close();
+			WinPrint.focus();
+			WinPrint.print();
+			WinPrint.close();
+		}
 	</script>
 </body>
 </html>

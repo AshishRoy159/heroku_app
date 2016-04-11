@@ -78,14 +78,14 @@
 		<div class="container">
 			<div class="navbar-header">
 				<button class="navbar-toggle" data-toggle="collapse"
-					data-target=".navbar-collapse">
+					data-target="#homeNav">
 					<span class="icon icon-bar"></span> <span class="icon icon-bar"></span>
 					<span class="icon icon-bar"></span>
 				</button>
 				<a href="#home" class="smoothScroll navbar-brand">BICYCLE
 					SHARING</a>
 			</div>
-			<div class="collapse navbar-collapse">
+			<div class="collapse navbar-collapse" id="homeNav">
 				<ul class="nav navbar-nav navbar-right">
 
 					<li><a href="#home" class="smoothScroll">HOME</a></li>
@@ -96,24 +96,20 @@
 					<li><a href="#contact" class="smoothScroll">CONTACT</a></li>
 					<li sec:authorize="isAnonymous()"><a class="smoothScroll"
 						href="login">LOGIN</a></li>
-					<li class="dropdown pull-right" sec:authorize="isAuthenticated()"><a
-						href="#" data-toggle="dropdown" class="dropdown-toggle"><i
-							class="fa fa-user fa-fw"></i><span>ACCOUNT</span><strong
-							class="caret"></strong></a>
-						<ul class="dropdown-menu">
-
+					<li class="dropdown" sec:authorize="isAuthenticated()"><a
+						data-toggle="dropdown" class="dropdown-toggle" role="button"
+						aria-haspopup="true" aria-expanded="false" href="#"><i
+							class="fa fa-user fa-fw"></i>ACCOUNT<strong class="caret"></strong></a>
+						<ul class="dropdown-menu black-and-white">
 							<li><a
-								th:href="@{/user/userProfile/} + ${#authentication.principal.userId}"
-								style="color: black;"><i class="fa fa-user fa-fw"></i>View
-									Profile<br /> [<small sec:authentication="name">[email]</small>]
-							</a></li>
+								th:href="@{/user/userProfile/} + ${#authentication.principal.userId}"><i
+									class="fa fa-user fa-fw"></i>View Profile<br /> [<small
+									sec:authentication="name">[email]</small>] </a></li>
 							<li class="divider"></li>
-							<li><a style="color: black"
-								th:href="@{/user/changePassword}"><i
+							<li><a th:href="@{/user/changePassword}"><i
 									class="fa fa-gear fa-fw"></i>Change Password</a></li>
 							<li class="divider"></li>
-							<li><a href="logout" style="color: black;"><i
-									class="fa fa-sign-out fa-fw"></i>Logout</a></li>
+							<li><a href="logout"><i class="fa fa-sign-out fa-fw"></i>Logout</a></li>
 						</ul></li>
 				</ul>
 			</div>

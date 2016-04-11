@@ -41,7 +41,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mindfire.bicyclesharing.component.MessageBean;
-import com.mindfire.bicyclesharing.constant.Constant;
+import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.ChangePasswordDTO;
 import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
 import com.mindfire.bicyclesharing.dto.RegistrationPaymentDTO;
@@ -316,7 +316,7 @@ public class UserController {
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(value = { "/user/changePassword" }, method = RequestMethod.GET)
 	public String changePassword() {
-		return Constant.CHANGE_PASSWORD;
+		return ViewConstant.CHANGE_PASSWORD;
 	}
 
 	/**
@@ -355,7 +355,7 @@ public class UserController {
 			redirectAttributes.addFlashAttribute("invalidPassword", "Incorrect Old Password");
 		}
 
-		return "redirect:" + Constant.CHANGE_PASSWORD;
+		return "redirect:" + ViewConstant.CHANGE_PASSWORD;
 	}
 
 	/**

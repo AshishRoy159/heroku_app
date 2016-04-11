@@ -77,6 +77,11 @@ hr {
 	color: #FC3;
 }
 
+.black-and-white {
+	background-color: black;
+	color: white;
+}
+
 /* All Section styles
 ------------------------------------- */
 .section-title {

@@ -32,7 +32,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.component.MessageBean;
-import com.mindfire.bicyclesharing.constant.Constant;
+import com.mindfire.bicyclesharing.constant.MailConstant;
 import com.mindfire.bicyclesharing.event.ResendVerificationTokenEvent;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.VerificationToken;
@@ -102,7 +102,7 @@ public class ResendVerificationTokenListener implements ApplicationListener<Rese
 			User user) {
 		final String recipientAddress = user.getEmail();
 		final String subject = "Registration Confirmation";
-		final String confirmationUrl = Constant.CONTEXT_ROOT + "/registrationConfirm.html?token=" + newToken.getToken();
+		final String confirmationUrl = MailConstant.CONTEXT_ROOT + "/registrationConfirm.html?token=" + newToken.getToken();
 		final String message = messageBean.getResendToken();
 		final String msg = message + "\r\n" + "<a href='" + confirmationUrl + "'>Click Here</a>";
 
@@ -114,13 +114,13 @@ public class ResendVerificationTokenListener implements ApplicationListener<Rese
 
 		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(Constant.MAIL_USERNAME, Constant.MAIL_PASSWORD);
+				return new PasswordAuthentication(MailConstant.MAIL_USERNAME, MailConstant.MAIL_PASSWORD);
 			}
 		});
 
 		final Message email = new MimeMessage(session);
 		try {
-			email.setFrom(new InternetAddress(Constant.MAIL_USERNAME));
+			email.setFrom(new InternetAddress(MailConstant.MAIL_USERNAME));
 			email.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientAddress));
 			email.setSubject(subject);
 			email.setContent(msg, "text/html; charset=utf-8");

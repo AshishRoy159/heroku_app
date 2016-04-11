@@ -32,7 +32,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.component.MessageBean;
-import com.mindfire.bicyclesharing.constant.Constant;
+import com.mindfire.bicyclesharing.constant.MailConstant;
 import com.mindfire.bicyclesharing.event.OnResetPasswordEvent;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.service.UserService;
@@ -101,7 +101,7 @@ public class ResetPasswordListener implements ApplicationListener<OnResetPasswor
 	private final Message constructEmailMessage(final OnResetPasswordEvent event, final User user, final String token) {
 		final String recipientAddress = user.getEmail();
 		final String subject = "ResetPassword";
-		final String confirmationUrl = Constant.CONTEXT_ROOT + "/resetPassword.html?token=" + token;
+		final String confirmationUrl = MailConstant.CONTEXT_ROOT + "/resetPassword.html?token=" + token;
 		final String message = messageBean.getResetPassword();
 		final String msg = message + "\r\n" + "<a href='" + confirmationUrl + "'>Click Here</a>";
 
@@ -115,13 +115,13 @@ public class ResetPasswordListener implements ApplicationListener<OnResetPasswor
 
 		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(Constant.MAIL_USERNAME, Constant.MAIL_PASSWORD);
+				return new PasswordAuthentication(MailConstant.MAIL_USERNAME, MailConstant.MAIL_PASSWORD);
 			}
 		});
 
 		final Message email = new MimeMessage(session);
 		try {
-			email.setFrom(new InternetAddress(Constant.MAIL_USERNAME));
+			email.setFrom(new InternetAddress(MailConstant.MAIL_USERNAME));
 			email.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientAddress));
 			email.setSubject(subject);
 			email.setContent(msg, "text/html; charset=utf-8");

@@ -17,38 +17,13 @@
 package com.mindfire.bicyclesharing.constant;
 
 /**
- * This class is used to make view names as constant.
+ * This class contains mail property names as constants.
  * 
  * @author mindfire
  * @version 1.0
  * @since 01/03/2016
  */
-public class Constant {
-
-	/**
-	 * String Constant for the index view.
-	 */
-	public static final String INDEX = "index";
-
-	/**
-	 * String Constant for the registration view.
-	 */
-	public static final String REGISTRATION = "registration";
-
-	/**
-	 * String Constant for the Set Password view.
-	 */
-	public static final String SET_PASSWORD = "setPassword";
-
-	/**
-	 * String Constant for the changePassword view.
-	 */
-	public static final String CHANGE_PASSWORD = "changePassword";
-
-	/**
-	 * String Constant for the userProfile view.
-	 */
-	public static final String USER_PROFILE = "userProfile";
+public class MailConstant {
 
 	/**
 	 * String Constant for the MAIL_USERNAME.
@@ -61,4 +36,5 @@ public class Constant {
 	public static final String MAIL_PASSWORD = "bicyclerental@java";
 
 	public static final String CONTEXT_ROOT = "http://localhost:8080";
+
 }
