@@ -267,6 +267,10 @@ public class UserController {
 		}
 
 		User user = userService.userDetailsByEmail(forgotPasswordDTO);
+		
+		if (null == user) {
+			return new ModelAndView("forgotPassword", "errorMessage", "Email doesn't exist");
+		}
 
 		try {
 			String appUrl = System.getProperty("server.context-path");

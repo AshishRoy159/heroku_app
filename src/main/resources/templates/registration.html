@@ -17,6 +17,10 @@
 <link rel="stylesheet" href="css/nivo-lightbox.css" />
 <link rel="stylesheet" href="css/nivo_themes/default/default.css" />
 
+<!-- CSS for jquery datetime picker -->
+<link rel="stylesheet" href="/css/jquery.datetimepicker.css"
+	th:href="@{/css/jquery.datetimepicker.css}" />
+
 <!-- Main CSS
    	================================================== -->
 <link rel="stylesheet" href="css/style.css" />
@@ -61,8 +65,8 @@
 	<form action="#" th:action="@{/payment}" th:object="${userData}"
 		method="post" onsubmit="return emailFunction(this);">
 		<div class="register">
-		
-		<div class="text-danger" th:text="${failure}"></div>
+
+			<div class="text-danger" th:text="${failure}"></div>
 			<div class="container">
 				<div class="row">
 					<div
@@ -147,7 +151,7 @@
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<input type="date" name="dateOfBirth"
+									<input type="text" name="dateOfBirth"
 										class="form-control input-lg" id="datepicker"
 										onchange="checkDate();"
 										placeholder="Date Of Birth(yyyy/mm/dd)" tabindex="9"
@@ -177,10 +181,9 @@
 						<hr class="colorgraph" />
 						<div class="row">
 							<div class="col-md-6">
-								<a href="payment">
-									<button onclick="return checkDate()" class="btn btn-primary btn-block btn-lg" tabindex="12">
-										Pay Now</button>
-								</a>
+								<button type="submit" onclick="return checkDate()"
+									class="btn btn-primary btn-block btn-lg" tabindex="12">
+									Pay Now</button>
 							</div>
 							<div class="col-md-6">
 								<a href="login"> <input type="button" value="Sign In"
@@ -242,5 +245,16 @@
 	<script src="js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
 	<script src="js/smoothscroll.js" th:src="@{js/smoothscroll.js}"></script>
 	<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
+	<script src="/js/jquery.datetimepicker.full.js"
+		th:src="@{/js/jquery.datetimepicker.full.js}"></script>
+	<script>
+		$('#datepicker').datetimepicker({
+			yearOffset : 0,
+			lang : 'ch',
+			timepicker : false,
+			format : 'd/m/Y',
+			formatDate : 'Y/m/d',
+		});
+	</script>
 </body>
 </html>

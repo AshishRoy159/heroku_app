@@ -451,6 +451,16 @@ ul.nav.nav-second-level.collapse.in {
 }
 
 /*----------------------------------------------
+    UI ELEMENTS STYLES     
+------------------------------------------------*/
+.admin-footer {
+	height: 120px;
+	bottom: 0;
+	background-color: #babdb6;
+	padding: 20px;
+}
+
+/*----------------------------------------------
     MEDIA QUERIES     
 ------------------------------------------------*/
 @media ( min-width :768px) {

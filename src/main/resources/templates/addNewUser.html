@@ -15,7 +15,9 @@
 	rel="stylesheet" type="text/css" />
 <!-- TABLE STYLES-->
 <link th:href="@{/css/dataTables.bootstrap.css}" rel="stylesheet" />
-<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
+<!-- CSS for jquery datetime picker -->
+<link rel="stylesheet" href="/css/jquery.datetimepicker.css"
+	th:href="@{/css/jquery.datetimepicker.css}" />
 </head>
 <body>
 	<!-- Navigation section
@@ -120,10 +122,10 @@
 											</div>
 											<div class="col-md-6">
 												<div class="form-group">
-													<input type="date" id="datepicker"
-													onchange="checkDate();" name="dateOfBirth"
-														class="form-control input-lg"
-														placeholder="Date of birth (yyyy/mm/dd)" tabindex="9" title="invalid format"
+													<input type="text" name="dateOfBirth"
+														class="form-control input-lg" id="datepicker"
+														onchange="checkDate();"
+														placeholder="Date Of Birth(yyyy/mm/dd)" tabindex="9"
 														required="required" />
 												</div>
 											</div>
@@ -137,7 +139,8 @@
 											<div class="col-md-4"></div>
 											<div class="col-md-4">
 												<a href="/manager/managerPayment"> <input type="submit"
-													onclick="return checkDate()" class="btn btn-primary btn-block btn-lg" tabindex="11" />
+													onclick="return checkDate()"
+													class="btn btn-primary btn-block btn-lg" tabindex="11" />
 												</a>
 											</div>
 											<div class="col-md-4"></div>
@@ -172,9 +175,17 @@
 	<script th:src="@{/js/dataTables.bootstrap.js}" type="text/javascript"></script>
 	<!-- Custom Js -->
 	<script th:src="@{/js/custom-scripts.js}" type="text/javascript"></script>
-	<script src="/js/jquery.js" th:src="@{js/jquery.js}"></script>
-	<script src="/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
-	<script src="/js/smoothscroll.js" th:src="@{js/smoothscroll.js}"></script>
 	<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
+		<script src="/js/jquery.datetimepicker.full.js"
+		th:src="@{/js/jquery.datetimepicker.full.js}"></script>
+	<script>
+		$('#datepicker').datetimepicker({
+			yearOffset : 0,
+			lang : 'ch',
+			timepicker : false,
+			format : 'd/m/Y',
+			formatDate : 'Y/m/d',
+		});
+	</script>
 </body>
 </html>
