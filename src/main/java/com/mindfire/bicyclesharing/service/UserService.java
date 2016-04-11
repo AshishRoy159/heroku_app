@@ -201,4 +201,15 @@ public class UserService {
 	public int updateUserRole(ManageRoleDTO manageRoleDTO) {
 		return userComponent.mapUpdateRole(manageRoleDTO);
 	}
+
+	/**
+	 * This method is used to update user approval field.
+	 * 
+	 * @param id
+	 *            user id
+	 * @return {@link User} object
+	 */
+	public User setApproval(Long id) {
+		return userComponent.mapApproval(id);
+	}
 }

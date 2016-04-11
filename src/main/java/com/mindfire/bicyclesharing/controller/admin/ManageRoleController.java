@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mindfire.bicyclesharing.dto.ManageRoleDTO;
 import com.mindfire.bicyclesharing.model.User;
@@ -106,6 +107,37 @@ public class ManageRoleController {
 			return new ModelAndView("searchUsers", "usersList", users);
 		} else {
 			return new ModelAndView("searchUsers", "usersList", users);
+		}
+	}
+
+	/**
+	 * This method is used to approve the user by admin or manager.
+	 * 
+	 * @param id
+	 *            user id
+	 * @param redirectAttributes
+	 *            this is used for displaying messages
+	 * @param authentication
+	 *            this is used for retrieve the current user.
+	 * @return searchUser view.
+	 */
+	@RequestMapping(value = "/user/userApproval/{id}", method = RequestMethod.GET)
+	public ModelAndView userApproval(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
+			Authentication authentication) {
+		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+		if (null == userService.setApproval(id)) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Sorry operation failed...!");
+			if (currentUser.getUserRole().equals("ADMIN")) {
+				return new ModelAndView("redirect:/admin/userList");
+			} else {
+				return new ModelAndView("redirect:/manager/userList");
+			}
+		} else {
+			if (currentUser.getUserRole().equals("ADMIN")) {
+				return new ModelAndView("redirect:/admin/userList");
+			} else {
+				return new ModelAndView("redirect:/manager/userList");
+			}
 		}
 	}
 }

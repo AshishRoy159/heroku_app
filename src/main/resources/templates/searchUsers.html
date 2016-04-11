@@ -77,7 +77,7 @@
 											<td sec:authorize="hasAuthority('MANAGER')"
 												class="text-center" th:text="${user.role.userRole}"></td>
 											<td class="text-center" th:if="${user.isApproved}">✔</td>
-											<td class="text-center" th:unless="${user.isApproved}">✘</td>
+											<td class="text-center" th:unless="${user.isApproved}">✘ <a th:href="@{/user/userApproval/} + ${user.userId}" th:text="Approve"></a></td>
 											<td class="text-center" th:if="${user.enabled}">✔</td>
 											<td class="text-center" th:unless="${user.enabled}">✘</td>
 										</tr>

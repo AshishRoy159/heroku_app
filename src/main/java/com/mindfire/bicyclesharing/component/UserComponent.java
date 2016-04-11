@@ -224,7 +224,21 @@ public class UserComponent {
 	 *            the email id of User
 	 * @return User object
 	 */
-	public Optional<User> findUserByEmail(String email){
+	public Optional<User> findUserByEmail(String email) {
 		return userRepository.findOneByEmail(email);
+	}
+
+	/**
+	 * This method is used to approve the user.
+	 * 
+	 * @param id
+	 *            user id
+	 * @return {@link User} object
+	 */
+	public User mapApproval(Long id) {
+		User user = userRepository.findByUserId(id);
+		user.setIsApproved(true);
+
+		return userRepository.save(user);
 	}
 }

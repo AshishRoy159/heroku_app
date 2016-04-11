@@ -152,7 +152,7 @@ function checkDate(form) {
 	var selectedText = document.getElementById('datepicker').value;
 	var selectedDate = new Date(selectedText);
 	var now = new Date();
-	var minAge = parseInt((now - selectedDate) / (1000 * 60 * 60 * 24 * 365));
+	var minAge = (now - selectedDate) / (1000 * 60 * 60 * 24 * 365);
 	if (minAge < 6) {
 		alert(" You must be 6 years or older.");
 		return false;
