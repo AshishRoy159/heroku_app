@@ -57,10 +57,13 @@ public class TransferRequestComponent {
 	 * @return TransferRequest object
 	 */
 	public TransferRequest mapNewRequest(Authentication authentication, TransferRequestDTO transferRequestDTO) {
-		TransferRequest transferRequest = new TransferRequest();
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-
-		transferRequest.setPickUpPoint(pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint());
+		PickUpPoint pickUpPoint = pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint();
+		if(transferRequestDTO.getQuantity() > (pickUpPoint.getMaxCapacity() - pickUpPoint.getCurrentAvailability())){
+			return null;
+		}
+		TransferRequest transferRequest = new TransferRequest();
+		transferRequest.setPickUpPoint(pickUpPoint);
 		transferRequest.setManager(currentUser.getUser());
 		transferRequest.setQuantity(transferRequestDTO.getQuantity());
 

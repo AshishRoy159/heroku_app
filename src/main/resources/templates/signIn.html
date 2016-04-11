@@ -63,6 +63,7 @@
 	<div class="register">
 		<div class="container">
 			<div class="row">
+			<div class="text-danger" th:text="${loginError}"></div>
 				<form action="#" th:action="@{/login}" th:object="${loginData}"
 					method="post">
 					<div

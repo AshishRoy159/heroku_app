@@ -84,7 +84,10 @@ public class HomeController {
 	 */
 	@PostAuthorize("isAnonymous()")
 	@RequestMapping(value = { "login" }, method = RequestMethod.GET)
-	public ModelAndView getUserSignInPage(@RequestParam Optional<String> error) {
+	public ModelAndView getUserSignInPage(@RequestParam Optional<String> error,Model model) {
+		if(error.isPresent()){
+			model.addAttribute("loginError", "Invalid email or password..!!");
+		}
 		return new ModelAndView("signIn", "error", error);
 	}
 

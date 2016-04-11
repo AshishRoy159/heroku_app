@@ -113,7 +113,7 @@ public class BiCycleTransferController {
 			return new ModelAndView("redirect:transferRequest");
 		}
 		if (transferRequestService.addNewTransferRequest(authentication, transferRequestDTO) == null) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Transfer request filed!");
+			redirectAttributes.addFlashAttribute("errorMessage", "Request Failed..!! Request cannot exceed maximum capacity.");
 		} else {
 			redirectAttributes.addFlashAttribute("successMessage",
 					"Transfer request for " + transferRequestDTO.getQuantity() + " bicycles sent successfully");

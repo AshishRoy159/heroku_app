@@ -77,6 +77,14 @@
 									class="fa fa-user fa-fw"></i>View Profile<br /> [<small
 									sec:authentication="name">[email]</small>] </a></li>
 							<li class="divider"></li>
+							<li sec:authorize="hasAuthority('MANAGER')"><a
+								th:href="@{/manager/managerHome}"><i class="fa fa-home "></i>Manager
+									Home</a></li>
+							<li sec:authorize="hasAuthority('MANAGER')" class="divider"></li>
+							<li sec:authorize="hasAuthority('ADMIN')"><a
+								th:href="@{/admin/adminHome}"><i class="fa fa-home "></i>Admin
+									Home</a></li>
+							<li sec:authorize="hasAuthority('ADMIN')" class="divider"></li>
 							<li><a href="/user/changePassword"><i
 									class="fa fa-gear fa-fw"></i>Change Password</a></li>
 							<li class="divider"></li>
@@ -114,8 +122,12 @@
 							</a></li>
 							<li><a href="/user/changePassword"><i
 									class="fa fa-gear fa-fw"></i>Change Password</a></li>
-							<li><a href="#"> <i class="glyphicon glyphicon-flag"></i>
-									Help
+							<li><a
+								th:href="@{/user/walletTransaction/} + ${user.userId}"> <i
+									class="fa fa-inr"></i> Wallet Details
+							</a></li>
+							<li><a th:href="@{/user/bookingHistory/} + ${user.userId}">
+									<i class="fa fa-history"></i> Booking History
 							</a></li>
 						</ul>
 					</div>

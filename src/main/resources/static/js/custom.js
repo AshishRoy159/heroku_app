@@ -163,7 +163,7 @@ function checkDate(form) {
 /*
  * This function validates the booking date and time provided by the user.
  */
-function userBookingValidationJHHJGH(form) {
+function userBookingValidation(form) {
 	var bookingTime = document.getElementById("bookingId").value;
 	var returnTime = document.getElementById("returnId").value;
 	var currentDate = new Date();
@@ -173,56 +173,76 @@ function userBookingValidationJHHJGH(form) {
 			&& (currentDate.getMonth() + 1) == parseInt(res[1])
 			&& parseInt(res[0]) == parseInt(rtnRes[0])
 			&& parseInt(res[1]) == parseInt(rtnRes[1])) {
-		if (currentDate.getDate() == parseInt(res[2])
-				&& currentDate.getHours() == parseInt(res[3])
-				&& currentDate.getMinutes() < parseInt(res[4])
+		if (currentDate.getDate() < parseInt(res[2])
 				&& parseInt(res[2]) == parseInt(rtnRes[2])) {
 			if (parseInt(res[3]) < parseInt(rtnRes[3])) {
-				document.getElementById('errorMessage').innerHTML = "";
 				return true;
 			} else {
-				if (currentDate.getMinutes() < parseInt(res[4])
-						&& parseInt(res[4]) < parseInt(rtnRes[4])) {
-					document.getElementById('errorMessage').innerHTML = "";
-					return true;
+				if (parseInt(res[3]) == parseInt(rtnRes[3])) {
+					if (parseInt(res[4]) < parseInt(rtnRes[4])) {
+						return true;
+					} else {
+						alert("Please select valid booking date and time");
+						return false;
+					}
 				} else {
-					alert("Please select valid booking Time.");
+					alert("Please select valid booking date and time");
 					return false;
 				}
 			}
 		} else {
 			if (currentDate.getDate() == parseInt(res[2])
-					&& currentDate.getHours() < parseInt(res[3])
-					&& parseInt(res[2]) == parseInt(rtnRes[2])
-					&& parseInt(res[3]) < parseInt(rtnRes[3])) {
-				return true;
-			} else {
-				if (currentDate.getDate() == parseInt(res[2])
-						&& parseInt(res[3]) == parseInt(rtnRes[3])
-						&& parseInt(res[2]) == parseInt(rtnRes[2])
-						&& currentDate.getHours() == parseInt(res[3])) {
-					if (currentDate.getMinutes() < parseInt(res[4])
-							&& parseInt(res[4]) < parseInt(rtnRes[4])) {
-						document.getElementById('errorMessage').innerHTML = "";
-						return true;
+					&& parseInt(res[2]) == parseInt(rtnRes[2])) {
+				if (currentDate.getHours() < parseInt(res[3])
+						&& parseInt(res[3]) < parseInt(rtnRes[3])) {
+					return true;
+				} else {
+					if (currentDate.getHours() < parseInt(res[3])
+							&& parseInt(res[3]) == parseInt(rtnRes[3])) {
+						if (parseInt(res[4]) < parseInt(rtnRes[4])) {
+							return true;
+						} else {
+							alert("Please select valid booking date and time");
+							return false;
+						}
+					}
+					if (currentDate.getHours() == parseInt(res[3])
+							&& currentDate.getMinutes() < parseInt(res[4])) {
+						if (parseInt(res[3]) < parseInt(rtnRes[3])) {
+							return true;
+						} else {
+							if (parseInt(res[3]) == parseInt(rtnRes[3])) {
+								if (parseInt(res[4]) < parseInt(rtnRes[4])) {
+									return true;
+								} else {
+									alert("Please select valid booking date and time");
+									return false;
+								}
+							} else {
+								alert("Please select valid booking date and time");
+								return false;
+							}
+						}
 					} else {
-						alert("Please select valid booking Time");
+						alert("Please select valid booking date and time");
 						return false;
 					}
-				} else {
-					if (currentDate.getHours() <= parseInt(res[4])
-							&& parseInt(res[4]) < parseInt(rtnRes[4])) {
-						return true;
-					}
-					alert("Please select valid booking Time");
+					alert("Please select valid booking date and time");
 					return false;
 				}
-				alert("Please select valid booking Time");
+			} else {
+				alert("Please select valid booking date and time");
 				return false;
 			}
+			alert("Please select valid booking date and time");
+			return false;
 		}
 	} else {
 		alert("Please select valid booking date and time");
 		return false;
 	}
+}
+
+function iAgree() {
+	document.getElementById('iAgreeId').checked = true;
 }
