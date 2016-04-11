@@ -21,8 +21,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.mindfire.bicyclesharing.dto.WalletBalanceDTO;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
+import com.mindfire.bicyclesharing.repository.UserRepository;
+import com.mindfire.bicyclesharing.repository.WalletRepository;
 import com.mindfire.bicyclesharing.repository.WalletTransactionRepository;
 
 /**
@@ -37,6 +40,12 @@ import com.mindfire.bicyclesharing.repository.WalletTransactionRepository;
 public class WalletTransactionComponent {
 
 	@Autowired
+	private WalletRepository walletRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
 	private WalletTransactionRepository walletTransactionRepository;
 
 	/**
@@ -48,5 +57,15 @@ public class WalletTransactionComponent {
 	 */
 	public List<WalletTransaction> mapWalletTransactionByWallet(Wallet wallet) {
 		return walletTransactionRepository.findByWallet(wallet);
+	}
+	
+	public WalletTransaction mapWalletTransactionDetails(WalletBalanceDTO walletBalanceDTO){
+		WalletTransaction walletTransaction = new WalletTransaction();
+		walletTransaction.setAmount(walletBalanceDTO.getBalance());
+		walletTransaction.setWallet(walletRepository.findByUser(userRepository.findByUserId(walletBalanceDTO.getUserId())));
+		walletTransaction.setMode("cash");
+		walletTransaction.setType("DEPOSIT");
+
+		return walletTransactionRepository.save(walletTransaction);
 	}
 }

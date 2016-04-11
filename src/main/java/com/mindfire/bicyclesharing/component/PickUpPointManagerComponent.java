@@ -21,9 +21,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.mindfire.bicyclesharing.dto.ManageRoleDTO;
 import com.mindfire.bicyclesharing.model.PickUpPointManager;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
+import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
+import com.mindfire.bicyclesharing.repository.UserRepository;
 
 /**
  * PickUpPointManagerComponent class is used for interacting with corresponding
@@ -38,6 +41,12 @@ public class PickUpPointManagerComponent {
 
 	@Autowired
 	private PickUpPointManagerRepository pickUpPointManagerRepository;
+	
+	@Autowired
+	private PickUpPointRepository pickUpPointRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	/**
 	 * This method is used to get all pickup point manager details
@@ -57,5 +66,26 @@ public class PickUpPointManagerComponent {
 	 */
 	public PickUpPointManager getPickUpPointManagerByUser(User user) {
 		return pickUpPointManagerRepository.findByUser(user);
+	}
+	
+	/**
+	 * This method receives data from the ManageRoleDTO class and sets data to
+	 * the PickUpPointManager entity class
+	 * 
+	 * @param manageRoleDTO
+	 *            the data from the view
+	 * @return PickUpPointManager object
+	 */
+	public PickUpPointManager mapPickUpPointManagerDetails(ManageRoleDTO manageRoleDTO) {
+		PickUpPointManager pickUpPointManager = new PickUpPointManager();
+		pickUpPointManager.setPickUpPoint(pickUpPointRepository.findByPickUpPointId(manageRoleDTO.getPickUpPointId()));
+		pickUpPointManager.setRole(userRepository.findByUserId(manageRoleDTO.getUserId()).getRole());
+		pickUpPointManager.setUser(userRepository.findByUserId(manageRoleDTO.getUserId()));
+
+		return pickUpPointManagerRepository.save(pickUpPointManager);
+	}
+	
+	public int currentAvailabilityAtPickupPoint(User user){
+		return pickUpPointManagerRepository.findByUser(user).getPickUpPoint().getCurrentAvailability();
 	}
 }

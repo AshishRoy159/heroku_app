@@ -16,6 +16,8 @@
 
 package com.mindfire.bicyclesharing.service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -27,12 +29,15 @@ import org.springframework.stereotype.Service;
 import com.mindfire.bicyclesharing.component.BookingComponent;
 import com.mindfire.bicyclesharing.component.UserBookingComponent;
 import com.mindfire.bicyclesharing.dto.BookingPaymentDTO;
+import com.mindfire.bicyclesharing.dto.IssueCycleDTO;
 import com.mindfire.bicyclesharing.dto.IssueCycleForOnlineDTO;
 import com.mindfire.bicyclesharing.dto.PaymentAtPickUpPointDTO;
+import com.mindfire.bicyclesharing.dto.ReceiveBicyclePaymentDTO;
 import com.mindfire.bicyclesharing.dto.ReceiveCycleDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingDTO;
 import com.mindfire.bicyclesharing.model.Booking;
 import com.mindfire.bicyclesharing.model.User;
+import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
 
 /**
@@ -177,9 +182,76 @@ public class BookingService {
 	 * This method is used to close unused booking.
 	 * 
 	 * @param receiveCycleDTO
+	 *            receive cycle data
 	 * @return {@link Booking}
 	 */
 	public Booking closeBooking(ReceiveCycleDTO receiveCycleDTO) {
 		return bookingComponent.mapCloseBooking(receiveCycleDTO);
+	}
+
+	/**
+	 * This method is used to get the user booking details.
+	 * 
+	 * @param isOpen
+	 *            Boolean value
+	 * @param user
+	 *            User object
+	 * @return {@link Booking} object
+	 */
+	public Booking getBookingDetails(Boolean isOpen, User user) {
+		return bookingComponent.mapExistingBooking(isOpen, user);
+	}
+
+	/**
+	 * This method calculates the expected return time in timestamp format
+	 * 
+	 * @param issueCycleDTO
+	 *            issue cycle data
+	 * @return {@link Calendar} object
+	 */
+	public Calendar calculateExpectedIn(IssueCycleDTO issueCycleDTO) {
+		final Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(new Date().getTime());
+		cal.add(Calendar.HOUR, issueCycleDTO.getExpectedInTime());
+
+		return cal;
+	}
+
+	/**
+	 * This method calculates the fare depending on the user rate group and
+	 * expected in time
+	 * 
+	 * @param user
+	 *            user data
+	 * @param issueCycleDTO
+	 *            issue cycle data
+	 * @return {@link Double} object
+	 */
+	public Double calculateFare(User user, IssueCycleDTO issueCycleDTO) {
+		return user.getRateGroup().getBaseRate() * issueCycleDTO.getExpectedInTime();
+	}
+
+	public long calculateRidingTime(Booking booking) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(new Date().getTime());
+		return cal.getTimeInMillis() - booking.getExpectedIn().getTime();
+	}
+
+	public long calculateTotalRideTime(long actualTime) {
+		long hour = (actualTime / (60 * 1000)) / 60;
+		long remainder = (actualTime / (60 * 1000)) % 60;
+		if (remainder > 0) {
+			hour++;
+		}
+		return hour;
+	}
+
+	public double calculateActualFare(long hour, double baseRate) {
+		return (hour * (baseRate + ((baseRate * 10) / 100)));
+	}
+
+	public WalletTransaction saveReceiveBicyclePayment(ReceiveBicyclePaymentDTO receiveBicyclePaymentDTO,
+			Wallet userWallet) {
+		return bookingComponent.mapReceiveBicyclePayment(receiveBicyclePaymentDTO, userWallet);
 	}
 }

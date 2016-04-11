@@ -16,6 +16,9 @@
 
 package com.mindfire.bicyclesharing.component;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -31,11 +34,12 @@ import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
 import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
-import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
+import com.mindfire.bicyclesharing.repository.ProofDetailRepository;
+import com.mindfire.bicyclesharing.repository.RateGroupRepository;
 import com.mindfire.bicyclesharing.repository.RoleRepository;
 import com.mindfire.bicyclesharing.repository.UserRepository;
-import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
-import com.mindfire.bicyclesharing.service.UserService;
+import com.mindfire.bicyclesharing.repository.WalletRepository;
+import com.mindfire.bicyclesharing.repository.WalletTransactionRepository;
 
 /**
  * UserComponent class is used to get the data from the UserDTO class and set
@@ -49,19 +53,22 @@ import com.mindfire.bicyclesharing.service.UserService;
 public class UserComponent {
 
 	@Autowired
-	private UserService userService;
-
-	@Autowired
 	private RoleRepository roleRepository;
 
 	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
-	private PickUpPointRepository pickUpPointRepository;
+	private RateGroupRepository rateGroupRepository;
 
 	@Autowired
-	private PickUpPointManagerService pickPointManagerService;
+	private WalletRepository walletRepository;
+
+	@Autowired
+	private WalletTransactionRepository transactionRepository;
+
+	@Autowired
+	private ProofDetailRepository proofDetailRepository;
 
 	@Autowired
 	private PickUpPointManagerRepository pickUpPointManagerRepository;
@@ -99,7 +106,20 @@ public class UserComponent {
 		transaction.setType("REGISTRATION");
 		transaction.setAmount(regPaymentDTO.getAmount());
 
-		return userService.saveUserDetails(newUser, proofDetail, wallet, transaction);
+		proofDetailRepository.save(proofDetail);
+
+		newUser.setProofDetail(proofDetail);
+		newUser.setRole(roleRepository.findByUserRole("USER"));
+		newUser.setRateGroup(rateGroupRepository.findByGroupType("USER"));
+		userRepository.save(newUser);
+
+		wallet.setUser(newUser);
+		walletRepository.save(wallet);
+
+		transaction.setWallet(wallet);
+		transactionRepository.save(transaction);
+
+		return transaction;
 	}
 
 	/**
@@ -115,7 +135,7 @@ public class UserComponent {
 	public int mapPassword(String password, String userEmail) {
 		BCryptPasswordEncoder passEncoder = new BCryptPasswordEncoder();
 
-		return userService.savePassword(passEncoder.encode(password), userEmail);
+		return userRepository.updatePassword(passEncoder.encode(password), userEmail);
 	}
 
 	/**
@@ -127,7 +147,7 @@ public class UserComponent {
 	 * @return Integer 0 or 1
 	 */
 	public int mapUpdateUserDetail(UserDTO userDTO) {
-		return userService.updateUserDetail(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getDateOfBirth(),
+		return userRepository.updateUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getDateOfBirth(),
 				userDTO.getMobileNo(), userDTO.getUserAddress(), userDTO.getEmail());
 	}
 
@@ -139,8 +159,31 @@ public class UserComponent {
 	 *            the data from the view
 	 * @return User Object
 	 */
-	public User retrieveUserPassword(ForgotPasswordDTO forgotPasswordDTO) {
-		return userService.userDetails(forgotPasswordDTO.getEmail());
+	public User retrieveUserDetails(ForgotPasswordDTO forgotPasswordDTO) {
+		return userRepository.findByEmail(forgotPasswordDTO.getEmail());
+	}
+
+	/**
+	 * This method returns users detail based on userId
+	 * 
+	 * @param userId
+	 *            id of the user
+	 * @return {@link User} object
+	 */
+	public User getUser(Long userId) {
+		return userRepository.findByUserId(userId);
+	}
+
+	/**
+	 * This method is used to update user details
+	 * 
+	 * @param user
+	 *            user object
+	 * @return {@link User} object
+	 */
+	public User mapUser(User user) {
+		user.setEnabled(true);
+		return userRepository.save(user);
 	}
 
 	/**
@@ -161,23 +204,27 @@ public class UserComponent {
 		}
 
 		Role userRole = roleRepository.findByRoleId(manageRoleDTO.getUserRoleId());
-		return userService.updateUserRole(manageRoleDTO.getUserId(), userRole);
+
+		return userRepository.updateUserRole(userRole, manageRoleDTO.getUserId());
 	}
 
 	/**
-	 * This method receives data from the ManageRoleDTO class and sets data to
-	 * the PickUpPointManager entity class
+	 * This method is used for getting all users detail.
 	 * 
-	 * @param manageRoleDTO
-	 *            the data from the view
-	 * @return PickUpPointManager object
+	 * @return {@link User} List
 	 */
-	public PickUpPointManager mapPickUpPointManagerDetails(ManageRoleDTO manageRoleDTO) {
-		PickUpPointManager pickUpPointManager = new PickUpPointManager();
-		pickUpPointManager.setPickUpPoint(pickUpPointRepository.findByPickUpPointId(manageRoleDTO.getPickUpPointId()));
-		pickUpPointManager.setRole(userRepository.findByUserId(manageRoleDTO.getUserId()).getRole());
-		pickUpPointManager.setUser(userRepository.findByUserId(manageRoleDTO.getUserId()));
+	public List<User> mapAllUserDetails() {
+		return userRepository.findAllByOrderByUserId();
+	}
 
-		return pickPointManagerService.setPickUpPointToManager(pickUpPointManager);
+	/**
+	 * This method is used to get user details using user email
+	 * 
+	 * @param email
+	 *            the email id of User
+	 * @return User object
+	 */
+	public Optional<User> findUserByEmail(String email){
+		return userRepository.findOneByEmail(email);
 	}
 }

@@ -41,7 +41,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mindfire.bicyclesharing.component.MessageBean;
-import com.mindfire.bicyclesharing.component.UserComponent;
 import com.mindfire.bicyclesharing.constant.Constant;
 import com.mindfire.bicyclesharing.dto.ChangePasswordDTO;
 import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
@@ -51,14 +50,12 @@ import com.mindfire.bicyclesharing.dto.UserDTO;
 import com.mindfire.bicyclesharing.event.OnRegistrationCompleteEvent;
 import com.mindfire.bicyclesharing.event.OnResetPasswordEvent;
 import com.mindfire.bicyclesharing.event.ResendVerificationTokenEvent;
-import com.mindfire.bicyclesharing.model.PasswordResetToken;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.VerificationToken;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
-import com.mindfire.bicyclesharing.repository.PasswordResetTokenRepository;
-import com.mindfire.bicyclesharing.repository.VerificationTokenRepository;
 import com.mindfire.bicyclesharing.security.CurrentUser;
 import com.mindfire.bicyclesharing.service.UserService;
+import com.mindfire.bicyclesharing.service.VerificationTokenService;
 
 /**
  * UserController contains all the mappings related to the users
@@ -71,19 +68,13 @@ import com.mindfire.bicyclesharing.service.UserService;
 public class UserController {
 
 	@Autowired
-	private UserComponent userComponent;
-
-	@Autowired
 	private ApplicationEventPublisher eventPublisher;
 
 	@Autowired
 	private UserService userService;
 
 	@Autowired
-	private VerificationTokenRepository tokenRepository;
-
-	@Autowired
-	private PasswordResetTokenRepository passwordResetTokenRepository;
+	private VerificationTokenService verificationTokenService;
 
 	@Autowired
 	private MessageBean messageBean;
@@ -111,7 +102,7 @@ public class UserController {
 		}
 
 		UserDTO userDTO = (UserDTO) session.getAttribute("userDTO");
-		WalletTransaction transaction = userComponent.mapUserComponent(userDTO, regPaymentDTO);
+		WalletTransaction transaction = userService.saveUserDetails(userDTO, regPaymentDTO);
 
 		if (transaction != null) {
 			User registered = transaction.getWallet().getUser();
@@ -140,7 +131,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
 	public ModelAndView confirmRegistration(Model model, @RequestParam("token") String token) {
-		VerificationToken verificationToken = tokenRepository.findByToken(token);
+		VerificationToken verificationToken = verificationTokenService.getVerificationToken(token);
 
 		if (verificationToken == null) {
 			String message = messageBean.getInvalidToken();
@@ -161,9 +152,7 @@ public class UserController {
 				model.addAttribute("token", verificationToken);
 				return new ModelAndView("badUser");
 			} else {
-				user.setEnabled(true);
-				userService.saveRegisteredUser(user);
-				model.addAttribute("user", user);
+				model.addAttribute("user", userService.saveRegisteredUser(user));
 				return new ModelAndView("setPassword");
 			}
 		}
@@ -183,7 +172,7 @@ public class UserController {
 	public ModelAndView resendRegistrationToken(HttpServletRequest request,
 			@RequestParam("token") String existingToken) {
 
-		VerificationToken newToken = userService.generateNewVerificationToken(existingToken);
+		VerificationToken newToken = verificationTokenService.generateNewVerificationToken(existingToken);
 
 		User user = userService.getUser(newToken.getToken());
 		String appUrl = messageBean.getContextPath();
@@ -219,14 +208,14 @@ public class UserController {
 	 *            to validate incoming data
 	 * @return the signIn view
 	 */
-	@RequestMapping(value = "/afterSetPassword", method = RequestMethod.POST)
+	@RequestMapping(value = "/setPasswordConfirmation", method = RequestMethod.POST)
 	public ModelAndView setPassword(@ModelAttribute("setPasswordData") @Valid SetPasswordDTO setPasswordDTO,
 			Model model, BindingResult result) {
 		if (result.hasErrors()) {
 			return new ModelAndView("setPassword", "errorMessage", "Invalid password format");
 		}
 
-		int num = userComponent.mapPassword(setPasswordDTO.getPassword(), setPasswordDTO.getEmail());
+		int num = userService.savePassword(setPasswordDTO.getPassword(), setPasswordDTO.getEmail());
 
 		if (num == 0) {
 			return new ModelAndView("setPassword");
@@ -258,7 +247,7 @@ public class UserController {
 	 *            for validating incoming data
 	 * @return successRegister view
 	 */
-	@RequestMapping(value = "afterForgotPassword", method = RequestMethod.POST)
+	@RequestMapping(value = "forgotPasswordConfirmation", method = RequestMethod.POST)
 	public ModelAndView forgotOldPassword(
 			@Valid @ModelAttribute("forgotPasswordData") ForgotPasswordDTO forgotPasswordDTO, WebRequest request,
 			BindingResult result) {
@@ -266,7 +255,7 @@ public class UserController {
 			return new ModelAndView("forgotPassword", "errorMessage", "Invalid Email");
 		}
 
-		User user = userComponent.retrieveUserPassword(forgotPasswordDTO);
+		User user = userService.userDetailsByEmail(forgotPasswordDTO);
 
 		try {
 			String appUrl = System.getProperty("server.context-path");
@@ -291,7 +280,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
 	public ModelAndView resetPassword(Model model, @RequestParam("token") String token) {
-		PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
+		VerificationToken passwordResetToken = verificationTokenService.getVerificationToken(token);
 
 		if (passwordResetToken == null) {
 			String message = messageBean.getInvalidToken();
@@ -312,9 +301,7 @@ public class UserController {
 				model.addAttribute("token", passwordResetToken);
 				return new ModelAndView("badUser");
 			} else {
-				user.setEnabled(true);
-				userService.saveRegisteredUser(user);
-				model.addAttribute("user", user);
+				model.addAttribute("user", userService.saveRegisteredUser(user));
 				return new ModelAndView("setPassword");
 			}
 		}
@@ -347,7 +334,7 @@ public class UserController {
 	 *            to map model attributes
 	 * @return signIn view
 	 */
-	@RequestMapping(value = "user/afterChangePassword", method = RequestMethod.POST)
+	@RequestMapping(value = "user/changePasswordConfirmation", method = RequestMethod.POST)
 	public String afterChangePassword(Authentication authentication,
 			@Valid @ModelAttribute("changePasswordData") ChangePasswordDTO changePasswordDTO, BindingResult result,
 			RedirectAttributes redirectAttributes) {
@@ -361,7 +348,7 @@ public class UserController {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
 		if (passEncoder.matches(changePasswordDTO.getOldPassword(), currentUser.getUser().getPassword())) {
-			if (userComponent.mapPassword(changePasswordDTO.getNewPassword(), currentUser.getUser().getEmail()) != 0) {
+			if (userService.savePassword(changePasswordDTO.getNewPassword(), currentUser.getUser().getEmail()) != 0) {
 				return "redirect:/logout";
 			}
 		} else {
@@ -386,10 +373,7 @@ public class UserController {
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = { "/user/userProfile/{id}" })
 	public ModelAndView userProfile(Authentication authentication, Model model, @PathVariable Long id) {
-
-		User userDetails = userService.userDetails(id);
-		model.addAttribute("user", userDetails);
-
+		model.addAttribute("user", userService.userDetails(id));
 		return new ModelAndView("userProfile");
 	}
 
@@ -405,8 +389,7 @@ public class UserController {
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = { "/user/updateUserDetails/{id}" }, method = RequestMethod.GET)
 	public ModelAndView updateUserDetails(Model model, @PathVariable("id") Long id) {
-		User user = userService.userDetails(id);
-		model.addAttribute("user", user);
+		model.addAttribute("user", userService.userDetails(id));
 		return new ModelAndView("updateUserDetails");
 	}
 
@@ -433,9 +416,8 @@ public class UserController {
 			return new ModelAndView("updateUserDetails", "errorMessage", "Invalid data. Updation failed.");
 		}
 
-		int success = userComponent.mapUpdateUserDetail(userDTO);
-		User userDetails = userService.userDetails(id);
-		model.addAttribute("user", userDetails);
+		int success = userService.updateUserDetail(userDTO);
+		model.addAttribute("user", userService.userDetails(id));
 
 		if (success == 0) {
 			return new ModelAndView("updateUserDetails", "errorMessage", "Invalid data. Updation failed.");
@@ -455,6 +437,7 @@ public class UserController {
 	 *            for validating incoming data
 	 * @return payment view
 	 */
+	@PostAuthorize("isAnonymous()")
 	@RequestMapping(value = "payment", method = RequestMethod.POST)
 	public ModelAndView getPayment(@Valid @ModelAttribute("userData") UserDTO userDTO, HttpSession session,
 			BindingResult result) {

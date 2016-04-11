@@ -33,7 +33,7 @@ import org.springframework.format.annotation.NumberFormat;
 public class TransferRequestDTO {
 
 	@NotNull
-	@NumberFormat @Min(5) @Max(10)
+	@NumberFormat @Min(5) @Max(50)
 	private Integer quantity;
 
 	/**

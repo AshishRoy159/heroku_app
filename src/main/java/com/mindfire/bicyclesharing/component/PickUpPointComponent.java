@@ -16,13 +16,14 @@
 
 package com.mindfire.bicyclesharing.component;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.PickUpPointDTO;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
-import com.mindfire.bicyclesharing.service.PickUpPointService;
 
 /**
  * PickUpPointComponent class is used to get the data from the PickUpPointDto
@@ -34,9 +35,6 @@ import com.mindfire.bicyclesharing.service.PickUpPointService;
  */
 @Component
 public class PickUpPointComponent {
-
-	@Autowired
-	private PickUpPointService pickUpPointService;
 
 	@Autowired
 	private PickUpPointRepository pickUpPointRepository;
@@ -56,7 +54,7 @@ public class PickUpPointComponent {
 		pickUpPoint.setMaxCapacity(pickUpPointDTO.getMaxCapacity());
 		pickUpPoint.setCurrentAvailability(0);
 
-		return pickUpPointService.savePickUpPoint(pickUpPoint);
+		return pickUpPointRepository.save(pickUpPoint);
 	}
 
 	/**
@@ -65,17 +63,16 @@ public class PickUpPointComponent {
 	 * 
 	 * @param pickUpPointDTO
 	 *            the data from the view
-	 * @return Integer 0 or 1
+	 * @return {@link PickUpPoint} object
 	 */
-	public int mapUpdatePickUpPointDetails(PickUpPointDTO pickUpPointDTO) {
-		PickUpPoint pickUpPoint = new PickUpPoint();
+	public PickUpPoint mapUpdatePickUpPointDetails(PickUpPointDTO pickUpPointDTO) {
+		PickUpPoint pickUpPoint = pickUpPointRepository.findByPickUpPointId(pickUpPointDTO.getPickUpPointId());
 
 		pickUpPoint.setLocation(pickUpPointDTO.getLocation());
 		pickUpPoint.setMaxCapacity(pickUpPointDTO.getMaxCapacity());
 		pickUpPoint.setIsActive(pickUpPointDTO.getIsActive());
-		pickUpPoint.setPickUpPointId(pickUpPointDTO.getPickUpPointId());
 
-		return pickUpPointService.updatePickUpPointDetails(pickUpPoint);
+		return pickUpPointRepository.save(pickUpPoint);
 	}
 
 	/**
@@ -89,4 +86,37 @@ public class PickUpPointComponent {
 		return pickUpPointRepository.save(pickUpPoint);
 	}
 
+	/**
+	 * This method is used to find all PickupPoint
+	 * 
+	 * @return {@link PickUpPoint} List
+	 */
+	public List<PickUpPoint> findAllPickUpPoint() {
+		return pickUpPointRepository.findAllByOrderByPickUpPointIdAsc();
+	}
+
+	/**
+	 * This method is used to update the current availability.
+	 * 
+	 * @param pickUpPoint
+	 *            PickUpPoint object
+	 * @param size
+	 *            number of bicycle
+	 * @return {@link PickUpPoint} object
+	 */
+	public PickUpPoint updateBiCycleCurrentAvailability(PickUpPoint pickUpPoint, int size) {
+		pickUpPoint.setCurrentAvailability(size);
+		return pickUpPointRepository.save(pickUpPoint);
+	}
+
+	/**
+	 * This method is used to find the PickUpPoint details by id
+	 * 
+	 * @param id
+	 *            pickUpPoint id
+	 * @return {@link PickUpPoint} object
+	 */
+	public PickUpPoint findPickUpPointById(int id) {
+		return pickUpPointRepository.findByPickUpPointId(id);
+	}
 }

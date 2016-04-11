@@ -22,9 +22,8 @@ import org.springframework.stereotype.Component;
 import com.mindfire.bicyclesharing.dto.WalletBalanceDTO;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.Wallet;
-import com.mindfire.bicyclesharing.model.WalletTransaction;
 import com.mindfire.bicyclesharing.repository.UserRepository;
-import com.mindfire.bicyclesharing.service.WalletService;
+import com.mindfire.bicyclesharing.repository.WalletRepository;
 
 /**
  * WalletComponent class is used to get the data from the WalletBalanceDTO class
@@ -38,7 +37,7 @@ import com.mindfire.bicyclesharing.service.WalletService;
 public class WalletComponent {
 
 	@Autowired
-	private WalletService walletService;
+	private WalletRepository walletRepository;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -53,8 +52,9 @@ public class WalletComponent {
 	 */
 	public int mapWalletBalance(WalletBalanceDTO walletBalanceDTO) {
 		User user = userRepository.findByUserId(walletBalanceDTO.getUserId());
-		Wallet wallet = walletService.getWallet(user);
-		return walletService.addBalance(user, (wallet.getBalance() + walletBalanceDTO.getBalance()));
+		Wallet wallet = walletRepository.findByUser(user);
+		Double balance = wallet.getBalance() + walletBalanceDTO.getBalance();
+		return walletRepository.updateBalance(balance, user);
 
 	}
 
@@ -66,14 +66,18 @@ public class WalletComponent {
 	 *            the data from the view
 	 * @return WalletTransaction object
 	 */
-	public WalletTransaction mapWalletTransactionDetail(WalletBalanceDTO walletBalanceDTO) {
-		WalletTransaction walletTransaction = new WalletTransaction();
-		walletTransaction.setAmount(walletBalanceDTO.getBalance());
-		walletTransaction.setWallet(walletService.getWallet(userRepository.findByUserId(walletBalanceDTO.getUserId())));
-		walletTransaction.setMode("cash");
-		walletTransaction.setType("DEPOSIT");
+	// public WalletTransaction mapWalletTransactionDetail(WalletBalanceDTO
+	// walletBalanceDTO) {
+	// WalletTransaction walletTransaction = new WalletTransaction();
+	// walletTransaction.setAmount(walletBalanceDTO.getBalance());
+	// walletTransaction.setWallet(walletService.getWallet(userRepository.findByUserId(walletBalanceDTO.getUserId())));
+	// walletTransaction.setMode("cash");
+	// walletTransaction.setType("DEPOSIT");
+	//
+	// return walletService.saveWalletTransactionDetail(walletTransaction);
+	// }
 
-		return walletService.saveWalletTransactionDetail(walletTransaction);
-	}
-
+	 public Wallet findWalletByUser(User user){
+	 return walletRepository.findByUser(user);
+	 }
 }

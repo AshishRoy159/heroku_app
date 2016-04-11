@@ -31,8 +31,7 @@ import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.Transfer;
 import com.mindfire.bicyclesharing.repository.BiCycleRepository;
 import com.mindfire.bicyclesharing.repository.BiCycleTransferRepository;
-import com.mindfire.bicyclesharing.service.BiCycleService;
-import com.mindfire.bicyclesharing.service.PickUpPointService;
+import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
 
 /**
  * BiCycleComponent class is used to get the data from the BiCycleDTO class and
@@ -44,12 +43,12 @@ import com.mindfire.bicyclesharing.service.PickUpPointService;
  */
 @Component
 public class BiCycleComponent {
-
+	
 	@Autowired
-	private BiCycleService biCycleService;
-
+	private PickUpPointRepository pickUpPointRepository;
+	
 	@Autowired
-	private PickUpPointService pickUpPointService;
+	private PickUpPointComponent pickUpPointComponent;
 
 	@Autowired
 	private BiCycleRepository biCycleRepository;
@@ -67,13 +66,12 @@ public class BiCycleComponent {
 	 */
 	public BiCycle mapBiCycleData(BiCycleDTO biCycleDTO) {
 		BiCycle biCycle = new BiCycle();
-		PickUpPoint pickUpPoint = pickUpPointService.getPickupPointById(biCycleDTO.getPickUpPoint());
+		PickUpPoint pickUpPoint = pickUpPointRepository.findByPickUpPointId(biCycleDTO.getPickUpPoint());
 		biCycle.setChasisNo(biCycleDTO.getChasisNo());
 		biCycle.setCurrentLocation(pickUpPoint);
-		biCycleService.saveBiCycle(biCycle);
-		pickUpPointService.updateBicycleCurrentAvailability(
-				biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size(),
-				pickUpPoint.getPickUpPointId());
+		biCycleRepository.save(biCycle);
+		pickUpPointComponent.updateBiCycleCurrentAvailability(pickUpPoint,
+				biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size());
 
 		return biCycle;
 
@@ -153,4 +151,31 @@ public class BiCycleComponent {
 		return biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size();
 	}
 
+	/**
+	 * This method is used to get the bicycles on a specific pickup point
+	 * 
+	 * @param pickUpPoint
+	 *            the concerned pickup point
+	 * @param isAvailable
+	 *            availability of bicycle. True of false
+	 * @return {@link BiCycle} List
+	 */
+	public List<BiCycle> findByCurrentLocationAndAvailability(PickUpPoint pickUpPoint, Boolean isAvailable) {
+		return biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true);
+	}
+
+	/**
+	 * This method is used to update the bicycle details.
+	 * 
+	 * @param id
+	 *            bicycle id
+	 * @return {@link BiCycle} object
+	 */
+	public BiCycle updateBicycle(Long id) {
+		BiCycle biCycle = biCycleRepository.findByBiCycleId(id);
+		biCycle.setIsAvailable(false);
+		biCycleRepository.save(biCycle);
+
+		return biCycle;
+	}
 }

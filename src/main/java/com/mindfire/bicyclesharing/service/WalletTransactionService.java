@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.component.WalletTransactionComponent;
+import com.mindfire.bicyclesharing.dto.WalletBalanceDTO;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
 
@@ -50,5 +51,9 @@ public class WalletTransactionService {
 	 */
 	public List<WalletTransaction> getAllTransactionByWallet(Wallet wallet) {
 		return walletTransactionComponent.mapWalletTransactionByWallet(wallet);
+	}
+	
+	public WalletTransaction createWalletTransaction(WalletBalanceDTO walletBalanceDTO){
+		return walletTransactionComponent.mapWalletTransactionDetails(walletBalanceDTO);
 	}
 }

@@ -16,6 +16,8 @@
 
 package com.mindfire.bicyclesharing.controller.admin;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +31,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.mindfire.bicyclesharing.component.UserComponent;
 import com.mindfire.bicyclesharing.dto.ManageRoleDTO;
+import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.security.CurrentUser;
+import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
 import com.mindfire.bicyclesharing.service.UserService;
 
@@ -46,10 +49,10 @@ import com.mindfire.bicyclesharing.service.UserService;
 public class ManageRoleController {
 
 	@Autowired
-	private UserComponent userComponent;
+	private PickUpPointService pickUpPointService;
 
 	@Autowired
-	private PickUpPointService pickUpPointService;
+	private PickUpPointManagerService pickUpPointManagerService;
 
 	@Autowired
 	private UserService userService;
@@ -90,18 +93,19 @@ public class ManageRoleController {
 	@RequestMapping(value = "admin/updateRole", method = RequestMethod.POST)
 	public ModelAndView setPickUpPoint(@Valid @ModelAttribute("manageRoleData") ManageRoleDTO manageRoleDTO,
 			BindingResult result, Model model) {
+		List<User> users = userService.getAllUsers();
 		if (result.hasErrors()) {
 			model.addAttribute("errorMessage", "Something went wrong. Operation failed.");
-			return new ModelAndView("searchUsers", "usersList", userService.getAllUsers());
+			return new ModelAndView("searchUsers", "usersList", users);
 		}
 
-		if (userComponent.mapUpdateRole(manageRoleDTO) > 0) {
+		if (userService.updateUserRole(manageRoleDTO) > 0) {
 			if (manageRoleDTO.getUserRoleId() == 2) {
-				userComponent.mapPickUpPointManagerDetails(manageRoleDTO);
+				pickUpPointManagerService.setPickUpPointToManager(manageRoleDTO);
 			}
-			return new ModelAndView("searchUsers", "usersList", userService.getAllUsers());
+			return new ModelAndView("searchUsers", "usersList", users);
 		} else {
-			return new ModelAndView("searchUsers", "usersList", userService.getAllUsers());
+			return new ModelAndView("searchUsers", "usersList", users);
 		}
 	}
 }

@@ -24,10 +24,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.component.BiCycleComponent;
+import com.mindfire.bicyclesharing.dto.BiCycleDTO;
 import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.Transfer;
-import com.mindfire.bicyclesharing.repository.BiCycleRepository;
 
 /**
  * BiCycleService class contains methods for BiCycle related operations
@@ -40,47 +40,17 @@ import com.mindfire.bicyclesharing.repository.BiCycleRepository;
 public class BiCycleService {
 
 	@Autowired
-	private BiCycleRepository biCycleRepository;
-
-	@Autowired
 	private BiCycleComponent biCycleComponent;
-
-	/**
-	 * This method is used for saving the bicycle details.
-	 * 
-	 * @param biCycle
-	 *            the BiCycle object to be stored in database
-	 * @return the stored BiCycle object
-	 */
-	public BiCycle saveBiCycle(BiCycle biCycle) {
-		return biCycleRepository.save(biCycle);
-	}
-
-	/**
-	 * This method is used for finding all bicycle at any particular pickup
-	 * point.
-	 * 
-	 * @param pickUpPointId
-	 *            the id of the respective pickup point
-	 * @return BiCycle list
-	 */
-	public List<BiCycle> findAllBiCycleByPickUpPointId(PickUpPoint pickUpPointId) {
-		return biCycleRepository.findAllByCurrentLocation(pickUpPointId);
-	}
 
 	/**
 	 * This method is used for updating the bicycle availability.
 	 * 
 	 * @param id
 	 *            this is biCycleId
-	 * @return BiCycle object
+	 * @return {@link BiCycle} object
 	 */
 	public BiCycle updateBiCycleDetails(Long id) {
-		BiCycle biCycle = biCycleRepository.findByBiCycleId(id);
-		biCycle.setIsAvailable(false);
-		biCycleRepository.save(biCycle);
-
-		return biCycle;
+		return biCycleComponent.updateBicycle(id);
 	}
 
 	/**
@@ -94,5 +64,25 @@ public class BiCycleService {
 	public List<BiCycle> findBicyclesForShipment(Transfer transfer) {
 		Pageable pageable = new PageRequest(0, transfer.getQuantity());
 		return biCycleComponent.getAvailableBicycles(transfer.getTransferredFrom(), true, pageable);
+	}
+
+	/**
+	 * This method is used to retrieve bicycles based on current location and
+	 * availability.
+	 * 
+	 * @param pickUpPoint
+	 *            current pickup point
+	 * 
+	 * @param availability
+	 *            availability of bicycle
+	 * 
+	 * @return {@link BiCycle} List
+	 */
+	public List<BiCycle> getBicyclesByPickupPointAndAvailability(PickUpPoint pickUpPoint, Boolean availability) {
+		return biCycleComponent.findByCurrentLocationAndAvailability(pickUpPoint, availability);
+	}
+
+	public BiCycle saveBiCycleDetails(BiCycleDTO biCycleDTO) {
+		return biCycleComponent.mapBiCycleData(biCycleDTO);
 	}
 }

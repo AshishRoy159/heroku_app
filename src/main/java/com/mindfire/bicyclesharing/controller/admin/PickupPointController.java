@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mindfire.bicyclesharing.component.PickUpPointComponent;
 import com.mindfire.bicyclesharing.dto.PickUpPointDTO;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
@@ -46,9 +45,6 @@ import com.mindfire.bicyclesharing.service.PickUpPointService;
  */
 @Controller
 public class PickupPointController {
-
-	@Autowired
-	private PickUpPointComponent pickUpPointComponent;
 
 	@Autowired
 	private PickUpPointService pickUpPointService;
@@ -84,7 +80,7 @@ public class PickupPointController {
 			return new ModelAndView("redirect:addNewPickupPoint");
 		}
 
-		PickUpPoint pickUpPoint = pickUpPointComponent.mapPickUpPointDetails(pickUpPointDTO);
+		PickUpPoint pickUpPoint = pickUpPointService.savePickUpPoint(pickUpPointDTO);
 
 		if (pickUpPoint == null) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Oops... Operation failed!!");
@@ -119,8 +115,8 @@ public class PickupPointController {
 	 */
 	@RequestMapping(value = "admin/updatePickupPointDetails/{id}", method = RequestMethod.GET)
 	public ModelAndView pickupPointUpdateForm(@PathVariable("id") Integer pickUpPointId) {
-		PickUpPoint pickUpPoint = pickUpPointService.getPickupPointById(pickUpPointId);
-		return new ModelAndView("updatePickupPointDetails", "pickUpPoint", pickUpPoint);
+		return new ModelAndView("updatePickupPointDetails", "pickUpPoint",
+				pickUpPointService.getPickupPointById(pickUpPointId));
 	}
 
 	/**
@@ -135,15 +131,18 @@ public class PickupPointController {
 	 */
 	@RequestMapping(value = "admin/updatePickupPointDetails", method = RequestMethod.POST)
 	public ModelAndView updatePickUpPointDetails(
-			@Valid @ModelAttribute("pickupPointData") PickUpPointDTO pickUpPointDTO, BindingResult result) {
+			@Valid @ModelAttribute("pickupPointData") PickUpPointDTO pickUpPointDTO, BindingResult result,
+			RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
-			return new ModelAndView("redirect:pickupPointDetails");
+			redirectAttributes.addFlashAttribute("errorMessage", "Please Enter valid data");
+			return new ModelAndView("updatePickupPointDetails");
 		}
 
-		int updatedResult = pickUpPointComponent.mapUpdatePickUpPointDetails(pickUpPointDTO);
+		PickUpPoint pickUpPoint = pickUpPointService.updatePickUpPointDetails(pickUpPointDTO);
 
-		if (updatedResult != 0) {
-			return new ModelAndView("redirect:pickupPointDetails");
+		if (null == pickUpPoint) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Operation Failed...!!");
+			return new ModelAndView("updatePickupPointDetails");
 		}
 		return new ModelAndView("redirect:pickupPointDetails");
 	}

@@ -22,9 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.component.PickUpPointManagerComponent;
+import com.mindfire.bicyclesharing.dto.ManageRoleDTO;
 import com.mindfire.bicyclesharing.model.PickUpPointManager;
 import com.mindfire.bicyclesharing.model.User;
-import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
 
 /**
  * PickUpPointManagerService class contains methods for PickUp Point Manager
@@ -38,21 +38,18 @@ import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
 public class PickUpPointManagerService {
 
 	@Autowired
-	private PickUpPointManagerRepository pickUpPointManagerRepository;
-
-	@Autowired
 	private PickUpPointManagerComponent pickUpPointManagerComponent;
 
 	/**
 	 * This method is used to save the pickup point manager related data to the
 	 * database
 	 * 
-	 * @param pickUpPointManager
-	 *            the PickUpPointManager object to be stored in the database
+	 * @param manageRoleDTO
+	 *            user role related data.
 	 * @return PickUpPointManager object
 	 */
-	public PickUpPointManager setPickUpPointToManager(PickUpPointManager pickUpPointManager) {
-		return pickUpPointManagerRepository.save(pickUpPointManager);
+	public PickUpPointManager setPickUpPointToManager(ManageRoleDTO manageRoleDTO) {
+		return pickUpPointManagerComponent.mapPickUpPointManagerDetails(manageRoleDTO);
 	}
 
 	/**
@@ -63,7 +60,7 @@ public class PickUpPointManagerService {
 	 * @return {@link PickUpPointManager}
 	 */
 	public PickUpPointManager getPickupPointManager(User user) {
-		return pickUpPointManagerRepository.findByUser(user);
+		return pickUpPointManagerComponent.getPickUpPointManagerByUser(user);
 	}
 
 	/**
@@ -75,7 +72,7 @@ public class PickUpPointManagerService {
 	 * @return {@link Integer} current availability amount
 	 */
 	public int getCurrentAvailability(User user) {
-		return pickUpPointManagerRepository.findByUser(user).getPickUpPoint().getCurrentAvailability();
+		return pickUpPointManagerComponent.currentAvailabilityAtPickupPoint(user);
 	}
 
 	/**

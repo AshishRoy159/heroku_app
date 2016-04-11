@@ -300,7 +300,8 @@ public class BookingComponent {
 	 * This method is used for closing the booking based on the booking id
 	 * 
 	 * @param receiveCycleDTO
-	 * @return {@link Booking}
+	 *            receive cycle Data.
+	 * @return {@link Booking} object
 	 */
 	public Booking mapCloseBooking(ReceiveCycleDTO receiveCycleDTO) {
 		Booking booking = bookingRepository.findByBookingId(receiveCycleDTO.getBookingId());
@@ -312,5 +313,18 @@ public class BookingComponent {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * This method is used for mapping the existing booking details.
+	 * 
+	 * @param isOpen
+	 *            boolean value
+	 * @param user
+	 *            User object
+	 * @return {@link Booking} object
+	 */
+	public Booking mapExistingBooking(Boolean isOpen, User user) {
+		return bookingRepository.findByIsOpenAndUser(isOpen, user);
 	}
 }

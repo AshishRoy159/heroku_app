@@ -21,12 +21,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.component.UserBookingComponent;
+import com.mindfire.bicyclesharing.component.WalletComponent;
 import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
+import com.mindfire.bicyclesharing.dto.WalletBalanceDTO;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
-import com.mindfire.bicyclesharing.repository.WalletRepository;
-import com.mindfire.bicyclesharing.repository.WalletTransactionRepository;
 
 /**
  * This class contain methods for wallet related operations.
@@ -38,12 +38,9 @@ import com.mindfire.bicyclesharing.repository.WalletTransactionRepository;
  */
 @Service
 public class WalletService {
-
+	
 	@Autowired
-	private WalletRepository walletRepository;
-
-	@Autowired
-	private WalletTransactionRepository walletTransactionRepository;
+	private WalletComponent walletComponent;
 
 	@Autowired
 	private UserBookingComponent userBookingComponent;
@@ -51,14 +48,12 @@ public class WalletService {
 	/**
 	 * This method is used to add balance to the User's wallet
 	 * 
-	 * @param user
-	 *            User object
-	 * @param balance
-	 *            amount to be added to wallet
+	 * @param walletBalanceDTO
+	 *            the data from the view
 	 * @return Integer 0 or 1
 	 */
-	public int addBalance(User user, Double balance) {
-		return walletRepository.updateBalance(balance, user);
+	public int addBalance(WalletBalanceDTO walletBalanceDTO) {
+		return walletComponent.mapWalletBalance(walletBalanceDTO);
 	}
 
 	/**
@@ -66,10 +61,10 @@ public class WalletService {
 	 * 
 	 * @param user
 	 *            User object
-	 * @return Wallet object
+	 * @return {@link Wallet} object
 	 */
 	public Wallet getWallet(User user) {
-		return walletRepository.findByUser(user);
+		return walletComponent.findWalletByUser(user);
 	}
 
 	/**
@@ -78,12 +73,12 @@ public class WalletService {
 	 * 
 	 * @param walletTransaction
 	 *            WalletTransaction details to be saved in the database
-	 * @return WalletTransaction object
+	 * @return {@link WalletTransaction} object
 	 */
-	public WalletTransaction saveWalletTransactionDetail(WalletTransaction walletTransaction) {
-		return walletTransactionRepository.save(walletTransaction);
-
-	}
+//	public WalletTransaction saveWalletTransactionDetail(WalletTransaction walletTransaction) {
+//		return walletTransactionRepository.save(walletTransaction);
+//
+//	}
 
 	/**
 	 * This method is used for saving the payment on user booking.

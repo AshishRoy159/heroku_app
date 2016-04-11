@@ -28,9 +28,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mindfire.bicyclesharing.component.BiCycleComponent;
 import com.mindfire.bicyclesharing.dto.BiCycleDTO;
 import com.mindfire.bicyclesharing.model.BiCycle;
+import com.mindfire.bicyclesharing.service.BiCycleService;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
 
 /**
@@ -48,7 +48,7 @@ public class BicycleController {
 	private PickUpPointService pickUpPointService;
 
 	@Autowired
-	private BiCycleComponent biCycleComponent;
+	private BiCycleService biCycleService;
 
 	/**
 	 * This method maps the add new pickup point request. Simply render the
@@ -84,7 +84,7 @@ public class BicycleController {
 			return new ModelAndView("redirect:addNewBicycle");
 		}
 
-		BiCycle biCycle = biCycleComponent.mapBiCycleData(biCycleDTO);
+		BiCycle biCycle = biCycleService.saveBiCycleDetails(biCycleDTO);
 
 		if (biCycle == null) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Oops... Operation failed!!");

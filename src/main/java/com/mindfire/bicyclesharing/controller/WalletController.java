@@ -27,10 +27,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mindfire.bicyclesharing.component.WalletComponent;
 import com.mindfire.bicyclesharing.dto.WalletBalanceDTO;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.service.UserService;
+import com.mindfire.bicyclesharing.service.WalletService;
+import com.mindfire.bicyclesharing.service.WalletTransactionService;
 
 /**
  * This class contains all the Request Mappings related to the wallet balance
@@ -44,7 +45,10 @@ import com.mindfire.bicyclesharing.service.UserService;
 public class WalletController {
 
 	@Autowired
-	private WalletComponent walletComponent;
+	private WalletService walletService;
+
+	@Autowired
+	private WalletTransactionService walletTransactionService;
 
 	@Autowired
 	private UserService userService;
@@ -53,15 +57,10 @@ public class WalletController {
 	 * This method is used to map the add wallet balance request. Simply render
 	 * the addWalletBalance view
 	 * 
-	 * @param walletBalanceDTO
-	 *            for receiving incoming data from view
-	 * @param bindingResult
-	 *            for validating incoming data
 	 * @return addWalletBalance view
 	 */
 	@RequestMapping(value = { "/manager/addWalletBalance" }, method = RequestMethod.GET)
-	public ModelAndView getWalletView(@Valid @ModelAttribute("addWalletBalance") WalletBalanceDTO walletBalanceDTO,
-			BindingResult bindingResult) {
+	public ModelAndView getWalletView() {
 		return new ModelAndView("addWalletBalance");
 	}
 
@@ -89,8 +88,8 @@ public class WalletController {
 			redirectAttributes.addFlashAttribute("errorMessage", "User not found!!!");
 			return new ModelAndView("redirect:addWalletBalance");
 
-		} else if (walletComponent.mapWalletBalance(walletBalanceDTO) == 1) {
-			walletComponent.mapWalletTransactionDetail(walletBalanceDTO);
+		} else if (walletService.addBalance(walletBalanceDTO) == 1) {
+			walletTransactionService.createWalletTransaction(walletBalanceDTO);
 			redirectAttributes.addFlashAttribute("successMessage", "Successfully Added!!!");
 			return new ModelAndView("redirect:addWalletBalance");
 		}

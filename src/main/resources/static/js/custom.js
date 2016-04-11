@@ -148,7 +148,7 @@ function hideInvalidMessage() {
 /*
  * This function validates the booking date and time provided by the user.
  */
-function userBookingValidation(form) {
+function userBookingValidationJHHJGH(form) {
 	var bookingTime = document.getElementById("bookingId").value;
 	var returnTime = document.getElementById("returnId").value;
 	var currentDate = new Date();

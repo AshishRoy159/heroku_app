@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mindfire.bicyclesharing.component.BookingComponent;
 import com.mindfire.bicyclesharing.dto.BookingPaymentDTO;
 import com.mindfire.bicyclesharing.dto.IssueCycleDTO;
 import com.mindfire.bicyclesharing.dto.ReceiveBicyclePaymentDTO;
@@ -48,16 +47,14 @@ import com.mindfire.bicyclesharing.model.PickUpPointManager;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
-import com.mindfire.bicyclesharing.repository.BiCycleRepository;
-import com.mindfire.bicyclesharing.repository.BookingRepository;
-import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
-import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
-import com.mindfire.bicyclesharing.repository.RateGroupRepository;
-import com.mindfire.bicyclesharing.repository.UserRepository;
-import com.mindfire.bicyclesharing.repository.WalletRepository;
 import com.mindfire.bicyclesharing.security.CurrentUser;
 import com.mindfire.bicyclesharing.service.BiCycleService;
 import com.mindfire.bicyclesharing.service.BookingService;
+import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
+import com.mindfire.bicyclesharing.service.PickUpPointService;
+import com.mindfire.bicyclesharing.service.RateGroupService;
+import com.mindfire.bicyclesharing.service.UserService;
+import com.mindfire.bicyclesharing.service.WalletService;
 
 /**
  * BookingController contains all the mappings related to the Booking.
@@ -70,17 +67,17 @@ import com.mindfire.bicyclesharing.service.BookingService;
 public class BookingController {
 
 	@Autowired
-	private PickUpPointManagerRepository pickUpPointManagerRepository;
+	private UserService userService;
 
 	@Autowired
-	private UserRepository userRepository;
+	private PickUpPointService pickUpPointService;
 
 	@Autowired
-	private BiCycleRepository bicycleRepository;
-
+	private PickUpPointManagerService pickUpPointManagerService;
+	
 	@Autowired
-	private BookingRepository bookingRepository;
-
+	private RateGroupService rateGroupService;
+	
 	@Autowired
 	private BookingService bookingService;
 
@@ -88,17 +85,8 @@ public class BookingController {
 	private BiCycleService biCycleService;
 
 	@Autowired
-	private PickUpPointRepository pickUpPointRepository;
-
-	@Autowired
-	private RateGroupRepository rateGroupRepository;
-
-	@Autowired
-	private WalletRepository walletRepository;
-
-	@Autowired
-	private BookingComponent bookingComponent;
-
+	private WalletService walletService;
+	
 	/**
 	 * This method is used to map the booking of the bicycles request. Simply
 	 * render the booking view
@@ -113,10 +101,9 @@ public class BookingController {
 	@RequestMapping(value = { "/manager/booking" }, method = RequestMethod.GET)
 	public ModelAndView getBookingView(Model model, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-		Long userId = currentUser.getUserId();
-		User manager = userRepository.findByUserId(userId);
-		PickUpPointManager pickUpPoint = pickUpPointManagerRepository.findByUser(manager);
-		List<BiCycle> biCycles = bicycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint.getPickUpPoint(),
+		User manager = userService.userDetails(currentUser.getUserId());
+		PickUpPointManager pickUpPoint = pickUpPointManagerService.getPickupPointManager(manager);
+		List<BiCycle> biCycles = biCycleService.getBicyclesByPickupPointAndAvailability(pickUpPoint.getPickUpPoint(),
 				true);
 		model.addAttribute("biCycles", biCycles);
 		return new ModelAndView("booking");
@@ -141,24 +128,24 @@ public class BookingController {
 			@ModelAttribute("issueCyclePaymentData") BookingPaymentDTO bookingPaymentDTO, Authentication auth,
 			HttpSession session) {
 		CurrentUser currentUser = (CurrentUser) auth.getPrincipal();
-		User user = userRepository.findByUserId(bookingPaymentDTO.getUserId());
-		List<Booking> existingBooking = bookingRepository.findByUserAndIsOpen(user, true);
-		if (!existingBooking.isEmpty()) {
+		User user = userService.userDetails(bookingPaymentDTO.getUserId());
+		Booking existingBooking = bookingService.getBookingDetails(true, user);
+		if (null != existingBooking) {
 			redirectAttributes.addFlashAttribute("bookingFailure", "Oops..!! Your booking status is open..!");
 			return new ModelAndView("redirect:/manager/booking");
 		}
 
-		Booking bookingDetails = bookingService.addNewBooking(auth, bookingPaymentDTO, session);
-		if (null == bookingDetails) {
+		Booking booking = bookingService.addNewBooking(auth, bookingPaymentDTO, session);
+		if (null == booking) {
 			redirectAttributes.addFlashAttribute("bookingFailure", "Oops..!! You do not have sufficient balance");
 			return new ModelAndView("redirect:/manager/booking");
 		} else {
 			biCycleService.updateBiCycleDetails(bookingPaymentDTO.getBicycleId());
-			PickUpPoint pickUpPoint = pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint();
-			pickUpPoint.setCurrentAvailability(
-					bicycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size());
-			pickUpPointRepository.save(pickUpPoint);
-			redirectAttributes.addFlashAttribute("bookingDetails", bookingDetails);
+			PickUpPoint pickUpPoint = pickUpPointManagerService.getPickupPointManager(currentUser.getUser())
+					.getPickUpPoint();
+			pickUpPointService.updatePickUpPointAvailability(pickUpPoint,
+					biCycleService.getBicyclesByPickupPointAndAvailability(pickUpPoint, true).size());
+			redirectAttributes.addFlashAttribute("bookingDetails", booking);
 			return new ModelAndView("redirect:/manager/printIssueBicycleDetails");
 		}
 	}
@@ -187,18 +174,15 @@ public class BookingController {
 		} else {
 			redirectAttributes.addFlashAttribute("issueCycleData", issueCycleDTO);
 
-			final Calendar cal = Calendar.getInstance();
-			cal.setTimeInMillis(new Date().getTime());
-			cal.add(Calendar.HOUR, issueCycleDTO.getExpectedInTime());
+			Calendar cal = bookingService.calculateExpectedIn(issueCycleDTO);
 
 			session.setAttribute("expectedIn", new Timestamp(cal.getTimeInMillis()));
-			User user = userRepository.findByUserId(issueCycleDTO.getUserId());
+			User user = userService.userDetails(issueCycleDTO.getUserId());
 			if (null == user) {
 				redirectAttributes.addFlashAttribute("bookingFailure", "Invalid UserId...");
 				return new ModelAndView("redirect:/manager/booking");
 			}
-			Double fare = (user.getRateGroup().getBaseRate() * issueCycleDTO.getExpectedInTime());
-			redirectAttributes.addFlashAttribute("baseFare", fare);
+			Double fare = bookingService.calculateFare(user, issueCycleDTO);
 			model.addAttribute("baseFare", fare);
 
 			if (user.getIsApproved() == true && user.getEnabled() == true) {
@@ -231,7 +215,7 @@ public class BookingController {
 			redirectAttributes.addFlashAttribute("receiveCycleErrorMessage", "Enter a valid Booking Id");
 			return new ModelAndView("redirect:/manager/booking");
 		}
-		Booking booking = bookingRepository.findByBookingId(receiveCycleDTO.getBookingId());
+		Booking booking = bookingService.getBookingById(receiveCycleDTO.getBookingId());
 		if (null == booking) {
 			redirectAttributes.addFlashAttribute("bookingFailure", "Your Booking Id is Incorrect!!");
 			return new ModelAndView("redirect:/manager/booking");
@@ -240,24 +224,17 @@ public class BookingController {
 				if (booking.getIsOpen()) {
 
 					redirectAttributes.addFlashAttribute("bookingDetails", booking);
-					Calendar cal = Calendar.getInstance();
-					cal.setTimeInMillis(new Date().getTime());
-					long time = cal.getTimeInMillis() - booking.getExpectedIn().getTime();
+					
+					long time = bookingService.calculateRidingTime(booking);
 					long actualTime = time - 600000; // we are giving 10 minute
 														// relaxation.
 					if (actualTime <= 0) {
 						redirectAttributes.addFlashAttribute("currentTime", new Timestamp(new Date().getTime()));
 						return new ModelAndView("redirect:/manager/receiveBicycle");
 					} else {
-						long hour = (actualTime / (60 * 1000)) / 60;
-						long remainder = (actualTime / (60 * 1000)) % 60;
-						if (remainder > 0) {
-							hour++;
-						}
-						double baseRate = rateGroupRepository.findByGroupType(userRepository
-								.findByUserId(booking.getUser().getUserId()).getRateGroup().getGroupType())
-								.getBaseRate();
-						double fare = hour * (baseRate + ((baseRate * 10) / 100));
+						long  hour = bookingService.calculateTotalRideTime(actualTime);
+						double baseRate = rateGroupService.getBaseRate(booking.getUser()).getBaseRate();
+						double fare = bookingService.calculateActualFare(hour, baseRate);
 						redirectAttributes.addFlashAttribute("fare", fare);
 						return new ModelAndView("redirect:/manager/receiveBicyclePayment");
 					}
@@ -291,15 +268,14 @@ public class BookingController {
 	@RequestMapping(value = "/manager/receiveBicycle", method = RequestMethod.POST)
 	public ModelAndView receiveBicycleDetails(@ModelAttribute("receiveCycleData") ReceiveCycleDTO receiveCycleDTO,
 			Authentication auth, RedirectAttributes redirectAttributes) {
-		Long bookingId = receiveCycleDTO.getBookingId();
 		double fare = 0.0;
-		Booking book = bookingRepository.findByBookingId(receiveCycleDTO.getBookingId());
+		Booking book = bookingService.getBookingById(receiveCycleDTO.getBookingId());
 		if (null == book) {
 			redirectAttributes.addFlashAttribute("bookingFailure", "Your Booking Id is Incorrect!!");
 			return new ModelAndView("redirect:/manager/booking");
 		} else {
 			if (book.getIsOpen()) {
-				Booking booking = bookingService.receiveBicycle(bookingId, fare, auth);
+				Booking booking = bookingService.receiveBicycle(receiveCycleDTO.getBookingId(), fare, auth);
 				if (null == booking) {
 					redirectAttributes.addFlashAttribute("bookingFailure",
 							"Your receive request cannot be processed. Try again Later!!");
@@ -334,23 +310,20 @@ public class BookingController {
 	public ModelAndView paymentOnBicycleReceive(
 			@ModelAttribute("receiveCyclePaymentData") ReceiveBicyclePaymentDTO receiveBicyclePaymentDTO,
 			Authentication auth, RedirectAttributes redirectAttributes) {
-		Long bookingId = receiveBicyclePaymentDTO.getBookingId();
-
-		Booking book = bookingRepository.findByBookingId(receiveBicyclePaymentDTO.getBookingId());
+		Booking book = bookingService.getBookingById(receiveBicyclePaymentDTO.getBookingId());
 		if (null == book) {
 			redirectAttributes.addFlashAttribute("bookingFailure", "Your Booking Id is Incorrect!!");
 			return new ModelAndView("redirect:/manager/booking");
 
 		} else {
-			Wallet wallet = walletRepository.findByUser(book.getUser());
-
-			WalletTransaction transaction = bookingComponent.mapReceiveBicyclePayment(receiveBicyclePaymentDTO, wallet);
+			Wallet wallet = walletService.getWallet(book.getUser());
+			WalletTransaction transaction = bookingService.saveReceiveBicyclePayment(receiveBicyclePaymentDTO, wallet);
 			if (null == transaction) {
 				redirectAttributes.addFlashAttribute("bookingFailure",
 						"Your receive request cannot be processed due to low balance. Try again Later!!");
 				return new ModelAndView("redirect:/manager/booking");
 			} else {
-				Booking booking = bookingService.receiveBicycle(bookingId, receiveBicyclePaymentDTO.getFare(), auth);
+				Booking booking = bookingService.receiveBicycle(receiveBicyclePaymentDTO.getBookingId(), receiveBicyclePaymentDTO.getFare(), auth);
 				if (null == booking) {
 					redirectAttributes.addFlashAttribute("bookingFailure",
 							"Your receive request cannot be processed. Try again Later!!");
