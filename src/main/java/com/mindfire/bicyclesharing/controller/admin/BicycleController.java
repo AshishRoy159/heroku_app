@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
+import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.BiCycleDTO;
 import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.service.BiCycleService;
@@ -60,8 +62,8 @@ public class BicycleController {
 	 */
 	@RequestMapping(value = "admin/addNewBicycle", method = RequestMethod.GET)
 	public ModelAndView addBicycleForm(Model model) {
-		model.addAttribute("pickUpPoints", pickUpPointService.getAllPickupPoints());
-		return new ModelAndView("addNewBicycle");
+		model.addAttribute(ModelAttributeConstant.PICKUP_POINTS, pickUpPointService.getAllPickupPoints());
+		return new ModelAndView(ViewConstant.ADD_NEW_BICYCLE);
 	}
 
 	/**
@@ -80,18 +82,18 @@ public class BicycleController {
 	public ModelAndView addedNewBicycle(@Valid @ModelAttribute("bicycleData") BiCycleDTO biCycleDTO,
 			BindingResult result, RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Oops... Operation failed!!");
-			return new ModelAndView("redirect:addNewBicycle");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Oops... Operation failed!!");
+			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_BICYCLE);
 		}
 
 		BiCycle biCycle = biCycleService.saveBiCycleDetails(biCycleDTO);
 
 		if (biCycle == null) {
-			redirectAttributes.addFlashAttribute("errorMessage", "No space for new bicycle at this pickup point!!");
-			return new ModelAndView("redirect:addNewBicycle");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "No space for new bicycle at this pickup point!!");
+			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_BICYCLE);
 		} else {
-			redirectAttributes.addFlashAttribute("successMessage", "Successfully Added!!!");
-			return new ModelAndView("redirect:addNewBicycle");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Added!!!");
+			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_BICYCLE);
 		}
 	}
 }

@@ -16,17 +16,12 @@
 
 package com.mindfire.bicyclesharing.dto;
 
-import java.util.Date;
-
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
 /**
@@ -52,9 +47,7 @@ public class UserDTO {
 	private Long mobileNo;
 
 	@NotNull
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date dateOfBirth;
+	private String dateOfBirth;
 
 	@NotNull
 	@Email
@@ -120,7 +113,7 @@ public class UserDTO {
 	/**
 	 * @return the dateOfBirth
 	 */
-	public Date getDateOfBirth() {
+	public String getDateOfBirth() {
 		return dateOfBirth;
 	}
 
@@ -128,7 +121,7 @@ public class UserDTO {
 	 * @param dateOfBirth
 	 *            the dateOfBirth to set
 	 */
-	public void setDateOfBirth(Date dateOfBirth) {
+	public void setDateOfBirth(String dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 

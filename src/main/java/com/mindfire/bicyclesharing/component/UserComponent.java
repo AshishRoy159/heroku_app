@@ -16,6 +16,8 @@
 
 package com.mindfire.bicyclesharing.component;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,6 +75,8 @@ public class UserComponent {
 	@Autowired
 	private PickUpPointManagerRepository pickUpPointManagerRepository;
 
+	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
 	/**
 	 * This method is used for receiving the data from UserDTO object and set
 	 * the data to the corresponding entity classes
@@ -82,16 +86,20 @@ public class UserComponent {
 	 * @param regPaymentDTO
 	 *            the data from the view
 	 * @return user Returns an User object
+	 * @throws ParseException
+	 *             may occur while parsing from String to Date
 	 */
-	public WalletTransaction mapUserComponent(UserDTO userDTO, RegistrationPaymentDTO regPaymentDTO) {
+	public WalletTransaction mapUserComponent(UserDTO userDTO, RegistrationPaymentDTO regPaymentDTO)
+			throws ParseException {
 
 		User newUser = new User();
+
 		newUser.setFirstName(userDTO.getFirstName());
 		newUser.setLastName(userDTO.getLastName());
 		newUser.setEmail(userDTO.getEmail());
 		newUser.setUserAddress(userDTO.getUserAddress());
 		newUser.setMobileNo(userDTO.getMobileNo());
-		newUser.setDateOfBirth(userDTO.getDateOfBirth());
+		newUser.setDateOfBirth(simpleDateFormat.parse(userDTO.getDateOfBirth()));
 
 		ProofDetail proofDetail = new ProofDetail();
 		proofDetail.setProofType(userDTO.getProofType());
@@ -145,10 +153,13 @@ public class UserComponent {
 	 * @param userDTO
 	 *            the data from the view
 	 * @return Integer 0 or 1
+	 * @throws ParseException
+	 *             may occur while pasring from String to Date
 	 */
-	public int mapUpdateUserDetail(UserDTO userDTO) {
-		return userRepository.updateUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getDateOfBirth(),
-				userDTO.getMobileNo(), userDTO.getUserAddress(), userDTO.getEmail());
+	public int mapUpdateUserDetail(UserDTO userDTO) throws ParseException {
+		return userRepository.updateUser(userDTO.getFirstName(), userDTO.getLastName(),
+				simpleDateFormat.parse(userDTO.getDateOfBirth()), userDTO.getMobileNo(), userDTO.getUserAddress(),
+				userDTO.getEmail());
 	}
 
 	/**

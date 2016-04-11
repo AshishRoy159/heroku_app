@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.service.BookingService;
 import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
@@ -62,7 +63,7 @@ public class HomeController {
 	@RequestMapping(value = { "/", "index" })
 	public ModelAndView getHomePage(Model model) {
 		model.addAttribute("pickUpPoints", pickUpPointService.getAllActivePickupPoints(true));
-		return new ModelAndView("index");
+		return new ModelAndView(ViewConstant.INDEX);
 	}
 
 	/**
@@ -72,7 +73,7 @@ public class HomeController {
 	 */
 	@RequestMapping(value = { "register" }, method = RequestMethod.GET)
 	public String getUserCreatePage() {
-		return "registration";
+		return ViewConstant.REGISTRATION;
 	}
 
 	/**
@@ -84,11 +85,11 @@ public class HomeController {
 	 */
 	@PostAuthorize("isAnonymous()")
 	@RequestMapping(value = { "login" }, method = RequestMethod.GET)
-	public ModelAndView getUserSignInPage(@RequestParam Optional<String> error,Model model) {
-		if(error.isPresent()){
+	public ModelAndView getUserSignInPage(@RequestParam Optional<String> error, Model model) {
+		if (error.isPresent()) {
 			model.addAttribute("loginError", "Invalid email or password..!!");
 		}
-		return new ModelAndView("signIn", "error", error);
+		return new ModelAndView(ViewConstant.SIGN_IN, "error", error);
 	}
 
 	/**
@@ -114,6 +115,6 @@ public class HomeController {
 	public ModelAndView adminHome(Model model) {
 		model.addAttribute("bookings", bookingService.getAllBookingDetails(true));
 		model.addAttribute("pickUpPointManagers", pickUpPointManagerService.getAllPickUpPointManager());
-		return new ModelAndView("adminHome");
+		return new ModelAndView(ViewConstant.ADMIN_HOME);
 	}
 }

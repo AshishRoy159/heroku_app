@@ -16,6 +16,7 @@
 
 package com.mindfire.bicyclesharing.service;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,8 +61,11 @@ public class UserService {
 	 * @param transaction
 	 *            WalletTransaction details of the user
 	 * @return WalletTransaction object
+	 * @throws ParseException
+	 *             may occur while parsing from String to Date
 	 */
-	public WalletTransaction saveUserDetails(UserDTO userDTO, RegistrationPaymentDTO regPaymentDTO) {
+	public WalletTransaction saveUserDetails(UserDTO userDTO, RegistrationPaymentDTO regPaymentDTO)
+			throws ParseException {
 		return userComponent.mapUserComponent(userDTO, regPaymentDTO);
 	}
 
@@ -84,8 +88,10 @@ public class UserService {
 	 * @param userDTO
 	 *            it contains user data
 	 * @return Integer 0 or 1
+	 * @throws ParseException
+	 *             may occur while parsing from String to Date
 	 */
-	public int updateUserDetail(UserDTO userDTO) {
+	public int updateUserDetail(UserDTO userDTO) throws ParseException {
 		return userComponent.mapUpdateUserDetail(userDTO);
 	}
 

@@ -36,6 +36,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
+import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.BookingPaymentDTO;
 import com.mindfire.bicyclesharing.dto.IssueCycleDTO;
 import com.mindfire.bicyclesharing.dto.ReceiveBicyclePaymentDTO;
@@ -74,10 +76,10 @@ public class BookingController {
 
 	@Autowired
 	private PickUpPointManagerService pickUpPointManagerService;
-	
+
 	@Autowired
 	private RateGroupService rateGroupService;
-	
+
 	@Autowired
 	private BookingService bookingService;
 
@@ -86,7 +88,7 @@ public class BookingController {
 
 	@Autowired
 	private WalletService walletService;
-	
+
 	/**
 	 * This method is used to map the booking of the bicycles request. Simply
 	 * render the booking view
@@ -105,8 +107,8 @@ public class BookingController {
 		PickUpPointManager pickUpPoint = pickUpPointManagerService.getPickupPointManager(manager);
 		List<BiCycle> biCycles = biCycleService.getBicyclesByPickupPointAndAvailability(pickUpPoint.getPickUpPoint(),
 				true);
-		model.addAttribute("biCycles", biCycles);
-		return new ModelAndView("booking");
+		model.addAttribute(ModelAttributeConstant.BICYCLES, biCycles);
+		return new ModelAndView(ViewConstant.BOOKING);
 	}
 
 	/**
@@ -131,21 +133,23 @@ public class BookingController {
 		User user = userService.userDetails(bookingPaymentDTO.getUserId());
 		Booking existingBooking = bookingService.getBookingDetails(true, user);
 		if (null != existingBooking) {
-			redirectAttributes.addFlashAttribute("bookingFailure", "Oops..!! Your booking status is open..!");
-			return new ModelAndView("redirect:/manager/booking");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
+					"Oops..!! Your booking status is open..!");
+			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 		}
 
 		Booking booking = bookingService.addNewBooking(auth, bookingPaymentDTO, session);
 		if (null == booking) {
-			redirectAttributes.addFlashAttribute("bookingFailure", "Oops..!! You do not have sufficient balance");
-			return new ModelAndView("redirect:/manager/booking");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
+					"Oops..!! You do not have sufficient balance");
+			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 		} else {
 			biCycleService.updateBiCycleDetails(bookingPaymentDTO.getBicycleId());
 			PickUpPoint pickUpPoint = pickUpPointManagerService.getPickupPointManager(currentUser.getUser())
 					.getPickUpPoint();
 			pickUpPointService.updatePickUpPointAvailability(pickUpPoint,
 					biCycleService.getBicyclesByPickupPointAndAvailability(pickUpPoint, true).size());
-			redirectAttributes.addFlashAttribute("bookingDetails", booking);
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_DETAILS, booking);
 			return new ModelAndView("redirect:/manager/printIssueBicycleDetails");
 		}
 	}
@@ -170,7 +174,7 @@ public class BookingController {
 			BindingResult result, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
 		if (result.hasErrors()) {
 			redirectAttributes.addFlashAttribute("issueCycleErrorMessage", "Please enter valid data !");
-			return new ModelAndView("redirect:/manager/booking");
+			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 		} else {
 			redirectAttributes.addFlashAttribute("issueCycleData", issueCycleDTO);
 
@@ -179,18 +183,18 @@ public class BookingController {
 			session.setAttribute("expectedIn", new Timestamp(cal.getTimeInMillis()));
 			User user = userService.userDetails(issueCycleDTO.getUserId());
 			if (null == user) {
-				redirectAttributes.addFlashAttribute("bookingFailure", "Invalid UserId...");
-				return new ModelAndView("redirect:/manager/booking");
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE, "Invalid UserId...");
+				return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 			}
 			Double fare = bookingService.calculateFare(user, issueCycleDTO);
-			model.addAttribute("baseFare", fare);
+			model.addAttribute(ModelAttributeConstant.BASE_FARE, fare);
 
 			if (user.getIsApproved() == true && user.getEnabled() == true) {
-				return new ModelAndView("bookingPayment");
+				return new ModelAndView(ViewConstant.BOOKING_PAYMENT);
 			} else {
-				redirectAttributes.addFlashAttribute("bookingFailure",
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
 						"It seems your verification is still pending. you need to get approved to book a bicycle.");
-				return new ModelAndView("redirect:/manager/booking");
+				return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 			}
 		}
 	}
@@ -213,18 +217,19 @@ public class BookingController {
 			RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
 			redirectAttributes.addFlashAttribute("receiveCycleErrorMessage", "Enter a valid Booking Id");
-			return new ModelAndView("redirect:/manager/booking");
+			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 		}
 		Booking booking = bookingService.getBookingById(receiveCycleDTO.getBookingId());
 		if (null == booking) {
-			redirectAttributes.addFlashAttribute("bookingFailure", "Your Booking Id is Incorrect!!");
-			return new ModelAndView("redirect:/manager/booking");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
+					"Your Booking Id is Incorrect!!");
+			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 		} else {
 			if (null != booking.getBiCycleId()) {
 				if (booking.getIsOpen()) {
 
-					redirectAttributes.addFlashAttribute("bookingDetails", booking);
-					
+					redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_DETAILS, booking);
+
 					long time = bookingService.calculateRidingTime(booking);
 					long actualTime = time - 600000; // we are giving 10 minute
 														// relaxation.
@@ -232,7 +237,7 @@ public class BookingController {
 						redirectAttributes.addFlashAttribute("currentTime", new Timestamp(new Date().getTime()));
 						return new ModelAndView("redirect:/manager/receiveBicycle");
 					} else {
-						long  hour = bookingService.calculateTotalRideTime(actualTime);
+						long hour = bookingService.calculateTotalRideTime(actualTime);
 						double baseRate = rateGroupService.getBaseRate(booking.getUser()).getBaseRate();
 						double fare = bookingService.calculateActualFare(hour, baseRate);
 						redirectAttributes.addFlashAttribute("fare", fare);
@@ -240,15 +245,16 @@ public class BookingController {
 					}
 
 				} else {
-					redirectAttributes.addFlashAttribute("bookingFailure", "Your Booking is already received!!");
-					return new ModelAndView("redirect:/manager/booking");
+					redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
+							"Your Booking is already received!!");
+					return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 
 				}
 
 			} else {
-				redirectAttributes.addFlashAttribute("bookingFailure",
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
 						"You have not been assigned any bicycle on this booking Id!!");
-				return new ModelAndView("redirect:/manager/booking");
+				return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 			}
 		}
 	}
@@ -271,23 +277,25 @@ public class BookingController {
 		double fare = 0.0;
 		Booking book = bookingService.getBookingById(receiveCycleDTO.getBookingId());
 		if (null == book) {
-			redirectAttributes.addFlashAttribute("bookingFailure", "Your Booking Id is Incorrect!!");
-			return new ModelAndView("redirect:/manager/booking");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
+					"Your Booking Id is Incorrect!!");
+			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 		} else {
 			if (book.getIsOpen()) {
 				Booking booking = bookingService.receiveBicycle(receiveCycleDTO.getBookingId(), fare, auth);
 				if (null == booking) {
-					redirectAttributes.addFlashAttribute("bookingFailure",
+					redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
 							"Your receive request cannot be processed. Try again Later!!");
-					return new ModelAndView("redirect:/manager/booking");
+					return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 				} else {
-					redirectAttributes.addFlashAttribute("bookingSuccess",
+					redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_SUCCESS,
 							"Your receive request processed successfully!!");
-					return new ModelAndView("redirect:/manager/booking");
+					return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 				}
 			} else {
-				redirectAttributes.addFlashAttribute("bookingFailure", "Your Booking is already received!!");
-				return new ModelAndView("redirect:/manager/booking");
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
+						"Your Booking is already received!!");
+				return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 			}
 
 		}
@@ -312,27 +320,29 @@ public class BookingController {
 			Authentication auth, RedirectAttributes redirectAttributes) {
 		Booking book = bookingService.getBookingById(receiveBicyclePaymentDTO.getBookingId());
 		if (null == book) {
-			redirectAttributes.addFlashAttribute("bookingFailure", "Your Booking Id is Incorrect!!");
-			return new ModelAndView("redirect:/manager/booking");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
+					"Your Booking Id is Incorrect!!");
+			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 
 		} else {
 			Wallet wallet = walletService.getWallet(book.getUser());
 			WalletTransaction transaction = bookingService.saveReceiveBicyclePayment(receiveBicyclePaymentDTO, wallet);
 			if (null == transaction) {
-				redirectAttributes.addFlashAttribute("bookingFailure",
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
 						"Your receive request cannot be processed due to low balance. Try again Later!!");
-				return new ModelAndView("redirect:/manager/booking");
+				return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 			} else {
-				Booking booking = bookingService.receiveBicycle(receiveBicyclePaymentDTO.getBookingId(), receiveBicyclePaymentDTO.getFare(), auth);
+				Booking booking = bookingService.receiveBicycle(receiveBicyclePaymentDTO.getBookingId(),
+						receiveBicyclePaymentDTO.getFare(), auth);
 				if (null == booking) {
-					redirectAttributes.addFlashAttribute("bookingFailure",
+					redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
 							"Your receive request cannot be processed. Try again Later!!");
-					return new ModelAndView("redirect:/manager/booking");
+					return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 				} else {
 
-					redirectAttributes.addFlashAttribute("bookingSuccess",
+					redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_SUCCESS,
 							"Your receive request processed successfully!!");
-					return new ModelAndView("redirect:/manager/booking");
+					return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 				}
 			}
 		}
@@ -347,7 +357,7 @@ public class BookingController {
 	 */
 	@RequestMapping(value = "/manager/receiveBicyclePayment", method = RequestMethod.GET)
 	public ModelAndView receiveBicyclePayment() {
-		return new ModelAndView("receiveBicyclePayment");
+		return new ModelAndView(ViewConstant.RECEIVE_BICYCLE_PAYMENT);
 	}
 
 	/**
@@ -358,7 +368,7 @@ public class BookingController {
 	 */
 	@RequestMapping(value = "/manager/receiveBicycle", method = RequestMethod.GET)
 	public ModelAndView receiveBicycle() {
-		return new ModelAndView("receiveBicycle");
+		return new ModelAndView(ViewConstant.RECEIVE_BICYCLE);
 	}
 
 	/**
@@ -376,14 +386,16 @@ public class BookingController {
 	public ModelAndView closeCurrentBooking(@Valid @ModelAttribute("closeBookingData") ReceiveCycleDTO receiveCycleDTO,
 			BindingResult result, RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("closeMessage", "Invalid Booking Id.");
-			return new ModelAndView("redirect:/manager/booking");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE, "Invalid Booking Id.");
+			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 		} else if (null != bookingService.closeBooking(receiveCycleDTO)) {
-			redirectAttributes.addFlashAttribute("closeMessage", "Your booking has been successfully closed.");
-			return new ModelAndView("redirect:/manager/booking");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
+					"Your booking has been successfully closed.");
+			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 		} else {
-			redirectAttributes.addFlashAttribute("closeMessage", "Your booking status is not valid..");
-			return new ModelAndView("redirect:/manager/booking");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
+					"Your booking status is not valid..");
+			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 		}
 	}
 }

@@ -55,7 +55,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr th:each="pickUpPoint : ${pickUpPointList}">
+										<tr th:each="pickUpPoint : ${pickUpPoints}">
 											<td th:text="${pickUpPoint.pickUpPointId}"></td>
 											<td sec:authorize="hasAuthority('ADMIN')"><a
 												th:href="@{/admin/updatePickupPointDetails/} + ${pickUpPoint.pickUpPointId}"

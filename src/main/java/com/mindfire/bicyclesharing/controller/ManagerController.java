@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
+import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.UserDTO;
 
 /**
@@ -47,7 +49,7 @@ public class ManagerController {
 	 */
 	@RequestMapping(value = { "/manager/addNewUser" }, method = RequestMethod.GET)
 	public ModelAndView addNewUser() {
-		return new ModelAndView("addNewUser");
+		return new ModelAndView(ViewConstant.ADD_NEW_USER);
 	}
 
 	/**
@@ -68,10 +70,11 @@ public class ManagerController {
 	public ModelAndView getPayment(@Valid @ModelAttribute("userData") UserDTO userDTO, BindingResult result,
 			HttpSession session, RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Invalid User Data ! Try Again.");
-			return new ModelAndView("redirect:addNewUser");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
+					"Invalid User Data ! Try Again.");
+			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_USER);
 		}
 		session.setAttribute("userDTO", userDTO);
-		return new ModelAndView("managerPayment");
+		return new ModelAndView(ViewConstant.MANAGER_PAYMENT);
 	}
 }

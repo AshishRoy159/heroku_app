@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
+import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.WalletBalanceDTO;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.service.UserService;
@@ -61,7 +63,7 @@ public class WalletController {
 	 */
 	@RequestMapping(value = { "/manager/addWalletBalance" }, method = RequestMethod.GET)
 	public ModelAndView getWalletView() {
-		return new ModelAndView("addWalletBalance");
+		return new ModelAndView(ViewConstant.ADD_WALLET_BALANCE);
 	}
 
 	/**
@@ -79,22 +81,23 @@ public class WalletController {
 	public ModelAndView addWalletBalance(@Valid @ModelAttribute("addWalletBalance") WalletBalanceDTO walletBalanceDTO,
 			BindingResult result, RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Balance must be between 100 and 999!!!");
-			return new ModelAndView("redirect:addWalletBalance");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
+					"Balance must be between 100 and 999!!!");
+			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_WALLET_BALANCE);
 
 		}
 		User user = userService.userDetails(walletBalanceDTO.getUserId());
 		if (user == null) {
-			redirectAttributes.addFlashAttribute("errorMessage", "User not found!!!");
-			return new ModelAndView("redirect:addWalletBalance");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "User not found!!!");
+			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_WALLET_BALANCE);
 
 		} else if (walletService.addBalance(walletBalanceDTO) == 1) {
 			walletTransactionService.createWalletTransaction(walletBalanceDTO);
-			redirectAttributes.addFlashAttribute("successMessage", "Successfully Added!!!");
-			return new ModelAndView("redirect:addWalletBalance");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Added!!!");
+			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_WALLET_BALANCE);
 		}
-		redirectAttributes.addFlashAttribute("errorMessage", "Oops... Operation failed!!");
-		return new ModelAndView("redirect:addWalletBalance");
+		redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Oops... Operation failed!!");
+		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_WALLET_BALANCE);
 	}
 
 }

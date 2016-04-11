@@ -32,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
+import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.ManageRoleDTO;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.security.CurrentUser;
@@ -73,10 +75,10 @@ public class ManageRoleController {
 	public ModelAndView manageRole(@PathVariable("id") Long userId, Model model, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		if (userId == currentUser.getUserId()) {
-			return new ModelAndView("searchUsers", "usersList", userService.getAllUsers());
+			return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST, userService.getAllUsers());
 		}
 		model.addAttribute("userId", userId);
-		return new ModelAndView("manageRole", "pickUpPoints", pickUpPointService.getAllPickupPoints());
+		return new ModelAndView(ViewConstant.MANAGE_ROLE, ModelAttributeConstant.PICKUP_POINTS, pickUpPointService.getAllPickupPoints());
 	}
 
 	/**
@@ -96,17 +98,17 @@ public class ManageRoleController {
 			BindingResult result, Model model) {
 		List<User> users = userService.getAllUsers();
 		if (result.hasErrors()) {
-			model.addAttribute("errorMessage", "Something went wrong. Operation failed.");
-			return new ModelAndView("searchUsers", "usersList", users);
+			model.addAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Something went wrong. Operation failed.");
+			return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST, users);
 		}
 
 		if (userService.updateUserRole(manageRoleDTO) > 0) {
 			if (manageRoleDTO.getUserRoleId() == 2) {
 				pickUpPointManagerService.setPickUpPointToManager(manageRoleDTO);
 			}
-			return new ModelAndView("searchUsers", "usersList", users);
+			return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST, users);
 		} else {
-			return new ModelAndView("searchUsers", "usersList", users);
+			return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST, users);
 		}
 	}
 
@@ -126,17 +128,17 @@ public class ManageRoleController {
 			Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		if (null == userService.setApproval(id)) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Sorry operation failed...!");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Sorry operation failed...!");
 			if (currentUser.getUserRole().equals("ADMIN")) {
-				return new ModelAndView("redirect:/admin/userList");
+				return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
 			} else {
-				return new ModelAndView("redirect:/manager/userList");
+				return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
 			}
 		} else {
 			if (currentUser.getUserRole().equals("ADMIN")) {
-				return new ModelAndView("redirect:/admin/userList");
+				return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
 			} else {
-				return new ModelAndView("redirect:/manager/userList");
+				return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
 			}
 		}
 	}

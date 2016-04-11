@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
+import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.TransferDataDTO;
 import com.mindfire.bicyclesharing.dto.TransferRensponseDTO;
 import com.mindfire.bicyclesharing.dto.TransferRequestDTO;
@@ -87,7 +89,7 @@ public class BiCycleTransferController {
 	 */
 	@RequestMapping(value = "manager/transferRequest", method = RequestMethod.GET)
 	public ModelAndView transferRequest() {
-		return new ModelAndView("transferRequest");
+		return new ModelAndView(ViewConstant.TRANSFER_REQUEST);
 	}
 
 	/**
@@ -108,18 +110,18 @@ public class BiCycleTransferController {
 	public ModelAndView sendRequest(@Valid @ModelAttribute("transferData") TransferRequestDTO transferRequestDTO,
 			BindingResult result, RedirectAttributes redirectAttributes, Authentication authentication) {
 		if (result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("transferErrorMessage",
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 					"Inavlid Request. Please enter valid quantity");
-			return new ModelAndView("redirect:transferRequest");
+			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.TRANSFER_REQUEST);
 		}
 		if (transferRequestService.addNewTransferRequest(authentication, transferRequestDTO) == null) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Request Failed..!! Request cannot exceed maximum capacity.");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Request Failed..!! Request cannot exceed maximum capacity.");
 		} else {
-			redirectAttributes.addFlashAttribute("successMessage",
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE,
 					"Transfer request for " + transferRequestDTO.getQuantity() + " bicycles sent successfully");
 		}
 
-		return new ModelAndView("redirect:transferRequest");
+		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.TRANSFER_REQUEST);
 	}
 
 	/**
@@ -133,9 +135,9 @@ public class BiCycleTransferController {
 	@RequestMapping(value = "admin/requests", method = RequestMethod.GET)
 	public ModelAndView viewRequests(Model model) {
 		List<TransferRequest> allrequests = transferRequestService.findAllRequests();
-		model.addAttribute("requests", allrequests);
+		model.addAttribute(ModelAttributeConstant.REQUESTS, allrequests);
 
-		return new ModelAndView("requestsAndNotificatons");
+		return new ModelAndView(ViewConstant.REQUEST_AND_NOTIFICATIONS);
 	}
 
 	/**
@@ -152,9 +154,9 @@ public class BiCycleTransferController {
 	public ModelAndView viewOthersRequests(Model model, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		List<TransferRequestRespondedDTO> allrequests = transferRequestService.findOtherRequest(currentUser);
-		model.addAttribute("requests", allrequests);
+		model.addAttribute(ModelAttributeConstant.REQUESTS, allrequests);
 
-		return new ModelAndView("requestsAndNotificatons");
+		return new ModelAndView(ViewConstant.REQUEST_AND_NOTIFICATIONS);
 	}
 
 	/**
@@ -176,9 +178,9 @@ public class BiCycleTransferController {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		int currentAvailable = pickUpPointManagerService.getCurrentAvailability(currentUser.getUser());
 		TransferRequest request = transferRequestService.findTransferRequest(requestId);
-		model.addAttribute("request", request);
+		model.addAttribute(ModelAttributeConstant.REQUEST, request);
 		model.addAttribute("max", Math.min(request.getQuantity(), currentAvailable));
-		return new ModelAndView("transferResponseManager");
+		return new ModelAndView(ViewConstant.TRANSFER_RESPONSE_MANAGER);
 	}
 
 	/**
@@ -215,9 +217,9 @@ public class BiCycleTransferController {
 	public ModelAndView adminResponse(@PathVariable("id") Long requestId, Model model) {
 		TransferRequest transferRequest = transferRequestService.findTransferRequest(requestId);
 		List<TransferResponse> responses = transferResponseService.findresponsesForRequest(transferRequest);
-		model.addAttribute("request", transferRequest);
-		model.addAttribute("responses", responses);
-		return new ModelAndView("transferResponseAdmin");
+		model.addAttribute(ModelAttributeConstant.REQUEST, transferRequest);
+		model.addAttribute(ModelAttributeConstant.RESPONSES, responses);
+		return new ModelAndView(ViewConstant.TRANSFER_RESPONSE_ADMIN);
 	}
 
 	/**
@@ -251,9 +253,9 @@ public class BiCycleTransferController {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		List<Transfer> outgoingTransfers = transferService.findOutgoingTransfers(currentUser);
 		List<Transfer> incomingTransfers = transferService.findIncomingTransfers(currentUser);
-		model.addAttribute("outgoings", outgoingTransfers);
-		model.addAttribute("incomings", incomingTransfers);
-		return new ModelAndView("transfers");
+		model.addAttribute(ModelAttributeConstant.OUTGOINGS, outgoingTransfers);
+		model.addAttribute(ModelAttributeConstant.INCOMINGS, incomingTransfers);
+		return new ModelAndView(ViewConstant.TRANSFERS);
 	}
 
 	/**
@@ -273,9 +275,9 @@ public class BiCycleTransferController {
 	public ModelAndView sendShipment(@PathVariable("id") Long transferId, Model model, HttpSession session) {
 		Transfer transfer = transferService.findTransferDetails(transferId);
 		List<BiCycle> biCycles = bicycleService.findBicyclesForShipment(transfer);
-		session.setAttribute("bicycles", biCycles);
+		session.setAttribute(ModelAttributeConstant.BICYCLES, biCycles);
 
-		return new ModelAndView("transferConfirm", "transfer", transfer);
+		return new ModelAndView(ViewConstant.TRANSFER_CONFIRM, ModelAttributeConstant.TRANSFER, transfer);
 	}
 
 	/**
@@ -310,9 +312,9 @@ public class BiCycleTransferController {
 	public ModelAndView receiveShipment(@PathVariable("id") Long transferId, HttpSession session) {
 		Transfer transfer = transferService.findTransferDetails(transferId);
 		List<BiCycle> biCycles = biCycleTransferService.findBicyclesInTransition(transfer);
-		session.setAttribute("bicycles", biCycles);
+		session.setAttribute(ModelAttributeConstant.BICYCLES, biCycles);
 
-		return new ModelAndView("receiveConfirm", "transfer", transfer);
+		return new ModelAndView(ViewConstant.RECEIVE_CONFIRM, ModelAttributeConstant.TRANSFER, transfer);
 	}
 
 	/**
@@ -332,7 +334,7 @@ public class BiCycleTransferController {
 	public ModelAndView confirmShipmentReceive(@PathVariable("id") Long transferId, HttpSession session, Model model) {
 		Transfer transfer = transferService.confirmReceiveTransfer(transferId, session);
 		if (null == transfer) {
-			model.addAttribute("errorMessage", "Error Receiving Transfer!!");
+			model.addAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Error Receiving Transfer!!");
 			return new ModelAndView("receiveShipment/" + transferId);
 		} else {
 			return new ModelAndView("redirect:/manager/transfers");

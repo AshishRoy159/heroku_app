@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.service.UserService;
 import com.mindfire.bicyclesharing.service.WalletService;
@@ -66,6 +67,6 @@ public class WalletTransactionController {
 		Wallet wallet = walletService.getWallet(userService.userDetails(id));
 		model.addAttribute("wallet", wallet);
 		model.addAttribute("walletTransactions", walletTransactionService.getAllTransactionByWallet(wallet));
-		return new ModelAndView("walletTransaction");
+		return new ModelAndView(ViewConstant.WALLET_TRANSACTION);
 	}
 }

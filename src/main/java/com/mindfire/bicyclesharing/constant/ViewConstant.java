@@ -28,7 +28,7 @@ public class ViewConstant {
 	/**
 	 * String Constant for the index view.
 	 */
-	public static final String INDEX = "index";
+	public static final String INDEX = "/index";
 
 	/**
 	 * String Constant for the registration view.
@@ -48,6 +48,8 @@ public class ViewConstant {
 	 */
 	public static final String SET_PASSWORD = "setPassword";
 
+	public static final String SIGN_IN = "signIn";
+
 	/**
 	 * String Constant for the changePassword view.
 	 */
@@ -65,7 +67,7 @@ public class ViewConstant {
 	public static final String USER_BOOKIG_HISTORY = "userBookingHistory";
 
 	public static final String WALLET_TRANSACTION = "walletTransaction";
-	
+
 	public static final String ADMIN_HOME = "adminHome";
 
 	public static final String ADD_NEW_BICYCLE = "addNewBicycle";
@@ -73,9 +75,11 @@ public class ViewConstant {
 	public static final String ADD_NEW_USER = "addNewUser";
 
 	public static final String ADD_WALLET_BALANCE = "updateUserDetails";
-	
+
 	public static final String BOOKING = "booking";
 
+	public static final String REDIRECT_TO_MANAGER_BOOKING = "redirect:/manager/booking";
+	
 	public static final String BOOKING_PAYMENT = "bookingPayment";
 
 	public static final String MANAGER_PAYMENT = "managerPayment";
@@ -115,5 +119,7 @@ public class ViewConstant {
 	public static final String TRANSFER_CONFIRM = "transferConfirm";
 
 	public static final String RECEIVE_CONFIRM = "receiveConfirm";
+
+	public static final String REDIRECT = "redirect:";
 
 }

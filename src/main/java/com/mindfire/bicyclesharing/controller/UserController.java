@@ -16,6 +16,7 @@
 
 package com.mindfire.bicyclesharing.controller;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Optional;
 
@@ -42,6 +43,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mindfire.bicyclesharing.component.MessageBean;
+import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.ChangePasswordDTO;
 import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
@@ -94,19 +96,24 @@ public class UserController {
 	 *            to access general request meta data
 	 * @return successRegister view in case of successful registration else
 	 *         failure view
+	 * @throws ParseException
+	 *             may occur while parsing from String to Date
 	 */
 	@RequestMapping(value = "register", method = RequestMethod.POST)
 	public ModelAndView addUser(@Valid @ModelAttribute("paymentData") RegistrationPaymentDTO regPaymentDTO,
-			BindingResult result, HttpSession session, WebRequest request, Model model) {
+			BindingResult result, HttpSession session, WebRequest request, Model model) throws ParseException {
 		if (result.hasErrors()) {
-			return new ModelAndView("payment", "errorMessage", "Invalid Payment data");
+			return new ModelAndView(ViewConstant.PAYMENT, ModelAttributeConstant.ERROR_MESSAGE, "Invalid Payment data");
 		}
 
 		UserDTO userDTO = (UserDTO) session.getAttribute("userDTO");
 
 		Optional<User> existing = userService.getUserByEmail(userDTO.getEmail());
 
-		if (null == existing) {
+		if (existing.isPresent()) {
+			model.addAttribute("failure", "User with same email already exists!!");
+			return new ModelAndView(ViewConstant.REGISTRATION);
+		} else {
 			WalletTransaction transaction = userService.saveUserDetails(userDTO, regPaymentDTO);
 
 			if (transaction != null) {
@@ -118,13 +125,10 @@ public class UserController {
 				} catch (Exception me) {
 					System.out.println(me.getMessage());
 				}
-				return new ModelAndView("successRegister", "user", userDTO);
+				return new ModelAndView(ViewConstant.SUCCESS_REGISTER, ModelAttributeConstant.USER, userDTO);
 			} else {
-				return new ModelAndView("failure");
+				return new ModelAndView(ViewConstant.FAILURE);
 			}
-		} else {
-			model.addAttribute("failure", "User with same email already exists!!");
-			return new ModelAndView("registration");
 		}
 
 	}
@@ -146,24 +150,24 @@ public class UserController {
 
 		if (verificationToken == null) {
 			String message = messageBean.getInvalidToken();
-			model.addAttribute("message", message);
-			return new ModelAndView("badUser");
+			model.addAttribute(ModelAttributeConstant.MESSAGE, message);
+			return new ModelAndView(ViewConstant.BAD_USER);
 		}
 
 		User user = verificationToken.getUser();
 		if (user.getEnabled()) {
 			String message = messageBean.getAlreadyActivated();
-			model.addAttribute("message", message);
-			return new ModelAndView("badUser");
+			model.addAttribute(ModelAttributeConstant.MESSAGE, message);
+			return new ModelAndView(ViewConstant.BAD_USER);
 		} else {
 			Calendar cal = Calendar.getInstance();
 			if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-				model.addAttribute("message", messageBean.getExpired());
+				model.addAttribute(ModelAttributeConstant.MESSAGE, messageBean.getExpired());
 				model.addAttribute("expired", true);
 				model.addAttribute("token", verificationToken);
-				return new ModelAndView("badUser");
+				return new ModelAndView(ViewConstant.BAD_USER);
 			} else {
-				model.addAttribute("user", userService.saveRegisteredUser(user));
+				model.addAttribute(ModelAttributeConstant.USER, userService.saveRegisteredUser(user));
 				return new ModelAndView("setPassword");
 			}
 		}
@@ -267,7 +271,7 @@ public class UserController {
 		}
 
 		User user = userService.userDetailsByEmail(forgotPasswordDTO);
-		
+
 		if (null == user) {
 			return new ModelAndView("forgotPassword", "errorMessage", "Email doesn't exist");
 		}
@@ -299,25 +303,25 @@ public class UserController {
 
 		if (passwordResetToken == null) {
 			String message = messageBean.getInvalidToken();
-			model.addAttribute("message", message);
-			return new ModelAndView("badUser");
+			model.addAttribute(ModelAttributeConstant.MESSAGE, message);
+			return new ModelAndView(ViewConstant.BAD_USER);
 		}
 
 		User user = passwordResetToken.getUser();
 		if (!user.getEnabled()) {
 			String message = messageBean.getDisabled();
-			model.addAttribute("message", message);
-			return new ModelAndView("badUser");
+			model.addAttribute(ModelAttributeConstant.MESSAGE, message);
+			return new ModelAndView(ViewConstant.BAD_USER);
 		} else {
 			Calendar cal = Calendar.getInstance();
 			if ((passwordResetToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-				model.addAttribute("message", messageBean.getExpired());
+				model.addAttribute(ModelAttributeConstant.MESSAGE, messageBean.getExpired());
 				model.addAttribute("expired", true);
 				model.addAttribute("token", passwordResetToken);
-				return new ModelAndView("badUser");
+				return new ModelAndView(ViewConstant.BAD_USER);
 			} else {
-				model.addAttribute("user", userService.saveRegisteredUser(user));
-				return new ModelAndView("setPassword");
+				model.addAttribute(ModelAttributeConstant.USER, userService.saveRegisteredUser(user));
+				return new ModelAndView(ViewConstant.SET_PASSWORD);
 			}
 		}
 	}
@@ -354,7 +358,7 @@ public class UserController {
 			@Valid @ModelAttribute("changePasswordData") ChangePasswordDTO changePasswordDTO, BindingResult result,
 			RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("invalidPassword",
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.INVALID_PASSWORD,
 					"Password must be 4 to 16 characters long without any spaces");
 			return "redirect:changePassword";
 		}
@@ -367,10 +371,10 @@ public class UserController {
 				return "redirect:/logout";
 			}
 		} else {
-			redirectAttributes.addFlashAttribute("invalidPassword", "Incorrect Old Password");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.INVALID_PASSWORD, "Incorrect Old Password");
 		}
 
-		return "redirect:" + ViewConstant.CHANGE_PASSWORD;
+		return ViewConstant.REDIRECT + ViewConstant.CHANGE_PASSWORD;
 	}
 
 	/**
@@ -388,8 +392,8 @@ public class UserController {
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = { "/user/userProfile/{id}" })
 	public ModelAndView userProfile(Authentication authentication, Model model, @PathVariable Long id) {
-		model.addAttribute("user", userService.userDetails(id));
-		return new ModelAndView("userProfile");
+		model.addAttribute(ModelAttributeConstant.USER, userService.userDetails(id));
+		return new ModelAndView(ViewConstant.USER_PROFILE);
 	}
 
 	/**
@@ -404,8 +408,8 @@ public class UserController {
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = { "/user/updateUserDetails/{id}" }, method = RequestMethod.GET)
 	public ModelAndView updateUserDetails(Model model, @PathVariable("id") Long id) {
-		model.addAttribute("user", userService.userDetails(id));
-		return new ModelAndView("updateUserDetails");
+		model.addAttribute(ModelAttributeConstant.USER, userService.userDetails(id));
+		return new ModelAndView(ViewConstant.UPDATE_USER_DETAILS);
 	}
 
 	/**
@@ -422,22 +426,26 @@ public class UserController {
 	 *            for validating incoming data
 	 * @return userProfile view in case of successful updation else
 	 *         updateUserDetails view
+	 * @throws ParseException
+	 *             may occur while parsing from String to Date
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = { "user/updateUserDetails/{id}" }, method = RequestMethod.POST)
 	public ModelAndView afterUpdateUserDetails(@Valid @ModelAttribute("userDetailData") UserDTO userDTO,
-			@PathVariable("id") Long id, Model model, BindingResult result) {
+			@PathVariable("id") Long id, Model model, BindingResult result) throws ParseException {
 		if (result.hasErrors()) {
-			return new ModelAndView("updateUserDetails", "errorMessage", "Invalid data. Updation failed.");
+			return new ModelAndView(ViewConstant.UPDATE_USER_DETAILS, ModelAttributeConstant.ERROR_MESSAGE,
+					"Invalid data. Updation failed.");
 		}
 
 		int success = userService.updateUserDetail(userDTO);
-		model.addAttribute("user", userService.userDetails(id));
+		model.addAttribute(ModelAttributeConstant.USER, userService.userDetails(id));
 
 		if (success == 0) {
-			return new ModelAndView("updateUserDetails", "errorMessage", "Invalid data. Updation failed.");
+			return new ModelAndView(ViewConstant.UPDATE_USER_DETAILS, ModelAttributeConstant.ERROR_MESSAGE,
+					"Invalid data. Updation failed.");
 		} else {
-			return new ModelAndView("userProfile");
+			return new ModelAndView(ViewConstant.USER_PROFILE);
 		}
 	}
 
@@ -454,14 +462,16 @@ public class UserController {
 	 */
 	@PostAuthorize("isAnonymous()")
 	@RequestMapping(value = "payment", method = RequestMethod.POST)
-	public ModelAndView getPayment(@Valid @ModelAttribute("userData") UserDTO userDTO, HttpSession session,
-			BindingResult result) {
+	public ModelAndView getPayment(@Valid @ModelAttribute("userData") UserDTO userDTO, BindingResult result,
+			HttpSession session) {
 		if (result.hasErrors()) {
-			return new ModelAndView("registration", "errorMessage", "Invalid User data");
+			System.out.println(result.toString());
+			return new ModelAndView(ViewConstant.REGISTRATION, ModelAttributeConstant.ERROR_MESSAGE,
+					"Invalid User data");
 		}
 
 		session.setAttribute("userDTO", userDTO);
-		return new ModelAndView("payment");
+		return new ModelAndView(ViewConstant.PAYMENT);
 	}
 
 	/**
@@ -471,6 +481,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "admin/userList", "manager/userList" })
 	public ModelAndView userList() {
-		return new ModelAndView("searchUsers", "usersList", userService.getAllUsers());
+		return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST,
+				userService.getAllUsers());
 	}
 }
