@@ -6,13 +6,13 @@ $(window).load(function() {
 
 $(document).ready(function() {
 
-//	/*
-//	 * Hide mobile menu after clicking on a link
-//	 * -----------------------------------------------
-//	 */
-//	$('.navbar-collapse a').click(function() {
-//		$(".navbar-collapse").collapse('hide');
-//	});
+	// /*
+	// * Hide mobile menu after clicking on a link
+	// * -----------------------------------------------
+	// */
+	// $('.navbar-collapse a').click(function() {
+	// $(".navbar-collapse").collapse('hide');
+	// });
 
 	/*
 	 * jQuery to collapse the navbar on scroll
@@ -146,6 +146,21 @@ function hideInvalidMessage() {
 }
 
 /*
+ * Validates the input date.
+ */
+function checkDate(form) {
+	var selectedText = document.getElementById('datepicker').value;
+	var selectedDate = new Date(selectedText);
+	var now = new Date();
+	var minAge = parseInt((now - selectedDate) / (1000 * 60 * 60 * 24 * 365));
+	if (minAge < 6) {
+		alert(" You must be 6 years or older.");
+		return false;
+	}
+
+}
+
+/*
  * This function validates the booking date and time provided by the user.
  */
 function userBookingValidationJHHJGH(form) {
@@ -195,7 +210,8 @@ function userBookingValidationJHHJGH(form) {
 						return false;
 					}
 				} else {
-					if(currentDate.getHours()<= parseInt(res[4]) && parseInt(res[4]) < parseInt(rtnRes[4])){
+					if (currentDate.getHours() <= parseInt(res[4])
+							&& parseInt(res[4]) < parseInt(rtnRes[4])) {
 						return true;
 					}
 					alert("Please select valid booking Time");

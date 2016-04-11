@@ -70,7 +70,7 @@
 						<h2>Please Sign Up</h2>
 						<hr class="colorgraph"></hr>
 						<div class="row">
-						<div class="text-danger" th:text="${errorMessage}"></div>
+							<div class="text-danger" th:text="${errorMessage}"></div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<input type="text" name="firstName"
@@ -132,8 +132,8 @@
 								<div class="form-group">
 									<input type="text" name="proofNo" class="form-control input-lg"
 										placeholder="Enter Proof Id" pattern="[a-zA-Z0-9]{2,20}"
-										title="please enter alphabet and digits only.Size[min=2,max=20]" maxlength="20"
-										tabindex="7" required="required" />
+										title="please enter alphabet and digits only.Size[min=2,max=20]"
+										maxlength="20" tabindex="7" required="required" />
 								</div>
 							</div>
 						</div>
@@ -148,8 +148,9 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<input type="date" name="dateOfBirth"
-										class="form-control input-lg"
-										placeholder="Enter Date Of Birth" tabindex="9"
+										class="form-control input-lg" id="datepicker"
+										onchange="checkDate();"
+										placeholder="Date Of Birth(yyyy/mm/dd)" tabindex="9"
 										required="required" />
 								</div>
 							</div>
@@ -177,7 +178,7 @@
 						<div class="row">
 							<div class="col-md-6">
 								<a href="payment">
-									<button class="btn btn-primary btn-block btn-lg" tabindex="12">
+									<button onclick="return checkDate()" class="btn btn-primary btn-block btn-lg" tabindex="12">
 										Pay Now</button>
 								</a>
 							</div>

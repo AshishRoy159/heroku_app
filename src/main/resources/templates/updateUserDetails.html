@@ -13,6 +13,7 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 <script
 	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
 <!-- Template site title
    ================================================== -->
 <title>Bicycle Sharing</title>
@@ -130,7 +131,7 @@
 								<div class="col-md-12 form-group">
 									<form action="#"
 										th:action="@{/user/updateUserDetails/} + ${user.userId}"
-										th:object="${userDetailData}" method="post">
+										th:object="${userDetailData}" method="post" onsubmit="return checkDate(this);">
 										<div class="row">
 											<h2 class="text-danger" th:text="${errorMessage}"></h2>
 											<div class="col-md-6">
@@ -138,8 +139,8 @@
 											</div>
 											<div class="col-md-6">
 												<input class="form-control" type="text" name="firstName"
-													th:value="${user.firstName}" pattern="[a-zA-Z]{2,30}"
-													tabindex="1" maxlength="15" required="required" />
+													th:value="${user.firstName}" pattern="[a-zA-Z]{2,20}"
+													tabindex="1" maxlength="20" required="required" />
 
 											</div>
 										</div>
@@ -150,8 +151,8 @@
 											</div>
 											<div class="col-md-6">
 												<input class="form-control" type="text" name="lastName"
-													th:value="${user.lastName}" pattern="[a-zA-Z]{2,30}"
-													maxlength="30" required="required" />
+													th:value="${user.lastName}" pattern="[a-zA-Z]{2,20}"
+													maxlength="20" required="required" />
 											</div>
 										</div>
 										<br />
@@ -170,7 +171,8 @@
 												<label>DateOfBirth:</label>
 											</div>
 											<div class="col-md-6">
-												<input class="form-control" type="date" name="dateOfBirth"
+												<input class="form-control" type="date" id="datepicker"
+													onchange="checkDate();" name="dateOfBirth"
 													th:value="${user.dateOfBirth}" tabindex="3"
 													required="required" />
 											</div>
@@ -216,7 +218,7 @@
 											</div>
 										</div>
 										<br />
-										<button type="submit" class="btn btn-primary pull-right">Submit</button>
+										<button type="submit"  class="btn btn-primary pull-right" >Submit</button>
 									</form>
 								</div>
 							</div>
@@ -245,7 +247,5 @@
 			</div>
 		</div>
 	</div>
-	<br />
-	<br />
 </body>
 </html>

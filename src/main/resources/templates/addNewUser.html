@@ -15,6 +15,7 @@
 	rel="stylesheet" type="text/css" />
 <!-- TABLE STYLES-->
 <link th:href="@{/css/dataTables.bootstrap.css}" rel="stylesheet" />
+<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
 </head>
 <body>
 	<!-- Navigation section
@@ -38,7 +39,7 @@
 								<div class="col-md-12 col-sm-12 col-xs-12">
 									<form action="#" th:action="@{/manager/managerPayment}"
 										th:object="${userData}" method="post"
-										onsubmit="return emailFunction(this);">
+										onsubmit="return emailFunction(this)">
 										<div class="row">
 											<div class="col-md-6">
 												<div class="form-group">
@@ -119,9 +120,10 @@
 											</div>
 											<div class="col-md-6">
 												<div class="form-group">
-													<input type="date" name="dateOfBirth"
+													<input type="date" id="datepicker"
+													onchange="checkDate();" name="dateOfBirth"
 														class="form-control input-lg"
-														placeholder="Enter Date Of Birth" tabindex="9"
+														placeholder="Date of birth (yyyy/mm/dd)" tabindex="9" title="invalid format"
 														required="required" />
 												</div>
 											</div>
@@ -135,7 +137,7 @@
 											<div class="col-md-4"></div>
 											<div class="col-md-4">
 												<a href="/manager/managerPayment"> <input type="submit"
-													class="btn btn-primary btn-block btn-lg" tabindex="11" />
+													onclick="return checkDate()" class="btn btn-primary btn-block btn-lg" tabindex="11" />
 												</a>
 											</div>
 											<div class="col-md-4"></div>
