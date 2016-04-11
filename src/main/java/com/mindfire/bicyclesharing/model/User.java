@@ -56,6 +56,7 @@ public class User implements Serializable {
 	@Column(name = "date_of_birth")
 	private Date dateOfBirth;
 
+	@Column(unique = true)
 	private String email;
 
 	private Boolean enabled;

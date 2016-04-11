@@ -57,6 +57,15 @@ public class PickUpPointService {
 	public List<PickUpPoint> getAllPickupPoints() {
 		return pickUpPointComponent.findAllPickUpPoint();
 	}
+	
+	/**
+	 * This method is used to find all active pickup points
+	 * 
+	 * @return PickUpPoint list
+	 */
+	public List<PickUpPoint> getAllActivePickupPoints(Boolean isActive) {
+		return pickUpPointComponent.findAllActivePickUpPoint(isActive);
+	}
 
 	/**
 	 * This method is used to find pickup point by its id

@@ -44,6 +44,13 @@ public interface PickUpPointRepository extends JpaRepository<PickUpPoint, Intege
 	 * @return PickUpPoint list
 	 */
 	public List<PickUpPoint> findAllByOrderByPickUpPointIdAsc();
+	
+	/**
+	 * This method is used to get the details of all active pickup points
+	 * 
+	 * @return PickUpPoint list
+	 */
+	public List<PickUpPoint> findByIsActiveOrderByPickUpPointIdAsc(boolean isActive);
 
 	/**
 	 * This method is used to find the details of a specific pickup point by its

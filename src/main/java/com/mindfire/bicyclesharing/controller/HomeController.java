@@ -61,7 +61,7 @@ public class HomeController {
 	 */
 	@RequestMapping(value = { "/", "index" })
 	public ModelAndView getHomePage(Model model) {
-		model.addAttribute("pickUpPoints", pickUpPointService.getAllPickupPoints());
+		model.addAttribute("pickUpPoints", pickUpPointService.getAllActivePickupPoints(true));
 		return new ModelAndView("index");
 	}
 

@@ -17,6 +17,7 @@
 package com.mindfire.bicyclesharing.controller;
 
 import java.util.Calendar;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -96,26 +97,36 @@ public class UserController {
 	 */
 	@RequestMapping(value = "register", method = RequestMethod.POST)
 	public ModelAndView addUser(@Valid @ModelAttribute("paymentData") RegistrationPaymentDTO regPaymentDTO,
-			BindingResult result, HttpSession session, WebRequest request) {
+			BindingResult result, HttpSession session, WebRequest request, Model model) {
 		if (result.hasErrors()) {
 			return new ModelAndView("payment", "errorMessage", "Invalid Payment data");
 		}
 
 		UserDTO userDTO = (UserDTO) session.getAttribute("userDTO");
-		WalletTransaction transaction = userService.saveUserDetails(userDTO, regPaymentDTO);
 
-		if (transaction != null) {
-			User registered = transaction.getWallet().getUser();
-			try {
-				String appUrl = System.getProperty("server.context-path");
-				eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), appUrl));
-			} catch (Exception me) {
-				System.out.println(me.getMessage());
+		Optional<User> existing = userService.getUserByEmail(userDTO.getEmail());
+
+		if (null == existing) {
+			WalletTransaction transaction = userService.saveUserDetails(userDTO, regPaymentDTO);
+
+			if (transaction != null) {
+				User registered = transaction.getWallet().getUser();
+				try {
+					String appUrl = System.getProperty("server.context-path");
+					eventPublisher
+							.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), appUrl));
+				} catch (Exception me) {
+					System.out.println(me.getMessage());
+				}
+				return new ModelAndView("successRegister", "user", userDTO);
+			} else {
+				return new ModelAndView("failure");
 			}
-			return new ModelAndView("successRegister", "user", userDTO);
 		} else {
-			return new ModelAndView("failure");
+			model.addAttribute("failure", "User with same email already exists!!");
+			return new ModelAndView("registration");
 		}
+
 	}
 
 	/**

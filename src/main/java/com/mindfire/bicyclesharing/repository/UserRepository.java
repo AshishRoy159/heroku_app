@@ -123,6 +123,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	@Transactional
 	@Modifying(clearAutomatically = true)
-	@Query("update User u set u.role =:userRoleId where u.userId =:userId")
+	@Query("update User u set u.role =:userRoleId where u.userId =:userId" )
 	public int updateUserRole(@Param("userRoleId") Role userRoleId, @Param("userId") Long userId);
 }

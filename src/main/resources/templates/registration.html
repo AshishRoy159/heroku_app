@@ -61,6 +61,8 @@
 	<form action="#" th:action="@{/payment}" th:object="${userData}"
 		method="post" onsubmit="return emailFunction(this);">
 		<div class="register">
+		
+		<div class="text-danger" th:text="${failure}"></div>
 			<div class="container">
 				<div class="row">
 					<div

@@ -87,7 +87,7 @@ public class BicycleController {
 		BiCycle biCycle = biCycleService.saveBiCycleDetails(biCycleDTO);
 
 		if (biCycle == null) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Oops... Operation failed!!");
+			redirectAttributes.addFlashAttribute("errorMessage", "No space for new bicycle at this pickup point!!");
 			return new ModelAndView("redirect:addNewBicycle");
 		} else {
 			redirectAttributes.addFlashAttribute("successMessage", "Successfully Added!!!");

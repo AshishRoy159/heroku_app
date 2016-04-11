@@ -43,10 +43,10 @@ import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
  */
 @Component
 public class BiCycleComponent {
-	
+
 	@Autowired
 	private PickUpPointRepository pickUpPointRepository;
-	
+
 	@Autowired
 	private PickUpPointComponent pickUpPointComponent;
 
@@ -67,14 +67,18 @@ public class BiCycleComponent {
 	public BiCycle mapBiCycleData(BiCycleDTO biCycleDTO) {
 		BiCycle biCycle = new BiCycle();
 		PickUpPoint pickUpPoint = pickUpPointRepository.findByPickUpPointId(biCycleDTO.getPickUpPoint());
-		biCycle.setChasisNo(biCycleDTO.getChasisNo());
-		biCycle.setCurrentLocation(pickUpPoint);
-		biCycleRepository.save(biCycle);
-		pickUpPointComponent.updateBiCycleCurrentAvailability(pickUpPoint,
-				biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size());
 
-		return biCycle;
+		if (pickUpPoint.getMaxCapacity() > pickUpPoint.getCurrentAvailability()) {
+			biCycle.setChasisNo(biCycleDTO.getChasisNo());
+			biCycle.setCurrentLocation(pickUpPoint);
+			biCycleRepository.save(biCycle);
+			pickUpPointComponent.updateBiCycleCurrentAvailability(pickUpPoint,
+					biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size());
 
+			return biCycle;
+		} else {
+			return null;
+		}
 	}
 
 	/**
