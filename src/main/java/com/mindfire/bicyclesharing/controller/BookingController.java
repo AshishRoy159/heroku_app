@@ -388,10 +388,24 @@ public class BookingController {
 		if (result.hasErrors()) {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE, "Invalid Booking Id.");
 			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
-		} else if (null != bookingService.closeBooking(receiveCycleDTO)) {
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
-					"Your booking has been successfully closed.");
-			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
+		}
+		Booking booking = bookingService.getBookingById(receiveCycleDTO.getBookingId());
+		if (null != booking) {
+			if (null != booking.getBiCycleId()) {
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
+						"You already taken bicycle Please return bicycle before closing the booking..!");
+				return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
+			} else {
+				if (null != bookingService.closeBooking(receiveCycleDTO)) {
+					redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
+							"Your booking has been successfully closed.");
+					return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
+				} else {
+					redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
+							"Your booking status is not valid..");
+					return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
+				}
+			}
 		} else {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
 					"Your booking status is not valid..");

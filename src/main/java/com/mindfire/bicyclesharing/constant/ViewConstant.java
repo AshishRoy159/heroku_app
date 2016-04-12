@@ -74,7 +74,7 @@ public class ViewConstant {
 
 	public static final String ADD_NEW_USER = "addNewUser";
 
-	public static final String ADD_WALLET_BALANCE = "updateUserDetails";
+	public static final String ADD_WALLET_BALANCE = "addWalletBalance";
 
 	public static final String BOOKING = "booking";
 

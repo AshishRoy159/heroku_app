@@ -235,7 +235,8 @@ public class UserBookingController {
 			} else {
 				// giving 30(1800000 millisecond) minute relaxation for taking
 				// bicycle before booking time.
-				if (!openBooking.getExpectedOut().before(new Timestamp(System.currentTimeMillis() + 1800000))) {
+				if (!openBooking.getExpectedOut().before(new Timestamp(System.currentTimeMillis() + 1800000))
+						|| !openBooking.getExpectedIn().after(new Timestamp(System.currentTimeMillis()))) {
 					redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 							"Your expected out time is:-" + openBooking.getExpectedOut());
 					return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
@@ -312,7 +313,8 @@ public class UserBookingController {
 			RedirectAttributes redirectAttributes) {
 		Booking bookingDetails = bookingSevice.updateIssueBicycleDetailsWithPayment(paymentAtPickUpPointDTO);
 		if (null == bookingDetails) {
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE, "Sorry ..!! Your Operation Failed.");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
+					"Sorry ..!! Your Operation Failed.");
 			return new ModelAndView(ViewConstant.BOOKING);
 		} else {
 
