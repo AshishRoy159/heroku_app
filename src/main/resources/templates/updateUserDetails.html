@@ -6,14 +6,6 @@
 <head>
 
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet"
-	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-<script
-	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
 <!-- Template site title
    ================================================== -->
 <title>Bicycle Sharing</title>
@@ -26,6 +18,9 @@
 <!-- Bootstrap CSS
    ================================================== -->
 <link rel="stylesheet" href="/css/bootstrap.min.css" />
+<!-- CSS for jquery datetime picker -->
+<link rel="stylesheet" href="/css/jquery.datetimepicker.css"
+	th:href="@{/css/jquery.datetimepicker.css}" />
 
 <!-- Font Icons
    ================================================== -->
@@ -143,7 +138,8 @@
 								<div class="col-md-12 form-group">
 									<form action="#"
 										th:action="@{/user/updateUserDetails/} + ${user.userId}"
-										th:object="${userDetailData}" method="post" onsubmit="return checkDate(this);">
+										th:object="${userDetailData}" method="post"
+										onsubmit="return checkDate(this);">
 										<div class="row">
 											<h2 class="text-danger" th:text="${errorMessage}"></h2>
 											<div class="col-md-6">
@@ -183,7 +179,7 @@
 												<label>DateOfBirth:</label>
 											</div>
 											<div class="col-md-6">
-												<input class="form-control" type="date" id="datepicker"
+												<input class="form-control" type="text" id="datepicker"
 													onchange="checkDate();" name="dateOfBirth"
 													th:value="${user.dateOfBirth}" tabindex="3"
 													required="required" />
@@ -230,7 +226,7 @@
 											</div>
 										</div>
 										<br />
-										<button type="submit"  class="btn btn-primary pull-right" >Submit</button>
+										<button type="submit" class="btn btn-primary pull-right">Submit</button>
 									</form>
 								</div>
 							</div>
@@ -259,5 +255,21 @@
 			</div>
 		</div>
 	</div>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script
+		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
+	<script src="/js/jquery.datetimepicker.full.js"
+		th:src="@{/js/jquery.datetimepicker.full.js}"></script>
+	<script>
+		$('#datepicker').datetimepicker({
+			yearOffset : 0,
+			lang : 'ch',
+			timepicker : false,
+			format : 'Y-m-d',
+			formatDate : 'Y-m-d',
+		});
+	</script>
 </body>
 </html>

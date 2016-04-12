@@ -16,6 +16,11 @@
 
 package com.mindfire.bicyclesharing.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Optional;
@@ -82,6 +87,8 @@ public class UserController {
 	@Autowired
 	private MessageBean messageBean;
 
+	private static final String DOCUMENTS_DIR = "src/main/resources/documents";
+
 	/**
 	 * This method maps the registration request. Simply render the
 	 * successRegister view.
@@ -98,10 +105,12 @@ public class UserController {
 	 *         failure view
 	 * @throws ParseException
 	 *             may occur while parsing from String to Date
+	 * @throws IOException
 	 */
 	@RequestMapping(value = "register", method = RequestMethod.POST)
 	public ModelAndView addUser(@Valid @ModelAttribute("paymentData") RegistrationPaymentDTO regPaymentDTO,
-			BindingResult result, HttpSession session, WebRequest request, Model model) throws ParseException {
+			BindingResult result, HttpSession session, WebRequest request, Model model)
+			throws ParseException, IOException {
 		if (result.hasErrors()) {
 			return new ModelAndView(ViewConstant.PAYMENT, ModelAttributeConstant.ERROR_MESSAGE, "Invalid Payment data");
 		}
@@ -470,6 +479,12 @@ public class UserController {
 					"Invalid User data");
 		}
 
+		try {
+			saveUserDocument(userDTO);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		session.setAttribute("userDTO", userDTO);
 		return new ModelAndView(ViewConstant.PAYMENT);
 	}
@@ -483,5 +498,22 @@ public class UserController {
 	public ModelAndView userList() {
 		return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST,
 				userService.getAllUsers());
+	}
+
+	/**
+	 * This method saves the user verification document on server storage
+	 * 
+	 * @param userDTO
+	 *            details of the user
+	 * @throws IOException
+	 *             may occur while storing the document
+	 */
+	public void saveUserDocument(UserDTO userDTO) throws IOException {
+		Path documentsDir = Files.createDirectories(Paths.get(DOCUMENTS_DIR + "/" + userDTO.getEmail()));
+		Path document = documentsDir.resolve(userDTO.getDocument().getOriginalFilename());
+		Files.deleteIfExists(document);
+
+		File dest = document.toAbsolutePath().toFile();
+		userDTO.getDocument().transferTo(dest);
 	}
 }

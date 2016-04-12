@@ -16,6 +16,12 @@
 
 package com.mindfire.bicyclesharing.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -40,6 +46,8 @@ import com.mindfire.bicyclesharing.dto.UserDTO;
  */
 @Controller
 public class ManagerController {
+
+	private static final String DOCUMENTS_DIR = "src/main/resources/documents";
 
 	/**
 	 * This method is used to map the add new user request by the manager.
@@ -74,7 +82,30 @@ public class ManagerController {
 					"Invalid User Data ! Try Again.");
 			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_USER);
 		}
+
+		try {
+			saveUserDocument(userDTO);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		session.setAttribute("userDTO", userDTO);
 		return new ModelAndView(ViewConstant.MANAGER_PAYMENT);
+	}
+
+	/**
+	 * This method saves the user verification document on server storage
+	 * 
+	 * @param userDTO
+	 *            details of the user
+	 * @throws IOException
+	 *             may occur while storing the document
+	 */
+	public void saveUserDocument(UserDTO userDTO) throws IOException {
+		Path documentsDir = Files.createDirectories(Paths.get(DOCUMENTS_DIR + "/" + userDTO.getEmail()));
+		Path document = documentsDir.resolve(userDTO.getDocument().getOriginalFilename());
+		Files.deleteIfExists(document);
+
+		File dest = document.toAbsolutePath().toFile();
+		userDTO.getDocument().transferTo(dest);
 	}
 }

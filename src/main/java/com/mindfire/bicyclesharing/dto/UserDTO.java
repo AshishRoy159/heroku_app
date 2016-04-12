@@ -23,6 +23,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.NumberFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * UserDTO class is used for taking data from the registration view
@@ -63,7 +64,7 @@ public class UserDTO {
 	@Pattern(regexp = "[a-zA-Z0-9]{2,20}")
 	private String proofNo;
 
-	private String document;
+	private MultipartFile document;
 
 	/**
 	 * @return the firstName
@@ -188,7 +189,7 @@ public class UserDTO {
 	/**
 	 * @return the document
 	 */
-	public String getDocument() {
+	public MultipartFile getDocument() {
 		return document;
 	}
 
@@ -196,7 +197,7 @@ public class UserDTO {
 	 * @param document
 	 *            the document to set
 	 */
-	public void setDocument(String document) {
+	public void setDocument(MultipartFile document) {
 		this.document = document;
 	}
 
