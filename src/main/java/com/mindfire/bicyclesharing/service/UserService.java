@@ -220,4 +220,15 @@ public class UserService {
 	public User setApproval(Long id) {
 		return userComponent.mapApproval(id);
 	}
+	
+	/**
+	 * This method is used to update user enable field.
+	 * 
+	 * @param id
+	 *            user id
+	 * @return {@link User} object
+	 */
+	public User setEnable(Long id) {
+		return userComponent.mapIsActive(id);
+	}
 }

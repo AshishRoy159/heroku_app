@@ -250,8 +250,28 @@ public class UserComponent {
 	 */
 	public User mapApproval(Long id) {
 		User user = userRepository.findByUserId(id);
+		if(user.getIsApproved()){
+			user.setIsApproved(false);
+		}else{
 		user.setIsApproved(true);
-
+		}
+		return userRepository.save(user);
+	}
+	
+	/**
+	 * This method is used to enable or disable the user.
+	 * 
+	 * @param id
+	 *            user id
+	 * @return {@link User} object
+	 */
+	public User mapIsActive(Long id) {
+		User user = userRepository.findByUserId(id);
+		if(user.getEnabled()){
+			user.setEnabled(false);
+		}else{
+			user.setEnabled(true);
+		}
 		return userRepository.save(user);
 	}
 }

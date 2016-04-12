@@ -75,10 +75,12 @@ public class ManageRoleController {
 	public ModelAndView manageRole(@PathVariable("id") Long userId, Model model, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		if (userId == currentUser.getUserId()) {
-			return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST, userService.getAllUsers());
+			return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST,
+					userService.getAllUsers());
 		}
 		model.addAttribute("userId", userId);
-		return new ModelAndView(ViewConstant.MANAGE_ROLE, ModelAttributeConstant.PICKUP_POINTS, pickUpPointService.getAllPickupPoints());
+		return new ModelAndView(ViewConstant.MANAGE_ROLE, ModelAttributeConstant.PICKUP_POINTS,
+				pickUpPointService.getAllPickupPoints());
 	}
 
 	/**
@@ -127,14 +129,69 @@ public class ManageRoleController {
 	public ModelAndView userApproval(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
 			Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-		if (null == userService.setApproval(id)) {
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Sorry operation failed...!");
+		if ((currentUser.getUserRole().equals("ADMIN") && currentUser.getUserId() != id) || (currentUser.getUserRole().equals("MANAGER")
+				&& userService.userDetails(id).getRole().getUserRole().equals("USER"))) {
+			if (null == userService.setApproval(id)) {
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
+						"Sorry operation failed...!");
+				if (currentUser.getUserRole().equals("ADMIN")) {
+					return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
+				} else {
+					return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
+				}
+			} else {
+				if (currentUser.getUserRole().equals("ADMIN")) {
+					return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
+				} else {
+					return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
+				}
+			}
+		} else {
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
+					"You don't have permission to update this details...!");
 			if (currentUser.getUserRole().equals("ADMIN")) {
 				return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
 			} else {
 				return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
 			}
+		}
+	}
+
+	/**
+	 * This method is used to enable the user by admin or manager.
+	 * 
+	 * @param id
+	 *            user id
+	 * @param redirectAttributes
+	 *            this is used for displaying messages
+	 * @param authentication
+	 *            this is used for retrieve the current user.
+	 * @return searchUser view.
+	 */
+	@RequestMapping(value = "/user/userEnable/{id}", method = RequestMethod.GET)
+	public ModelAndView userEnable(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
+			Authentication authentication) {
+		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+		if ((currentUser.getUserRole().equals("ADMIN") && currentUser.getUserId() != id) || (currentUser.getUserRole().equals("MANAGER")
+				&& userService.userDetails(id).getRole().getUserRole().equals("USER"))) {
+			if (null == userService.setEnable(id)) {
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
+						"Sorry operation failed...!");
+				if (currentUser.getUserRole().equals("ADMIN")) {
+					return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
+				} else {
+					return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
+				}
+			} else {
+				if (currentUser.getUserRole().equals("ADMIN")) {
+					return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
+				} else {
+					return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
+				}
+			}
 		} else {
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
+					"You don't have permission to update this details...!");
 			if (currentUser.getUserRole().equals("ADMIN")) {
 				return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
 			} else {
