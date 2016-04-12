@@ -111,7 +111,7 @@ public class UserBookingController {
 							"Your Booking is successfully completed..Please Choose your payment.");
 					long actualTime = (userBooking.getExpectedIn().getTime() - userBooking.getExpectedOut().getTime());
 					long hour = bookingSevice.calculateTotalRideTime(actualTime);
-					double baseRate = rateGroupService.getBaseRate(userBooking.getUser()).getBaseRate();
+					double baseRate = rateGroupService.getBaseRate(userBooking.getUser()).getBaseRateBean().getBaseRate();
 					double fare = (hour * baseRate);
 
 					if (fare == 0.0) {
@@ -251,7 +251,7 @@ public class UserBookingController {
 								long actualTime = (openBooking.getExpectedIn().getTime()
 										- openBooking.getExpectedOut().getTime());
 								long hour = bookingSevice.calculateTotalRideTime(actualTime);
-								double baseRate = rateGroupService.getBaseRate(openBooking.getUser()).getBaseRate();
+								double baseRate = rateGroupService.getBaseRate(openBooking.getUser()).getBaseRateBean().getBaseRate();
 								double fare = (hour * baseRate);
 								if (fare == 0.0) {
 									fare = baseRate;

@@ -36,5 +36,5 @@ public interface RateGroupRepository extends JpaRepository<RateGroup, Long> {
 	 *            the groupType
 	 * @return RateGroup object
 	 */
-	public RateGroup findByGroupType(String rateGroup);
+	public RateGroup findByGroupTypeAndIsActive(String rateGroup, Boolean isActive);
 }

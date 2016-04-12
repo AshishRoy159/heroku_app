@@ -228,7 +228,7 @@ public class BookingService {
 	 * @return {@link Double} object
 	 */
 	public Double calculateFare(User user, IssueCycleDTO issueCycleDTO) {
-		return user.getRateGroup().getBaseRate() * issueCycleDTO.getExpectedInTime();
+		return user.getRateGroup().getBaseRateBean().getBaseRate() * issueCycleDTO.getExpectedInTime();
 	}
 
 	public long calculateRidingTime(Booking booking) {

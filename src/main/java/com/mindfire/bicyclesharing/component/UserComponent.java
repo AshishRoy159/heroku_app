@@ -118,7 +118,7 @@ public class UserComponent {
 
 		newUser.setProofDetail(proofDetail);
 		newUser.setRole(roleRepository.findByUserRole("USER"));
-		newUser.setRateGroup(rateGroupRepository.findByGroupType("USER"));
+		newUser.setRateGroup(rateGroupRepository.findByGroupTypeAndIsActive("USER", true));
 		userRepository.save(newUser);
 
 		wallet.setUser(newUser);

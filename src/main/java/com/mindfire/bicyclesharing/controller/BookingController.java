@@ -238,7 +238,7 @@ public class BookingController {
 						return new ModelAndView("redirect:/manager/receiveBicycle");
 					} else {
 						long hour = bookingService.calculateTotalRideTime(actualTime);
-						double baseRate = rateGroupService.getBaseRate(booking.getUser()).getBaseRate();
+						double baseRate = rateGroupService.getBaseRate(booking.getUser()).getBaseRateBean().getBaseRate();
 						double fare = bookingService.calculateActualFare(hour, baseRate);
 						redirectAttributes.addFlashAttribute("fare", fare);
 						return new ModelAndView("redirect:/manager/receiveBicyclePayment");

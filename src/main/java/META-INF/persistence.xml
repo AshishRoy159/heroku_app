@@ -7,7 +7,6 @@
 		<class>com.mindfire.bicyclesharing.model.Booking</class>
 		<class>com.mindfire.bicyclesharing.model.PickUpPoint</class>
 		<class>com.mindfire.bicyclesharing.model.ProofDetail</class>
-		<class>com.mindfire.bicyclesharing.model.RateGroup</class>
 		<class>com.mindfire.bicyclesharing.model.Role</class>
 		<class>com.mindfire.bicyclesharing.model.Transfer</class>
 		<class>com.mindfire.bicyclesharing.model.TransferRequest</class>
@@ -19,5 +18,7 @@
 		<class>com.mindfire.bicyclesharing.model.Wallet</class>
 		<class>com.mindfire.bicyclesharing.model.PickUpPointManager</class>
 		<class>com.mindfire.bicyclesharing.enums.TransferStatusEnumConverter</class>
+		<class>com.mindfire.bicyclesharing.model.BaseRate</class>
+		<class>com.mindfire.bicyclesharing.model.RateGroup</class>
 	</persistence-unit>
 </persistence>
