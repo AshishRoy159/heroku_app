@@ -121,5 +121,7 @@ public class ViewConstant {
 	public static final String RECEIVE_CONFIRM = "receiveConfirm";
 
 	public static final String REDIRECT = "redirect:";
+	
+	public static final String RUNNING_BOOKING = "bookingInUse";
 
 }

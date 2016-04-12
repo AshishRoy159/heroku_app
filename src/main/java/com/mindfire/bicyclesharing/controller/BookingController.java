@@ -238,7 +238,8 @@ public class BookingController {
 						return new ModelAndView("redirect:/manager/receiveBicycle");
 					} else {
 						long hour = bookingService.calculateTotalRideTime(actualTime);
-						double baseRate = rateGroupService.getBaseRate(booking.getUser()).getBaseRateBean().getBaseRate();
+						double baseRate = rateGroupService.getBaseRate(booking.getUser()).getBaseRateBean()
+								.getBaseRate();
 						double fare = bookingService.calculateActualFare(hour, baseRate);
 						redirectAttributes.addFlashAttribute("fare", fare);
 						return new ModelAndView("redirect:/manager/receiveBicyclePayment");
@@ -411,5 +412,17 @@ public class BookingController {
 					"Your booking status is not valid..");
 			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 		}
+	}
+
+	/**
+	 * This method is used to map the request for view the current running
+	 * bookings and simply render the view along with the result.
+	 * 
+	 * @return bookingInUse view.
+	 */
+	@RequestMapping(value = { "admin/bookingInUse", "manager/bookingInUse" }, method = RequestMethod.GET)
+	public ModelAndView runningBookings() {
+		List<Booking> runningBookings = bookingService.getRunningBooking(true);
+		return new ModelAndView(ViewConstant.RUNNING_BOOKING, ModelAttributeConstant.BOOKINGS, runningBookings);
 	}
 }

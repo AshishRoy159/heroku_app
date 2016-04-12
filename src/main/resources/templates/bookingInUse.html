@@ -27,12 +27,8 @@
 			<div class="row">
 				<div class="col-md-12">
 					<h1 class="page-header">
-						User Details<br /> <small sec:authorize="hasAuthority('ADMIN')">(Click on User's Name to view
-							user profile or click on User's role to change role)</small>
+						Bookings In Use<br />
 					</h1>
-					<h2>
-						<small  sec:authorize="hasAuthority('ADMIN')">(You cannot change your own role.)</small>
-					</h2>
 				</div>
 			</div>
 			<div class="row" style="margin-bottom: 10px">
@@ -42,44 +38,38 @@
 				<div class="col-md-12 col-sm-12 col-xs-12">
 					<!-- Advanced Tables -->
 					<div class="panel panel-info">
-						<div class="panel-heading">User Details</div>
+						<div class="panel-heading">
+							Bookings In Use <span sec:authorize="hasAuthority('ADMIN')"> ( To view user's details click on user
+								name )</span>
+						</div>
 						<div class="panel-body">
 							<div class="table-responsive">
 								<table class="table table-striped table-bordered table-hover"
 									id="dataTables-example">
 									<thead>
 										<tr>
-											<th>User Id</th>
-											<th>User name</th>
-											<th>User address</th>
-											<th>Mobile No</th>
-											<th>Registered on</th>
-											<th>Role</th>
-											<th>Is approved?</th>
-											<th>Is Active?</th>
+											<th class="text-center">Booking Id</th>
+											<th class="text-center">Actual Out</th>
+											<th class="text-center">Expected In</th>
+											<th class="text-center">Pickup From</th>
+											<th class="text-center">Name</th>
+											<th class="text-center">User's Mobile</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr th:each="user : ${usersList}">
-											<td class="text-center" th:text="${user.userId}"></td>
-											<td sec:authorize="hasAuthority('ADMIN')" class="text-center"><a
-												th:href="@{/user/userProfile/} + ${user.userId}"
-												th:text="${user.firstName} + *{' '} + ${user.lastName}"></a></td>
-											<td sec:authorize="hasAuthority('MANAGER')"
-												class="text-center"
-												th:text="${user.firstName} + *{' '} + ${user.lastName}"></td>
-											<td class="text-center" th:text="${user.userAddress}"></td>
-											<td class="text-center" th:text="${user.mobileNo}"></td>
-											<td class="text-center" th:text="${user.registrationTime}"></td>
-											<td sec:authorize="hasAuthority('ADMIN')" class="text-center"><a
-												th:href="@{/admin/manageRole/} + ${user.userId}"
-												th:text="${user.role.userRole}"></a></td>
-											<td sec:authorize="hasAuthority('MANAGER')"
-												class="text-center" th:text="${user.role.userRole}"></td>
-											<td class="text-center" th:if="${user.isApproved}">✔</td>
-											<td class="text-center" th:unless="${user.isApproved}">✘ <a th:href="@{/user/userApproval/} + ${user.userId}" th:text="Approve"></a></td>
-											<td class="text-center" th:if="${user.enabled}">✔</td>
-											<td class="text-center" th:unless="${user.enabled}">✘</td>
+										<tr th:each="booking : ${bookings}">
+											<td class="text-center" th:text="${booking.bookingId}"></td>
+											<td class="text-center" th:text="${booking.actualOut}"></td>
+											<td class="text-center" th:text="${booking.expectedIn}"></td>
+											<td class="text-center"
+												th:text="${booking.pickedUpFrom.location}"></td>
+											<td class="text-center"
+											  sec:authorize="hasAuthority('MANAGER')" th:text="${booking.user.firstName} + *{' '} + ${booking.user.lastName}"></td>
+											<td class="text-center" sec:authorize="hasAuthority('ADMIN')"><a
+												th:href="@{/user/userProfile/} + ${booking.user.userId}"
+												th:text="${booking.user.firstName} + *{' '} + ${booking.user.lastName}"></a>
+											</td>
+											<td class="text-center" th:text="${booking.user.mobileNo}"></td>
 										</tr>
 									</tbody>
 								</table>

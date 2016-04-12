@@ -327,4 +327,16 @@ public class BookingComponent {
 	public Booking mapExistingBooking(Boolean isOpen, User user) {
 		return bookingRepository.findByIsOpenAndUser(isOpen, user);
 	}
+
+	/**
+	 * This method is used to map the running bookings based on their isOpen
+	 * status.
+	 * 
+	 * @param isOpen
+	 *            Boolean value for check their status
+	 * @return {@link Booking} List
+	 */
+	public List<Booking> mapRunningBooking(Boolean isOpen) {
+		return bookingRepository.findAllByIsOpenAndBiCycleIdIsNotNull(isOpen);
+	}
 }

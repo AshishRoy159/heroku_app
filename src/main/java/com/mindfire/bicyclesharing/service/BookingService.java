@@ -231,12 +231,28 @@ public class BookingService {
 		return user.getRateGroup().getBaseRateBean().getBaseRate() * issueCycleDTO.getExpectedInTime();
 	}
 
+	/**
+	 * This method is used to calculate the riding time based on the booking.
+	 * 
+	 * @param booking
+	 *            this is Booking object
+	 * @return {@link Long} value
+	 */
 	public long calculateRidingTime(Booking booking) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(new Date().getTime());
 		return cal.getTimeInMillis() - booking.getExpectedIn().getTime();
 	}
 
+	/**
+	 * This method is used to calculate total riding time based on their actual
+	 * time.
+	 * 
+	 * @param actualTime
+	 *            this is actual time (difference between expectedIn and
+	 *            expectedOut)
+	 * @return {@link Long} value
+	 */
 	public long calculateTotalRideTime(long actualTime) {
 		long hour = (actualTime / (60 * 1000)) / 60;
 		long remainder = (actualTime / (60 * 1000)) % 60;
@@ -246,12 +262,42 @@ public class BookingService {
 		return hour;
 	}
 
+	/**
+	 * This method is used to calculate actual fare based on the base rate and
+	 * time.
+	 * 
+	 * @param hour
+	 *            this is riding time
+	 * @param baseRate
+	 *            this is base rate for riding per hour
+	 * @return {@link Double} value
+	 */
 	public double calculateActualFare(long hour, double baseRate) {
 		return (hour * (baseRate + ((baseRate * 10) / 100)));
 	}
 
+	/**
+	 * This method is used to save the receive bicycle payment details.
+	 * 
+	 * @param receiveBicyclePaymentDTO
+	 *            receive bicycle payment data
+	 * @param userWallet
+	 *            this is wallet object associated to the user
+	 * @return {@link WalletTransaction} object
+	 */
 	public WalletTransaction saveReceiveBicyclePayment(ReceiveBicyclePaymentDTO receiveBicyclePaymentDTO,
 			Wallet userWallet) {
 		return bookingComponent.mapReceiveBicyclePayment(receiveBicyclePaymentDTO, userWallet);
+	}
+
+	/**
+	 * This method is used to get all running bookings.
+	 * 
+	 * @param isOpen
+	 *            Boolean value this is used to check the booking status
+	 * @return {@link Booking} List
+	 */
+	public List<Booking> getRunningBooking(Boolean isOpen) {
+		return bookingComponent.mapRunningBooking(isOpen);
 	}
 }

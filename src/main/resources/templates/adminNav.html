@@ -179,6 +179,12 @@
 					<li sec:authorize="hasAuthority('MANAGER')"><a
 						th:href="@{/manager/addWalletBalance}"><i
 							class="fa fa-fw fa-file "></i> Add Wallet balance</a></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/bookingInUse}"><i
+							class="fa fa-history fa-fw"></i> Running bookings</a></li>
+					<li sec:authorize="hasAuthority('ADMIN')"><a
+						th:href="@{/admin/bookingInUse}"><i
+							class="fa fa-history fa-fw"></i> Running bookings</a></li>
 				</ul>
 			</div>
 
