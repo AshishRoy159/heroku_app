@@ -23,6 +23,7 @@ import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomi
 import org.springframework.boot.context.embedded.ErrorPage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 /**
@@ -73,7 +74,7 @@ public class BicycleSharingApplication {
 	 * multipart files are converted to objects of MutipartFile class
 	 * 
 	 * @see MultipartFile
-	 * @return Returns a CommonsMultipartResolver object
+	 * @return {@link CommonsMultipartResolver} object
 	 */
 	@Bean(name = "multipartResolver")
 	public CommonsMultipartResolver createMultipartResolver() {

@@ -61,6 +61,7 @@ public class PickUpPointService {
 	/**
 	 * This method is used to find all active pickup points
 	 * 
+	 * @param isActive true or false
 	 * @return PickUpPoint list
 	 */
 	public List<PickUpPoint> getAllActivePickupPoints(Boolean isActive) {
@@ -81,7 +82,7 @@ public class PickUpPointService {
 	/**
 	 * This method is used to update pickup point details.
 	 * 
-	 * @param pickUpPoint
+	 * @param pickUpPointDTO
 	 *            the PickUpPoint data to be updated
 	 * @return Integer either 0 or 1
 	 */

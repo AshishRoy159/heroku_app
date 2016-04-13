@@ -107,11 +107,11 @@ public class TransferResponseService {
 	 * This method is used to retrieve record of a transfer response from a
 	 * specific pickup point to a specific request.
 	 * 
-	 * @param request
+	 * @param transferRequest
 	 *            the transfer request
 	 * @param pickUpPoint
 	 *            the concerned pickup point
-	 * @return {@link TransferResponse} object
+	 * @return {@link TransferResponse} object null or not
 	 */
 	public Optional<TransferResponse> findResponseForrequest(TransferRequest transferRequest, PickUpPoint pickUpPoint) {
 		return transferResponseComponent.getResposneForRequest(transferRequest, pickUpPoint);

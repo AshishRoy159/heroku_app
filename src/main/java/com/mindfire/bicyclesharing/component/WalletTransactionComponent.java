@@ -41,10 +41,10 @@ public class WalletTransactionComponent {
 
 	@Autowired
 	private WalletRepository walletRepository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private WalletTransactionRepository walletTransactionRepository;
 
@@ -53,16 +53,24 @@ public class WalletTransactionComponent {
 	 * 
 	 * @param wallet
 	 *            Wallet object
-	 * @return {@link List<WalletTransaction>}
+	 * @return {@link WalletTransaction} List
 	 */
 	public List<WalletTransaction> mapWalletTransactionByWallet(Wallet wallet) {
 		return walletTransactionRepository.findByWallet(wallet);
 	}
-	
-	public WalletTransaction mapWalletTransactionDetails(WalletBalanceDTO walletBalanceDTO){
+
+	/**
+	 * This method is used to create new wallet transaction record
+	 * 
+	 * @param walletBalanceDTO
+	 *            the incoming wallet transaction data
+	 * @return {@link WalletTransaction} object
+	 */
+	public WalletTransaction mapWalletTransactionDetails(WalletBalanceDTO walletBalanceDTO) {
 		WalletTransaction walletTransaction = new WalletTransaction();
 		walletTransaction.setAmount(walletBalanceDTO.getBalance());
-		walletTransaction.setWallet(walletRepository.findByUser(userRepository.findByUserId(walletBalanceDTO.getUserId())));
+		walletTransaction
+				.setWallet(walletRepository.findByUser(userRepository.findByUserId(walletBalanceDTO.getUserId())));
 		walletTransaction.setMode("cash");
 		walletTransaction.setType("DEPOSIT");
 

@@ -59,25 +59,13 @@ public class WalletComponent {
 	}
 
 	/**
-	 * This method is used for receiving data from WalletBalanceDTO and set the
-	 * data to corresponding entity class.
+	 * This method is used to get wallet details of an user
 	 * 
-	 * @param walletBalanceDTO
-	 *            the data from the view
-	 * @return WalletTransaction object
+	 * @param user
+	 *            the concerned user
+	 * @return {@link Wallet} object
 	 */
-	// public WalletTransaction mapWalletTransactionDetail(WalletBalanceDTO
-	// walletBalanceDTO) {
-	// WalletTransaction walletTransaction = new WalletTransaction();
-	// walletTransaction.setAmount(walletBalanceDTO.getBalance());
-	// walletTransaction.setWallet(walletService.getWallet(userRepository.findByUserId(walletBalanceDTO.getUserId())));
-	// walletTransaction.setMode("cash");
-	// walletTransaction.setType("DEPOSIT");
-	//
-	// return walletService.saveWalletTransactionDetail(walletTransaction);
-	// }
-
-	 public Wallet findWalletByUser(User user){
-	 return walletRepository.findByUser(user);
-	 }
+	public Wallet findWalletByUser(User user) {
+		return walletRepository.findByUser(user);
+	}
 }

@@ -49,6 +49,7 @@ public class MailConfig {
 	 * 
 	 * @return {@link JavaMailSender} object
 	 * @throws IOException
+	 *             may occur while reading from properties file
 	 */
 	@Bean
 	public JavaMailSender mailSender() throws IOException {
@@ -69,6 +70,7 @@ public class MailConfig {
 	 * 
 	 * @return {@link Properties} object
 	 * @throws IOException
+	 *             may occur while reading from properties file
 	 */
 	private Properties configProperties() throws IOException {
 		Properties properties = new Properties();
@@ -81,6 +83,7 @@ public class MailConfig {
 	 * 
 	 * @return {@link Properties} object
 	 * @throws IOException
+	 *             may occur while reading from properties file
 	 */
 	private Properties javaMailProperties() throws IOException {
 		Properties properties = new Properties();

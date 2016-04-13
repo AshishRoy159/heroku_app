@@ -47,13 +47,20 @@ public class WalletTransactionService {
 	 * 
 	 * @param wallet
 	 *            Wallet object
-	 * @return {@link List<WalletTransaction>}
+	 * @return {@link WalletTransaction} List
 	 */
 	public List<WalletTransaction> getAllTransactionByWallet(Wallet wallet) {
 		return walletTransactionComponent.mapWalletTransactionByWallet(wallet);
 	}
-	
-	public WalletTransaction createWalletTransaction(WalletBalanceDTO walletBalanceDTO){
+
+	/**
+	 * This method is used to create new wallet transaction object
+	 * 
+	 * @param walletBalanceDTO
+	 *            the incoming wallet transaction data
+	 * @return {@link WalletTransaction} object
+	 */
+	public WalletTransaction createWalletTransaction(WalletBalanceDTO walletBalanceDTO) {
 		return walletTransactionComponent.mapWalletTransactionDetails(walletBalanceDTO);
 	}
 }

@@ -16,7 +16,6 @@
 
 package com.mindfire.bicyclesharing.component;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -89,10 +88,9 @@ public class UserComponent {
 	 * @return user Returns an User object
 	 * @throws ParseException
 	 *             may occur while parsing from String to Date
-	 * @throws IOException
 	 */
 	public WalletTransaction mapUserComponent(UserDTO userDTO, RegistrationPaymentDTO regPaymentDTO)
-			throws ParseException, IOException {
+			throws ParseException {
 
 		User newUser = new User();
 

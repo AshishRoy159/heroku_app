@@ -95,16 +95,16 @@ public class UserController {
 	 *            the current session
 	 * @param request
 	 *            to access general request meta data
+	 * @param model
+	 *            to map the model attributes
 	 * @return successRegister view in case of successful registration else
 	 *         failure view
 	 * @throws ParseException
 	 *             may occur while parsing from String to Date
-	 * @throws IOException
 	 */
 	@RequestMapping(value = "register", method = RequestMethod.POST)
 	public ModelAndView addUser(@Valid @ModelAttribute("paymentData") RegistrationPaymentDTO regPaymentDTO,
-			BindingResult result, HttpSession session, WebRequest request, Model model)
-			throws ParseException, IOException {
+			BindingResult result, HttpSession session, WebRequest request, Model model) throws ParseException {
 		if (result.hasErrors()) {
 			return new ModelAndView(ViewConstant.PAYMENT, ModelAttributeConstant.ERROR_MESSAGE, "Invalid Payment data");
 		}
@@ -122,8 +122,7 @@ public class UserController {
 			if (transaction != null) {
 				User registered = transaction.getWallet().getUser();
 				try {
-					eventPublisher
-							.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale()));
+					eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale()));
 				} catch (Exception me) {
 					System.out.println(me.getMessage());
 				}

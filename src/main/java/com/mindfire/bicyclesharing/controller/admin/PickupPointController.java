@@ -129,6 +129,8 @@ public class PickupPointController {
 	 *            to receive the incoming data
 	 * @param result
 	 *            for validation of incoming data
+	 * @param redirectAttributes
+	 *            for mapping model attributes
 	 * @return pickupPointDetails view
 	 */
 	@RequestMapping(value = "admin/updatePickupPointDetails", method = RequestMethod.POST)

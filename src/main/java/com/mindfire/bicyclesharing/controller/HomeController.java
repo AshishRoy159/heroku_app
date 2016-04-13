@@ -90,6 +90,12 @@ public class HomeController {
 	 * 
 	 * @param error
 	 *            to catch login errors
+	 * @param logout
+	 *            to show messages on logout
+	 * @param model
+	 *            to map model attributes
+	 * @param authentication
+	 *            to get the current user details
 	 * @return the signIn view.
 	 */
 	@RequestMapping(value = { "login" }, method = RequestMethod.GET)
@@ -105,7 +111,7 @@ public class HomeController {
 				model.addAttribute("loginError", "Invalid email or password..!!");
 			}
 			if (logout.isPresent()) {
-				model.addAttribute("loginError", "You are successfully logged out!!");
+				model.addAttribute("loginError", "You have successfully logged out!!");
 			}
 			return new ModelAndView(ViewConstant.SIGN_IN, "error", error);
 		}

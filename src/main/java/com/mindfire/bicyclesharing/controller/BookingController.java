@@ -167,6 +167,8 @@ public class BookingController {
 	 *            the session's variables.
 	 * @param redirectAttributes
 	 *            to map model attributes
+	 * @param model
+	 *            to map model attributes
 	 * @return bookingPayment or booking view.
 	 */
 	@RequestMapping(value = { "/manager/bookingPayment" }, method = RequestMethod.GET)

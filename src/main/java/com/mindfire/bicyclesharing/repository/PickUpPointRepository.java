@@ -44,10 +44,12 @@ public interface PickUpPointRepository extends JpaRepository<PickUpPoint, Intege
 	 * @return PickUpPoint list
 	 */
 	public List<PickUpPoint> findAllByOrderByPickUpPointIdAsc();
-	
+
 	/**
 	 * This method is used to get the details of all active pickup points
 	 * 
+	 * @param isActive
+	 *            true or false
 	 * @return PickUpPoint list
 	 */
 	public List<PickUpPoint> findByIsActiveOrderByPickUpPointIdAsc(boolean isActive);
@@ -96,5 +98,5 @@ public interface PickUpPointRepository extends JpaRepository<PickUpPoint, Intege
 	@Query("update PickUpPoint p set p.currentAvailability =:currentAvailability where p.pickUpPointId =:pickUpPointId")
 	public int updateCurrentAvailability(@Param("currentAvailability") int currentAvailability,
 			@Param("pickUpPointId") int pickUpPointId);
-	
+
 }

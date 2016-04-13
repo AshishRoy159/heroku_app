@@ -59,21 +59,16 @@ public class UserService {
 	/**
 	 * This method is used to save the user related data to the database
 	 * 
-	 * @param user
-	 *            the user details
-	 * @param proofDetail
-	 *            user identification proof details
-	 * @param wallet
-	 *            Wallet details of the user
-	 * @param transaction
-	 *            WalletTransaction details of the user
+	 * @param userDTO
+	 *            the incoming user details
+	 * @param regPaymentDTO
+	 *            the incoming payment details
 	 * @return WalletTransaction object
 	 * @throws ParseException
 	 *             may occur while parsing from String to Date
-	 * @throws IOException
 	 */
 	public WalletTransaction saveUserDetails(UserDTO userDTO, RegistrationPaymentDTO regPaymentDTO)
-			throws ParseException, IOException {
+			throws ParseException {
 		return userComponent.mapUserComponent(userDTO, regPaymentDTO);
 	}
 
@@ -153,7 +148,7 @@ public class UserService {
 	/**
 	 * This method is used to get user details using user email
 	 * 
-	 * @param userEmail
+	 * @param forgotPasswordDTO
 	 *            the email id of User
 	 * @return User object
 	 */

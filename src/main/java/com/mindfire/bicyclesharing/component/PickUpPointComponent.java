@@ -94,10 +94,12 @@ public class PickUpPointComponent {
 	public List<PickUpPoint> findAllPickUpPoint() {
 		return pickUpPointRepository.findAllByOrderByPickUpPointIdAsc();
 	}
-	
+
 	/**
 	 * This method is used to find all active PickupPoint
 	 * 
+	 * @param isActive
+	 *            true or false
 	 * @return {@link PickUpPoint} List
 	 */
 	public List<PickUpPoint> findAllActivePickUpPoint(Boolean isActive) {
