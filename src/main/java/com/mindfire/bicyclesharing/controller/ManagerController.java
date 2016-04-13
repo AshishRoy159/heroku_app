@@ -16,15 +16,12 @@
 
 package com.mindfire.bicyclesharing.controller;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,6 +33,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.UserDTO;
+import com.mindfire.bicyclesharing.service.UserService;
 
 /**
  * ManagerController contains all the mappings related to the manager.
@@ -47,7 +45,8 @@ import com.mindfire.bicyclesharing.dto.UserDTO;
 @Controller
 public class ManagerController {
 
-	private static final String DOCUMENTS_DIR = "src/main/resources/documents";
+	@Autowired
+	private UserService userService;
 
 	/**
 	 * This method is used to map the add new user request by the manager.
@@ -84,28 +83,11 @@ public class ManagerController {
 		}
 
 		try {
-			saveUserDocument(userDTO);
+			userService.saveUserDocument(userDTO);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		session.setAttribute("userDTO", userDTO);
 		return new ModelAndView(ViewConstant.MANAGER_PAYMENT);
-	}
-
-	/**
-	 * This method saves the user verification document on server storage
-	 * 
-	 * @param userDTO
-	 *            details of the user
-	 * @throws IOException
-	 *             may occur while storing the document
-	 */
-	public void saveUserDocument(UserDTO userDTO) throws IOException {
-		Path documentsDir = Files.createDirectories(Paths.get(DOCUMENTS_DIR + "/" + userDTO.getEmail()));
-		Path document = documentsDir.resolve(userDTO.getDocument().getOriginalFilename());
-		Files.deleteIfExists(document);
-
-		File dest = document.toAbsolutePath().toFile();
-		userDTO.getDocument().transferTo(dest);
 	}
 }

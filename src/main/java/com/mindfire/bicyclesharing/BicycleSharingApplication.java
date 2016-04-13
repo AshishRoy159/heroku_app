@@ -18,10 +18,12 @@ package com.mindfire.bicyclesharing;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.web.MultipartAutoConfiguration;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.ErrorPage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 /**
  * Indicates a configuration class that declares one or more @Bean methods and
@@ -33,7 +35,7 @@ import org.springframework.http.HttpStatus;
  * @version 1.0
  * @since 10/03/2016
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = { MultipartAutoConfiguration.class })
 public class BicycleSharingApplication {
 
 	/**
@@ -64,5 +66,20 @@ public class BicycleSharingApplication {
 
 			container.addErrorPages(error401Page, error404Page, error500Page);
 		});
+	}
+
+	/**
+	 * This method acts as a bean to handle multipart files The uploaded
+	 * multipart files are converted to objects of MutipartFile class
+	 * 
+	 * @see MultipartFile
+	 * @return Returns a CommonsMultipartResolver object
+	 */
+	@Bean(name = "multipartResolver")
+	public CommonsMultipartResolver createMultipartResolver() {
+		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+		resolver.setDefaultEncoding("utf-8");
+		resolver.setMaxUploadSize(5242880);
+		return resolver;
 	}
 }

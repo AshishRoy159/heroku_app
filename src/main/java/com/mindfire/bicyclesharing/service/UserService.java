@@ -16,7 +16,11 @@
 
 package com.mindfire.bicyclesharing.service;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +54,8 @@ public class UserService {
 	@Autowired
 	private VerificationTokenRepository tokenRepository;
 
+	private static final String DOCUMENTS_DIR = "src/main/resources/documents";
+
 	/**
 	 * This method is used to save the user related data to the database
 	 * 
@@ -64,7 +70,7 @@ public class UserService {
 	 * @return WalletTransaction object
 	 * @throws ParseException
 	 *             may occur while parsing from String to Date
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public WalletTransaction saveUserDetails(UserDTO userDTO, RegistrationPaymentDTO regPaymentDTO)
 			throws ParseException, IOException {
@@ -220,7 +226,7 @@ public class UserService {
 	public User setApproval(Long id) {
 		return userComponent.mapApproval(id);
 	}
-	
+
 	/**
 	 * This method is used to update user enable field.
 	 * 
@@ -230,5 +236,22 @@ public class UserService {
 	 */
 	public User setEnable(Long id) {
 		return userComponent.mapIsActive(id);
+	}
+
+	/**
+	 * This method saves the user verification document on server storage
+	 * 
+	 * @param userDTO
+	 *            details of the user
+	 * @throws IOException
+	 *             may occur while storing the document
+	 */
+	public void saveUserDocument(UserDTO userDTO) throws IOException {
+		Path documentsDir = Files.createDirectories(Paths.get(DOCUMENTS_DIR + "/" + userDTO.getEmail()));
+		Path document = documentsDir.resolve(userDTO.getDocument().getOriginalFilename());
+		Files.deleteIfExists(document);
+
+		File dest = document.toAbsolutePath().toFile();
+		userDTO.getDocument().transferTo(dest);
 	}
 }

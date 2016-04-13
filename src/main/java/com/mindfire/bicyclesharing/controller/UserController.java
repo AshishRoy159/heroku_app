@@ -16,11 +16,7 @@
 
 package com.mindfire.bicyclesharing.controller;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Optional;
@@ -86,8 +82,6 @@ public class UserController {
 
 	@Autowired
 	private MessageBean messageBean;
-
-	private static final String DOCUMENTS_DIR = "src/main/resources/documents";
 
 	/**
 	 * This method maps the registration request. Simply render the
@@ -480,9 +474,8 @@ public class UserController {
 		}
 
 		try {
-			saveUserDocument(userDTO);
+			userService.saveUserDocument(userDTO);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		session.setAttribute("userDTO", userDTO);
@@ -498,22 +491,5 @@ public class UserController {
 	public ModelAndView userList() {
 		return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST,
 				userService.getAllUsers());
-	}
-
-	/**
-	 * This method saves the user verification document on server storage
-	 * 
-	 * @param userDTO
-	 *            details of the user
-	 * @throws IOException
-	 *             may occur while storing the document
-	 */
-	public void saveUserDocument(UserDTO userDTO) throws IOException {
-		Path documentsDir = Files.createDirectories(Paths.get(DOCUMENTS_DIR + "/" + userDTO.getEmail()));
-		Path document = documentsDir.resolve(userDTO.getDocument().getOriginalFilename());
-		Files.deleteIfExists(document);
-
-		File dest = document.toAbsolutePath().toFile();
-		userDTO.getDocument().transferTo(dest);
 	}
 }
