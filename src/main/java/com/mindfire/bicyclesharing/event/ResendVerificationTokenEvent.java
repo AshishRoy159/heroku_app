@@ -41,8 +41,6 @@ public class ResendVerificationTokenEvent extends ApplicationEvent {
 	/**
 	 * ResendVerificationTokenEvent constructor
 	 * 
-	 * @param appUrl
-	 *            the context path
 	 * @param locale
 	 *            to tailor information for the user
 	 * @param newToken
@@ -50,14 +48,12 @@ public class ResendVerificationTokenEvent extends ApplicationEvent {
 	 * @param user
 	 *            User object
 	 */
-	public ResendVerificationTokenEvent(final Locale locale, final VerificationToken newToken,
-			final User user) {
+	public ResendVerificationTokenEvent(final Locale locale, final VerificationToken newToken, final User user) {
 		super(user);
 		this.locale = locale;
 		this.newToken = newToken;
 		this.user = user;
 	}
-
 
 	/**
 	 * @return the locale

@@ -43,8 +43,6 @@ public class OnResetPasswordEvent extends ApplicationEvent {
 	 *            User object
 	 * @param locale
 	 *            to tailor information for the user
-	 * @param appUrl
-	 *            the context path
 	 */
 	public OnResetPasswordEvent(final User user, final Locale locale) {
 		super(user);

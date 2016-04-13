@@ -43,8 +43,6 @@ public class OnRegistrationCompleteEvent extends ApplicationEvent {
 	 *            User object of user just registered
 	 * @param locale
 	 *            to tailor information for the user
-	 * @param appUrl
-	 *            the context path
 	 */
 	public OnRegistrationCompleteEvent(final User user, final Locale locale) {
 		super(user);
