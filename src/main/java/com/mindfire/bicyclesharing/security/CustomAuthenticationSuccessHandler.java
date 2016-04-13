@@ -61,20 +61,26 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 		if (savedRequest == null) {
 			Collection<? extends GrantedAuthority> auths = authentication.getAuthorities();
-
-			if (auths.toArray()[0].toString().equals("ADMIN")) {
-				//this targetUrl will be changed to admin home page when the page design is complete.
-				String targetUrl = "admin/adminHome";
-				getRedirectStrategy().sendRedirect(request, response, targetUrl);
-			} else if (auths.toArray()[0].toString().equals("USER")) {
-				String targetUrl = "index.html";
-				getRedirectStrategy().sendRedirect(request, response, targetUrl);
-			} else if (auths.toArray()[0].toString().equals("MANAGER")) {
-				//this targetUrl will be changed to manager home page when the page design is complete.
-				String targetUrl = "manager/managerHome";
+			CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+			if (currentUser.getUser().getEnabled()) {
+				if (auths.toArray()[0].toString().equals("ADMIN")) {
+					// this targetUrl will be changed to admin home page
+					String targetUrl = "admin/adminHome";
+					getRedirectStrategy().sendRedirect(request, response, targetUrl);
+				} else if (auths.toArray()[0].toString().equals("USER")) {
+					String targetUrl = "index.html";
+					getRedirectStrategy().sendRedirect(request, response, targetUrl);
+				} else if (auths.toArray()[0].toString().equals("MANAGER")) {
+					// this targetUrl will be changed to manager home page
+					String targetUrl = "manager/managerHome";
+					getRedirectStrategy().sendRedirect(request, response, targetUrl);
+				}
+			}else{
+				String targetUrl = "/logout";
 				getRedirectStrategy().sendRedirect(request, response, targetUrl);
 			}
-		} else {
+		}
+		else {
 			String targetUrl = savedRequest.getRedirectUrl();
 			getRedirectStrategy().sendRedirect(request, response, targetUrl);
 		}

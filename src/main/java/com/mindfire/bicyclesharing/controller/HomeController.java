@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mindfire.bicyclesharing.constant.ViewConstant;
+import com.mindfire.bicyclesharing.security.CurrentUser;
 import com.mindfire.bicyclesharing.service.BookingService;
 import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
@@ -92,16 +93,19 @@ public class HomeController {
 	 * @return the signIn view.
 	 */
 	@RequestMapping(value = { "login" }, method = RequestMethod.GET)
-	public ModelAndView getUserSignInPage(@RequestParam Optional<String> error, Model model) {
+	public ModelAndView getUserSignInPage(@RequestParam Optional<String> error, @RequestParam Optional<String> logout,
+			Model model, Authentication authentication) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
 			/* The user is logged in :) */
 			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.INDEX);
 		} else {
 			if (error.isPresent()) {
 				model.addAttribute("loginError", "Invalid email or password..!!");
+			}
+			if (logout.isPresent()) {
+				model.addAttribute("loginError", "You are successfully logged out!!");
 			}
 			return new ModelAndView(ViewConstant.SIGN_IN, "error", error);
 		}
@@ -124,12 +128,32 @@ public class HomeController {
 	 * 
 	 * @param model
 	 *            to map model attributes
+	 * @param authentication
+	 *            this is used for retrieving current user details.
 	 * @return adminHome view
 	 */
 	@RequestMapping(value = { "admin", "admin/adminHome", "manager", "manager/managerHome" })
-	public ModelAndView adminHome(Model model) {
+	public ModelAndView adminHome(Model model, Authentication authentication) {
+		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+		if (currentUser.getUserRole().equals("MANAGER")) {
+			pickUpPointManagerService.openPickUpPoint(currentUser.getUser());
+		}
 		model.addAttribute("bookings", bookingService.getAllBookingDetails(true));
 		model.addAttribute("pickUpPointManagers", pickUpPointManagerService.getAllPickUpPointManager());
 		return new ModelAndView(ViewConstant.ADMIN_HOME);
+	}
+
+	/**
+	 * This method is used for closing the pickup point.
+	 * 
+	 * @param authentication
+	 *            this is used for retrieving current user details.
+	 * @return signIn view
+	 */
+	@RequestMapping(value = "managerLogout", method = RequestMethod.GET)
+	public ModelAndView managerLogout(Authentication authentication) {
+		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+		pickUpPointManagerService.closePickUpPoint(currentUser.getUser());
+		return new ModelAndView("redirect:/logout");
 	}
 }

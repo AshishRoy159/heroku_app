@@ -41,10 +41,10 @@ public class PickUpPointManagerComponent {
 
 	@Autowired
 	private PickUpPointManagerRepository pickUpPointManagerRepository;
-	
+
 	@Autowired
 	private PickUpPointRepository pickUpPointRepository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -67,7 +67,7 @@ public class PickUpPointManagerComponent {
 	public PickUpPointManager getPickUpPointManagerByUser(User user) {
 		return pickUpPointManagerRepository.findByUser(user);
 	}
-	
+
 	/**
 	 * This method receives data from the ManageRoleDTO class and sets data to
 	 * the PickUpPointManager entity class
@@ -84,8 +84,44 @@ public class PickUpPointManagerComponent {
 
 		return pickUpPointManagerRepository.save(pickUpPointManager);
 	}
-	
-	public int currentAvailabilityAtPickupPoint(User user){
+
+	/**
+	 * This method is used for retrieving the current availability of the pickup
+	 * point.
+	 * 
+	 * @param user
+	 *            User object
+	 * @return {@link Integer} value
+	 */
+	public int currentAvailabilityAtPickupPoint(User user) {
 		return pickUpPointManagerRepository.findByUser(user).getPickUpPoint().getCurrentAvailability();
+	}
+
+	/**
+	 * This method is used to map the pickup point details to open the pickup
+	 * point when manager is logged In.
+	 * 
+	 * @param user
+	 *            User object
+	 * @return {@link PickUpPointManager} object
+	 */
+	public PickUpPointManager mapPickupPointDetailForOpen(User user) {
+		PickUpPointManager pickUpPointManager = pickUpPointManagerRepository.findByUser(user);
+		pickUpPointManager.getPickUpPoint().setIsOpen(true);
+		return pickUpPointManagerRepository.save(pickUpPointManager);
+	}
+
+	/**
+	 * This method is used to map the pickup point details to close the pickup
+	 * point when manager is logged In.
+	 * 
+	 * @param user
+	 *            User object
+	 * @return {@link PickUpPointManager} object
+	 */
+	public PickUpPointManager mapPickupPointDetailForClose(User user) {
+		PickUpPointManager pickUpPointManager = pickUpPointManagerRepository.findByUser(user);
+		pickUpPointManager.getPickUpPoint().setIsOpen(false);
+		return pickUpPointManagerRepository.save(pickUpPointManager);
 	}
 }

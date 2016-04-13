@@ -83,4 +83,26 @@ public class PickUpPointManagerService {
 	public List<PickUpPointManager> getAllPickUpPointManager() {
 		return pickUpPointManagerComponent.getAllManager();
 	}
+
+	/**
+	 * This method is used to open the pickup point when manager is logged In.
+	 * 
+	 * @param user
+	 *            User object
+	 * @return {@link PickUpPointManager} object
+	 */
+	public PickUpPointManager openPickUpPoint(User user) {
+		return pickUpPointManagerComponent.mapPickupPointDetailForOpen(user);
+	}
+
+	/**
+	 * This method is used to close the pickup point when manager is logged In.
+	 * 
+	 * @param user
+	 *            User object
+	 * @return {@link PickUpPointManager} object
+	 */
+	public PickUpPointManager closePickUpPoint(User user) {
+		return pickUpPointManagerComponent.mapPickupPointDetailForClose(user);
+	}
 }

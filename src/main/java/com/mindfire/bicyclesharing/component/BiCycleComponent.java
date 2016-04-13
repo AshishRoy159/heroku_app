@@ -109,7 +109,7 @@ public class BiCycleComponent {
 	 */
 	public void bicyclesInTransition(HttpSession session, Transfer transfer) {
 		@SuppressWarnings("unchecked")
-		List<BiCycle> biCycles = (List<BiCycle>) session.getAttribute("bicycles");
+		List<BiCycle> biCycles = (List<BiCycle>) session.getAttribute("biCycles");
 		for (BiCycle biCycle : biCycles) {
 			BiCycleTransfer biCycleTransfer = new BiCycleTransfer();
 
@@ -133,7 +133,7 @@ public class BiCycleComponent {
 	 */
 	public void bicyclesTransferred(HttpSession session, Transfer transfer) {
 		@SuppressWarnings("unchecked")
-		List<BiCycle> biCycles = (List<BiCycle>) session.getAttribute("bicycles");
+		List<BiCycle> biCycles = (List<BiCycle>) session.getAttribute("biCycles");
 		for (BiCycle biCycle : biCycles) {
 			biCycle.setIsAvailable(true);
 			biCycle.setCurrentLocation(transfer.getTransferredTo());
