@@ -17,6 +17,7 @@
 package com.mindfire.bicyclesharing.component;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -119,6 +120,20 @@ public class TransferResponseComponent {
 	 */
 	public int updateIsApproved(Boolean isApproved, Long responseId) {
 		return transferResponseRepository.updateIsApproved(isApproved, responseId);
+	}
+
+	/**
+	 * This method is used to retrieve record of a transfer response from a
+	 * specific pickup point to a specific request.
+	 * 
+	 * @param request
+	 *            the transfer request
+	 * @param pickUpPoint
+	 *            the concerned pickup point
+	 * @return {@link TransferResponse} object
+	 */
+	public Optional<TransferResponse> getResposneForRequest(TransferRequest transferRequest, PickUpPoint pickUpPoint) {
+		return transferResponseRepository.findByRequestAndPickUpPoint(transferRequest, pickUpPoint);
 	}
 
 }

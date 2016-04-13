@@ -17,6 +17,7 @@
 package com.mindfire.bicyclesharing.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -67,6 +68,18 @@ public interface TransferResponseRepository extends JpaRepository<TransferRespon
 	 * @return {@link TransferResponse} object
 	 */
 	public TransferResponse findByResponseId(Long responseId);
+
+	/**
+	 * This method is used to retrieve record of a transfer response from a
+	 * specific pickup point to a specific request.
+	 * 
+	 * @param request
+	 *            the transfer request
+	 * @param pickUpPoint
+	 *            the concerned pickup point
+	 * @return {@link TransferResponse} object
+	 */
+	public Optional<TransferResponse> findByRequestAndPickUpPoint(TransferRequest request, PickUpPoint pickUpPoint);
 
 	/**
 	 * This method is used to update the status of the response

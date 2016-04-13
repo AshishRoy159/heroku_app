@@ -17,12 +17,14 @@
 package com.mindfire.bicyclesharing.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.component.TransferResponseComponent;
 import com.mindfire.bicyclesharing.dto.TransferRensponseDTO;
+import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.TransferRequest;
 import com.mindfire.bicyclesharing.model.TransferResponse;
 import com.mindfire.bicyclesharing.security.CurrentUser;
@@ -99,6 +101,20 @@ public class TransferResponseService {
 	 */
 	public int updateApproval(Boolean isApproved, Long responseId) {
 		return transferResponseComponent.updateIsApproved(isApproved, responseId);
+	}
+
+	/**
+	 * This method is used to retrieve record of a transfer response from a
+	 * specific pickup point to a specific request.
+	 * 
+	 * @param request
+	 *            the transfer request
+	 * @param pickUpPoint
+	 *            the concerned pickup point
+	 * @return {@link TransferResponse} object
+	 */
+	public Optional<TransferResponse> findResponseForrequest(TransferRequest transferRequest, PickUpPoint pickUpPoint) {
+		return transferResponseComponent.getResposneForRequest(transferRequest, pickUpPoint);
 	}
 
 }

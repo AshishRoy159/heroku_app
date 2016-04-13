@@ -17,6 +17,7 @@
 package com.mindfire.bicyclesharing.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -40,6 +41,7 @@ import com.mindfire.bicyclesharing.dto.TransferDataDTO;
 import com.mindfire.bicyclesharing.dto.TransferRensponseDTO;
 import com.mindfire.bicyclesharing.dto.TransferRequestDTO;
 import com.mindfire.bicyclesharing.dto.TransferRequestRespondedDTO;
+import com.mindfire.bicyclesharing.enums.TransferStatusEnum;
 import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.Transfer;
 import com.mindfire.bicyclesharing.model.TransferRequest;
@@ -115,7 +117,8 @@ public class BiCycleTransferController {
 			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.TRANSFER_REQUEST);
 		}
 		if (transferRequestService.addNewTransferRequest(authentication, transferRequestDTO) == null) {
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Request Failed..!! Request cannot exceed maximum capacity.");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
+					"Request Failed..!! Request cannot exceed maximum capacity.");
 		} else {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE,
 					"Transfer request for " + transferRequestDTO.getQuantity() + " bicycles sent successfully");
@@ -176,8 +179,15 @@ public class BiCycleTransferController {
 	public ModelAndView managerResponse(@PathVariable("id") Long requestId, Model model,
 			Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-		int currentAvailable = pickUpPointManagerService.getCurrentAvailability(currentUser.getUser());
 		TransferRequest request = transferRequestService.findTransferRequest(requestId);
+		Optional<TransferResponse> response = transferResponseService.findResponseForrequest(request,
+				pickUpPointManagerService.getPickupPointManager(currentUser.getUser()).getPickUpPoint());
+
+		if (request.getIsApproved() || response.isPresent()) {
+			return new ModelAndView(ViewConstant.REDIRECT + "/manager/requests");
+		}
+
+		int currentAvailable = pickUpPointManagerService.getCurrentAvailability(currentUser.getUser());
 		model.addAttribute(ModelAttributeConstant.REQUEST, request);
 		model.addAttribute("max", Math.min(request.getQuantity(), currentAvailable));
 		return new ModelAndView(ViewConstant.TRANSFER_RESPONSE_MANAGER);
@@ -274,6 +284,12 @@ public class BiCycleTransferController {
 	@RequestMapping(value = "manager/sendShipment/{id}", method = RequestMethod.GET)
 	public ModelAndView sendShipment(@PathVariable("id") Long transferId, Model model, HttpSession session) {
 		Transfer transfer = transferService.findTransferDetails(transferId);
+
+		if (transfer.getStatus().equals(TransferStatusEnum.IN_TRANSITION)
+				|| transfer.getStatus().equals(TransferStatusEnum.CLOSED)) {
+			return new ModelAndView(ViewConstant.REDIRECT + "/manager/transfers");
+		}
+
 		List<BiCycle> biCycles = bicycleService.findBicyclesForShipment(transfer);
 		session.setAttribute(ModelAttributeConstant.BICYCLES, biCycles);
 
@@ -311,6 +327,12 @@ public class BiCycleTransferController {
 	@RequestMapping(value = "manager/receiveShipment/{id}", method = RequestMethod.GET)
 	public ModelAndView receiveShipment(@PathVariable("id") Long transferId, HttpSession session) {
 		Transfer transfer = transferService.findTransferDetails(transferId);
+
+		if (transfer.getStatus().equals(TransferStatusEnum.PENDING)
+				|| transfer.getStatus().equals(TransferStatusEnum.CLOSED)) {
+			return new ModelAndView(ViewConstant.REDIRECT + "/manager/transfers");
+		}
+
 		List<BiCycle> biCycles = biCycleTransferService.findBicyclesInTransition(transfer);
 		session.setAttribute(ModelAttributeConstant.BICYCLES, biCycles);
 
@@ -332,13 +354,22 @@ public class BiCycleTransferController {
 	@PostAuthorize("@currentUserService.canAccessManagerReceiver(principal, #transferId)")
 	@RequestMapping(value = "manager/confirmShipmentReceive/{id}", method = RequestMethod.GET)
 	public ModelAndView confirmShipmentReceive(@PathVariable("id") Long transferId, HttpSession session, Model model) {
-		Transfer transfer = transferService.confirmReceiveTransfer(transferId, session);
-		if (null == transfer) {
+		Transfer transfer = transferService.findTransferDetails(transferId);
+
+		if (transfer.getStatus().equals(TransferStatusEnum.PENDING)
+				|| transfer.getStatus().equals(TransferStatusEnum.CLOSED)) {
+			return new ModelAndView(ViewConstant.REDIRECT + "/manager/transfers");
+		}
+
+		Transfer closedTransfer = transferService.confirmReceiveTransfer(transferId, session);
+
+		if (null == closedTransfer) {
 			model.addAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Error Receiving Transfer!!");
 			return new ModelAndView("receiveShipment/" + transferId);
 		} else {
 			return new ModelAndView("redirect:/manager/transfers");
 		}
+
 	}
 
 }
