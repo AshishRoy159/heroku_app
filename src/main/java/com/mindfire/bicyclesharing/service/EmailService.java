@@ -21,7 +21,7 @@ public class EmailService {
     @Autowired 
     private TemplateEngine templateEngine;
     
-	public void sendSimpleMail(String recipientName, String recipientEmail, Locale locale, String subject, String confirmationUrl) throws Exception	{
+	public void sendSimpleMail(String recipientName, String recipientEmail, Locale locale, String subject, String confirmationUrl, String template) throws Exception	{
         // Prepare the evaluation context
         final Context ctx = new Context(locale);
         ctx.setVariable("name", recipientName);
@@ -36,7 +36,7 @@ public class EmailService {
             message.setTo(recipientEmail);
 
             // Create the HTML body using Thymeleaf
-            final String htmlContent = this.templateEngine.process("email-simple", ctx);
+            final String htmlContent = this.templateEngine.process(template, ctx);
             message.setText(htmlContent, true /* isHtml */);
 		} catch (Exception e) {
 			e.printStackTrace();

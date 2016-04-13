@@ -34,7 +34,6 @@ import com.mindfire.bicyclesharing.model.VerificationToken;
 @SuppressWarnings("serial")
 public class ResendVerificationTokenEvent extends ApplicationEvent {
 
-	private final String appUrl;
 	private final Locale locale;
 	private final VerificationToken newToken;
 	private final User user;
@@ -51,21 +50,14 @@ public class ResendVerificationTokenEvent extends ApplicationEvent {
 	 * @param user
 	 *            User object
 	 */
-	public ResendVerificationTokenEvent(final String appUrl, final Locale locale, final VerificationToken newToken,
+	public ResendVerificationTokenEvent(final Locale locale, final VerificationToken newToken,
 			final User user) {
 		super(user);
-		this.appUrl = appUrl;
 		this.locale = locale;
 		this.newToken = newToken;
 		this.user = user;
 	}
 
-	/**
-	 * @return the appUrl
-	 */
-	public String getAppUrl() {
-		return appUrl;
-	}
 
 	/**
 	 * @return the locale

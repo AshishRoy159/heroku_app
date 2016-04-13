@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.mindfire.bicyclesharing.constant.MailConstant;
 import com.mindfire.bicyclesharing.event.OnRegistrationCompleteEvent;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.service.EmailService;
@@ -44,12 +43,13 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
 	@Autowired
 	private UserService service;
+	
 	@Autowired
 	private HttpServletRequest request;
 	
 	@Autowired
 	private EmailService emailService;
-	
+		
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -75,15 +75,18 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 	 * @throws Exception 
 	 */
 	private void confirmRegistration(final OnRegistrationCompleteEvent event) throws Exception {
+		
+		String appUrl = request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/"));
 		final User user = event.getUser();
 		final String token = UUID.randomUUID().toString();
 		service.createVerificationTokenForUser(user, token);
 		Locale locale = request.getLocale();
 		final String recipientAddress = user.getEmail();
 		final String subject = "Registration Confirmation";
-		final String confirmationUrl = MailConstant.CONTEXT_ROOT + "/registrationConfirm.html?token=" + token;
+		final String confirmationUrl = appUrl + "/registrationConfirm.html?token=" + token;
+		final String template = "/mail/registrationMail";
 
-		emailService.sendSimpleMail(user.getFirstName(), recipientAddress, locale, subject, confirmationUrl);
+		emailService.sendSimpleMail(user.getFirstName(), recipientAddress, locale, subject, confirmationUrl, template);
 	}
 
 }

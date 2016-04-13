@@ -33,7 +33,6 @@ import com.mindfire.bicyclesharing.model.User;
 @SuppressWarnings("serial")
 public class OnResetPasswordEvent extends ApplicationEvent {
 
-	private final String appUrl;
 	private final Locale locale;
 	private final User user;
 
@@ -47,18 +46,10 @@ public class OnResetPasswordEvent extends ApplicationEvent {
 	 * @param appUrl
 	 *            the context path
 	 */
-	public OnResetPasswordEvent(final User user, final Locale locale, final String appUrl) {
+	public OnResetPasswordEvent(final User user, final Locale locale) {
 		super(user);
 		this.user = user;
 		this.locale = locale;
-		this.appUrl = appUrl;
-	}
-
-	/**
-	 * @return the appUrl
-	 */
-	public String getAppUrl() {
-		return appUrl;
 	}
 
 	/**

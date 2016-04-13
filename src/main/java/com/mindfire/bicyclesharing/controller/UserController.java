@@ -122,9 +122,8 @@ public class UserController {
 			if (transaction != null) {
 				User registered = transaction.getWallet().getUser();
 				try {
-					String appUrl = System.getProperty("server.context-path");
 					eventPublisher
-							.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), appUrl));
+							.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale()));
 				} catch (Exception me) {
 					System.out.println(me.getMessage());
 				}
@@ -193,9 +192,8 @@ public class UserController {
 		VerificationToken newToken = verificationTokenService.generateNewVerificationToken(existingToken);
 
 		User user = userService.getUser(newToken.getToken());
-		String appUrl = messageBean.getContextPath();
 		try {
-			eventPublisher.publishEvent(new ResendVerificationTokenEvent(appUrl, request.getLocale(), newToken, user));
+			eventPublisher.publishEvent(new ResendVerificationTokenEvent(request.getLocale(), newToken, user));
 		} catch (Exception me) {
 			System.out.println(me.getMessage());
 		}
@@ -280,8 +278,7 @@ public class UserController {
 		}
 
 		try {
-			String appUrl = System.getProperty("server.context-path");
-			eventPublisher.publishEvent(new OnResetPasswordEvent(user, request.getLocale(), appUrl));
+			eventPublisher.publishEvent(new OnResetPasswordEvent(user, request.getLocale()));
 		} catch (Exception me) {
 			System.out.println(me.getMessage());
 		}

@@ -16,25 +16,18 @@
 
 package com.mindfire.bicyclesharing.event.listener;
 
-import java.util.Properties;
+import java.util.Locale;
 import java.util.UUID;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.mindfire.bicyclesharing.component.MessageBean;
-import com.mindfire.bicyclesharing.constant.MailConstant;
 import com.mindfire.bicyclesharing.event.OnResetPasswordEvent;
 import com.mindfire.bicyclesharing.model.User;
+import com.mindfire.bicyclesharing.service.EmailService;
 import com.mindfire.bicyclesharing.service.UserService;
 
 /**
@@ -52,8 +45,11 @@ public class ResetPasswordListener implements ApplicationListener<OnResetPasswor
 	private UserService service;
 
 	@Autowired
-	private MessageBean messageBean;
-
+	private EmailService emailService;
+	
+	@Autowired
+	private HttpServletRequest request;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -65,7 +61,7 @@ public class ResetPasswordListener implements ApplicationListener<OnResetPasswor
 	public void onApplicationEvent(OnResetPasswordEvent event) {
 		try {
 			this.confirmRegistration(event);
-		} catch (MessagingException e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
@@ -76,58 +72,20 @@ public class ResetPasswordListener implements ApplicationListener<OnResetPasswor
 	 * 
 	 * @param event
 	 *            OnResetPasswordEvent
-	 * @throws MessagingException
+	 * @throws Exception 
 	 */
-	private void confirmRegistration(final OnResetPasswordEvent event) throws MessagingException {
+	private void confirmRegistration(final OnResetPasswordEvent event) throws Exception {
+		
+		String appUrl = request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/"));
 		final User user = event.getUser();
 		final String token = UUID.randomUUID().toString();
 		service.createResetPasswordTokenForUser(user, token);
-
-		final Message email = constructEmailMessage(event, user, token);
-		Transport.send(email);
-	}
-
-	/**
-	 * This method constructs the verification email message
-	 * 
-	 * @param event
-	 *            OnResetPasswordEvent
-	 * @param user
-	 *            User object
-	 * @param token
-	 *            generated token
-	 * @return Message object
-	 */
-	private final Message constructEmailMessage(final OnResetPasswordEvent event, final User user, final String token) {
+		final Locale locale = event.getLocale();
 		final String recipientAddress = user.getEmail();
-		final String subject = "ResetPassword";
-		final String confirmationUrl = MailConstant.CONTEXT_ROOT + "/resetPassword.html?token=" + token;
-		final String message = messageBean.getResetPassword();
-		final String msg = message + "\r\n" + "<a href='" + confirmationUrl + "'>Click Here</a>";
-
-		System.out.println(confirmationUrl);
-
-		Properties props = new Properties();
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.port", "587");
-
-		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(MailConstant.MAIL_USERNAME, MailConstant.MAIL_PASSWORD);
-			}
-		});
-
-		final Message email = new MimeMessage(session);
-		try {
-			email.setFrom(new InternetAddress(MailConstant.MAIL_USERNAME));
-			email.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientAddress));
-			email.setSubject(subject);
-			email.setContent(msg, "text/html; charset=utf-8");
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return email;
+		final String subject = "Reset Password";
+		final String confirmationUrl = appUrl + "/resetPassword.html?token=" + token;
+		final String template = "/mail/resetPasswordMail";
+		
+		emailService.sendSimpleMail(user.getFirstName(), recipientAddress, locale, subject, confirmationUrl, template);
 	}
 }

@@ -17,25 +17,17 @@
 package com.mindfire.bicyclesharing.event.listener;
 
 import java.util.Locale;
-import java.util.Properties;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.mindfire.bicyclesharing.component.MessageBean;
-import com.mindfire.bicyclesharing.constant.MailConstant;
 import com.mindfire.bicyclesharing.event.ResendVerificationTokenEvent;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.VerificationToken;
+import com.mindfire.bicyclesharing.service.EmailService;
 
 /**
  * ResendVerificationTokenListener is an event listener for
@@ -47,9 +39,12 @@ import com.mindfire.bicyclesharing.model.VerificationToken;
  */
 @Component
 public class ResendVerificationTokenListener implements ApplicationListener<ResendVerificationTokenEvent> {
-
+	
 	@Autowired
-	private MessageBean messageBean;
+	private EmailService emailService;
+	
+	@Autowired
+	private HttpServletRequest request;
 
 	/*
 	 * (non-Javadoc)
@@ -73,60 +68,22 @@ public class ResendVerificationTokenListener implements ApplicationListener<Rese
 	 * 
 	 * @param event
 	 *            ResendVerificationTokenEvent
-	 * @throws MessagingException
+	 * @throws Exception 
 	 */
-	private void resendVerificationToken(final ResendVerificationTokenEvent event) throws MessagingException {
-		final String appUrl = event.getAppUrl();
+	private void resendVerificationToken(final ResendVerificationTokenEvent event) throws Exception {
+		
+		String appUrl = request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/"));
 		final Locale locale = event.getLocale();
 		final VerificationToken token = event.getNewToken();
 		final User user = event.getUser();
-
-		final Message email = constructResendVerificationTokenEmail(appUrl, locale, token, user);
-		Transport.send(email);
-	}
-
-	/**
-	 * This method constructs the verification email message
-	 * 
-	 * @param contextPath
-	 *            the context path
-	 * @param locale
-	 *            to tailor information for the user
-	 * @param newToken
-	 *            new token generated
-	 * @param user
-	 *            User object
-	 * @return Message object
-	 */
-	private Message constructResendVerificationTokenEmail(String contextPath, Locale locale, VerificationToken newToken,
-			User user) {
 		final String recipientAddress = user.getEmail();
 		final String subject = "Registration Confirmation";
-		final String confirmationUrl = MailConstant.CONTEXT_ROOT + "/registrationConfirm.html?token=" + newToken.getToken();
-		final String message = messageBean.getResendToken();
-		final String msg = message + "\r\n" + "<a href='" + confirmationUrl + "'>Click Here</a>";
+		final String confirmationUrl = appUrl + "/registrationConfirm.html?token=" + token.getToken();
+		final String template = "/mail/resendVerificationMail";
+		
+		emailService.sendSimpleMail(user.getFirstName(), recipientAddress, locale, subject, confirmationUrl, template);
 
-		Properties props = new Properties();
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.port", "587");
-
-		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(MailConstant.MAIL_USERNAME, MailConstant.MAIL_PASSWORD);
-			}
-		});
-
-		final Message email = new MimeMessage(session);
-		try {
-			email.setFrom(new InternetAddress(MailConstant.MAIL_USERNAME));
-			email.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientAddress));
-			email.setSubject(subject);
-			email.setContent(msg, "text/html; charset=utf-8");
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return email;
 	}
+
+	
 }
