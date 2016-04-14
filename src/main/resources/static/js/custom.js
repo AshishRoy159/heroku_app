@@ -160,12 +160,92 @@ function checkDate(form) {
 
 }
 
+function userBookingValidationForImage1(form){
+	var bookingTime = document.getElementById("bookingId1").value;
+	var returnTime = document.getElementById("returnId1").value;
+	if(userBookingValidation(bookingTime,returnTime)){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+function userBookingValidationForImage2(form){
+	var bookingTime = document.getElementById("bookingId2").value;
+	var returnTime = document.getElementById("returnId2").value;
+	if(userBookingValidation(bookingTime,returnTime)){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+function userBookingValidationForImage3(form){
+	var bookingTime = document.getElementById("bookingId3").value;
+	var returnTime = document.getElementById("returnId3").value;
+	if(userBookingValidation(bookingTime,returnTime)){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+function userBookingValidationForImage4(form){
+	var bookingTime = document.getElementById("bookingId4").value;
+	var returnTime = document.getElementById("returnId4").value;
+	if(userBookingValidation(bookingTime,returnTime)){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+function userBookingValidationForImage5(form){
+	var bookingTime = document.getElementById("bookingId5").value;
+	var returnTime = document.getElementById("returnId5").value;
+	if(userBookingValidation(bookingTime,returnTime)){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+function userBookingValidationForImage6(form){
+	var bookingTime = document.getElementById("bookingId6").value;
+	var returnTime = document.getElementById("returnId6").value;
+	if(userBookingValidation(bookingTime,returnTime)){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+function userBookingValidationForImage7(form){
+	var bookingTime = document.getElementById("bookingId7").value;
+	var returnTime = document.getElementById("returnId7").value;
+	if(userBookingValidation(bookingTime,returnTime)){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+function userBookingValidationForMobile(form){
+	var bookingTime = document.getElementById("bookingId8").value;
+	var returnTime = document.getElementById("returnId8").value;
+	if(userBookingValidation(bookingTime,returnTime)){
+		return true;
+	}else{
+		return false;
+	}
+}
+
 /*
  * This function validates the booking date and time provided by the user.
  */
-function userBookingValidation(form) {
-	var bookingTime = document.getElementById("bookingId").value;
-	var returnTime = document.getElementById("returnId").value;
+function userBookingValidation(bookingTime,returnTime) {
+	var bookingTime = bookingTime;
+	var returnTime = returnTime;
 	var currentDate = new Date();
 	var res = bookingTime.split(/[\s, "/",":"]+/);
 	var rtnRes = returnTime.split(/[\s, "/",":"]+/);

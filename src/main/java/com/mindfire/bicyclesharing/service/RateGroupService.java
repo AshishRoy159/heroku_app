@@ -62,4 +62,39 @@ public class RateGroupService {
 	public List<RateGroup> getAllRateGroup() {
 		return rateGroupComponent.getAllRateGroup();
 	}
+	
+	/**
+	 * This method is used to find all rate group based on isActive.
+	 * 
+	 * @param isActive
+	 *            Boolean value
+	 * @return {@link RateGroup} List
+	 */
+	public List<RateGroup> getAllRateGroupAndIsActive(Boolean isActive){
+		return rateGroupComponent.mapAllRateGroupAndIsActive(isActive);
+	}
+	
+	/**
+	 * This method is used to find RateGroup by id.
+	 * 
+	 * @param id
+	 *            rateGroupId
+	 * @return {@link RateGroup} object
+	 */
+	public RateGroup getRateGroupById(Integer id){
+		return rateGroupComponent.mapRateGroupById(id);
+	}
+	
+	/**
+	 * This method is used to update rate group type and create new rate group
+	 * type.
+	 * 
+	 * @param rateGroupDTO
+	 *            this object contains rate group related data.
+	 * @return {@link RateGroup} object
+	 * @throws ParseException
+	 */
+	public RateGroup updateRateGroup(RateGroupDTO rateGroupDTO) throws ParseException{
+		return rateGroupComponent.mapUpdateRateGroupAndIsActive(rateGroupDTO);
+	}
 }

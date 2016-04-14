@@ -34,6 +34,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.RateGroupDTO;
+import com.mindfire.bicyclesharing.dto.RateGroupTypeDTO;
 import com.mindfire.bicyclesharing.model.RateGroup;
 import com.mindfire.bicyclesharing.service.RateGroupService;
 
@@ -73,15 +74,87 @@ public class RateGroupController {
 	}
 
 	/**
-	 * This method maps the Rate Group Details request. Simply render
-	 * the rateGroupDetails view.
-	 * @param model 
-	 * 				to map the model attributes.
+	 * This method maps the Rate Group Details request. Simply render the
+	 * rateGroupDetails view.
+	 * 
+	 * @param model
+	 *            to map the model attributes.
 	 * @return rateGroupDetails view.
 	 */
-	@RequestMapping(value="admin/rateGroupDetails", method = RequestMethod.GET)
-	public ModelAndView getRateGroup(Model model){
+	@RequestMapping(value = "admin/rateGroupDetails", method = RequestMethod.GET)
+	public ModelAndView getRateGroup(Model model) {
 		List<RateGroup> rateGroups = rateGroupService.getAllRateGroup();
-		return new ModelAndView(ViewConstant.RATE_GROUP_DETAILS,ModelAttributeConstant.RATE_GROUPS,rateGroups);
+		return new ModelAndView(ViewConstant.RATE_GROUP_DETAILS, ModelAttributeConstant.RATE_GROUPS, rateGroups);
+	}
+
+	/**
+	 * This method is used to map request and render the view along with rate
+	 * groups.
+	 * 
+	 * @return selectRateGroup view
+	 */
+	@RequestMapping(value = "/admin/selectRateGroup", method = RequestMethod.GET)
+	public ModelAndView checkGroupType() {
+		List<RateGroup> rateGroups = rateGroupService.getAllRateGroupAndIsActive(true);
+		return new ModelAndView("selectRateGroup", "rateGroups", rateGroups);
+	}
+
+	/**
+	 * This method is used to map the request for update the rate group and
+	 * simply render the view along with the rate group data
+	 * 
+	 * @param rateGroupTypeDTO
+	 *            this object contains rate group id
+	 * @param redirectAttributes
+	 *            this is used to hold the messages and object for retrieving
+	 *            data on the view.
+	 * @param result
+	 *            this is used to validate the rate group type DTO
+	 * @return updateRateGroup or selectRateGroup view.
+	 */
+	@RequestMapping(value = "/admin/updateRateGroup", method = RequestMethod.POST)
+	public ModelAndView updateRateGroupView(
+			@Valid @ModelAttribute("rateGroupTypeData") RateGroupTypeDTO rateGroupTypeDTO, BindingResult result,
+			RedirectAttributes redirectAttributes) {
+		if (result.hasErrors()) {
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid Data..");
+			return new ModelAndView("redirect:/admin/selectRateGroup");
+		}
+		RateGroup rateGroup = rateGroupService.getRateGroupById(rateGroupTypeDTO.getRateGroupId());
+		if (null == rateGroup) {
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Operation failed..");
+			return new ModelAndView("redirect:/admin/selectRateGroup");
+		}
+		return new ModelAndView("updateRateGroup", "rateGroup", rateGroup);
+	}
+
+	/**
+	 * This is used to map the request for update the rate group and create new
+	 * rate group and simply render the view.
+	 * 
+	 * @param rateGroupDTO
+	 *            this object contains rate group related data
+	 * @param redirectAttributes
+	 *            this is used to hold the messages and object for retrieving
+	 *            data on the view.
+	 * @param result
+	 *            this is used to validate the data Rate Group DTO
+	 * @return selectRateGroupType view
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/admin/updatedRateGroup", method = RequestMethod.POST)
+	public ModelAndView updateRateGroup(@Valid @ModelAttribute("updateRateGroupData") RateGroupDTO rateGroupDTO,
+			BindingResult result, RedirectAttributes redirectAttributes) throws ParseException {
+		if (result.hasErrors()) {
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid Data.!");
+			return new ModelAndView("redirect:/admin/selectRateGroup");
+		}
+		if (null == rateGroupService.updateRateGroup(rateGroupDTO)) {
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Operation failed..!");
+			return new ModelAndView("redirect:/admin/selectRateGroup");
+		} else {
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Updated..!");
+			return new ModelAndView("redirect:/admin/selectRateGroup");
+		}
 	}
 }

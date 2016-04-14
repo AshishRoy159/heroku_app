@@ -136,4 +136,18 @@ public class RateGroup implements Serializable {
 		this.baseRateBean = baseRateBean;
 	}
 
+	/**
+	 * @return the isActive
+	 */
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	/**
+	 * @param isActive
+	 *            the isActive to set
+	 */
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
 }

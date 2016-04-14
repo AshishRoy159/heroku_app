@@ -46,4 +46,8 @@ public interface RateGroupRepository extends JpaRepository<RateGroup, Long> {
 	 * This method is used to get the details of all rate groups.
 	 */
 	public List<RateGroup> findAll();
+	
+	public List<RateGroup> findAllByIsActive(Boolean isActive);
+	
+	public RateGroup findByRateGroupId(Integer id);
 }
