@@ -16,19 +16,13 @@
 
 package com.mindfire.bicyclesharing.event.listener;
 
-import java.util.Locale;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.mindfire.bicyclesharing.event.ResetPasswordEvent;
+import com.mindfire.bicyclesharing.event.BookingSuccessEvent;
 import com.mindfire.bicyclesharing.model.User;
-import com.mindfire.bicyclesharing.service.EmailService;
-import com.mindfire.bicyclesharing.service.UserService;
+import com.mindfire.bicyclesharing.service.SMSService;
 
 /**
  * RegistrationListener is an event listener for OnRegistrationCompleteEvent
@@ -39,17 +33,11 @@ import com.mindfire.bicyclesharing.service.UserService;
  * @since 10/03/2016
  */
 @Component
-public class ResetPasswordListener implements ApplicationListener<ResetPasswordEvent> {
+public class BookingSuccessListener implements ApplicationListener<BookingSuccessEvent> {
 
 	@Autowired
-	private UserService service;
+	private SMSService smsService;
 
-	@Autowired
-	private EmailService emailService;
-	
-	@Autowired
-	private HttpServletRequest request;
-	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -58,9 +46,9 @@ public class ResetPasswordListener implements ApplicationListener<ResetPasswordE
 	 * springframework.context.ApplicationEvent)
 	 */
 	@Override
-	public void onApplicationEvent(ResetPasswordEvent event) {
+	public void onApplicationEvent(BookingSuccessEvent event) {
 		try {
-			this.confirmRegistration(event);
+			this.confirmBooking(event);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -71,21 +59,18 @@ public class ResetPasswordListener implements ApplicationListener<ResetPasswordE
 	 * the verification email
 	 * 
 	 * @param event
-	 *            OnResetPasswordEvent
-	 * @throws Exception 
+	 *            OnRegistrationCompleteEvent
+	 * @throws Exception
 	 */
-	private void confirmRegistration(final ResetPasswordEvent event) throws Exception {
-		
-		String appUrl = request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/"));
+	private void confirmBooking(final BookingSuccessEvent event) throws Exception {
+
 		final User user = event.getUser();
-		final String token = UUID.randomUUID().toString();
-		service.createResetPasswordTokenForUser(user, token);
-		final Locale locale = event.getLocale();
-		final String recipientAddress = user.getEmail();
-		final String subject = "Reset Password";
-		final String confirmationUrl = appUrl + "/resetPassword.html?token=" + token;
-		final String template = "/mail/resetPasswordMail";
-		
-		emailService.sendSimpleMail(user.getFirstName(), recipientAddress, locale, subject, confirmationUrl, template);
+		final String recipientNumber = "91" + user.getMobileNo();
+		final Long bookingId = event.getBooking().getBookingId();
+		final String message = "Hello " + user.getFirstName() + "." + "\n"
+				+ "Your booking is successful. Your Booking Id is " + bookingId + ". Thank you for using our Service.";
+
+		smsService.sendMessage(recipientNumber, message);
 	}
+
 }

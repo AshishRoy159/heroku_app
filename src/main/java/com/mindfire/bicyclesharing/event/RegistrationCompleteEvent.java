@@ -31,7 +31,7 @@ import com.mindfire.bicyclesharing.model.User;
  * @since 10/03/2016
  */
 @SuppressWarnings("serial")
-public class OnResetPasswordEvent extends ApplicationEvent {
+public class RegistrationCompleteEvent extends ApplicationEvent {
 
 	private final Locale locale;
 	private final User user;
@@ -40,11 +40,11 @@ public class OnResetPasswordEvent extends ApplicationEvent {
 	 * OnRegistrationCompleteEvent constructor
 	 * 
 	 * @param user
-	 *            User object
+	 *            User object of user just registered
 	 * @param locale
 	 *            to tailor information for the user
 	 */
-	public OnResetPasswordEvent(final User user, final Locale locale) {
+	public RegistrationCompleteEvent(final User user, final Locale locale) {
 		super(user);
 		this.user = user;
 		this.locale = locale;

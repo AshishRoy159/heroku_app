@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.mindfire.bicyclesharing.event.OnRegistrationCompleteEvent;
+import com.mindfire.bicyclesharing.event.RegistrationCompleteEvent;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.service.EmailService;
 import com.mindfire.bicyclesharing.service.UserService;
@@ -39,7 +39,7 @@ import com.mindfire.bicyclesharing.service.UserService;
  * @since 10/03/2016
  */
 @Component
-public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
+public class RegistrationListener implements ApplicationListener<RegistrationCompleteEvent> {
 
 	@Autowired
 	private UserService service;
@@ -58,7 +58,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 	 * springframework.context.ApplicationEvent)
 	 */
 	@Override
-	public void onApplicationEvent(OnRegistrationCompleteEvent event) {
+	public void onApplicationEvent(RegistrationCompleteEvent event) {
 		try {
 			this.confirmRegistration(event);
 		} catch (Exception e) {
@@ -74,7 +74,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 	 *            OnRegistrationCompleteEvent
 	 * @throws Exception 
 	 */
-	private void confirmRegistration(final OnRegistrationCompleteEvent event) throws Exception {
+	private void confirmRegistration(final RegistrationCompleteEvent event) throws Exception {
 		
 		String appUrl = request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/"));
 		final User user = event.getUser();

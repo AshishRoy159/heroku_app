@@ -25,6 +25,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -42,6 +43,7 @@ import com.mindfire.bicyclesharing.dto.BookingPaymentDTO;
 import com.mindfire.bicyclesharing.dto.IssueCycleDTO;
 import com.mindfire.bicyclesharing.dto.ReceiveBicyclePaymentDTO;
 import com.mindfire.bicyclesharing.dto.ReceiveCycleDTO;
+import com.mindfire.bicyclesharing.event.BookingSuccessEvent;
 import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.Booking;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
@@ -67,6 +69,9 @@ import com.mindfire.bicyclesharing.service.WalletService;
  */
 @Controller
 public class BookingController {
+
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
 
 	@Autowired
 	private UserService userService;
@@ -149,6 +154,12 @@ public class BookingController {
 					.getPickUpPoint();
 			pickUpPointService.updatePickUpPointAvailability(pickUpPoint,
 					biCycleService.getBicyclesByPickupPointAndAvailability(pickUpPoint, true).size());
+			
+			try {
+				eventPublisher.publishEvent(new BookingSuccessEvent(user, booking));
+			} catch (Exception me) {
+				System.out.println(me.getMessage());
+			}
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_DETAILS, booking);
 			return new ModelAndView("redirect:/manager/printIssueBicycleDetails");
 		}

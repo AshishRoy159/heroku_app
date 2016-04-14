@@ -51,9 +51,9 @@ import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
 import com.mindfire.bicyclesharing.dto.RegistrationPaymentDTO;
 import com.mindfire.bicyclesharing.dto.SetPasswordDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
-import com.mindfire.bicyclesharing.event.OnRegistrationCompleteEvent;
-import com.mindfire.bicyclesharing.event.OnResetPasswordEvent;
+import com.mindfire.bicyclesharing.event.RegistrationCompleteEvent;
 import com.mindfire.bicyclesharing.event.ResendVerificationTokenEvent;
+import com.mindfire.bicyclesharing.event.ResetPasswordEvent;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.VerificationToken;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
@@ -122,7 +122,7 @@ public class UserController {
 			if (transaction != null) {
 				User registered = transaction.getWallet().getUser();
 				try {
-					eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale()));
+					eventPublisher.publishEvent(new RegistrationCompleteEvent(registered, request.getLocale()));
 				} catch (Exception me) {
 					System.out.println(me.getMessage());
 				}
@@ -277,7 +277,7 @@ public class UserController {
 		}
 
 		try {
-			eventPublisher.publishEvent(new OnResetPasswordEvent(user, request.getLocale()));
+			eventPublisher.publishEvent(new ResetPasswordEvent(user, request.getLocale()));
 		} catch (Exception me) {
 			System.out.println(me.getMessage());
 		}

@@ -21,6 +21,7 @@ import java.sql.Timestamp;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -39,6 +40,7 @@ import com.mindfire.bicyclesharing.dto.IssueCycleForOnlineDTO;
 import com.mindfire.bicyclesharing.dto.PaymentAtPickUpPointDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
+import com.mindfire.bicyclesharing.event.BookingSuccessEvent;
 import com.mindfire.bicyclesharing.model.Booking;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
@@ -61,6 +63,9 @@ import com.mindfire.bicyclesharing.service.WalletService;
 @Controller
 public class UserBookingController {
 
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
+	
 	@Autowired
 	private BookingService bookingSevice;
 
@@ -156,9 +161,11 @@ public class UserBookingController {
 	public ModelAndView userBookingPayment(
 			@ModelAttribute("userBookingPaymentData") UserBookingPaymentDTO userBookingPaymentDTO,
 			Authentication authentication, RedirectAttributes redirectAttributes) {
+		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+		Booking booking = bookingSevice.getBookingById(userBookingPaymentDTO.getBookingId());
 		if (userBookingPaymentDTO.getMode().equals("cash")) {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_DETAILS,
-					bookingSevice.getBookingById(userBookingPaymentDTO.getBookingId()));
+					booking);
 			return new ModelAndView("redirect:/user/printUserBookingDetails");
 		} else {
 			WalletTransaction walletTransaction = walletService.saveUserBookingPayment(userBookingPaymentDTO,
@@ -168,6 +175,11 @@ public class UserBookingController {
 						"Your Payment is Not successfully completed Due to low balance");
 				return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.INDEX);
 			} else {
+				try {
+					eventPublisher.publishEvent(new BookingSuccessEvent(currentUser.getUser(), booking));
+				} catch (Exception me) {
+					System.out.println(me.getMessage());
+				}
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.MESSAGE,
 						"Your Payment is successfully completed");
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_DETAILS,
