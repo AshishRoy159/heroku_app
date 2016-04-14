@@ -121,7 +121,7 @@
 								th:href="@{/admin/adminHome}"><i class="fa fa-home"></i>Home<br />
 							</a></li>
 							<li class="divider"></li>
-							<li class="active"><a href="#"> <i
+							<li class="active"><a th:href="@{/user/userProfile/} + ${user.userId}"> <i
 									class="glyphicon glyphicon-home"></i> Overview
 							</a></li>
 							<li><a

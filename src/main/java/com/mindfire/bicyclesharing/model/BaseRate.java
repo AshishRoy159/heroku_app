@@ -36,6 +36,7 @@ public class BaseRate implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "base_rate_id")
+
 	private Long baseRateId;
 
 	@Column(name = "base_rate")

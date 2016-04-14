@@ -16,11 +16,16 @@
 
 package com.mindfire.bicyclesharing.component;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.mindfire.bicyclesharing.dto.RateGroupDTO;
 import com.mindfire.bicyclesharing.model.RateGroup;
 import com.mindfire.bicyclesharing.model.User;
+import com.mindfire.bicyclesharing.repository.BaseRateRepository;
 import com.mindfire.bicyclesharing.repository.RateGroupRepository;
 
 /**
@@ -36,6 +41,11 @@ public class RateGroupComponent {
 
 	@Autowired
 	private RateGroupRepository rateGroupRepository;
+	
+	@Autowired
+	private BaseRateRepository baseRateRepository;
+	
+	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	/**
 	 * This method is used to find the rate group by groupType
@@ -46,5 +56,14 @@ public class RateGroupComponent {
 	 */
 	public RateGroup mapRateGroup(User user) {
 		return rateGroupRepository.findByGroupTypeAndIsActive(user.getRateGroup().getGroupType(), true);
+	}
+	
+	public RateGroup mapNewRateGroupDetails(RateGroupDTO rateGroupDTO) throws ParseException{
+		RateGroup rateGroup = new RateGroup();
+		rateGroup.setDiscount(rateGroupDTO.getDiscount());
+		rateGroup.setEffectiveFrom(simpleDateFormat.parse(rateGroupDTO.getEffectiveFrom()));
+		rateGroup.setGroupType(rateGroupDTO.getGroupType());
+		rateGroup.setBaseRateBean(baseRateRepository.findByGroupType("USER"));
+		return rateGroupRepository.save(rateGroup);
 	}
 }

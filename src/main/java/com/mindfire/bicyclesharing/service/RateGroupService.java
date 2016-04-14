@@ -16,10 +16,13 @@
 
 package com.mindfire.bicyclesharing.service;
 
+import java.text.ParseException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.component.RateGroupComponent;
+import com.mindfire.bicyclesharing.dto.RateGroupDTO;
 import com.mindfire.bicyclesharing.model.RateGroup;
 import com.mindfire.bicyclesharing.model.User;
 
@@ -45,5 +48,9 @@ public class RateGroupService {
 	 */
 	public RateGroup getBaseRate(User user) {
 		return rateGroupComponent.mapRateGroup(user);
+	}
+	
+	public RateGroup addNewRateGroup(RateGroupDTO rateGroupDTO) throws ParseException{
+		return rateGroupComponent.mapNewRateGroupDetails(rateGroupDTO);
 	}
 }

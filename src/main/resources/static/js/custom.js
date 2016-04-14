@@ -243,6 +243,25 @@ function userBookingValidation(form) {
 	}
 }
 
+/* 
+ * Used to check  iAgree checkbox 
+ */
 function iAgree() {
 	document.getElementById('iAgreeId').checked = true;
+}
+
+/*
+ * Validates the input date.
+ */
+function checkEffectiveFrom(form) {
+	var selectedText = document.getElementById('datepicker').value;
+	var selectedDate = new Date(selectedText);
+	var now = new Date();
+	if((selectedDate - now ) < 0){
+		alert('Date should be in future...');
+		return false;
+	}else{
+		return true;
+	}
+
 }

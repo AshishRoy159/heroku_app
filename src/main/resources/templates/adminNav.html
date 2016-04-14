@@ -55,8 +55,12 @@
 						th:href="@{/manager/managerHome}"><i class="fa fa-dashboard "></i>Dashboard</a></li>
 					<li sec:authorize="hasAuthority('ADMIN')"><a
 						th:href="@{/admin/adminHome}"><i class="fa fa-dashboard "></i>Dashboard</a></li>
-					<li><a th:href="@{#}"><i class="fa fa-desktop "></i>
-							Pricing and plans</a></li>
+					<li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{#}"><i class="fa fa-desktop "></i>
+							Pricing and plans<span class="fa arrow"></span></a>
+							<ul class="nav nav-second-level ">
+							<li><a th:href="@{/admin/addNewRateGroup}">Add New Rate Group</a></li>
+							<li><a th:href="@{/admin/addNewRateGroup}">Update Plan</a></li>
+							</ul></li>
 					<li sec:authorize="hasAuthority('ADMIN')"><a
 						th:href="@{/admin/requests}"><i class="fa fa-qrcode "></i>
 							Requests and Notifications</a></li>
