@@ -25,6 +25,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.mindfire.bicyclesharing.security.CustomAuthenticationFailureHandler;
 import com.mindfire.bicyclesharing.security.CustomAuthenticationSuccessHandler;
 
 /**
@@ -40,6 +41,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private CustomAuthenticationSuccessHandler successHandler;
+	
+	@Autowired
+	private CustomAuthenticationFailureHandler failureHandler;
 
 	@Autowired
 	private UserDetailsService userDetailsService;
@@ -57,7 +61,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.hasAnyAuthority("ADMIN", "USER", "MANAGER").and().authorizeRequests().antMatchers("/manager/**")
 				.hasAnyAuthority("MANAGER").and().authorizeRequests().antMatchers("/admin/**").hasAuthority("ADMIN")
 				.anyRequest().permitAll().and().formLogin().loginPage("/login").successHandler(successHandler)
-				.failureUrl("/login?error").usernameParameter("email").permitAll().and().logout().logoutUrl("/logout")
+				.failureHandler(failureHandler).usernameParameter("email").permitAll().and().logout().logoutUrl("/logout")
 				.deleteCookies("remember-me").logoutSuccessUrl("/login?logout").permitAll().and().rememberMe().and()
 				.csrf().disable();
 	}

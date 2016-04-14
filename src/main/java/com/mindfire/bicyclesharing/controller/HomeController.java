@@ -99,8 +99,8 @@ public class HomeController {
 	 * @return the signIn view.
 	 */
 	@RequestMapping(value = { "login" }, method = RequestMethod.GET)
-	public ModelAndView getUserSignInPage(@RequestParam Optional<String> error, @RequestParam Optional<String> logout,
-			Model model, Authentication authentication) {
+	public ModelAndView getUserSignInPage(@RequestParam("error") Optional<String> error,
+			@RequestParam Optional<String> logout, Model model, Authentication authentication) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
@@ -108,7 +108,11 @@ public class HomeController {
 			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.INDEX);
 		} else {
 			if (error.isPresent()) {
-				model.addAttribute("loginError", "Invalid email or password..!!");
+				if (error.get().equals("badUser")) {
+					model.addAttribute("loginError", "Invalid Email or Password");
+				} else if (error.get().equals("disabled")) {
+					model.addAttribute("loginError", "Your Account is Disabled. Please contact nearest Pickup Point.");
+				}
 			}
 			if (logout.isPresent()) {
 				model.addAttribute("loginError", "You have successfully logged out!!");

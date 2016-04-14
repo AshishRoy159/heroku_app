@@ -62,50 +62,49 @@
 	</section>
 	<div class="register">
 		<div class="container">
-			<div class="row">
+			<div class="row"></div>
 			<div class="text-danger" th:text="${loginError}"></div>
-				<form action="#" th:action="@{/login}" th:object="${loginData}"
-					method="post">
-					<div
-						class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
-						<h2>Please Sign In</h2>
-						<hr class="colorgraph"></hr>
-						<div class="form-group">
-							<input type="email" name="email" maxlength="50" class="form-control input-lg"
-								placeholder="Enter Email Id" tabindex="1"
-								title="Enter Valid Email Id" required="required" />
-						</div>
+			<form action="#" th:action="@{/login}" th:object="${loginData}"
+				method="post">
+				<div
+					class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+					<h2>Please Sign In</h2>
+					<hr class="colorgraph"></hr>
+					<div class="form-group">
+						<input type="email" name="email" maxlength="50"
+							class="form-control input-lg" placeholder="Enter Email Id"
+							tabindex="1" title="Enter Valid Email Id" required="required" />
+					</div>
 
-						<div class="form-group">
-							<input type="password" name="password" pattern="*{4,16}" maxlength="16"
-								class="form-control input-lg" placeholder="Enter Password"
-								tabindex="2" required="required" />
-						</div>
+					<div class="form-group">
+						<input type="password" name="password" pattern="*{4,16}"
+							maxlength="16" class="form-control input-lg"
+							placeholder="Enter Password" tabindex="2" required="required" />
+					</div>
+					<div>
+						<span class="button-checkbox pull-left"> <input
+							type="checkbox" tabindex="3" name="remember-me" id="remember-me" />
+							Remember Me
+						</span> <span><a href="forgotPassword" tabindex="4"
+							class="btn btn-link pull-right" style="font-size: 1.1em">Forgot
+								Password?</a></span>
 
-						<div>
-							<span class="button-checkbox pull-left"> <input
-								type="checkbox" tabindex="3" name="remember-me" id="remember-me" />
-								Remember Me
-							</span> <span><a href="forgotPassword" tabindex="4"
-								class="btn btn-link pull-right" style="font-size: 1.1em">Forgot
-									Password?</a></span>
+					</div>
+					<br />
+					<hr class="colorgraph" />
+					<div class="row">
+						<div class="col-md-6">
+							<input type="submit" value="Login"
+								class="btn btn-primary btn-block btn-lg" tabindex="5" />
 						</div>
-						<br />
-						<hr class="colorgraph" />
-						<div class="row">
-							<div class="col-md-6">
-								<input type="submit" value="Login"
-									class="btn btn-primary btn-block btn-lg" tabindex="5" />
-							</div>
-							<div class="col-md-6">
-								<a href="register"> <input type="button" value="Register"
-									class="btn btn-success btn-block btn-lg" tabindex="6" />
-								</a>
-							</div>
+						<div class="col-md-6">
+							<a href="register"> <input type="button" value="Register"
+								class="btn btn-success btn-block btn-lg" tabindex="6" />
+							</a>
 						</div>
 					</div>
-				</form>
-			</div>
+				</div>
+			</form>
 		</div>
 	</div>
 
