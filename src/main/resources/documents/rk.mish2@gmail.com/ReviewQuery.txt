@@ -1,0 +1,4 @@
+SELECT brand,model,title,review,firstname
+FROM car
+INNER JOIN reviews ON reviews.car_id=car.car_id
+INNER JOIN userdetails on reviews.user_id=userdetails.user_id

@@ -16,6 +16,8 @@
 
 package com.mindfire.bicyclesharing.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.mindfire.bicyclesharing.model.RateGroup;
@@ -39,4 +41,9 @@ public interface RateGroupRepository extends JpaRepository<RateGroup, Long> {
 	 * @return RateGroup object
 	 */
 	public RateGroup findByGroupTypeAndIsActive(String rateGroup, Boolean isActive);
+
+	/**
+	 * This method is used to get the details of all rate groups.
+	 */
+	public List<RateGroup> findAll();
 }

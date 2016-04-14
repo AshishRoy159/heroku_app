@@ -17,6 +17,7 @@
 package com.mindfire.bicyclesharing.service;
 
 import java.text.ParseException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,8 +50,16 @@ public class RateGroupService {
 	public RateGroup getBaseRate(User user) {
 		return rateGroupComponent.mapRateGroup(user);
 	}
-	
-	public RateGroup addNewRateGroup(RateGroupDTO rateGroupDTO) throws ParseException{
+
+	public RateGroup addNewRateGroup(RateGroupDTO rateGroupDTO) throws ParseException {
 		return rateGroupComponent.mapNewRateGroupDetails(rateGroupDTO);
+	}
+
+	/**
+	 * This method is used to get all rate group details.
+	 * @return RateGroup List
+	 */
+	public List<RateGroup> getAllRateGroup() {
+		return rateGroupComponent.getAllRateGroup();
 	}
 }

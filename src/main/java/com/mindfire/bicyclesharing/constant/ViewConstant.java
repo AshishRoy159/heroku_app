@@ -123,5 +123,7 @@ public class ViewConstant {
 	public static final String REDIRECT = "redirect:";
 	
 	public static final String RUNNING_BOOKING = "bookingInUse";
+	
+	public static final String RATE_GROUP_DETAILS = "rateGroupDetails";
 
 }

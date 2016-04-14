@@ -17,11 +17,13 @@
 package com.mindfire.bicyclesharing.controller.admin;
 
 import java.text.ParseException;
+import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +32,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
+import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.RateGroupDTO;
+import com.mindfire.bicyclesharing.model.RateGroup;
 import com.mindfire.bicyclesharing.service.RateGroupService;
 
 /**
@@ -55,7 +59,7 @@ public class RateGroupController {
 	@RequestMapping(value = "/admin/addRateGroup", method = RequestMethod.POST)
 	public ModelAndView addRateGroup(@Valid @ModelAttribute("rateGroupData") RateGroupDTO rateGroupDTO,
 			BindingResult result, RedirectAttributes redirectAttributes) throws ParseException {
-		if(result.hasErrors()){
+		if (result.hasErrors()) {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid Data..!");
 			return new ModelAndView("redirect:/admin/addNewRateGroup");
 		}
@@ -66,5 +70,18 @@ public class RateGroupController {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully added..!");
 			return new ModelAndView("redirect:/admin/addNewRateGroup");
 		}
+	}
+
+	/**
+	 * This method maps the Rate Group Details request. Simply render
+	 * the rateGroupDetails view.
+	 * @param model 
+	 * 				to map the model attributes.
+	 * @return rateGroupDetails view.
+	 */
+	@RequestMapping(value="admin/rateGroupDetails", method = RequestMethod.GET)
+	public ModelAndView getRateGroup(Model model){
+		List<RateGroup> rateGroups = rateGroupService.getAllRateGroup();
+		return new ModelAndView(ViewConstant.RATE_GROUP_DETAILS,ModelAttributeConstant.RATE_GROUPS,rateGroups);
 	}
 }

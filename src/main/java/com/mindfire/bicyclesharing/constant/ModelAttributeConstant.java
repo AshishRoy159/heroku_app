@@ -68,4 +68,6 @@ public class ModelAttributeConstant {
 	public static final String BOOKING_FAILURE = "bookingFailure";
 	
 	public static final String BOOKING_SUCCESS = "bookingSuccess";
+	
+	public static final String RATE_GROUPS = "rateGroups";
 }
