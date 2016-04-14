@@ -57,7 +57,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.hasAnyAuthority("ADMIN", "USER", "MANAGER").and().authorizeRequests().antMatchers("/manager/**")
 				.hasAnyAuthority("MANAGER").and().authorizeRequests().antMatchers("/admin/**").hasAuthority("ADMIN")
 				.anyRequest().permitAll().and().formLogin().loginPage("/login").successHandler(successHandler)
-				.failureUrl("/login?error").usernameParameter("email").permitAll().and().csrf().disable();
+				.failureUrl("/login?error").usernameParameter("email").permitAll().and().logout().logoutUrl("/logout")
+				.deleteCookies("remember-me").logoutSuccessUrl("/login?logout").permitAll().and().rememberMe().and()
+				.csrf().disable();
 	}
 
 	/*

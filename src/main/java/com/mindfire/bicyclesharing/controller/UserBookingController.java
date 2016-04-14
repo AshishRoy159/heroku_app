@@ -65,7 +65,7 @@ public class UserBookingController {
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
-	
+
 	@Autowired
 	private BookingService bookingSevice;
 
@@ -116,7 +116,8 @@ public class UserBookingController {
 							"Your Booking is successfully completed..Please Choose your payment.");
 					long actualTime = (userBooking.getExpectedIn().getTime() - userBooking.getExpectedOut().getTime());
 					long hour = bookingSevice.calculateTotalRideTime(actualTime);
-					double baseRate = rateGroupService.getBaseRate(userBooking.getUser()).getBaseRateBean().getBaseRate();
+					double baseRate = rateGroupService.getBaseRate(userBooking.getUser()).getBaseRateBean()
+							.getBaseRate();
 					double fare = (hour * baseRate);
 
 					if (fare == 0.0) {
@@ -163,23 +164,33 @@ public class UserBookingController {
 			Authentication authentication, RedirectAttributes redirectAttributes) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		Booking booking = bookingSevice.getBookingById(userBookingPaymentDTO.getBookingId());
+
 		if (userBookingPaymentDTO.getMode().equals("cash")) {
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_DETAILS,
-					booking);
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_DETAILS, booking);
+
+			try {
+				eventPublisher.publishEvent(new BookingSuccessEvent(currentUser.getUser(), booking));
+			} catch (Exception me) {
+				System.out.println(me.getMessage());
+			}
+
 			return new ModelAndView("redirect:/user/printUserBookingDetails");
 		} else {
 			WalletTransaction walletTransaction = walletService.saveUserBookingPayment(userBookingPaymentDTO,
 					authentication);
+
 			if (null == walletTransaction) {
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 						"Your Payment is Not successfully completed Due to low balance");
 				return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.INDEX);
 			} else {
+
 				try {
 					eventPublisher.publishEvent(new BookingSuccessEvent(currentUser.getUser(), booking));
 				} catch (Exception me) {
 					System.out.println(me.getMessage());
 				}
+
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.MESSAGE,
 						"Your Payment is successfully completed");
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_DETAILS,
@@ -264,7 +275,8 @@ public class UserBookingController {
 								long actualTime = (openBooking.getExpectedIn().getTime()
 										- openBooking.getExpectedOut().getTime());
 								long hour = bookingSevice.calculateTotalRideTime(actualTime);
-								double baseRate = rateGroupService.getBaseRate(openBooking.getUser()).getBaseRateBean().getBaseRate();
+								double baseRate = rateGroupService.getBaseRate(openBooking.getUser()).getBaseRateBean()
+										.getBaseRate();
 								double fare = (hour * baseRate);
 								if (fare == 0.0) {
 									fare = baseRate;

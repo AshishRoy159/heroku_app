@@ -68,19 +68,6 @@ public class WalletService {
 	}
 
 	/**
-	 * This method is used to save wallet transaction related data to the
-	 * database.
-	 * 
-	 * @param walletTransaction
-	 *            WalletTransaction details to be saved in the database
-	 * @return {@link WalletTransaction} object
-	 */
-//	public WalletTransaction saveWalletTransactionDetail(WalletTransaction walletTransaction) {
-//		return walletTransactionRepository.save(walletTransaction);
-//
-//	}
-
-	/**
 	 * This method is used for saving the payment on user booking.
 	 * 
 	 * @param userBookingPaymentDTO
