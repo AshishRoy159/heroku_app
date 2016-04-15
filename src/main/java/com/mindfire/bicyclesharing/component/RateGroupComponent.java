@@ -180,6 +180,7 @@ public class RateGroupComponent {
 		newRateGroup.setBaseRateBean(rateGroup.getBaseRateBean());
 		newRateGroup.setDiscount(rateGroupDTO.getDiscount());
 		newRateGroup.setEffectiveFrom(simpleDateFormat.parse(rateGroupDTO.getEffectiveFrom()));
+		newRateGroup.setIsActive(false);
 		rateGroupRepository.save(newRateGroup);
 		@SuppressWarnings("deprecation")
 		int date = newRateGroup.getEffectiveFrom().getDate();
@@ -208,7 +209,6 @@ public class RateGroupComponent {
 						String.valueOf(year) + "-" + String.valueOf(month + 1) + "-" + String.valueOf(date - 1)));
 			}
 		}
-		rateGroup.setIsActive(false);
 		return rateGroupRepository.save(rateGroup);
 	}
 }

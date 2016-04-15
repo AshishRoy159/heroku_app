@@ -92,4 +92,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	 * @return {@link Booking} List
 	 */
 	public List<Booking> findAllByIsOpenAndBiCycleIdIsNotNull(Boolean isOpen);
+	
+	/**
+	 * This method is used to find the all booking based on the isOpen status
+	 * and BiCycle is Null.
+	 * 
+	 * @param isOpen
+	 *            Boolean value
+	 * @return {@link Booking} List
+	 */
+	public List<Booking> findAllByIsOpenAndBiCycleIdIsNull(Boolean isOpen);
 }

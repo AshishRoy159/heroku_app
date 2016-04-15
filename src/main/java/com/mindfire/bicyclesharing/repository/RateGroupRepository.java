@@ -46,8 +46,44 @@ public interface RateGroupRepository extends JpaRepository<RateGroup, Long> {
 	 * This method is used to get the details of all rate groups.
 	 */
 	public List<RateGroup> findAll();
-	
+
+	/**
+	 * This method is used to get the details of all active rate groups.
+	 * 
+	 * @param isActive
+	 *            true or false
+	 * @return {@link RateGroup} List
+	 */
 	public List<RateGroup> findAllByIsActive(Boolean isActive);
-	
+
+	/**
+	 * This method is used to find the rate groups based on isActive and
+	 * effective upto fields.
+	 * 
+	 * @param isActive
+	 *            true or false
+	 * @return {@link RateGroup} List
+	 */
+	public List<RateGroup> findAllByIsActiveAndEffectiveUptoIsNotNull(Boolean isActive);
+
+	/**
+	 * This method is used to find a particular rate group.
+	 * 
+	 * @param id
+	 *            rate group id
+	 * @return {@link RateGroup}
+	 */
 	public RateGroup findByRateGroupId(Integer id);
+
+	/**
+	 * This method is used to find a rate group based on group type,Is active
+	 * and effective Upto feilds.
+	 * 
+	 * @param groupType
+	 *            the groupType
+	 * @param isActive
+	 *            true or false
+	 * @return {@link RateGroup}
+	 */
+	public RateGroup findByGroupTypeAndIsActiveAndEffectiveUptoIsNull(String groupType, Boolean isActive);
 }

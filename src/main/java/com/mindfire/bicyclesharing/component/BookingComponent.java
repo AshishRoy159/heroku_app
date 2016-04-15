@@ -307,8 +307,6 @@ public class BookingComponent {
 		Booking booking = bookingRepository.findByBookingId(receiveCycleDTO.getBookingId());
 		if (null != booking && booking.getIsOpen()) {
 			booking.setIsOpen(false);
-			booking.setReturnedAt(booking.getPickedUpFrom());
-
 			return bookingRepository.save(booking);
 		} else {
 			return null;

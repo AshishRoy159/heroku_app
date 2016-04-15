@@ -23,6 +23,7 @@ import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomi
 import org.springframework.boot.context.embedded.ErrorPage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
@@ -36,6 +37,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
  * @version 1.0
  * @since 10/03/2016
  */
+@EnableScheduling
 @SpringBootApplication(exclude = { MultipartAutoConfiguration.class })
 public class BicycleSharingApplication {
 
