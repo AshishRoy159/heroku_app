@@ -37,6 +37,7 @@
 		50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1
 		87.5%, #62c2e4 87.5%, #62c2e4);
 }
+
 .foot {
 	position: relative;
 }
@@ -48,10 +49,37 @@
 	width: 100%;
 }
 
-.heightDiv{
+.heightDiv {
 	height: 150px;
 }
 
-.tblFontSize{
+.tblFontSize {
 	font-size: 14px;
+}
+
+.jumbotron {
+	position: relative;
+	background: url("/images/bicyclelogo.jpg") no-repeat center;
+	width: 100%;
+	height: 100%;
+	background-size: cover;
+	overflow: hidden;
+}
+
+.jumbotron h1 {
+	text-align: center;
+	color: white;
+}
+
+.jumbotron a {
+	color: white;
+	text-align: center;
+}
+
+.jumbotron p {
+	text-align: center;
+}
+
+.container h2 {
+	color: red;
 }
