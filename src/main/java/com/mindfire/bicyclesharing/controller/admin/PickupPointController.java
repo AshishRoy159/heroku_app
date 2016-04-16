@@ -21,6 +21,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,6 +35,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.PickUpPointDTO;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
 
@@ -79,18 +82,16 @@ public class PickupPointController {
 			BindingResult result, RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Oops... Operation failed!!");
-			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_PICKUP_POINT);
-		}
-
-		PickUpPoint pickUpPoint = pickUpPointService.savePickUpPoint(pickUpPointDTO);
-
-		if (pickUpPoint == null) {
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Oops... Operation failed!!");
-			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_PICKUP_POINT);
 		} else {
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Added!!!");
-			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_PICKUP_POINT);
+			PickUpPoint pickUpPoint = pickUpPointService.savePickUpPoint(pickUpPointDTO);
+			if (pickUpPoint == null) {
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
+						"Oops... Operation failed!!");
+			} else {
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Added!!!");
+			}
 		}
+		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_PICKUP_POINT);
 	}
 
 	/**
@@ -117,6 +118,9 @@ public class PickupPointController {
 	 */
 	@RequestMapping(value = "admin/updatePickupPointDetails/{id}", method = RequestMethod.GET)
 	public ModelAndView pickupPointUpdateForm(@PathVariable("id") Integer pickUpPointId) {
+		if(pickUpPointService.getPickupPointById(pickUpPointId) == null){
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
 		return new ModelAndView(ViewConstant.UPDATE_PICKUP_POINT_DETAILS, ModelAttributeConstant.PICKUP_POINT,
 				pickUpPointService.getPickupPointById(pickUpPointId));
 	}
@@ -141,9 +145,7 @@ public class PickupPointController {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Please Enter valid data");
 			return new ModelAndView(ViewConstant.UPDATE_PICKUP_POINT_DETAILS);
 		}
-
 		PickUpPoint pickUpPoint = pickUpPointService.updatePickUpPointDetails(pickUpPointDTO);
-
 		if (null == pickUpPoint) {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Operation Failed...!!");
 			return new ModelAndView(ViewConstant.UPDATE_PICKUP_POINT_DETAILS);

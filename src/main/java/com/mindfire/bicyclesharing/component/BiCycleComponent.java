@@ -21,10 +21,14 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.BiCycleDTO;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.BiCycleTransfer;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
@@ -71,7 +75,13 @@ public class BiCycleComponent {
 		if (pickUpPoint.getMaxCapacity() > pickUpPoint.getCurrentAvailability()) {
 			biCycle.setChasisNo(biCycleDTO.getChasisNo());
 			biCycle.setCurrentLocation(pickUpPoint);
-			biCycleRepository.save(biCycle);
+
+			try {
+				biCycleRepository.save(biCycle);
+			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+			}
+
 			pickUpPointComponent.updateBiCycleCurrentAvailability(pickUpPoint,
 					biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size());
 
@@ -114,10 +124,21 @@ public class BiCycleComponent {
 			BiCycleTransfer biCycleTransfer = new BiCycleTransfer();
 
 			biCycle.setIsAvailable(false);
-			biCycleRepository.save(biCycle);
+
+			try {
+				biCycleRepository.save(biCycle);
+			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+			}
+
 			biCycleTransfer.setBiCycle(biCycle);
 			biCycleTransfer.setTransfer(transfer);
-			biCycleTransferRepository.save(biCycleTransfer);
+			try {
+				biCycleTransferRepository.save(biCycleTransfer);
+			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+			}
+
 		}
 	}
 
@@ -137,7 +158,12 @@ public class BiCycleComponent {
 		for (BiCycle biCycle : biCycles) {
 			biCycle.setIsAvailable(true);
 			biCycle.setCurrentLocation(transfer.getTransferredTo());
-			biCycleRepository.save(biCycle);
+			try {
+				biCycleRepository.save(biCycle);
+			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+			}
+
 		}
 	}
 
@@ -177,8 +203,13 @@ public class BiCycleComponent {
 	 */
 	public BiCycle updateBicycle(Long id) {
 		BiCycle biCycle = biCycleRepository.findByBiCycleId(id);
+
 		biCycle.setIsAvailable(false);
-		biCycleRepository.save(biCycle);
+		try {
+			biCycleRepository.save(biCycle);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 
 		return biCycle;
 	}

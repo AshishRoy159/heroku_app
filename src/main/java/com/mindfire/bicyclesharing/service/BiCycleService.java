@@ -29,6 +29,8 @@ import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.Transfer;
 
+import javassist.NotFoundException;
+
 /**
  * BiCycleService class contains methods for BiCycle related operations
  * 
@@ -48,8 +50,9 @@ public class BiCycleService {
 	 * @param id
 	 *            this is biCycleId
 	 * @return {@link BiCycle} object
+	 * @throws NotFoundException 
 	 */
-	public BiCycle updateBiCycleDetails(Long id) {
+	public BiCycle updateBiCycleDetails(Long id) throws NotFoundException {
 		return biCycleComponent.updateBicycle(id);
 	}
 
@@ -60,8 +63,9 @@ public class BiCycleService {
 	 * @param transfer
 	 *            concerned transfer record
 	 * @return {@link BiCycle} List
+	 * @throws NotFoundException 
 	 */
-	public List<BiCycle> findBicyclesForShipment(Transfer transfer) {
+	public List<BiCycle> findBicyclesForShipment(Transfer transfer) throws NotFoundException {
 		Pageable pageable = new PageRequest(0, transfer.getQuantity());
 		return biCycleComponent.getAvailableBicycles(transfer.getTransferredFrom(), true, pageable);
 	}
@@ -77,12 +81,19 @@ public class BiCycleService {
 	 *            availability of bicycle
 	 * 
 	 * @return {@link BiCycle} List
+	 * @throws NotFoundException 
 	 */
-	public List<BiCycle> getBicyclesByPickupPointAndAvailability(PickUpPoint pickUpPoint, Boolean availability) {
+	public List<BiCycle> getBicyclesByPickupPointAndAvailability(PickUpPoint pickUpPoint, Boolean availability) throws NotFoundException {
 		return biCycleComponent.findByCurrentLocationAndAvailability(pickUpPoint, availability);
 	}
 
-	public BiCycle saveBiCycleDetails(BiCycleDTO biCycleDTO) {
+	/**
+	 * 
+	 * @param biCycleDTO
+	 * @return
+	 * @throws NotFoundException 
+	 */
+	public BiCycle saveBiCycleDetails(BiCycleDTO biCycleDTO) throws NotFoundException {
 		return biCycleComponent.mapBiCycleData(biCycleDTO);
 	}
 }

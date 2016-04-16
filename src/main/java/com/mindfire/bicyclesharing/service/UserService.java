@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.component.UserComponent;
@@ -33,6 +35,8 @@ import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
 import com.mindfire.bicyclesharing.dto.ManageRoleDTO;
 import com.mindfire.bicyclesharing.dto.RegistrationPaymentDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.VerificationToken;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
@@ -108,7 +112,11 @@ public class UserService {
 	 */
 	public void createVerificationTokenForUser(final User user, final String token) {
 		final VerificationToken myToken = new VerificationToken(token, user);
-		tokenRepository.save(myToken);
+		try {
+			tokenRepository.save(myToken);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**
@@ -161,7 +169,7 @@ public class UserService {
 	 * 
 	 * @param userId
 	 *            userId of User
-	 * @return {@link User}
+	 * @return {@link User} 
 	 */
 	public User userDetails(Long userId) {
 		return userComponent.getUser(userId);
@@ -188,7 +196,11 @@ public class UserService {
 	 */
 	public void createResetPasswordTokenForUser(final User user, final String token) {
 		final VerificationToken myToken = new VerificationToken(token, user);
-		tokenRepository.save(myToken);
+		try {
+			tokenRepository.save(myToken);
+		} catch (Exception e) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**

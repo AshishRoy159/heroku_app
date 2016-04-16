@@ -19,9 +19,13 @@ package com.mindfire.bicyclesharing.component;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.PickUpPointDTO;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
 
@@ -54,7 +58,11 @@ public class PickUpPointComponent {
 		pickUpPoint.setMaxCapacity(pickUpPointDTO.getMaxCapacity());
 		pickUpPoint.setCurrentAvailability(0);
 
-		return pickUpPointRepository.save(pickUpPoint);
+		try {
+			return pickUpPointRepository.save(pickUpPoint);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**
@@ -72,7 +80,11 @@ public class PickUpPointComponent {
 		pickUpPoint.setMaxCapacity(pickUpPointDTO.getMaxCapacity());
 		pickUpPoint.setIsActive(pickUpPointDTO.getIsActive());
 
-		return pickUpPointRepository.save(pickUpPoint);
+		try {
+			return pickUpPointRepository.save(pickUpPoint);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**
@@ -83,7 +95,11 @@ public class PickUpPointComponent {
 	 * @return {@link PickUpPoint} object
 	 */
 	public PickUpPoint updatePickupPoint(PickUpPoint pickUpPoint) {
-		return pickUpPointRepository.save(pickUpPoint);
+		try {
+			return pickUpPointRepository.save(pickUpPoint);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**
@@ -93,6 +109,7 @@ public class PickUpPointComponent {
 	 */
 	public List<PickUpPoint> findAllPickUpPoint() {
 		return pickUpPointRepository.findAllByOrderByPickUpPointIdAsc();
+
 	}
 
 	/**
@@ -117,7 +134,11 @@ public class PickUpPointComponent {
 	 */
 	public PickUpPoint updateBiCycleCurrentAvailability(PickUpPoint pickUpPoint, int size) {
 		pickUpPoint.setCurrentAvailability(size);
-		return pickUpPointRepository.save(pickUpPoint);
+		try {
+			return pickUpPointRepository.save(pickUpPoint);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**
@@ -128,6 +149,10 @@ public class PickUpPointComponent {
 	 * @return {@link PickUpPoint} object
 	 */
 	public PickUpPoint findPickUpPointById(int id) {
-		return pickUpPointRepository.findByPickUpPointId(id);
+		PickUpPoint pickUpPoint = pickUpPointRepository.findByPickUpPointId(id);
+		if (null == pickUpPoint) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.NOT_FOUND);
+		}
+		return pickUpPoint;
 	}
 }

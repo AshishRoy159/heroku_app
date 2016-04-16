@@ -35,6 +35,8 @@ import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.service.BiCycleService;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
 
+import javassist.NotFoundException;
+
 /**
  * This class contains all the Request Mappings related to the navigation of the
  * Bicycle related pages from admin section.
@@ -77,23 +79,23 @@ public class BicycleController {
 	 * @param redirectAttributes
 	 *            to map the model attributes
 	 * @return addNewBicycle view
+	 * @throws NotFoundException
 	 */
 	@RequestMapping(value = "admin/addBicycle", method = RequestMethod.POST)
 	public ModelAndView addedNewBicycle(@Valid @ModelAttribute("bicycleData") BiCycleDTO biCycleDTO,
-			BindingResult result, RedirectAttributes redirectAttributes) {
+			BindingResult result, RedirectAttributes redirectAttributes) throws NotFoundException {
 		if (result.hasErrors()) {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Oops... Operation failed!!");
-			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_BICYCLE);
-		}
-
-		BiCycle biCycle = biCycleService.saveBiCycleDetails(biCycleDTO);
-
-		if (biCycle == null) {
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "No space for new bicycle at this pickup point!!");
-			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_BICYCLE);
 		} else {
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Added!!!");
-			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_BICYCLE);
+			BiCycle biCycle = biCycleService.saveBiCycleDetails(biCycleDTO);
+
+			if (biCycle == null) {
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
+						"No space for new bicycle at this pickup point!!");
+			} else {
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Added!!!");
+			}
 		}
+		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_BICYCLE);
 	}
 }

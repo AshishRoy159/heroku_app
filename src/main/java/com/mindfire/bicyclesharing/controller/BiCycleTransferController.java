@@ -23,6 +23,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -42,6 +43,8 @@ import com.mindfire.bicyclesharing.dto.TransferRensponseDTO;
 import com.mindfire.bicyclesharing.dto.TransferRequestDTO;
 import com.mindfire.bicyclesharing.dto.TransferRequestRespondedDTO;
 import com.mindfire.bicyclesharing.enums.TransferStatusEnum;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.Transfer;
 import com.mindfire.bicyclesharing.model.TransferRequest;
@@ -53,6 +56,8 @@ import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
 import com.mindfire.bicyclesharing.service.TransferRequestService;
 import com.mindfire.bicyclesharing.service.TransferResponseService;
 import com.mindfire.bicyclesharing.service.TransferService;
+
+import javassist.NotFoundException;
 
 /**
  * BiCycleTransferController contains all the mappings related to the bicycle
@@ -180,6 +185,9 @@ public class BiCycleTransferController {
 			Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		TransferRequest request = transferRequestService.findTransferRequest(requestId);
+		if(request == null){
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
 		Optional<TransferResponse> response = transferResponseService.findResponseForrequest(request,
 				pickUpPointManagerService.getPickupPointManager(currentUser.getUser()).getPickUpPoint());
 
@@ -226,6 +234,9 @@ public class BiCycleTransferController {
 	@RequestMapping(value = "admin/respond/{id}", method = RequestMethod.GET)
 	public ModelAndView adminResponse(@PathVariable("id") Long requestId, Model model) {
 		TransferRequest transferRequest = transferRequestService.findTransferRequest(requestId);
+		if(transferRequest == null){
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
 		List<TransferResponse> responses = transferResponseService.findresponsesForRequest(transferRequest);
 		model.addAttribute(ModelAttributeConstant.REQUEST, transferRequest);
 		model.addAttribute(ModelAttributeConstant.RESPONSES, responses);
@@ -243,6 +254,9 @@ public class BiCycleTransferController {
 	@RequestMapping(value = "admin/approveResponse/{id}", method = RequestMethod.GET)
 	public ModelAndView approveResponse(@PathVariable("id") Long responseId) {
 		TransferResponse transferResponse = transferResponseService.findResponseById(responseId);
+		if(transferResponse == null){
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
 		transferResponseService.updateApproval(true, responseId);
 		transferService.addNewTransfer(transferResponse);
 		return new ModelAndView("redirect:/admin/respond/" + transferResponse.getRequest().getRequestId());
@@ -279,11 +293,15 @@ public class BiCycleTransferController {
 	 * @param session
 	 *            for session attributes
 	 * @return transferConfirm view
+	 * @throws NotFoundException 
 	 */
 	@PostAuthorize("@currentUserService.canAccessManagerSender(principal, #transferId)")
 	@RequestMapping(value = "manager/sendShipment/{id}", method = RequestMethod.GET)
-	public ModelAndView sendShipment(@PathVariable("id") Long transferId, Model model, HttpSession session) {
+	public ModelAndView sendShipment(@PathVariable("id") Long transferId, Model model, HttpSession session) throws NotFoundException {
 		Transfer transfer = transferService.findTransferDetails(transferId);
+		if(transfer == null){
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
 
 		if (transfer.getStatus().equals(TransferStatusEnum.IN_TRANSITION)
 				|| transfer.getStatus().equals(TransferStatusEnum.CLOSED)) {
@@ -322,12 +340,16 @@ public class BiCycleTransferController {
 	 * @param session
 	 *            for session attributes
 	 * @return receiveConfirm view
+	 * @throws NotFoundException 
 	 */
 	@PostAuthorize("@currentUserService.canAccessManagerReceiver(principal, #transferId)")
 	@RequestMapping(value = "manager/receiveShipment/{id}", method = RequestMethod.GET)
-	public ModelAndView receiveShipment(@PathVariable("id") Long transferId, HttpSession session) {
+	public ModelAndView receiveShipment(@PathVariable("id") Long transferId, HttpSession session) throws NotFoundException {
 		Transfer transfer = transferService.findTransferDetails(transferId);
-
+		
+		if(transfer == null){
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
 		if (transfer.getStatus().equals(TransferStatusEnum.PENDING)
 				|| transfer.getStatus().equals(TransferStatusEnum.CLOSED)) {
 			return new ModelAndView(ViewConstant.REDIRECT + "/manager/transfers");
@@ -356,6 +378,9 @@ public class BiCycleTransferController {
 	public ModelAndView confirmShipmentReceive(@PathVariable("id") Long transferId, HttpSession session, Model model) {
 		Transfer transfer = transferService.findTransferDetails(transferId);
 
+		if(transfer == null){
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
 		if (transfer.getStatus().equals(TransferStatusEnum.PENDING)
 				|| transfer.getStatus().equals(TransferStatusEnum.CLOSED)) {
 			return new ModelAndView(ViewConstant.REDIRECT + "/manager/transfers");

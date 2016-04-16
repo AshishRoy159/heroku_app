@@ -60,6 +60,8 @@ import com.mindfire.bicyclesharing.service.RateGroupService;
 import com.mindfire.bicyclesharing.service.UserService;
 import com.mindfire.bicyclesharing.service.WalletService;
 
+import javassist.NotFoundException;
+
 /**
  * BookingController contains all the mappings related to the Booking.
  * 
@@ -103,10 +105,11 @@ public class BookingController {
 	 * @param authentication
 	 *            to get current logged in user details
 	 * @return booking view
+	 * @throws NotFoundException 
 	 */
 	@PostAuthorize("hasAuthority('MANAGER')")
 	@RequestMapping(value = { "/manager/booking" }, method = RequestMethod.GET)
-	public ModelAndView getBookingView(Model model, Authentication authentication) {
+	public ModelAndView getBookingView(Model model, Authentication authentication) throws NotFoundException {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		User manager = userService.userDetails(currentUser.getUserId());
 		PickUpPointManager pickUpPoint = pickUpPointManagerService.getPickupPointManager(manager);
@@ -129,11 +132,12 @@ public class BookingController {
 	 * @param session
 	 *            for session data
 	 * @return payment or booking view
+	 * @throws NotFoundException 
 	 */
 	@RequestMapping(value = { "/manager/issueCyclePayment" }, method = RequestMethod.POST)
 	public ModelAndView issueBicycle(RedirectAttributes redirectAttributes,
 			@ModelAttribute("issueCyclePaymentData") BookingPaymentDTO bookingPaymentDTO, Authentication auth,
-			HttpSession session) {
+			HttpSession session) throws NotFoundException {
 		CurrentUser currentUser = (CurrentUser) auth.getPrincipal();
 		User user = userService.userDetails(bookingPaymentDTO.getUserId());
 		Booking existingBooking = bookingService.getBookingDetails(true, user);
@@ -181,10 +185,11 @@ public class BookingController {
 	 * @param model
 	 *            to map model attributes
 	 * @return bookingPayment or booking view.
+	 * @throws NotFoundException 
 	 */
 	@RequestMapping(value = { "/manager/bookingPayment" }, method = RequestMethod.GET)
 	public ModelAndView bookingPayment(@Valid @ModelAttribute("issueCycleData") IssueCycleDTO issueCycleDTO,
-			BindingResult result, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+			BindingResult result, HttpSession session, RedirectAttributes redirectAttributes, Model model) throws NotFoundException {
 		if (result.hasErrors()) {
 			redirectAttributes.addFlashAttribute("issueCycleErrorMessage", "Please enter valid data !");
 			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
@@ -253,7 +258,8 @@ public class BookingController {
 						long hour = bookingService.calculateTotalRideTime(actualTime);
 						double baseRate = rateGroupService.getBaseRate(booking.getUser()).getBaseRateBean()
 								.getBaseRate();
-						double fare = bookingService.calculateActualFare(hour, baseRate);
+						double discount = rateGroupService.getBaseRate(booking.getUser()).getDiscount();
+						double fare = bookingService.calculateActualFare(hour, baseRate,discount);
 						redirectAttributes.addFlashAttribute("fare", fare);
 						return new ModelAndView("redirect:/manager/receiveBicyclePayment");
 					}

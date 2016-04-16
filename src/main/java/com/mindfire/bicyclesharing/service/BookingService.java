@@ -40,6 +40,8 @@ import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
 
+import javassist.NotFoundException;
+
 /**
  * BookingService class contains methods for Booking related operations
  * 
@@ -66,9 +68,10 @@ public class BookingService {
 	 * @param session
 	 *            for session data
 	 * @return Booking object.
+	 * @throws NotFoundException
 	 */
 	public Booking addNewBooking(Authentication authentication, BookingPaymentDTO bookingPaymentDTO,
-			HttpSession session) {
+			HttpSession session) throws NotFoundException {
 		return bookingComponent.mapNewBooking(authentication, bookingPaymentDTO, session);
 	}
 
@@ -272,8 +275,8 @@ public class BookingService {
 	 *            this is base rate for riding per hour
 	 * @return {@link Double} value
 	 */
-	public double calculateActualFare(long hour, double baseRate) {
-		return (hour * (baseRate + ((baseRate * 10) / 100)));
+	public double calculateActualFare(long hour, double baseRate, double discount) {
+		return (hour * (baseRate + ((baseRate * 10) / 100)) - (baseRate * (discount / 100)));
 	}
 
 	/**

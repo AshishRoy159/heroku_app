@@ -17,9 +17,13 @@
 package com.mindfire.bicyclesharing.component;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.WalletBalanceDTO;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.repository.UserRepository;
@@ -54,7 +58,11 @@ public class WalletComponent {
 		User user = userRepository.findByUserId(walletBalanceDTO.getUserId());
 		Wallet wallet = walletRepository.findByUser(user);
 		Double balance = wallet.getBalance() + walletBalanceDTO.getBalance();
-		return walletRepository.updateBalance(balance, user);
+		try {
+			return walletRepository.updateBalance(balance, user);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 
 	}
 

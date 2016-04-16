@@ -17,6 +17,7 @@
 package com.mindfire.bicyclesharing.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,10 +27,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mindfire.bicyclesharing.constant.ViewConstant;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.service.UserService;
 import com.mindfire.bicyclesharing.service.WalletService;
 import com.mindfire.bicyclesharing.service.WalletTransactionService;
+
+import javassist.NotFoundException;
 
 /**
  * This class contains all the Request Mappings related to the wallet
@@ -60,10 +65,14 @@ public class WalletTransactionController {
 	 * @param id
 	 *            User id
 	 * @return walletTransaction view
+	 * @throws NotFoundException 
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = "/user/walletTransaction/{id}", method = RequestMethod.GET)
-	public ModelAndView walletTransactionDetails(Model model, @PathVariable("id") Long id) {
+	public ModelAndView walletTransactionDetails(Model model, @PathVariable("id") Long id) throws NotFoundException {
+		if(userService.userDetails(id) == null){
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
 		Wallet wallet = walletService.getWallet(userService.userDetails(id));
 		model.addAttribute("wallet", wallet);
 		model.addAttribute("walletTransactions", walletTransactionService.getAllTransactionByWallet(wallet));

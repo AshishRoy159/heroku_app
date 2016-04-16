@@ -21,9 +21,13 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.RateGroupDTO;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.RateGroup;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.repository.BaseRateRepository;
@@ -65,7 +69,13 @@ public class RateGroupComponent {
 		rateGroup.setEffectiveFrom(simpleDateFormat.parse(rateGroupDTO.getEffectiveFrom()));
 		rateGroup.setGroupType(rateGroupDTO.getGroupType());
 		rateGroup.setBaseRateBean(baseRateRepository.findByGroupType("USER"));
-		return rateGroupRepository.save(rateGroup);
+
+		try {
+			return rateGroupRepository.save(rateGroup);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
+
 	}
 
 	/**
@@ -209,6 +219,10 @@ public class RateGroupComponent {
 						String.valueOf(year) + "-" + String.valueOf(month + 1) + "-" + String.valueOf(date - 1)));
 			}
 		}
-		return rateGroupRepository.save(rateGroup);
+		try {
+			return rateGroupRepository.save(rateGroup);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 }

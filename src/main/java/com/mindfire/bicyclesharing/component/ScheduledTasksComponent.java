@@ -23,9 +23,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.Booking;
 import com.mindfire.bicyclesharing.model.RateGroup;
 import com.mindfire.bicyclesharing.repository.BookingRepository;
@@ -64,9 +68,17 @@ public class ScheduledTasksComponent {
 				RateGroup newRateGroup = rateGroupRepository
 						.findByGroupTypeAndIsActiveAndEffectiveUptoIsNull(rateGroup.getGroupType(), false);
 				rateGroup.setIsActive(false);
-				rateGroupRepository.save(rateGroup);
+				try {
+					rateGroupRepository.save(rateGroup);
+				} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+				}
 				newRateGroup.setIsActive(true);
-				rateGroupRepository.save(newRateGroup);
+				try {
+					rateGroupRepository.save(newRateGroup);
+				} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+				}
 			}
 		}
 		//This is used to updating the booking table.
@@ -74,7 +86,11 @@ public class ScheduledTasksComponent {
 		for(Booking booking:bookings){
 			if(booking.getExpectedIn().before(new Timestamp(System.currentTimeMillis()))){
 			booking.setIsOpen(false);
-			bookingRepository.save(booking);
+			try {
+				bookingRepository.save(booking);
+			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+			}
 			}
 		}
 	}

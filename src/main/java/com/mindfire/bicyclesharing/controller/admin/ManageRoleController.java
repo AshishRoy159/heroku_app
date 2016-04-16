@@ -21,6 +21,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,11 +36,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.ManageRoleDTO;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.security.CurrentUser;
 import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
 import com.mindfire.bicyclesharing.service.UserService;
+
+import javassist.NotFoundException;
 
 /**
  * ManageRoleController contains all the mappings related to managing user roles
@@ -70,10 +75,17 @@ public class ManageRoleController {
 	 * @param authentication
 	 *            to get the current logged in user details
 	 * @return manageRole view
+	 * @throws NotFoundException
 	 */
 	@RequestMapping("/admin/manageRole/{id}")
-	public ModelAndView manageRole(@PathVariable("id") Long userId, Model model, Authentication authentication) {
+	public ModelAndView manageRole(@PathVariable("id") Long userId, Model model, Authentication authentication)
+			throws NotFoundException {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+
+		if (null == userService.userDetails(userId)) {
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
+
 		if (userId == currentUser.getUserId()) {
 			return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST,
 					userService.getAllUsers());
@@ -124,13 +136,18 @@ public class ManageRoleController {
 	 * @param authentication
 	 *            this is used for retrieve the current user.
 	 * @return searchUser view.
+	 * @throws NotFoundException
 	 */
 	@RequestMapping(value = "/user/userApproval/{id}", method = RequestMethod.GET)
 	public ModelAndView userApproval(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
-			Authentication authentication) {
+			Authentication authentication) throws NotFoundException {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-		if ((currentUser.getUserRole().equals("ADMIN") && currentUser.getUserId() != id) || (currentUser.getUserRole().equals("MANAGER")
-				&& userService.userDetails(id).getRole().getUserRole().equals("USER"))) {
+		if(userService.userDetails(id) == null){
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
+		if ((currentUser.getUserRole().equals("ADMIN") && currentUser.getUserId() != id)
+				|| (currentUser.getUserRole().equals("MANAGER")
+						&& userService.userDetails(id).getRole().getUserRole().equals("USER"))) {
 			if (null == userService.setApproval(id)) {
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 						"Sorry operation failed...!");
@@ -167,13 +184,18 @@ public class ManageRoleController {
 	 * @param authentication
 	 *            this is used for retrieve the current user.
 	 * @return searchUser view.
+	 * @throws NotFoundException
 	 */
 	@RequestMapping(value = "/user/userEnable/{id}", method = RequestMethod.GET)
 	public ModelAndView userEnable(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
-			Authentication authentication) {
+			Authentication authentication) throws NotFoundException {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-		if ((currentUser.getUserRole().equals("ADMIN") && currentUser.getUserId() != id) || (currentUser.getUserRole().equals("MANAGER")
-				&& userService.userDetails(id).getRole().getUserRole().equals("USER"))) {
+		if (null == userService.userDetails(id)) {
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
+		if ((currentUser.getUserRole().equals("ADMIN") && currentUser.getUserId() != id)
+				|| (currentUser.getUserRole().equals("MANAGER")
+						&& userService.userDetails(id).getRole().getUserRole().equals("USER"))) {
 			if (null == userService.setEnable(id)) {
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 						"Sorry operation failed...!");

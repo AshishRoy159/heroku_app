@@ -20,9 +20,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.TransferRensponseDTO;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.TransferRequest;
 import com.mindfire.bicyclesharing.model.TransferResponse;
@@ -62,7 +66,6 @@ public class TransferResponseComponent {
 	 * @return {@link TransferResponse} object
 	 */
 	public TransferResponse mapNewTransferResponse(TransferRensponseDTO transferRensponseDTO, CurrentUser currentUser) {
-
 		TransferResponse transferResponse = new TransferResponse();
 		transferResponse.setRequest(transferRequestRepository.findByRequestId(transferRensponseDTO.getRequestId()));
 		transferResponse.setQuantity(transferRensponseDTO.getQuantity());
@@ -71,7 +74,11 @@ public class TransferResponseComponent {
 				.setPickUpPoint(pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint());
 		transferResponse.setManager(currentUser.getUser());
 
-		return transferResponseRepository.save(transferResponse);
+		try {
+			return transferResponseRepository.save(transferResponse);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**
@@ -106,7 +113,11 @@ public class TransferResponseComponent {
 	 * @return {@link TransferResponse} object
 	 */
 	public TransferResponse getTransferResponse(Long responseId) {
-		return transferResponseRepository.findByResponseId(responseId);
+		try {
+			return transferResponseRepository.findByResponseId(responseId);
+		} catch (Exception e) {
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
 	}
 
 	/**
@@ -119,7 +130,11 @@ public class TransferResponseComponent {
 	 * @return Integer 0 or 1
 	 */
 	public int updateIsApproved(Boolean isApproved, Long responseId) {
-		return transferResponseRepository.updateIsApproved(isApproved, responseId);
+		try {
+			return transferResponseRepository.updateIsApproved(isApproved, responseId);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**

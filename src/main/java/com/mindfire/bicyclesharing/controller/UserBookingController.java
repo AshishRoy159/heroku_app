@@ -22,6 +22,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -41,6 +42,8 @@ import com.mindfire.bicyclesharing.dto.PaymentAtPickUpPointDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
 import com.mindfire.bicyclesharing.event.BookingSuccessEvent;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.Booking;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
@@ -50,6 +53,8 @@ import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
 import com.mindfire.bicyclesharing.service.RateGroupService;
 import com.mindfire.bicyclesharing.service.UserService;
 import com.mindfire.bicyclesharing.service.WalletService;
+
+import javassist.NotFoundException;
 
 /**
  * UserBookingController class is used for the mappings related requests for the
@@ -118,10 +123,10 @@ public class UserBookingController {
 					long hour = bookingSevice.calculateTotalRideTime(actualTime);
 					double baseRate = rateGroupService.getBaseRate(userBooking.getUser()).getBaseRateBean()
 							.getBaseRate();
-					double fare = (hour * baseRate);
-
+					double discount = rateGroupService.getBaseRate(userBooking.getUser()).getDiscount();
+					double fare = bookingSevice.calculateActualFare(hour, baseRate, discount);
 					if (fare == 0.0) {
-						fare = baseRate;
+						fare = baseRate - (baseRate * (discount / 100));
 					}
 					redirectAttributes.addFlashAttribute("fare", fare);
 					redirectAttributes.addFlashAttribute("userBookingDetails", userBooking);
@@ -277,9 +282,10 @@ public class UserBookingController {
 								long hour = bookingSevice.calculateTotalRideTime(actualTime);
 								double baseRate = rateGroupService.getBaseRate(openBooking.getUser()).getBaseRateBean()
 										.getBaseRate();
-								double fare = (hour * baseRate);
+								double discount = rateGroupService.getBaseRate(openBooking.getUser()).getDiscount();
+								double fare = bookingSevice.calculateActualFare(hour, baseRate, discount);
 								if (fare == 0.0) {
-									fare = baseRate;
+									fare = baseRate - (baseRate * (discount / 100));
 								}
 								redirectAttributes.addFlashAttribute("fare", fare);
 								redirectAttributes.addFlashAttribute("bicycleId",
@@ -357,11 +363,15 @@ public class UserBookingController {
 	 * @param id
 	 *            user's id
 	 * @return userBookingHistory view
+	 * @throws NotFoundException
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = "/user/bookingHistory/{id}", method = RequestMethod.GET)
-	public ModelAndView userBookingHistory(Model model, @PathVariable("id") Long id) {
+	public ModelAndView userBookingHistory(Model model, @PathVariable("id") Long id) throws NotFoundException {
 		User user = userService.userDetails(id);
+		if(user == null){
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
 		model.addAttribute(ModelAttributeConstant.USER, user);
 		model.addAttribute("bookingHistory", bookingSevice.getAllBooking(user, false));
 

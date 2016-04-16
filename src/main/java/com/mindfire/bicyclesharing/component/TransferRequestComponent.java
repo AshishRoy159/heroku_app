@@ -19,10 +19,14 @@ package com.mindfire.bicyclesharing.component;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.TransferRequestDTO;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.TransferRequest;
 import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
@@ -59,7 +63,7 @@ public class TransferRequestComponent {
 	public TransferRequest mapNewRequest(Authentication authentication, TransferRequestDTO transferRequestDTO) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		PickUpPoint pickUpPoint = pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint();
-		if(transferRequestDTO.getQuantity() > (pickUpPoint.getMaxCapacity() - pickUpPoint.getCurrentAvailability())){
+		if (transferRequestDTO.getQuantity() > (pickUpPoint.getMaxCapacity() - pickUpPoint.getCurrentAvailability())) {
 			return null;
 		}
 		TransferRequest transferRequest = new TransferRequest();
@@ -67,7 +71,11 @@ public class TransferRequestComponent {
 		transferRequest.setManager(currentUser.getUser());
 		transferRequest.setQuantity(transferRequestDTO.getQuantity());
 
-		return transferRequestRepository.save(transferRequest);
+		try {
+			return transferRequestRepository.save(transferRequest);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**
@@ -114,7 +122,11 @@ public class TransferRequestComponent {
 	 * @return Integer 0 or 1
 	 */
 	public int updateApprovedQuantity(Integer approvedQuantity, Long requestId) {
-		return transferRequestRepository.updateCurrentApprovedQuantity(approvedQuantity, requestId);
+		try {
+			return transferRequestRepository.updateCurrentApprovedQuantity(approvedQuantity, requestId);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**
@@ -122,13 +134,17 @@ public class TransferRequestComponent {
 	 * request
 	 * 
 	 * @param isApproved
-	 *            approval statud. <code>true</code> or <code>false</code>
+	 *            approval status. <code>true</code> or <code>false</code>
 	 * @param requestId
 	 *            id of the request
 	 * @return {@link Integer} 0 or 1
 	 */
 	public int uppdateIsApproved(Boolean isApproved, Long requestId) {
-		return transferRequestRepository.updateIsApproved(isApproved, requestId);
+		try {
+			return transferRequestRepository.updateIsApproved(isApproved, requestId);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }

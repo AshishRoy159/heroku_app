@@ -27,6 +27,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -54,6 +55,8 @@ import com.mindfire.bicyclesharing.dto.UserDTO;
 import com.mindfire.bicyclesharing.event.RegistrationCompleteEvent;
 import com.mindfire.bicyclesharing.event.ResendVerificationTokenEvent;
 import com.mindfire.bicyclesharing.event.ResetPasswordEvent;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.VerificationToken;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
@@ -150,9 +153,7 @@ public class UserController {
 		VerificationToken verificationToken = verificationTokenService.getVerificationToken(token);
 
 		if (verificationToken == null) {
-			String message = messageBean.getInvalidToken();
-			model.addAttribute(ModelAttributeConstant.MESSAGE, message);
-			return new ModelAndView(ViewConstant.BAD_USER);
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
 
 		User user = verificationToken.getUser();
@@ -387,11 +388,17 @@ public class UserController {
 	 * @param id
 	 *            the id of the user whose details is to be shown
 	 * @return userProfile view
+	 * @throws CustomException
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = { "/user/userProfile/{id}" })
-	public ModelAndView userProfile(Authentication authentication, Model model, @PathVariable Long id) {
-		model.addAttribute(ModelAttributeConstant.USER, userService.userDetails(id));
+	public ModelAndView userProfile(Authentication authentication, Model model, @PathVariable Long id)
+			throws CustomException, CustomException {
+		User user = userService.userDetails(id);
+		if (user == null) {
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
+		model.addAttribute(ModelAttributeConstant.USER, user);
 		return new ModelAndView(ViewConstant.USER_PROFILE);
 	}
 
@@ -403,10 +410,15 @@ public class UserController {
 	 * @param id
 	 *            the id of the user whose details is to be shown
 	 * @return updateUserDetails view
+	 * @throws CustomException
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = { "/user/updateUserDetails/{id}" }, method = RequestMethod.GET)
-	public ModelAndView updateUserDetails(Model model, @PathVariable("id") Long id) {
+	public ModelAndView updateUserDetails(Model model, @PathVariable("id") Long id) throws CustomException {
+		User user = userService.userDetails(id);
+		if (user == null) {
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
 		model.addAttribute(ModelAttributeConstant.USER, userService.userDetails(id));
 		return new ModelAndView(ViewConstant.UPDATE_USER_DETAILS);
 	}
@@ -427,16 +439,20 @@ public class UserController {
 	 *         updateUserDetails view
 	 * @throws ParseException
 	 *             may occur while parsing from String to Date
+	 * @throws CustomException
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = { "user/updateUserDetails/{id}" }, method = RequestMethod.POST)
 	public ModelAndView afterUpdateUserDetails(@Valid @ModelAttribute("userDetailData") UserDTO userDTO,
-			@PathVariable("id") Long id, Model model, BindingResult result) throws ParseException {
+			@PathVariable("id") Long id, Model model, BindingResult result) throws ParseException, CustomException {
 		if (result.hasErrors()) {
 			return new ModelAndView(ViewConstant.UPDATE_USER_DETAILS, ModelAttributeConstant.ERROR_MESSAGE,
 					"Invalid data. Updation failed.");
 		}
-
+		User user = userService.userDetails(id);
+		if (user == null) {
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
 		int success = userService.updateUserDetail(userDTO);
 		model.addAttribute(ModelAttributeConstant.USER, userService.userDetails(id));
 
@@ -472,7 +488,7 @@ public class UserController {
 		try {
 			userService.saveUserDocument(userDTO);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.PAYLOAD_TOO_LARGE);
 		}
 		session.setAttribute("userDTO", userDTO);
 		return new ModelAndView(ViewConstant.PAYMENT);

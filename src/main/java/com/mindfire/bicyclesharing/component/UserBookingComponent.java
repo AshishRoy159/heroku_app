@@ -19,11 +19,15 @@ package com.mindfire.bicyclesharing.component;
 import java.sql.Timestamp;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.UserBookingDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.Booking;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
@@ -83,7 +87,11 @@ public class UserBookingComponent {
 		userBooking.setIsOpen(true);
 		userBooking.setPickedUpFrom(pickUpPointRepository.findByPickUpPointId(userBookingDTO.getPickUpPoint()));
 
-		return bookingRepository.save(userBooking);
+		try {
+			return bookingRepository.save(userBooking);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**
@@ -105,10 +113,18 @@ public class UserBookingComponent {
 				return null;
 			} else {
 				userWallet.setBalance(userWallet.getBalance() - userBookingPaymentDTO.getFare());
-				walletRepository.save(userWallet);
+				try {
+					walletRepository.save(userWallet);
+				} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+				}
 				Booking userBooking = bookingRepository.findByBookingId(userBookingPaymentDTO.getBookingId());
 				userBooking.setFare(userBookingPaymentDTO.getFare());
-				bookingRepository.save(userBooking);
+				try {
+					bookingRepository.save(userBooking);
+				} catch (Exception e) {
+					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+				}
 				return bookingComponent.userBookingWalletTransaction(userBookingPaymentDTO, userWallet, paymentType);
 			}
 		} else {
@@ -139,8 +155,17 @@ public class UserBookingComponent {
 		PickUpPoint pickUpPoint = pickUpPointRepository.findByPickUpPointId(bicycle.getCurrentLocation().getPickUpPointId());
 		pickUpPoint.setCurrentAvailability(
 				biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size());
-		pickUpPointRepository.save(pickUpPoint);
-		return bookingRepository.save(userBooking);
+		try {
+			pickUpPointRepository.save(pickUpPoint);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
+		
+		try {
+			return bookingRepository.save(userBooking);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**

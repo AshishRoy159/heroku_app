@@ -20,10 +20,14 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.TransferDataDTO;
 import com.mindfire.bicyclesharing.enums.TransferStatusEnum;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.Transfer;
 import com.mindfire.bicyclesharing.model.TransferResponse;
@@ -56,7 +60,6 @@ public class TransferComponent {
 	 */
 	public Transfer mapNewTransfer(TransferResponse transferResponse) {
 		Transfer transfer = new Transfer();
-		int updatedApprovedQuantity;
 
 		if (transferResponse.getQuantity() >= (transferResponse.getRequest().getQuantity()
 				- transferResponse.getRequest().getApprovedQuantity())) {
@@ -66,7 +69,7 @@ public class TransferComponent {
 			transfer.setQuantity(transferResponse.getQuantity());
 		}
 
-		updatedApprovedQuantity = transferResponse.getRequest().getApprovedQuantity() + transfer.getQuantity();
+		int updatedApprovedQuantity = transferResponse.getRequest().getApprovedQuantity() + transfer.getQuantity();
 
 		transferRequestComponent.updateApprovedQuantity(updatedApprovedQuantity,
 				transferResponse.getRequest().getRequestId());
@@ -79,7 +82,11 @@ public class TransferComponent {
 		transfer.setTransferredTo(transferResponse.getRequest().getPickUpPoint());
 		transfer.setStatus(TransferStatusEnum.PENDING);
 
-		return transferRepository.save(transfer);
+		try {
+			return transferRepository.save(transfer);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**
@@ -103,7 +110,7 @@ public class TransferComponent {
 	 * @return {@link Transfer} List
 	 */
 	public List<Transfer> getIncomingTransfers(PickUpPoint pickUpPoint) {
-		return transferRepository.findByTransferredTo(pickUpPoint);
+		return transferRepository.findByTransferredFrom(pickUpPoint);
 	}
 
 	/**
@@ -114,7 +121,11 @@ public class TransferComponent {
 	 * @return {@link Transfer} object
 	 */
 	public Transfer getTransferDetails(Long transferId) {
-		return transferRepository.findByTransferId(transferId);
+		try {
+			return transferRepository.findByTransferId(transferId);
+		} catch (Exception e) {
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
 	}
 
 	/**
@@ -131,7 +142,11 @@ public class TransferComponent {
 		transfer.setVehicleNo(transferDataDTO.getVehicleNo());
 		transfer.setStatus(TransferStatusEnum.IN_TRANSITION);
 
-		return transferRepository.save(transfer);
+		try {
+			return transferRepository.save(transfer);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**
@@ -143,7 +158,11 @@ public class TransferComponent {
 	 * @return {@link Transfer} object
 	 */
 	public Transfer closeTransfer(Transfer transfer) {
-		return transferRepository.save(transfer);
+		try {
+			return transferRepository.save(transfer);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }

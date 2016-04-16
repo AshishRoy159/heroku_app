@@ -17,8 +17,12 @@
 package com.mindfire.bicyclesharing.component;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.VerificationToken;
 import com.mindfire.bicyclesharing.repository.VerificationTokenRepository;
 
@@ -55,6 +59,10 @@ public class VerificationTokenComponent {
 	 * @return {@link VerificationToken} object
 	 */
 	public VerificationToken saveVerificationToken(VerificationToken verificationToken) {
-		return verificationTokenRepository.save(verificationToken);
+		try {
+			return verificationTokenRepository.save(verificationToken);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 }

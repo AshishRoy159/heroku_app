@@ -35,6 +35,8 @@ import com.mindfire.bicyclesharing.service.UserService;
 import com.mindfire.bicyclesharing.service.WalletService;
 import com.mindfire.bicyclesharing.service.WalletTransactionService;
 
+import javassist.NotFoundException;
+
 /**
  * This class contains all the Request Mappings related to the wallet balance
  * and transactions from manager section.
@@ -76,10 +78,11 @@ public class WalletController {
 	 * @param redirectAttributes
 	 *            to map the model attributes
 	 * @return addWalletBalance view
+	 * @throws NotFoundException 
 	 */
 	@RequestMapping(value = "/manager/wallet", method = RequestMethod.POST)
 	public ModelAndView addWalletBalance(@Valid @ModelAttribute("addWalletBalance") WalletBalanceDTO walletBalanceDTO,
-			BindingResult result, RedirectAttributes redirectAttributes) {
+			BindingResult result, RedirectAttributes redirectAttributes) throws NotFoundException {
 		if (result.hasErrors()) {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 					"Balance must be between 100 and 999!!!");

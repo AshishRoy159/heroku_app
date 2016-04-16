@@ -19,9 +19,13 @@ package com.mindfire.bicyclesharing.component;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.ManageRoleDTO;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.PickUpPointManager;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
@@ -82,7 +86,11 @@ public class PickUpPointManagerComponent {
 		pickUpPointManager.setRole(userRepository.findByUserId(manageRoleDTO.getUserId()).getRole());
 		pickUpPointManager.setUser(userRepository.findByUserId(manageRoleDTO.getUserId()));
 
-		return pickUpPointManagerRepository.save(pickUpPointManager);
+		try {
+			return pickUpPointManagerRepository.save(pickUpPointManager);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**
@@ -108,7 +116,11 @@ public class PickUpPointManagerComponent {
 	public PickUpPointManager mapPickupPointDetailForOpen(User user) {
 		PickUpPointManager pickUpPointManager = pickUpPointManagerRepository.findByUser(user);
 		pickUpPointManager.getPickUpPoint().setIsOpen(true);
-		return pickUpPointManagerRepository.save(pickUpPointManager);
+		try {
+			return pickUpPointManagerRepository.save(pickUpPointManager);
+		} catch (Exception e) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**
@@ -122,6 +134,10 @@ public class PickUpPointManagerComponent {
 	public PickUpPointManager mapPickupPointDetailForClose(User user) {
 		PickUpPointManager pickUpPointManager = pickUpPointManagerRepository.findByUser(user);
 		pickUpPointManager.getPickUpPoint().setIsOpen(false);
-		return pickUpPointManagerRepository.save(pickUpPointManager);
+		try {
+			return pickUpPointManagerRepository.save(pickUpPointManager);
+		} catch (Exception e) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
 	}
 }
