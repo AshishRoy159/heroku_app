@@ -112,6 +112,7 @@ public class UserService {
 	 */
 	public void createVerificationTokenForUser(final User user, final String token) {
 		final VerificationToken myToken = new VerificationToken(token, user);
+
 		try {
 			tokenRepository.save(myToken);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
@@ -127,8 +128,7 @@ public class UserService {
 	 * @return User object
 	 */
 	public User getUser(String verificationToken) {
-		User user = tokenRepository.findByToken(verificationToken).getUser();
-		return user;
+		return tokenRepository.findByToken(verificationToken).getUser();
 	}
 
 	/**
@@ -169,7 +169,7 @@ public class UserService {
 	 * 
 	 * @param userId
 	 *            userId of User
-	 * @return {@link User} 
+	 * @return {@link User}
 	 */
 	public User userDetails(Long userId) {
 		return userComponent.getUser(userId);
@@ -196,6 +196,7 @@ public class UserService {
 	 */
 	public void createResetPasswordTokenForUser(final User user, final String token) {
 		final VerificationToken myToken = new VerificationToken(token, user);
+
 		try {
 			tokenRepository.save(myToken);
 		} catch (Exception e) {

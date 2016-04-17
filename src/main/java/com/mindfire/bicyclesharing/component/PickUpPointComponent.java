@@ -18,6 +18,7 @@ package com.mindfire.bicyclesharing.component;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,8 @@ import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
 @Component
 public class PickUpPointComponent {
 
+	Logger logger = Logger.getLogger(getClass());
+
 	@Autowired
 	private PickUpPointRepository pickUpPointRepository;
 
@@ -59,6 +62,7 @@ public class PickUpPointComponent {
 		pickUpPoint.setCurrentAvailability(0);
 
 		try {
+			logger.info("Added new pickup point data to the database.");
 			return pickUpPointRepository.save(pickUpPoint);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -81,6 +85,7 @@ public class PickUpPointComponent {
 		pickUpPoint.setIsActive(pickUpPointDTO.getIsActive());
 
 		try {
+			logger.info("Updated pickup point deatils.");
 			return pickUpPointRepository.save(pickUpPoint);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -95,7 +100,9 @@ public class PickUpPointComponent {
 	 * @return {@link PickUpPoint} object
 	 */
 	public PickUpPoint updatePickupPoint(PickUpPoint pickUpPoint) {
+
 		try {
+			logger.info("Updated pickup point deatils.");
 			return pickUpPointRepository.save(pickUpPoint);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -134,7 +141,9 @@ public class PickUpPointComponent {
 	 */
 	public PickUpPoint updateBiCycleCurrentAvailability(PickUpPoint pickUpPoint, int size) {
 		pickUpPoint.setCurrentAvailability(size);
+
 		try {
+			logger.info("Updated pickup point deatils.");
 			return pickUpPointRepository.save(pickUpPoint);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -149,7 +158,9 @@ public class PickUpPointComponent {
 	 * @return {@link PickUpPoint} object
 	 */
 	public PickUpPoint findPickUpPointById(int id) {
+
 		PickUpPoint pickUpPoint = pickUpPointRepository.findByPickUpPointId(id);
+
 		if (null == pickUpPoint) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.NOT_FOUND);
 		}

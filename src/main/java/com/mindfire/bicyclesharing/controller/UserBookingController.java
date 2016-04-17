@@ -20,6 +20,7 @@ import java.sql.Timestamp;
 
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mindfire.bicyclesharing.constant.CustomLoggerConstant;
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.IssueCycleForOnlineDTO;
@@ -68,6 +70,8 @@ import javassist.NotFoundException;
 @Controller
 public class UserBookingController {
 
+	Logger logger = Logger.getLogger(getClass());
+
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
 
@@ -99,24 +103,37 @@ public class UserBookingController {
 	 * @return index or user payment view
 	 */
 	@RequestMapping(value = "/user/booking", method = RequestMethod.POST)
-	public ModelAndView userBooking(@ModelAttribute("userBookingData") UserBookingDTO userBookingDTO,
-			RedirectAttributes redirectAttributes, Authentication authentication) {
+	public ModelAndView userBooking(@Valid @ModelAttribute("userBookingData") UserBookingDTO userBookingDTO,
+			BindingResult bindingResult, RedirectAttributes redirectAttributes, Authentication authentication) {
+
+		if (bindingResult.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid booking data");
+			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.INDEX);
+		}
+
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		Timestamp bookingTime = Timestamp.valueOf(userBookingDTO.getBookingTime().replace("/", "-").concat(":00.000"));
 		Timestamp returnTime = Timestamp.valueOf(userBookingDTO.getReturnTime().replace("/", "-").concat(":00.000"));
+
 		if (bookingTime.after(returnTime) || bookingTime.before(new Timestamp(System.currentTimeMillis()))) {
+			logger.info("Invalid booking date and time was selected. Transaction Cancelled.");
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 					"Please Enter Valid booking date and time..!!");
-			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.INDEX);
 		} else {
+			logger.info("Valid booking credentials.");
 			Booking existingBooking = bookingSevice.getBookingDetails(true, currentUser.getUser());
+
 			if (null == existingBooking) {
+				logger.info("User doesn't have existing open bookings.");
 				Booking userBooking = bookingSevice.saveUserBookingDetails(userBookingDTO, authentication);
+
 				if (null == userBooking) {
+					logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
 					redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 							"oops..!! Booking Failed.");
-					return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.INDEX);
 				} else {
+					logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 					redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_SUCCESS,
 							"Your Booking is successfully completed..Please Choose your payment.");
 					long actualTime = (userBooking.getExpectedIn().getTime() - userBooking.getExpectedOut().getTime());
@@ -126,19 +143,23 @@ public class UserBookingController {
 					double discount = rateGroupService.getBaseRate(userBooking.getUser()).getDiscount();
 					double fare = bookingSevice.calculateActualFare(hour, baseRate, discount);
 					if (fare == 0.0) {
+						logger.info("Calculated fare is 0. Fare is set to basrate.");
 						fare = baseRate - (baseRate * (discount / 100));
 					}
+
 					redirectAttributes.addFlashAttribute("fare", fare);
 					redirectAttributes.addFlashAttribute("userBookingDetails", userBooking);
 					return new ModelAndView("redirect:/user/userPayment");
 				}
+
 			} else {
+				logger.info("User has an existing open booking. Transaction cancelled.");
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 						"You have a boooking still open!!");
-				return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.INDEX);
 			}
 		}
 
+		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.INDEX);
 	}
 
 	/**
@@ -165,12 +186,19 @@ public class UserBookingController {
 	 */
 	@RequestMapping(value = "/user/userBookingPayment", method = RequestMethod.POST)
 	public ModelAndView userBookingPayment(
-			@ModelAttribute("userBookingPaymentData") UserBookingPaymentDTO userBookingPaymentDTO,
-			Authentication authentication, RedirectAttributes redirectAttributes) {
+			@Valid @ModelAttribute("userBookingPaymentData") UserBookingPaymentDTO userBookingPaymentDTO,
+			BindingResult bindingResult, Authentication authentication, RedirectAttributes redirectAttributes) {
+
+		if (bindingResult.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
+			return new ModelAndView(ViewConstant.USER_BOOKING_PAYMENT);
+		}
+
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		Booking booking = bookingSevice.getBookingById(userBookingPaymentDTO.getBookingId());
 
 		if (userBookingPaymentDTO.getMode().equals("cash")) {
+			logger.info("Payment will be by cash at pickup point.");
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_DETAILS, booking);
 
 			try {
@@ -181,14 +209,17 @@ public class UserBookingController {
 
 			return new ModelAndView("redirect:/user/printUserBookingDetails");
 		} else {
+			logger.info("Payment will be from wallet.");
 			WalletTransaction walletTransaction = walletService.saveUserBookingPayment(userBookingPaymentDTO,
 					authentication);
 
 			if (null == walletTransaction) {
+				logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 						"Your Payment is Not successfully completed Due to low balance");
-				return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.INDEX);
+				return new ModelAndView(ViewConstant.USER_BOOKING_PAYMENT);
 			} else {
+				logger.info("Successful booking and payment.");
 
 				try {
 					eventPublisher.publishEvent(new BookingSuccessEvent(currentUser.getUser(), booking));
@@ -251,32 +282,43 @@ public class UserBookingController {
 		} else {
 			CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 			Booking booking = bookingSevice.getBookingById(issueCycleForOnlineDTO.getBookingId());
+
 			if (null == booking) {
+				logger.error(CustomLoggerConstant.TRANSACTION_FAILED);
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid data !!");
 				return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 			}
+
 			Booking openBooking = bookingSevice.getBookingDetails(true, booking.getUser());
+
 			if (null == openBooking) {
+				logger.info("Booking doesn't exist. Transaction cancelled.");
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 						"Your Booking Id is not valid !!");
-				return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 			} else {
+				logger.info("Booking details are valid.");
+
 				// giving 30(1800000 millisecond) minute relaxation for taking
 				// bicycle before booking time.
 				if (!openBooking.getExpectedOut().before(new Timestamp(System.currentTimeMillis() + 1800000))
 						|| !openBooking.getExpectedIn().after(new Timestamp(System.currentTimeMillis()))) {
+					logger.info("User is too early. Transaction cancelled.");
 					redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 							"Your expected out time is:-" + openBooking.getExpectedOut());
-					return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 				} else {
+					logger.info("User is on expected time.");
+
 					if (openBooking.getPickedUpFrom().getPickUpPointId() != pickupPointManagerService
 							.getPickupPointManager(currentUser.getUser()).getPickUpPoint().getPickUpPointId()) {
+						logger.info("User is not at the same pickup point as booking.");
 						redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
 								"Your PickUp place is Not valid..!");
-						return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 					} else {
 						if (openBooking.getBiCycleId() == null) {
+							logger.info("This booking has not been issued a bicycle.");
+
 							if (openBooking.getFare() == 0) {
+								logger.info("Payment for this booking is due");
 								long actualTime = (openBooking.getExpectedIn().getTime()
 										- openBooking.getExpectedOut().getTime());
 								long hour = bookingSevice.calculateTotalRideTime(actualTime);
@@ -284,36 +326,46 @@ public class UserBookingController {
 										.getBaseRate();
 								double discount = rateGroupService.getBaseRate(openBooking.getUser()).getDiscount();
 								double fare = bookingSevice.calculateActualFare(hour, baseRate, discount);
+
 								if (fare == 0.0) {
+									logger.info("Calculted fare is 0. Fare is set to base rate.");
 									fare = baseRate - (baseRate * (discount / 100));
 								}
+
 								redirectAttributes.addFlashAttribute("fare", fare);
 								redirectAttributes.addFlashAttribute("bicycleId",
 										issueCycleForOnlineDTO.getBicycleId());
 								redirectAttributes.addFlashAttribute("bookingStatus", openBooking);
+								logger.info("Redirected to payment page.");
 								return new ModelAndView("redirect:/manager/paymentAtPickupPoint");
 							} else {
+								logger.info("User have already paid the fare amount.");
 								Booking bookingDetails = bookingSevice.updateIssueBicycleDetails(issueCycleForOnlineDTO,
 										openBooking.getFare());
+
 								if (null == bookingDetails) {
+									logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
 									return new ModelAndView(ViewConstant.BOOKING,
 											ModelAttributeConstant.BOOKING_FAILURE,
 											"Sorry ..!! Your Operation Failed.");
 								} else {
+									logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 									redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_DETAILS,
 											bookingDetails);
 									return new ModelAndView("redirect:/manager/printIssueBicycleDetails");
 								}
 							}
 						} else {
+							logger.info("A bicycle has already been issued for this bicycle. Transaction cancelled.");
 							redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 									"You already taken bicycle on this booking Id:- " + openBooking.getBookingId());
-							return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 						}
 					}
 				}
 			}
 		}
+
+		return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 	}
 
 	/**
@@ -339,15 +391,23 @@ public class UserBookingController {
 	 */
 	@RequestMapping(value = "/manager/printBookingReceipt", method = RequestMethod.POST)
 	public ModelAndView printBookingDetails(
-			@ModelAttribute("bookingPaymentData") PaymentAtPickUpPointDTO paymentAtPickUpPointDTO,
-			RedirectAttributes redirectAttributes) {
+			@Valid @ModelAttribute("bookingPaymentData") PaymentAtPickUpPointDTO paymentAtPickUpPointDTO,
+			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
+		if (bindingResult.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
+			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
+		}
+
 		Booking bookingDetails = bookingSevice.updateIssueBicycleDetailsWithPayment(paymentAtPickUpPointDTO);
+
 		if (null == bookingDetails) {
+			logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
 					"Sorry ..!! Your Operation Failed.");
 			return new ModelAndView(ViewConstant.BOOKING);
 		} else {
-
+			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			bookingSevice.createUserPaymentTransaction(paymentAtPickUpPointDTO);
 			redirectAttributes.addFlashAttribute("bookingDetails", bookingDetails);
 			return new ModelAndView("redirect:/manager/printIssueBicycleDetails");
@@ -369,9 +429,11 @@ public class UserBookingController {
 	@RequestMapping(value = "/user/bookingHistory/{id}", method = RequestMethod.GET)
 	public ModelAndView userBookingHistory(Model model, @PathVariable("id") Long id) throws NotFoundException {
 		User user = userService.userDetails(id);
-		if(user == null){
+
+		if (user == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
+
 		model.addAttribute(ModelAttributeConstant.USER, user);
 		model.addAttribute("bookingHistory", bookingSevice.getAllBooking(user, false));
 

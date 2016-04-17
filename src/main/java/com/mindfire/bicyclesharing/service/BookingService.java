@@ -214,6 +214,7 @@ public class BookingService {
 	 */
 	public Calendar calculateExpectedIn(IssueCycleDTO issueCycleDTO) {
 		final Calendar cal = Calendar.getInstance();
+
 		cal.setTimeInMillis(new Date().getTime());
 		cal.add(Calendar.HOUR, issueCycleDTO.getExpectedInTime());
 
@@ -259,9 +260,11 @@ public class BookingService {
 	public long calculateTotalRideTime(long actualTime) {
 		long hour = (actualTime / (60 * 1000)) / 60;
 		long remainder = (actualTime / (60 * 1000)) % 60;
+
 		if (remainder > 0) {
 			hour++;
 		}
+
 		return hour;
 	}
 

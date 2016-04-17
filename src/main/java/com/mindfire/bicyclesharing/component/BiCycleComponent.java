@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +49,8 @@ import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
 @Component
 public class BiCycleComponent {
 
+	Logger logger = Logger.getLogger(getClass());
+
 	@Autowired
 	private PickUpPointRepository pickUpPointRepository;
 
@@ -73,6 +76,7 @@ public class BiCycleComponent {
 		PickUpPoint pickUpPoint = pickUpPointRepository.findByPickUpPointId(biCycleDTO.getPickUpPoint());
 
 		if (pickUpPoint.getMaxCapacity() > pickUpPoint.getCurrentAvailability()) {
+			logger.info("There is space available for new bicycle.");
 			biCycle.setChasisNo(biCycleDTO.getChasisNo());
 			biCycle.setCurrentLocation(pickUpPoint);
 
@@ -85,8 +89,10 @@ public class BiCycleComponent {
 			pickUpPointComponent.updateBiCycleCurrentAvailability(pickUpPoint,
 					biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size());
 
+			logger.info("Bicycle with chassis no. " + biCycleDTO.getChasisNo() + " added to database.");
 			return biCycle;
 		} else {
+			logger.info("There are no more spaces for new bicycle at the desired pickup point.");
 			return null;
 		}
 	}
@@ -120,6 +126,7 @@ public class BiCycleComponent {
 	public void bicyclesInTransition(HttpSession session, Transfer transfer) {
 		@SuppressWarnings("unchecked")
 		List<BiCycle> biCycles = (List<BiCycle>) session.getAttribute("biCycles");
+
 		for (BiCycle biCycle : biCycles) {
 			BiCycleTransfer biCycleTransfer = new BiCycleTransfer();
 
@@ -133,6 +140,7 @@ public class BiCycleComponent {
 
 			biCycleTransfer.setBiCycle(biCycle);
 			biCycleTransfer.setTransfer(transfer);
+
 			try {
 				biCycleTransferRepository.save(biCycleTransfer);
 			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
@@ -158,6 +166,7 @@ public class BiCycleComponent {
 		for (BiCycle biCycle : biCycles) {
 			biCycle.setIsAvailable(true);
 			biCycle.setCurrentLocation(transfer.getTransferredTo());
+
 			try {
 				biCycleRepository.save(biCycle);
 			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
@@ -195,7 +204,7 @@ public class BiCycleComponent {
 	}
 
 	/**
-	 * This method is used to update the bicycle details.
+	 * This method is used to update the bicycle status.
 	 * 
 	 * @param id
 	 *            bicycle id
@@ -205,12 +214,14 @@ public class BiCycleComponent {
 		BiCycle biCycle = biCycleRepository.findByBiCycleId(id);
 
 		biCycle.setIsAvailable(false);
+
 		try {
 			biCycleRepository.save(biCycle);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
 
+		logger.info("Bicycle status updated to unavailable.");
 		return biCycle;
 	}
 }

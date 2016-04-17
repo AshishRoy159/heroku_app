@@ -51,18 +51,28 @@ public class RateGroupService {
 		return rateGroupComponent.mapRateGroup(user);
 	}
 
+	/**
+	 * This method is used to add add new rate group.
+	 * 
+	 * @param rateGroupDTO
+	 *            the incoming data to be saved
+	 * @return {@link RateGroup} object
+	 * @throws ParseException
+	 *             may occur while parsing from String to Date
+	 */
 	public RateGroup addNewRateGroup(RateGroupDTO rateGroupDTO) throws ParseException {
 		return rateGroupComponent.mapNewRateGroupDetails(rateGroupDTO);
 	}
 
 	/**
 	 * This method is used to get all rate group details.
-	 * @return RateGroup List
+	 * 
+	 * @return {@link RateGroup} List
 	 */
 	public List<RateGroup> getAllRateGroup() {
 		return rateGroupComponent.getAllRateGroup();
 	}
-	
+
 	/**
 	 * This method is used to find all rate group based on isActive.
 	 * 
@@ -70,10 +80,10 @@ public class RateGroupService {
 	 *            Boolean value
 	 * @return {@link RateGroup} List
 	 */
-	public List<RateGroup> getAllRateGroupAndIsActive(Boolean isActive){
+	public List<RateGroup> getAllRateGroupAndIsActive(Boolean isActive) {
 		return rateGroupComponent.mapAllRateGroupAndIsActive(isActive);
 	}
-	
+
 	/**
 	 * This method is used to find RateGroup by id.
 	 * 
@@ -81,10 +91,10 @@ public class RateGroupService {
 	 *            rateGroupId
 	 * @return {@link RateGroup} object
 	 */
-	public RateGroup getRateGroupById(Integer id){
+	public RateGroup getRateGroupById(Integer id) {
 		return rateGroupComponent.mapRateGroupById(id);
 	}
-	
+
 	/**
 	 * This method is used to update rate group type and create new rate group
 	 * type.
@@ -93,8 +103,9 @@ public class RateGroupService {
 	 *            this object contains rate group related data.
 	 * @return {@link RateGroup} object
 	 * @throws ParseException
+	 *             may occur while parsing from String to Date
 	 */
-	public RateGroup updateRateGroup(RateGroupDTO rateGroupDTO) throws ParseException{
+	public RateGroup updateRateGroup(RateGroupDTO rateGroupDTO) throws ParseException {
 		return rateGroupComponent.mapUpdateRateGroupAndIsActive(rateGroupDTO);
 	}
 }

@@ -22,6 +22,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mindfire.bicyclesharing.constant.CustomLoggerConstant;
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.TransferDataDTO;
@@ -69,6 +71,8 @@ import javassist.NotFoundException;
  */
 @Controller
 public class BiCycleTransferController {
+
+	Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
 	private TransferRequestService transferRequestService;
@@ -116,15 +120,17 @@ public class BiCycleTransferController {
 	@RequestMapping(value = "manager/sendRequest", method = RequestMethod.POST)
 	public ModelAndView sendRequest(@Valid @ModelAttribute("transferData") TransferRequestDTO transferRequestDTO,
 			BindingResult result, RedirectAttributes redirectAttributes, Authentication authentication) {
+
 		if (result.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 					"Inavlid Request. Please enter valid quantity");
-			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.TRANSFER_REQUEST);
-		}
-		if (transferRequestService.addNewTransferRequest(authentication, transferRequestDTO) == null) {
+		} else if (transferRequestService.addNewTransferRequest(authentication, transferRequestDTO) == null) {
+			logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 					"Request Failed..!! Request cannot exceed maximum capacity.");
 		} else {
+			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE,
 					"Transfer request for " + transferRequestDTO.getQuantity() + " bicycles sent successfully");
 		}
@@ -185,13 +191,16 @@ public class BiCycleTransferController {
 			Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		TransferRequest request = transferRequestService.findTransferRequest(requestId);
-		if(request == null){
+
+		if (request == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
+
 		Optional<TransferResponse> response = transferResponseService.findResponseForrequest(request,
 				pickUpPointManagerService.getPickupPointManager(currentUser.getUser()).getPickUpPoint());
 
 		if (request.getIsApproved() || response.isPresent()) {
+			logger.info("Not permitted to view this transfer request.");
 			return new ModelAndView(ViewConstant.REDIRECT + "/manager/requests");
 		}
 
@@ -216,7 +225,7 @@ public class BiCycleTransferController {
 			Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		transferResponseService.addNewResponse(transferResponseDTO, currentUser);
-		return new ModelAndView("redirect:requests");
+		return new ModelAndView(ViewConstant.REDIRECT + "requests");
 
 	}
 
@@ -234,9 +243,11 @@ public class BiCycleTransferController {
 	@RequestMapping(value = "admin/respond/{id}", method = RequestMethod.GET)
 	public ModelAndView adminResponse(@PathVariable("id") Long requestId, Model model) {
 		TransferRequest transferRequest = transferRequestService.findTransferRequest(requestId);
-		if(transferRequest == null){
+
+		if (transferRequest == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
+
 		List<TransferResponse> responses = transferResponseService.findresponsesForRequest(transferRequest);
 		model.addAttribute(ModelAttributeConstant.REQUEST, transferRequest);
 		model.addAttribute(ModelAttributeConstant.RESPONSES, responses);
@@ -254,9 +265,11 @@ public class BiCycleTransferController {
 	@RequestMapping(value = "admin/approveResponse/{id}", method = RequestMethod.GET)
 	public ModelAndView approveResponse(@PathVariable("id") Long responseId) {
 		TransferResponse transferResponse = transferResponseService.findResponseById(responseId);
-		if(transferResponse == null){
+
+		if (transferResponse == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
+
 		transferResponseService.updateApproval(true, responseId);
 		transferService.addNewTransfer(transferResponse);
 		return new ModelAndView("redirect:/admin/respond/" + transferResponse.getRequest().getRequestId());
@@ -293,18 +306,21 @@ public class BiCycleTransferController {
 	 * @param session
 	 *            for session attributes
 	 * @return transferConfirm view
-	 * @throws NotFoundException 
+	 * @throws NotFoundException
 	 */
 	@PostAuthorize("@currentUserService.canAccessManagerSender(principal, #transferId)")
 	@RequestMapping(value = "manager/sendShipment/{id}", method = RequestMethod.GET)
-	public ModelAndView sendShipment(@PathVariable("id") Long transferId, Model model, HttpSession session) throws NotFoundException {
+	public ModelAndView sendShipment(@PathVariable("id") Long transferId, Model model, HttpSession session)
+			throws NotFoundException {
 		Transfer transfer = transferService.findTransferDetails(transferId);
-		if(transfer == null){
+
+		if (transfer == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
 
 		if (transfer.getStatus().equals(TransferStatusEnum.IN_TRANSITION)
 				|| transfer.getStatus().equals(TransferStatusEnum.CLOSED)) {
+			logger.info("Transfer already shipped. " + CustomLoggerConstant.REDIRECTED_TO_MANAGER_VIEW);
 			return new ModelAndView(ViewConstant.REDIRECT + "/manager/transfers");
 		}
 
@@ -328,7 +344,7 @@ public class BiCycleTransferController {
 	public ModelAndView confirmShipment(@ModelAttribute("transferData") TransferDataDTO transferDataDTO,
 			HttpSession session) {
 		transferService.confirmTransfer(transferDataDTO, session);
-		return new ModelAndView("redirect:transfers");
+		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.TRANSFERS);
 	}
 
 	/**
@@ -340,18 +356,22 @@ public class BiCycleTransferController {
 	 * @param session
 	 *            for session attributes
 	 * @return receiveConfirm view
-	 * @throws NotFoundException 
+	 * @throws NotFoundException
 	 */
 	@PostAuthorize("@currentUserService.canAccessManagerReceiver(principal, #transferId)")
 	@RequestMapping(value = "manager/receiveShipment/{id}", method = RequestMethod.GET)
-	public ModelAndView receiveShipment(@PathVariable("id") Long transferId, HttpSession session) throws NotFoundException {
+	public ModelAndView receiveShipment(@PathVariable("id") Long transferId, HttpSession session)
+			throws NotFoundException {
 		Transfer transfer = transferService.findTransferDetails(transferId);
-		
-		if(transfer == null){
+
+		if (transfer == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
+
 		if (transfer.getStatus().equals(TransferStatusEnum.PENDING)
 				|| transfer.getStatus().equals(TransferStatusEnum.CLOSED)) {
+			logger.info(
+					"Transfer not yet shipped or already received. " + CustomLoggerConstant.REDIRECTED_TO_MANAGER_VIEW);
 			return new ModelAndView(ViewConstant.REDIRECT + "/manager/transfers");
 		}
 
@@ -378,20 +398,25 @@ public class BiCycleTransferController {
 	public ModelAndView confirmShipmentReceive(@PathVariable("id") Long transferId, HttpSession session, Model model) {
 		Transfer transfer = transferService.findTransferDetails(transferId);
 
-		if(transfer == null){
+		if (transfer == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
+
 		if (transfer.getStatus().equals(TransferStatusEnum.PENDING)
 				|| transfer.getStatus().equals(TransferStatusEnum.CLOSED)) {
+			logger.info(
+					"Transfer not yet shipped or already received. " + CustomLoggerConstant.REDIRECTED_TO_MANAGER_VIEW);
 			return new ModelAndView(ViewConstant.REDIRECT + "/manager/transfers");
 		}
 
 		Transfer closedTransfer = transferService.confirmReceiveTransfer(transferId, session);
 
 		if (null == closedTransfer) {
+			logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
 			model.addAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Error Receiving Transfer!!");
 			return new ModelAndView("receiveShipment/" + transferId);
 		} else {
+			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			return new ModelAndView("redirect:/manager/transfers");
 		}
 

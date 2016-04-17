@@ -19,6 +19,7 @@ package com.mindfire.bicyclesharing.component;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,8 @@ import com.mindfire.bicyclesharing.security.CurrentUser;
  */
 @Component
 public class TransferResponseComponent {
+
+	Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
 	private TransferResponseRepository transferResponseRepository;
@@ -75,6 +78,7 @@ public class TransferResponseComponent {
 		transferResponse.setManager(currentUser.getUser());
 
 		try {
+			logger.info("New response to a transfer request added.");
 			return transferResponseRepository.save(transferResponse);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -131,6 +135,7 @@ public class TransferResponseComponent {
 	 */
 	public int updateIsApproved(Boolean isApproved, Long responseId) {
 		try {
+			logger.info("Updated status of the response.");
 			return transferResponseRepository.updateIsApproved(isApproved, responseId);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);

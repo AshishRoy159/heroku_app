@@ -18,6 +18,7 @@ package com.mindfire.bicyclesharing.component;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,8 @@ import com.mindfire.bicyclesharing.security.CurrentUser;
 @Component
 public class TransferRequestComponent {
 
+	Logger logger = Logger.getLogger(getClass());
+
 	@Autowired
 	private TransferRequestRepository transferRequestRepository;
 
@@ -63,15 +66,20 @@ public class TransferRequestComponent {
 	public TransferRequest mapNewRequest(Authentication authentication, TransferRequestDTO transferRequestDTO) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		PickUpPoint pickUpPoint = pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint();
+
 		if (transferRequestDTO.getQuantity() > (pickUpPoint.getMaxCapacity() - pickUpPoint.getCurrentAvailability())) {
+			logger.info("Requested transfer quantity is more than remaining space at pickup point.");
 			return null;
 		}
+
 		TransferRequest transferRequest = new TransferRequest();
+
 		transferRequest.setPickUpPoint(pickUpPoint);
 		transferRequest.setManager(currentUser.getUser());
 		transferRequest.setQuantity(transferRequestDTO.getQuantity());
 
 		try {
+			logger.info("New transfer request created.");
 			return transferRequestRepository.save(transferRequest);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -123,6 +131,7 @@ public class TransferRequestComponent {
 	 */
 	public int updateApprovedQuantity(Integer approvedQuantity, Long requestId) {
 		try {
+			logger.info("Updated approved quantity for the request.");
 			return transferRequestRepository.updateCurrentApprovedQuantity(approvedQuantity, requestId);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -141,6 +150,7 @@ public class TransferRequestComponent {
 	 */
 	public int uppdateIsApproved(Boolean isApproved, Long requestId) {
 		try {
+			logger.info("Updated ststus of the request.");
 			return transferRequestRepository.updateIsApproved(isApproved, requestId);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);

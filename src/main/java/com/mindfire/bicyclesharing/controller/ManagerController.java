@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mindfire.bicyclesharing.constant.CustomLoggerConstant;
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.UserDTO;
@@ -47,6 +49,8 @@ import com.mindfire.bicyclesharing.service.UserService;
  */
 @Controller
 public class ManagerController {
+
+	Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
 	private UserService userService;
@@ -79,7 +83,9 @@ public class ManagerController {
 	@RequestMapping(value = { "/manager/managerPayment" }, method = RequestMethod.POST)
 	public ModelAndView getPayment(@Valid @ModelAttribute("userData") UserDTO userDTO, BindingResult result,
 			HttpSession session, RedirectAttributes redirectAttributes) {
+
 		if (result.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 					"Invalid User Data ! Try Again.");
 			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_USER);
@@ -90,6 +96,7 @@ public class ManagerController {
 		} catch (IOException e) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.PAYLOAD_TOO_LARGE);
 		}
+
 		session.setAttribute("userDTO", userDTO);
 		return new ModelAndView(ViewConstant.MANAGER_PAYMENT);
 	}

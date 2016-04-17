@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,8 @@ import com.mindfire.bicyclesharing.repository.RateGroupRepository;
 @Component
 public class RateGroupComponent {
 
+	Logger logger = Logger.getLogger(getClass());
+
 	@Autowired
 	private RateGroupRepository rateGroupRepository;
 
@@ -63,6 +66,15 @@ public class RateGroupComponent {
 		return rateGroupRepository.findByGroupTypeAndIsActive(user.getRateGroup().getGroupType(), true);
 	}
 
+	/**
+	 * This method is used to add add new rate group.
+	 * 
+	 * @param rateGroupDTO
+	 *            the incoming data to be saved
+	 * @return {@link RateGroup} object
+	 * @throws ParseException
+	 *             may occur while parsing from String to Date
+	 */
 	public RateGroup mapNewRateGroupDetails(RateGroupDTO rateGroupDTO) throws ParseException {
 		RateGroup rateGroup = new RateGroup();
 		rateGroup.setDiscount(rateGroupDTO.getDiscount());
@@ -71,6 +83,7 @@ public class RateGroupComponent {
 		rateGroup.setBaseRateBean(baseRateRepository.findByGroupType("USER"));
 
 		try {
+			logger.info("Created new rate group data.");
 			return rateGroupRepository.save(rateGroup);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -182,27 +195,35 @@ public class RateGroupComponent {
 	 *            this object contains rate group related data.
 	 * @return {@link RateGroup} object
 	 * @throws ParseException
+	 *             may occur while parsing from String to Date
 	 */
 	public RateGroup mapUpdateRateGroupAndIsActive(RateGroupDTO rateGroupDTO) throws ParseException {
 		RateGroup rateGroup = rateGroupRepository.findByGroupTypeAndIsActive(rateGroupDTO.getGroupType(), true);
 		RateGroup newRateGroup = new RateGroup();
+
 		newRateGroup.setGroupType(rateGroup.getGroupType());
 		newRateGroup.setBaseRateBean(rateGroup.getBaseRateBean());
 		newRateGroup.setDiscount(rateGroupDTO.getDiscount());
 		newRateGroup.setEffectiveFrom(simpleDateFormat.parse(rateGroupDTO.getEffectiveFrom()));
 		newRateGroup.setIsActive(false);
+
 		rateGroupRepository.save(newRateGroup);
+
 		@SuppressWarnings("deprecation")
 		int date = newRateGroup.getEffectiveFrom().getDate();
+
 		@SuppressWarnings("deprecation")
 		int month = newRateGroup.getEffectiveFrom().getMonth();// it will return
 																// 0 to 11
+
 		@SuppressWarnings("deprecation")
 		int year = newRateGroup.getEffectiveFrom().getYear() + 1900;
+
 		if (date == 1 && month == 0) {
 			rateGroup.setEffectiveUpto(simpleDateFormat
 					.parse(String.valueOf(year - 1) + "-" + String.valueOf(12) + "-" + String.valueOf(31)));
 		} else if (date == 1 && month == 2) {
+
 			if (isLeapYear(year)) {
 				rateGroup.setEffectiveUpto(simpleDateFormat
 						.parse(String.valueOf(year) + "-" + String.valueOf(2) + "-" + String.valueOf(29)));
@@ -210,7 +231,9 @@ public class RateGroupComponent {
 				rateGroup.setEffectiveUpto(simpleDateFormat
 						.parse(String.valueOf(year) + "-" + String.valueOf(2) + "-" + String.valueOf(28)));
 			}
+
 		} else {
+
 			if (date == 1) {
 				rateGroup.setEffectiveUpto(simpleDateFormat.parse(
 						String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(checkMonth(month))));
@@ -218,8 +241,11 @@ public class RateGroupComponent {
 				rateGroup.setEffectiveUpto(simpleDateFormat.parse(
 						String.valueOf(year) + "-" + String.valueOf(month + 1) + "-" + String.valueOf(date - 1)));
 			}
+
 		}
+
 		try {
+			logger.info("Updated rate group deatils.");
 			return rateGroupRepository.save(rateGroup);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);

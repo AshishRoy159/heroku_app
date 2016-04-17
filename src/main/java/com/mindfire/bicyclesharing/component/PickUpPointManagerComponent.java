@@ -18,6 +18,7 @@ package com.mindfire.bicyclesharing.component;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,8 @@ import com.mindfire.bicyclesharing.repository.UserRepository;
  */
 @Component
 public class PickUpPointManagerComponent {
+
+	Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
 	private PickUpPointManagerRepository pickUpPointManagerRepository;
@@ -87,6 +90,7 @@ public class PickUpPointManagerComponent {
 		pickUpPointManager.setUser(userRepository.findByUserId(manageRoleDTO.getUserId()));
 
 		try {
+			logger.info("Added new pickup point manager details to the database.");
 			return pickUpPointManagerRepository.save(pickUpPointManager);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -116,7 +120,9 @@ public class PickUpPointManagerComponent {
 	public PickUpPointManager mapPickupPointDetailForOpen(User user) {
 		PickUpPointManager pickUpPointManager = pickUpPointManagerRepository.findByUser(user);
 		pickUpPointManager.getPickUpPoint().setIsOpen(true);
+
 		try {
+			logger.info("Updated pickup point status to open.");
 			return pickUpPointManagerRepository.save(pickUpPointManager);
 		} catch (Exception e) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -134,7 +140,9 @@ public class PickUpPointManagerComponent {
 	public PickUpPointManager mapPickupPointDetailForClose(User user) {
 		PickUpPointManager pickUpPointManager = pickUpPointManagerRepository.findByUser(user);
 		pickUpPointManager.getPickUpPoint().setIsOpen(false);
+
 		try {
+			logger.info("Updated pickup point status to close.");
 			return pickUpPointManagerRepository.save(pickUpPointManager);
 		} catch (Exception e) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
