@@ -42,6 +42,7 @@ import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.IssueCycleForOnlineDTO;
 import com.mindfire.bicyclesharing.dto.PaymentAtPickUpPointDTO;
+import com.mindfire.bicyclesharing.dto.ReceiveCycleDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
 import com.mindfire.bicyclesharing.event.BookingSuccessEvent;
@@ -448,8 +449,80 @@ public class UserBookingController {
 		}
 
 		model.addAttribute(ModelAttributeConstant.USER, user);
-		model.addAttribute("bookingHistory", bookingSevice.getAllBooking(user, false));
+		model.addAttribute("bookingHistory", bookingSevice.getAllBooking(user, false, true));
 
 		return new ModelAndView(ViewConstant.USER_BOOKIG_HISTORY);
 	}
+
+	/**
+	 * This method is used to map the request current user booking and simply
+	 * render the view along with the data.
+	 * 
+	 * @param model
+	 *            to map the model attributes
+	 * @param id
+	 *            user id
+	 * @return currentBooking view.
+	 */
+	@RequestMapping(value = "/user/currentBooking/{id}", method = RequestMethod.GET)
+	public ModelAndView currentUserBooking(Model model, @PathVariable("id") Long id) {
+		User user = userService.userDetails(id);
+
+		if (user == null) {
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
+
+		model.addAttribute(ModelAttributeConstant.USER, user);
+		model.addAttribute("currentBooking", bookingSevice.getBookingDetails(true, user));
+
+		return new ModelAndView(ViewConstant.CURRENT_USER_BOOKING);
+	}
+
+	/**
+	 * This method is used to map the request for close current booking and
+	 * simply render the view currentBooking
+	 * 
+	 * @param bookingId
+	 *            this parameter holds bookingId
+	 * @param redirectAttributes
+	 *            to map the redirectAttributes
+	 * @return currentBooking view.
+	 */
+	@RequestMapping(value = { "/user/closeCurrentBooking/{id}" }, method = RequestMethod.GET)
+	public ModelAndView closeCurrentBooking(@PathVariable("id") Long bookingId, RedirectAttributes redirectAttributes) {
+
+		Booking booking = bookingSevice.getBookingById(bookingId);
+
+		if (null != booking) {
+			logger.info("Booking data is valid.");
+
+			if (null != booking.getBiCycleId()) {
+				logger.info("Issued bicycle has not been returned yet. Transaction cancelled.");
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
+						"You have been issued a bicycle. Please return bicycle before closing the booking..!");
+			} else {
+				logger.info("Bicycle has been issued for this booking.");
+				ReceiveCycleDTO receiveCycleDTO = new ReceiveCycleDTO();
+				receiveCycleDTO.setBookingId(bookingId);
+				if (null != bookingSevice.closeBooking(receiveCycleDTO)) {
+					logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
+					redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
+							"Your booking has been successfully closed.");
+				} else {
+					logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
+					redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
+							"Your booking status is not valid..");
+				}
+
+			}
+		} else {
+			logger.info("Booking doesn't exist. Transaction cancelled.");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
+					"Your booking status is not valid..");
+		}
+
+		return new ModelAndView(ViewConstant.REDIRECT + "/user/" + ViewConstant.CURRENT_USER_BOOKING + "/"
+				+ booking.getUser().getUserId());
+	}
+
 }

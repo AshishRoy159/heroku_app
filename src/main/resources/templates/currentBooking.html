@@ -121,7 +121,8 @@
 								th:href="@{/admin/adminHome}"><i class="fa fa-home"></i>Home<br />
 							</a></li>
 							<li class="divider"></li>
-							<li class="active"><a th:href="@{/user/userProfile/} + ${user.userId}"> <i
+							<li class="active"><a
+								th:href="@{/user/userProfile/} + ${user.userId}"> <i
 									class="glyphicon glyphicon-home"></i> Overview
 							</a></li>
 							<li><a
@@ -136,9 +137,6 @@
 							<li><a th:href="@{/user/bookingHistory/} + ${user.userId}">
 									<i class="fa fa-history"></i> Booking History
 							</a></li>
-							<li><a th:href="@{/user/currentBooking/} + ${user.userId}">
-									<i class="fa fa-history"></i> Current Booking
-							</a></li>
 						</ul>
 					</div>
 					<!-- END MENU -->
@@ -147,67 +145,52 @@
 			<div class="col-md-9">
 				<div class="profile-content">
 					<div class="row">
-						<div class="col-md-2"></div>
-						<div class="col-md-10">
+						<div class="col-md-12">
+						<h4 class="text-danger" th:text="*{closeMessage}"></h4>
 							<div class="row">
 								<div class="col-md-12">
 									<div class="row">
-										<div class="col-md-4">
-											<label class="text-primary">Name -</label>
-										</div>
-										<div class="col-md-8">
-											<span class="text-info" th:text="*{user.firstName}"></span> <span
-												class="text-info" th:text="*{user.lastName}"></span>
-										</div>
-									</div>
-									<br />
-									<div class="row">
-										<div class="col-md-4">
-											<label class="text-primary">Address -</label>
-										</div>
-										<div class="col-md-8">
-											<span class="text-info" th:text="*{user.userAddress}"></span>
-										</div>
-									</div>
-									<br />
-									<div class="row">
-										<div class="col-md-4">
-											<label class="text-primary">Phone.No -</label>
-										</div>
-										<div class="col-md-8">
-											<span class="text-info" th:text="*{user.mobileNo}"></span>
-										</div>
-									</div>
-									<br />
-									<div class="row">
-										<div class="col-md-4">
-											<label class="text-primary">Email -</label>
-										</div>
-										<div class="col-md-8">
-											<span class="text-info" th:text="*{user.email}"></span>
-										</div>
-									</div>
-									<br />
-									<div class="row">
-										<div class="col-md-4">
-											<label class="text-primary">Date Of Birth -</label>
-										</div>
-										<div class="col-md-8">
-											<span class="text-info" th:text="*{user.dateOfBirth}"></span>
+										<div class="col-md-12 col-sm-12 col-xs-12">
+											<div class="panel panel-info">
+												<div class="panel-heading">Current Booking</div>
+												<div class="panel-body" style="background-color: white;">
+													<div class="table-responsive">
+														<table
+															class="table table-striped table-bordered">
+															<thead>
+																<tr>
+																	<th>Booking Id</th>
+																	<th>PickUp From</th>
+																	<th>Expected Out</th>
+																	<th>Expected In</th>
+																	<th>Booking Status</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr
+																	th:each="currentBooking : ${currentBooking}">
+																	<td class="text-center"><span
+																		th:text="${currentBooking.bookingId}"></span></td>
+																	<td class="text-center"><span
+																		th:text="${currentBooking.pickedUpFrom.location}"></span></td>
+																	<td class="text-center"><span
+																		th:text="${currentBooking.expectedOut}"></span></td>
+																	<td class="text-center"><span
+																		th:text="${currentBooking.expectedIn}"></span></td>
+																	<td class="text-center"
+																		th:if="${currentBooking.isOpen}">✔<span
+																		style="font-size: 10px; color: blue;"><a
+																			th:href="@{/user/closeCurrentBooking/} + ${currentBooking.bookingId}">Close</a></span></td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+
 										</div>
 									</div>
-									<br />
-									<div class="row">
-										<div class="col-md-4">
-											<label class="text-primary">Valid ID Proof(s) -</label>
-										</div>
-										<div class="col-md-8">
-											<span class="text-primary"
-												th:text="*{user.proofDetail.proofType}"></span> - <span
-												class="text-info" th:text="*{user.proofDetail.proofNo}"></span>
-										</div>
-									</div>
-									<br />
+									<!-- /. ROW  -->
 								</div>
 							</div>
 						</div>

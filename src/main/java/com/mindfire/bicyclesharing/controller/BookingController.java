@@ -222,7 +222,7 @@ public class BookingController {
 			}
 
 			Double fare = bookingService.calculateFare(user, issueCycleDTO.getExpectedInTime());
-			Double discount = bookingService.calculateDiscount(user,fare);
+			Double discount = bookingService.calculateDiscount(user, fare);
 			fare = fare - discount;
 			model.addAttribute(ModelAttributeConstant.BASE_FARE, Math.ceil(fare));
 
@@ -291,7 +291,7 @@ public class BookingController {
 						double baseRate = rateGroupService.getBaseRate(booking.getUser()).getBaseRateBean()
 								.getBaseRate();
 						double discount = rateGroupService.getBaseRate(booking.getUser()).getDiscount();
-						double fare = bookingService.calculateActualFare(hour, baseRate,discount);
+						double fare = bookingService.calculateActualFare(hour, baseRate, discount);
 						redirectAttributes.addFlashAttribute("fare", Math.ceil(fare));
 						return new ModelAndView("redirect:/manager/receiveBicyclePayment");
 					}
@@ -465,16 +465,16 @@ public class BookingController {
 	 *            to map model attributes
 	 * @return booking view
 	 */
-	@RequestMapping(value = "/manager/closeBooking", method = RequestMethod.POST)
+	@RequestMapping(value = { "/manager/closeBooking"}, method = RequestMethod.POST)
 	public ModelAndView closeCurrentBooking(@Valid @ModelAttribute("closeBookingData") ReceiveCycleDTO receiveCycleDTO,
-			BindingResult result, RedirectAttributes redirectAttributes) {
+			BindingResult result,RedirectAttributes redirectAttributes) {
 
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE, "Invalid Booking Id.");
 			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 		}
-
+		
 		Booking booking = bookingService.getBookingById(receiveCycleDTO.getBookingId());
 
 		if (null != booking) {
