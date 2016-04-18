@@ -73,6 +73,8 @@ public class WalletService {
 	 * 
 	 * @param userBookingPaymentDTO
 	 *            user booking payment data
+	 * @param booking
+	 *            booking details
 	 * @param authentication
 	 *            to get current logged in user details
 	 * @return {@link WalletTransaction} object

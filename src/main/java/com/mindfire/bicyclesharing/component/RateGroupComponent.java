@@ -240,6 +240,7 @@ public class RateGroupComponent {
 	 *            RateGroup object
 	 * @return {@link RateGroup} object
 	 * @throws ParseException
+	 *             may occur while parsing from String to Date
 	 */
 	public RateGroup updateEffectiveUpTo(RateGroup newRateGroup) throws ParseException {
 		RateGroup rateGroup = rateGroupRepository.findByGroupTypeAndIsActive(newRateGroup.getGroupType(), true);

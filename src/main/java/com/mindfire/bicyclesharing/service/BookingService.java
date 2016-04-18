@@ -224,8 +224,8 @@ public class BookingService {
 	 * 
 	 * @param user
 	 *            user data
-	 * @param issueCycleDTO
-	 *            issue cycle data
+	 * @param hour
+	 *            booking duration
 	 * @return {@link Double} object
 	 */
 	public Double calculateFare(User user, long hour) {

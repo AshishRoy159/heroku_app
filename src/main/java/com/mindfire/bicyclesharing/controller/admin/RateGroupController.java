@@ -219,6 +219,8 @@ public class RateGroupController {
 	 * 
 	 * @param manageRateGroupDTO
 	 *            Manage rate group related data.
+	 * @param result
+	 *            to validate incoming data
 	 * @param model
 	 *            this is used to show the message and data on the view.
 	 * @return manageRateGroup view.

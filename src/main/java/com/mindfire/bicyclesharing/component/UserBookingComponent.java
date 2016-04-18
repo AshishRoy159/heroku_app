@@ -103,6 +103,8 @@ public class UserBookingComponent {
 	 * 
 	 * @param userBookingPaymentDTO
 	 *            this parameter holds the user payment data.
+	 * @param booking
+	 *            booking details
 	 * @param authentication
 	 *            this parameter is used to identify the current user.
 	 * @return {@link WalletTransaction}
