@@ -18,6 +18,7 @@ package com.mindfire.bicyclesharing.component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,18 +65,22 @@ public class RateGroupComponent {
 	}
 
 	public RateGroup mapNewRateGroupDetails(RateGroupDTO rateGroupDTO) throws ParseException {
+		RateGroup existingRateGroup = rateGroupRepository.findByGroupTypeAndIsActive(rateGroupDTO.getGroupType(), true);
 		RateGroup rateGroup = new RateGroup();
 		rateGroup.setDiscount(rateGroupDTO.getDiscount());
 		rateGroup.setEffectiveFrom(simpleDateFormat.parse(rateGroupDTO.getEffectiveFrom()));
 		rateGroup.setGroupType(rateGroupDTO.getGroupType());
 		rateGroup.setBaseRateBean(baseRateRepository.findByGroupType("USER"));
-
+		if (null == existingRateGroup) {
+			rateGroup.setIsActive(true);
+		} else {
+			rateGroup.setIsActive(false);
+		}
 		try {
 			return rateGroupRepository.save(rateGroup);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
-
 	}
 
 	/**
@@ -184,18 +189,51 @@ public class RateGroupComponent {
 	 * @throws ParseException
 	 */
 	public RateGroup mapUpdateRateGroupAndIsActive(RateGroupDTO rateGroupDTO) throws ParseException {
-		RateGroup rateGroup = rateGroupRepository.findByGroupTypeAndIsActive(rateGroupDTO.getGroupType(), true);
-		RateGroup newRateGroup = new RateGroup();
-		newRateGroup.setGroupType(rateGroup.getGroupType());
-		newRateGroup.setBaseRateBean(rateGroup.getBaseRateBean());
-		newRateGroup.setDiscount(rateGroupDTO.getDiscount());
-		newRateGroup.setEffectiveFrom(simpleDateFormat.parse(rateGroupDTO.getEffectiveFrom()));
-		newRateGroup.setIsActive(false);
-		rateGroupRepository.save(newRateGroup);
+		RateGroup existingRateGroup = rateGroupRepository
+				.findByGroupTypeAndIsActiveAndEffectiveUptoIsNull(rateGroupDTO.getGroupType(), false);
+		if (null != existingRateGroup) {
+			/* Some more work will be done here.. */
+			existingRateGroup.setEffectiveFrom(simpleDateFormat.parse(rateGroupDTO.getEffectiveFrom()));
+			existingRateGroup.setDiscount(rateGroupDTO.getDiscount());
+			try {
+				rateGroupRepository.save(existingRateGroup);
+			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+			}
+			return updateEffectiveUpTo(existingRateGroup);
+		} else {
+			RateGroup updateRateGroup = rateGroupRepository
+					.findByGroupTypeAndIsActiveAndEffectiveUptoIsNull(rateGroupDTO.getGroupType(), true);
+			if (updateRateGroup.getEffectiveFrom().after(simpleDateFormat.parse(simpleDateFormat.format(new Date())))) {
+				updateRateGroup.setDiscount(rateGroupDTO.getDiscount());
+				updateRateGroup.setEffectiveFrom(simpleDateFormat.parse(rateGroupDTO.getEffectiveFrom()));
+				try {
+					return rateGroupRepository.save(updateRateGroup);
+				} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+				}
+			}
+			RateGroup newRateGroup = mapNewRateGroupDetails(rateGroupDTO);
+			return updateEffectiveUpTo(newRateGroup);
+
+		}
+	}
+
+	/**
+	 * This method is used to update the effective upto field of the rate group.
+	 * 
+	 * @param newRateGroup
+	 *            RateGroup object
+	 * @return {@link RateGroup} object
+	 * @throws ParseException
+	 */
+	public RateGroup updateEffectiveUpTo(RateGroup newRateGroup) throws ParseException {
+		RateGroup rateGroup = rateGroupRepository.findByGroupTypeAndIsActive(newRateGroup.getGroupType(), true);
 		@SuppressWarnings("deprecation")
 		int date = newRateGroup.getEffectiveFrom().getDate();
 		@SuppressWarnings("deprecation")
-		int month = newRateGroup.getEffectiveFrom().getMonth();// it will return
+		int month = newRateGroup.getEffectiveFrom().getMonth();// it will
+																// return
 																// 0 to 11
 		@SuppressWarnings("deprecation")
 		int year = newRateGroup.getEffectiveFrom().getYear() + 1900;

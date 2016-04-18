@@ -28,6 +28,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
+import com.mindfire.bicyclesharing.dto.ManageRateGroupDTO;
 import com.mindfire.bicyclesharing.dto.ManageRoleDTO;
 import com.mindfire.bicyclesharing.dto.RegistrationPaymentDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
@@ -311,6 +312,16 @@ public class UserComponent {
 		} else {
 			user.setEnabled(true);
 		}
+		try {
+			return userRepository.save(user);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	public User assignRateGroup(ManageRateGroupDTO manageRateGroupDTO) {
+		User user = userRepository.findByUserId(manageRateGroupDTO.getUserId());
+		user.setRateGroup(rateGroupRepository.findByRateGroupId(manageRateGroupDTO.getRateGroupId()));
 		try {
 			return userRepository.save(user);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {

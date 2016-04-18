@@ -204,8 +204,10 @@ public class BookingController {
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE, "Invalid UserId...");
 				return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 			}
-			Double fare = bookingService.calculateFare(user, issueCycleDTO);
-			model.addAttribute(ModelAttributeConstant.BASE_FARE, fare);
+			Double fare = bookingService.calculateFare(user, issueCycleDTO.getExpectedInTime());
+			Double discount = bookingService.calculateDiscount(user,fare);
+			fare = fare - discount;
+			model.addAttribute(ModelAttributeConstant.BASE_FARE, Math.ceil(fare));
 
 			if (user.getIsApproved() == true && user.getEnabled() == true) {
 				return new ModelAndView(ViewConstant.BOOKING_PAYMENT);
@@ -245,7 +247,6 @@ public class BookingController {
 		} else {
 			if (null != booking.getBiCycleId()) {
 				if (booking.getIsOpen()) {
-
 					redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_DETAILS, booking);
 
 					long time = bookingService.calculateRidingTime(booking);
@@ -260,7 +261,7 @@ public class BookingController {
 								.getBaseRate();
 						double discount = rateGroupService.getBaseRate(booking.getUser()).getDiscount();
 						double fare = bookingService.calculateActualFare(hour, baseRate,discount);
-						redirectAttributes.addFlashAttribute("fare", fare);
+						redirectAttributes.addFlashAttribute("fare", Math.ceil(fare));
 						return new ModelAndView("redirect:/manager/receiveBicyclePayment");
 					}
 

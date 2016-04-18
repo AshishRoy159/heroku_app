@@ -37,7 +37,7 @@ public class RateGroup implements Serializable {
 	@JoinColumn(name = "base_rate")
 	private BaseRate baseRateBean;
 
-	@Column(name = "is_active", insertable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+	@Column(name = "is_active")
 	private Boolean isActive;
 
 	/**

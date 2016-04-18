@@ -33,10 +33,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
+import com.mindfire.bicyclesharing.dto.ManageRateGroupDTO;
 import com.mindfire.bicyclesharing.dto.RateGroupDTO;
 import com.mindfire.bicyclesharing.dto.RateGroupTypeDTO;
 import com.mindfire.bicyclesharing.model.RateGroup;
 import com.mindfire.bicyclesharing.service.RateGroupService;
+import com.mindfire.bicyclesharing.service.UserService;
 
 /**
  * This class contains all the Request Mappings related to the rate group
@@ -51,6 +53,9 @@ public class RateGroupController {
 
 	@Autowired
 	private RateGroupService rateGroupService;
+
+	@Autowired
+	private UserService userService;
 
 	@RequestMapping(value = "/admin/addNewRateGroup", method = RequestMethod.GET)
 	public ModelAndView addNewRateGroup() {
@@ -156,5 +161,41 @@ public class RateGroupController {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Updated..!");
 			return new ModelAndView("redirect:/admin/selectRateGroup");
 		}
+	}
+
+	/**
+	 * This method is used to map manage rate group and simply render the view
+	 * along with the rateGroup data.
+	 * 
+	 * @param model
+	 *            this is used to show the message and data on the view.
+	 * @return manageRateGroup view.
+	 */
+	@RequestMapping(value = "/manager/manageRateGroup", method = RequestMethod.GET)
+	public ModelAndView manageRateGroupView(Model model) {
+		List<RateGroup> rateGroups = rateGroupService.getAllRateGroupAndIsActive(true);
+		model.addAttribute(ModelAttributeConstant.RATE_GROUPS, rateGroups);
+		return new ModelAndView(ViewConstant.MANAGE_RATE_GROUP);
+	}
+
+	/**
+	 * This method is used map the request assignRateGroup for update the rate
+	 * group to specific user.
+	 * 
+	 * @param manageRateGroupDTO
+	 *            Manage rate group related data.
+	 * @param model
+	 *            this is used to show the message and data on the view.
+	 * @return manageRateGroup view.
+	 */
+	@RequestMapping(value = "/manager/assignRateGroup", method = RequestMethod.POST)
+	public ModelAndView assignRateGroup(@ModelAttribute("assignRateGroupData") ManageRateGroupDTO manageRateGroupDTO,
+			Model model) {
+		if (null == userService.UpdateRateGroup(manageRateGroupDTO)) {
+			model.addAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Operation failed..!");
+		} else {
+			model.addAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Rate group is assigned successfully!");
+		}
+		return new ModelAndView(ViewConstant.MANAGE_RATE_GROUP);
 	}
 }

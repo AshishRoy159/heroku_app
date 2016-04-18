@@ -123,12 +123,18 @@ public class UserBookingController {
 					long hour = bookingSevice.calculateTotalRideTime(actualTime);
 					double baseRate = rateGroupService.getBaseRate(userBooking.getUser()).getBaseRateBean()
 							.getBaseRate();
-					double discount = rateGroupService.getBaseRate(userBooking.getUser()).getDiscount();
-					double fare = bookingSevice.calculateActualFare(hour, baseRate, discount);
+					double fare = bookingSevice.calculateFare(userBooking.getUser(), hour);
+					double discount = bookingSevice.calculateDiscount(userBooking.getUser(),fare);
+					System.out.println(discount);
+					
+					
 					if (fare == 0.0) {
-						fare = baseRate - (baseRate * (discount / 100));
+						fare = baseRate - discount;
+					} else {
+						fare = fare - discount;
 					}
-					redirectAttributes.addFlashAttribute("fare", fare);
+				   System.out.println(fare);
+					redirectAttributes.addFlashAttribute("fare", Math.ceil(fare));
 					redirectAttributes.addFlashAttribute("userBookingDetails", userBooking);
 					return new ModelAndView("redirect:/user/userPayment");
 				}
@@ -282,12 +288,15 @@ public class UserBookingController {
 								long hour = bookingSevice.calculateTotalRideTime(actualTime);
 								double baseRate = rateGroupService.getBaseRate(openBooking.getUser()).getBaseRateBean()
 										.getBaseRate();
-								double discount = rateGroupService.getBaseRate(openBooking.getUser()).getDiscount();
-								double fare = bookingSevice.calculateActualFare(hour, baseRate, discount);
+								double fare = bookingSevice.calculateFare(openBooking.getUser(), hour);
+								double discount = bookingSevice.calculateDiscount(openBooking.getUser(),fare);
+								
 								if (fare == 0.0) {
-									fare = baseRate - (baseRate * (discount / 100));
+									fare = baseRate - discount;
+								} else {
+									fare = fare - discount;
 								}
-								redirectAttributes.addFlashAttribute("fare", fare);
+								redirectAttributes.addFlashAttribute("fare", Math.ceil(fare));
 								redirectAttributes.addFlashAttribute("bicycleId",
 										issueCycleForOnlineDTO.getBicycleId());
 								redirectAttributes.addFlashAttribute("bookingStatus", openBooking);
@@ -369,7 +378,7 @@ public class UserBookingController {
 	@RequestMapping(value = "/user/bookingHistory/{id}", method = RequestMethod.GET)
 	public ModelAndView userBookingHistory(Model model, @PathVariable("id") Long id) throws NotFoundException {
 		User user = userService.userDetails(id);
-		if(user == null){
+		if (user == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
 		model.addAttribute(ModelAttributeConstant.USER, user);

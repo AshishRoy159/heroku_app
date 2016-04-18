@@ -230,10 +230,13 @@ public class BookingService {
 	 *            issue cycle data
 	 * @return {@link Double} object
 	 */
-	public Double calculateFare(User user, IssueCycleDTO issueCycleDTO) {
-		return user.getRateGroup().getBaseRateBean().getBaseRate() * issueCycleDTO.getExpectedInTime();
+	public Double calculateFare(User user, long hour) {
+		return (user.getRateGroup().getBaseRateBean().getBaseRate() * hour);
 	}
-
+	
+	public Double calculateDiscount(User user,Double fare){
+		return (fare * (user.getRateGroup().getDiscount() / 100));
+	}
 	/**
 	 * This method is used to calculate the riding time based on the booking.
 	 * 

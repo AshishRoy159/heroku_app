@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.component.UserComponent;
 import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
+import com.mindfire.bicyclesharing.dto.ManageRateGroupDTO;
 import com.mindfire.bicyclesharing.dto.ManageRoleDTO;
 import com.mindfire.bicyclesharing.dto.RegistrationPaymentDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
@@ -260,5 +261,9 @@ public class UserService {
 
 		File dest = document.toAbsolutePath().toFile();
 		userDTO.getDocument().transferTo(dest);
+	}
+	
+	public User UpdateRateGroup(ManageRateGroupDTO manageRateGroupDTO){
+		return userComponent.assignRateGroup(manageRateGroupDTO);
 	}
 }

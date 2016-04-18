@@ -343,5 +343,4 @@ function checkEffectiveFrom(form) {
 	}else{
 		return true;
 	}
-
 }

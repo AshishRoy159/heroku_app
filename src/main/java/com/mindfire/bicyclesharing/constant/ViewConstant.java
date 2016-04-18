@@ -125,5 +125,7 @@ public class ViewConstant {
 	public static final String RUNNING_BOOKING = "bookingInUse";
 	
 	public static final String RATE_GROUP_DETAILS = "rateGroupDetails";
+	
+	public static final String MANAGE_RATE_GROUP = "manageRateGroup";
 
 }
