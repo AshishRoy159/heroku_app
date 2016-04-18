@@ -72,6 +72,8 @@ public class ViewConstant {
 	public static final String MANAGE_RATE_GROUP = "manageRateGroup";
 	
 	public static final String CURRENT_USER_BOOKING = "currentBooking";
+	
+	public static final String UPDATE_BASE_RATE= "updateBaseRate";
 
 
 }
