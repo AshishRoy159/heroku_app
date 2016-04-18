@@ -188,7 +188,7 @@ public class UserController {
 			} else {
 				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 				model.addAttribute(ModelAttributeConstant.USER, userService.saveRegisteredUser(user));
-				return new ModelAndView("setPassword");
+				return new ModelAndView(ViewConstant.SET_PASSWORD);
 			}
 		}
 	}
@@ -217,7 +217,7 @@ public class UserController {
 			System.out.println(me.getMessage());
 		}
 
-		return new ModelAndView("successRegister");
+		return new ModelAndView(ViewConstant.SUCCESS_REGISTER);
 
 	}
 
@@ -229,7 +229,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "setPassword", method = RequestMethod.GET)
 	public ModelAndView returnSetPasswordPage() {
-		return new ModelAndView("setPassword");
+		return new ModelAndView(ViewConstant.SET_PASSWORD);
 	}
 
 	/**
@@ -250,14 +250,15 @@ public class UserController {
 
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
-			return new ModelAndView("setPassword", "errorMessage", "Invalid password format");
+			return new ModelAndView(ViewConstant.SET_PASSWORD, ModelAttributeConstant.ERROR_MESSAGE,
+					"Invalid password format");
 		}
 
 		int num = userService.savePassword(setPasswordDTO.getPassword(), setPasswordDTO.getEmail());
 
 		if (num == 0) {
 			logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
-			return new ModelAndView("setPassword");
+			return new ModelAndView(ViewConstant.SET_PASSWORD);
 		} else {
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			return new ModelAndView("redirect:/logout");
@@ -272,7 +273,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "forgotPassword", method = RequestMethod.GET)
 	public ModelAndView forgotPassword() {
-		return new ModelAndView("forgotPassword");
+		return new ModelAndView(ViewConstant.FORGOT_PASSWORD);
 	}
 
 	/**
@@ -293,14 +294,16 @@ public class UserController {
 			BindingResult result) {
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
-			return new ModelAndView("forgotPassword", "errorMessage", "Invalid Email");
+			return new ModelAndView(ViewConstant.FORGOT_PASSWORD, ModelAttributeConstant.ERROR_MESSAGE,
+					"Invalid Email");
 		}
 
 		User user = userService.userDetailsByEmail(forgotPasswordDTO);
 
 		if (null == user) {
 			logger.info("Email id doesn't exist. Request for reset password denied.");
-			return new ModelAndView("forgotPassword", "errorMessage", "Email doesn't exist");
+			return new ModelAndView(ViewConstant.FORGOT_PASSWORD, ModelAttributeConstant.ERROR_MESSAGE,
+					"Email doesn't exist");
 		}
 
 		try {
@@ -310,7 +313,7 @@ public class UserController {
 		}
 
 		logger.info("Request for password reset approved.");
-		return new ModelAndView("successRegister");
+		return new ModelAndView(ViewConstant.SUCCESS_REGISTER);
 	}
 
 	/**
@@ -394,7 +397,7 @@ public class UserController {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.INVALID_PASSWORD,
 					"Password must be 4 to 16 characters long without any spaces");
-			return "redirect:changePassword";
+			return ViewConstant.REDIRECT + ViewConstant.CHANGE_PASSWORD;
 		}
 
 		BCryptPasswordEncoder passEncoder = new BCryptPasswordEncoder();
@@ -425,12 +428,10 @@ public class UserController {
 	 * @param id
 	 *            the id of the user whose details is to be shown
 	 * @return userProfile view
-	 * @throws CustomException
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = { "/user/userProfile/{id}" })
-	public ModelAndView userProfile(Authentication authentication, Model model, @PathVariable Long id)
-			throws CustomException, CustomException {
+	public ModelAndView userProfile(Authentication authentication, Model model, @PathVariable Long id) {
 		User user = userService.userDetails(id);
 
 		if (user == null) {
@@ -449,11 +450,10 @@ public class UserController {
 	 * @param id
 	 *            the id of the user whose details is to be shown
 	 * @return updateUserDetails view
-	 * @throws CustomException
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = { "/user/updateUserDetails/{id}" }, method = RequestMethod.GET)
-	public ModelAndView updateUserDetails(Model model, @PathVariable("id") Long id) throws CustomException {
+	public ModelAndView updateUserDetails(Model model, @PathVariable("id") Long id) {
 		User user = userService.userDetails(id);
 
 		if (user == null) {
@@ -480,12 +480,11 @@ public class UserController {
 	 *         updateUserDetails view
 	 * @throws ParseException
 	 *             may occur while parsing from String to Date
-	 * @throws CustomException
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = { "user/updateUserDetails/{id}" }, method = RequestMethod.POST)
 	public ModelAndView afterUpdateUserDetails(@Valid @ModelAttribute("userDetailData") UserDTO userDTO,
-			@PathVariable("id") Long id, Model model, BindingResult result) throws ParseException, CustomException {
+			@PathVariable("id") Long id, Model model, BindingResult result) throws ParseException {
 
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
@@ -526,7 +525,7 @@ public class UserController {
 	@PostAuthorize("isAnonymous()")
 	@RequestMapping(value = "payment", method = RequestMethod.POST)
 	public ModelAndView getPayment(@Valid @ModelAttribute("userData") UserDTO userDTO, BindingResult result,
-			HttpSession session) {
+			HttpSession session) throws CustomException {
 
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);

@@ -24,6 +24,7 @@ import com.mindfire.bicyclesharing.component.UserBookingComponent;
 import com.mindfire.bicyclesharing.component.WalletComponent;
 import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
 import com.mindfire.bicyclesharing.dto.WalletBalanceDTO;
+import com.mindfire.bicyclesharing.model.Booking;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
@@ -38,7 +39,7 @@ import com.mindfire.bicyclesharing.model.WalletTransaction;
  */
 @Service
 public class WalletService {
-	
+
 	@Autowired
 	private WalletComponent walletComponent;
 
@@ -76,8 +77,8 @@ public class WalletService {
 	 *            to get current logged in user details
 	 * @return {@link WalletTransaction} object
 	 */
-	public WalletTransaction saveUserBookingPayment(UserBookingPaymentDTO userBookingPaymentDTO,
+	public WalletTransaction saveUserBookingPayment(UserBookingPaymentDTO userBookingPaymentDTO, Booking booking,
 			Authentication authentication) {
-		return userBookingComponent.mapUserBookingPayment(userBookingPaymentDTO, authentication);
+		return userBookingComponent.mapUserBookingPayment(userBookingPaymentDTO, booking, authentication);
 	}
 }

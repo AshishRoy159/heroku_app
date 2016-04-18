@@ -62,8 +62,6 @@ import com.mindfire.bicyclesharing.service.RateGroupService;
 import com.mindfire.bicyclesharing.service.UserService;
 import com.mindfire.bicyclesharing.service.WalletService;
 
-import javassist.NotFoundException;
-
 /**
  * BookingController contains all the mappings related to the Booking.
  * 
@@ -109,11 +107,10 @@ public class BookingController {
 	 * @param authentication
 	 *            to get current logged in user details
 	 * @return booking view
-	 * @throws NotFoundException
 	 */
 	@PostAuthorize("hasAuthority('MANAGER')")
 	@RequestMapping(value = { "/manager/booking" }, method = RequestMethod.GET)
-	public ModelAndView getBookingView(Model model, Authentication authentication) throws NotFoundException {
+	public ModelAndView getBookingView(Model model, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		User manager = userService.userDetails(currentUser.getUserId());
 		PickUpPointManager pickUpPoint = pickUpPointManagerService.getPickupPointManager(manager);
@@ -131,17 +128,18 @@ public class BookingController {
 	 *            this is used for showing message on the view.
 	 * @param bookingPaymentDTO
 	 *            for receiving in coming data from view
+	 * @param bindingResult
+	 *            for validating incoming data
 	 * @param auth
 	 *            this is used for retrieving the currentUser
 	 * @param session
 	 *            for session data
 	 * @return payment or booking view
-	 * @throws NotFoundException
 	 */
 	@RequestMapping(value = { "/manager/issueCyclePayment" }, method = RequestMethod.POST)
 	public ModelAndView issueBicycle(RedirectAttributes redirectAttributes,
 			@ModelAttribute("issueCyclePaymentData") BookingPaymentDTO bookingPaymentDTO, BindingResult bindingResult,
-			Authentication auth, HttpSession session) throws NotFoundException {
+			Authentication auth, HttpSession session) {
 
 		if (bindingResult.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
@@ -201,12 +199,10 @@ public class BookingController {
 	 * @param model
 	 *            to map model attributes
 	 * @return bookingPayment or booking view.
-	 * @throws NotFoundException
 	 */
 	@RequestMapping(value = { "/manager/bookingPayment" }, method = RequestMethod.GET)
 	public ModelAndView bookingPayment(@Valid @ModelAttribute("issueCycleData") IssueCycleDTO issueCycleDTO,
-			BindingResult result, HttpSession session, RedirectAttributes redirectAttributes, Model model)
-			throws NotFoundException {
+			BindingResult result, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
 
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
@@ -224,6 +220,7 @@ public class BookingController {
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE, "Invalid UserId...");
 				return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 			}
+
 			Double fare = bookingService.calculateFare(user, issueCycleDTO.getExpectedInTime());
 			Double discount = bookingService.calculateDiscount(user,fare);
 			fare = fare - discount;
@@ -322,6 +319,8 @@ public class BookingController {
 	 * 
 	 * @param receiveCycleDTO
 	 *            receive booking id
+	 * @param bindingResult
+	 *            for validating incoming data
 	 * @param auth
 	 *            to get current logged in user details
 	 * @param redirectAttributes
@@ -378,6 +377,8 @@ public class BookingController {
 	 * 
 	 * @param receiveBicyclePaymentDTO
 	 *            payment amount and mode
+	 * @param bindingResult
+	 *            for validating incoming data
 	 * @param auth
 	 *            to get current logged in user details
 	 * @param redirectAttributes

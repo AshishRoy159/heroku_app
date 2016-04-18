@@ -59,8 +59,6 @@ import com.mindfire.bicyclesharing.service.TransferRequestService;
 import com.mindfire.bicyclesharing.service.TransferResponseService;
 import com.mindfire.bicyclesharing.service.TransferService;
 
-import javassist.NotFoundException;
-
 /**
  * BiCycleTransferController contains all the mappings related to the bicycle
  * transfer.
@@ -306,12 +304,10 @@ public class BiCycleTransferController {
 	 * @param session
 	 *            for session attributes
 	 * @return transferConfirm view
-	 * @throws NotFoundException
 	 */
 	@PostAuthorize("@currentUserService.canAccessManagerSender(principal, #transferId)")
 	@RequestMapping(value = "manager/sendShipment/{id}", method = RequestMethod.GET)
-	public ModelAndView sendShipment(@PathVariable("id") Long transferId, Model model, HttpSession session)
-			throws NotFoundException {
+	public ModelAndView sendShipment(@PathVariable("id") Long transferId, Model model, HttpSession session) {
 		Transfer transfer = transferService.findTransferDetails(transferId);
 
 		if (transfer == null) {
@@ -356,12 +352,10 @@ public class BiCycleTransferController {
 	 * @param session
 	 *            for session attributes
 	 * @return receiveConfirm view
-	 * @throws NotFoundException
 	 */
 	@PostAuthorize("@currentUserService.canAccessManagerReceiver(principal, #transferId)")
 	@RequestMapping(value = "manager/receiveShipment/{id}", method = RequestMethod.GET)
-	public ModelAndView receiveShipment(@PathVariable("id") Long transferId, HttpSession session)
-			throws NotFoundException {
+	public ModelAndView receiveShipment(@PathVariable("id") Long transferId, HttpSession session) {
 		Transfer transfer = transferService.findTransferDetails(transferId);
 
 		if (transfer == null) {

@@ -73,20 +73,6 @@
 								<div class="row">
 									<div class="col-md-4">
 										<div class="form-group">
-											<label>Booking Id</label>
-										</div>
-									</div>
-									<div class="col-md-8">
-										<div class="form-group">
-											<input type="text" class="form-control input-lg"
-												name="bookingId" th:value="${userBookingDetails.bookingId}"
-												readonly="readonly" />
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-4">
-										<div class="form-group">
 											<label>Pickup Place</label>
 										</div>
 									</div>
@@ -94,7 +80,7 @@
 										<div class="form-group">
 											<input type="text" class="form-control input-lg"
 												name="pickUppoint"
-												th:value="${userBookingDetails.pickedUpFrom.location}"
+												th:value="${pickUpPoint.location}"
 												disabled="disabled" />
 										</div>
 									</div>
@@ -109,7 +95,7 @@
 										<div class="form-group">
 											<input type="text" class="form-control input-lg"
 												name="expectedOutTime"
-												th:value="${userBookingDetails.expectedOut}"
+												th:value="${userBookingDetails.bookingTime}"
 												disabled="disabled" />
 										</div>
 									</div>
@@ -124,7 +110,7 @@
 										<div class="form-group">
 											<input type="text" class="form-control input-lg"
 												name="expectedInTime"
-												th:value="${userBookingDetails.expectedIn}"
+												th:value="${userBookingDetails.returnTime}"
 												disabled="disabled" />
 										</div>
 									</div>

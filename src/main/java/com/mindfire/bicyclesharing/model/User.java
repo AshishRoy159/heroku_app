@@ -70,7 +70,7 @@ public class User implements Serializable {
 	@Column(name = "last_name")
 	private String lastName;
 
-	@Column(name = "mobile_no")
+	@Column(name = "mobile_no", unique = true)
 	private Long mobileNo;
 
 	private String password;

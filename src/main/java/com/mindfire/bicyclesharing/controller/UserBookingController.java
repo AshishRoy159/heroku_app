@@ -18,6 +18,7 @@ package com.mindfire.bicyclesharing.controller;
 
 import java.sql.Timestamp;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
@@ -52,11 +53,10 @@ import com.mindfire.bicyclesharing.model.WalletTransaction;
 import com.mindfire.bicyclesharing.security.CurrentUser;
 import com.mindfire.bicyclesharing.service.BookingService;
 import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
+import com.mindfire.bicyclesharing.service.PickUpPointService;
 import com.mindfire.bicyclesharing.service.RateGroupService;
 import com.mindfire.bicyclesharing.service.UserService;
 import com.mindfire.bicyclesharing.service.WalletService;
-
-import javassist.NotFoundException;
 
 /**
  * UserBookingController class is used for the mappings related requests for the
@@ -90,21 +90,29 @@ public class UserBookingController {
 	@Autowired
 	private PickUpPointManagerService pickupPointManagerService;
 
+	@Autowired
+	private PickUpPointService pickUpPointService;
+
 	/**
 	 * This method maps the user booking requests and send the control and data
 	 * to the corresponding classes
 	 * 
 	 * @param userBookingDTO
 	 *            this parameter holds the user booking data.
+	 * @param bindingResult
+	 *            for validating incoming data
 	 * @param redirectAttributes
 	 *            this object redirect the required messages to the views.
 	 * @param authentication
 	 *            this object is used to retrieve the current user.
+	 * @param session
+	 *            to set session attribute
 	 * @return index or user payment view
 	 */
 	@RequestMapping(value = "/user/booking", method = RequestMethod.POST)
 	public ModelAndView userBooking(@Valid @ModelAttribute("userBookingData") UserBookingDTO userBookingDTO,
-			BindingResult bindingResult, RedirectAttributes redirectAttributes, Authentication authentication) {
+			BindingResult bindingResult, RedirectAttributes redirectAttributes, Authentication authentication,
+			HttpSession session) {
 
 		if (bindingResult.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
@@ -126,35 +134,28 @@ public class UserBookingController {
 
 			if (null == existingBooking) {
 				logger.info("User doesn't have existing open bookings.");
-				Booking userBooking = bookingSevice.saveUserBookingDetails(userBookingDTO, authentication);
+				session.setAttribute("bookingData", userBookingDTO);
+				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_SUCCESS,
+						"Your Booking is successfully completed..Please Choose your payment.");
+				long actualTime = (returnTime.getTime() - bookingTime.getTime());
+				long hour = bookingSevice.calculateTotalRideTime(actualTime);
+				double baseRate = rateGroupService.getBaseRate(currentUser.getUser()).getBaseRateBean().getBaseRate();
+				double fare = bookingSevice.calculateFare(currentUser.getUser(), hour);
+				double discount = bookingSevice.calculateDiscount(currentUser.getUser(), fare);
 
-				if (null == userBooking) {
-					logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
-					redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
-							"oops..!! Booking Failed.");
+				if (fare == 0.0) {
+					logger.info("Calculated fare is 0. Fare is set to baserate.");
+					fare = baseRate - discount;
 				} else {
-					logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
-					redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_SUCCESS,
-							"Your Booking is successfully completed..Please Choose your payment.");
-					long actualTime = (userBooking.getExpectedIn().getTime() - userBooking.getExpectedOut().getTime());
-					long hour = bookingSevice.calculateTotalRideTime(actualTime);
-					double baseRate = rateGroupService.getBaseRate(userBooking.getUser()).getBaseRateBean()
-							.getBaseRate();
-					double fare = bookingSevice.calculateFare(userBooking.getUser(), hour);
-					double discount = bookingSevice.calculateDiscount(userBooking.getUser(), fare);
-
-					if (fare == 0.0) {
-						fare = baseRate - discount;
-					} else {
-						fare = fare - discount;
-					}
-
-					logger.info("Calculated fare is 0. Fare is set to basrate.");
-					fare = baseRate - (baseRate * (discount / 100));
-					redirectAttributes.addFlashAttribute("fare", Math.ceil(fare));
-					redirectAttributes.addFlashAttribute("userBookingDetails", userBooking);
-					return new ModelAndView("redirect:/user/userPayment");
+					fare = fare - discount;
 				}
+
+				redirectAttributes.addFlashAttribute("fare", Math.ceil(fare));
+				redirectAttributes.addFlashAttribute("userBookingDetails", userBookingDTO);
+				redirectAttributes.addFlashAttribute("pickUpPoint",
+						pickUpPointService.getPickupPointById(userBookingDTO.getPickUpPoint()));
+				return new ModelAndView("redirect:/user/userPayment");
 
 			} else {
 				logger.info("User has an existing open booking. Transaction cancelled.");
@@ -182,24 +183,30 @@ public class UserBookingController {
 	 * 
 	 * @param userBookingPaymentDTO
 	 *            this parameter holds user booking payment data
+	 * @param bindingResult
+	 *            for validating incoming data
 	 * @param authentication
 	 *            this is used for retrieving current user
 	 * @param redirectAttributes
 	 *            for displaying specific messages
+	 * @param session
+	 *            to get session attribute
 	 * @return printUserBookingDetails view
 	 */
 	@RequestMapping(value = "/user/userBookingPayment", method = RequestMethod.POST)
 	public ModelAndView userBookingPayment(
 			@Valid @ModelAttribute("userBookingPaymentData") UserBookingPaymentDTO userBookingPaymentDTO,
-			BindingResult bindingResult, Authentication authentication, RedirectAttributes redirectAttributes) {
+			BindingResult bindingResult, Authentication authentication, RedirectAttributes redirectAttributes,
+			HttpSession session) {
 
 		if (bindingResult.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			return new ModelAndView(ViewConstant.USER_BOOKING_PAYMENT);
 		}
 
+		UserBookingDTO userBookingDTO = (UserBookingDTO) session.getAttribute("bookingData");
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-		Booking booking = bookingSevice.getBookingById(userBookingPaymentDTO.getBookingId());
+		Booking booking = bookingSevice.saveUserBookingDetails(userBookingDTO, authentication);
 
 		if (userBookingPaymentDTO.getMode().equals("cash")) {
 			logger.info("Payment will be by cash at pickup point.");
@@ -208,13 +215,13 @@ public class UserBookingController {
 			try {
 				eventPublisher.publishEvent(new BookingSuccessEvent(currentUser.getUser(), booking));
 			} catch (Exception me) {
-				System.out.println(me.getMessage());
+				logger.error(me.getMessage());
 			}
 
 			return new ModelAndView("redirect:/user/printUserBookingDetails");
 		} else {
 			logger.info("Payment will be from wallet.");
-			WalletTransaction walletTransaction = walletService.saveUserBookingPayment(userBookingPaymentDTO,
+			WalletTransaction walletTransaction = walletService.saveUserBookingPayment(userBookingPaymentDTO, booking,
 					authentication);
 
 			if (null == walletTransaction) {
@@ -233,8 +240,7 @@ public class UserBookingController {
 
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.MESSAGE,
 						"Your Payment is successfully completed");
-				redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_DETAILS,
-						bookingSevice.getBookingById(userBookingPaymentDTO.getBookingId()));
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_DETAILS, booking);
 				return new ModelAndView("redirect:/user/printUserBookingDetails");
 			}
 		}
@@ -391,6 +397,8 @@ public class UserBookingController {
 	 * 
 	 * @param paymentAtPickUpPointDTO
 	 *            this object holds the payment at pickup point related data.
+	 * @param bindingResult
+	 *            for validating incoming data
 	 * @param redirectAttributes
 	 *            this is used for retrieving current user..
 	 * @return booking or printIssueBicycleDetails view
@@ -429,11 +437,10 @@ public class UserBookingController {
 	 * @param id
 	 *            user's id
 	 * @return userBookingHistory view
-	 * @throws NotFoundException
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = "/user/bookingHistory/{id}", method = RequestMethod.GET)
-	public ModelAndView userBookingHistory(Model model, @PathVariable("id") Long id) throws NotFoundException {
+	public ModelAndView userBookingHistory(Model model, @PathVariable("id") Long id) {
 		User user = userService.userDetails(id);
 
 		if (user == null) {

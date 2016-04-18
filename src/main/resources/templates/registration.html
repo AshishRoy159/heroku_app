@@ -145,9 +145,9 @@
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
-									<input type="file" name="document"
-										class="form-control input-lg" tabindex="8"
-										title="Upload Proof Document" required="required" />
+									<input type="file" id="upload" name="document"
+										onchange="checkSize(5242880)" class="form-control input-lg"
+										tabindex="8" title="Upload Proof Document" required="required" />
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -183,7 +183,7 @@
 						<hr class="colorgraph" />
 						<div class="row">
 							<div class="col-md-6">
-								<button type="submit" onclick="return checkDate()"
+								<button type="submit" id="payNow" onclick="return checkDate()"
 									class="btn btn-primary btn-block btn-lg" tabindex="12">
 									Pay Now</button>
 							</div>

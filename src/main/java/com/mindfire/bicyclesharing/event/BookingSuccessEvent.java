@@ -40,8 +40,8 @@ public class BookingSuccessEvent extends ApplicationEvent {
 	 * 
 	 * @param user
 	 *            User object
-	 * @param locale
-	 *            to tailor information for the user
+	 * @param booking
+	 *            booking details
 	 */
 	public BookingSuccessEvent(final User user, final Booking booking) {
 		super(user);

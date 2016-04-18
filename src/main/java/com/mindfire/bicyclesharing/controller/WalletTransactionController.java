@@ -34,8 +34,6 @@ import com.mindfire.bicyclesharing.service.UserService;
 import com.mindfire.bicyclesharing.service.WalletService;
 import com.mindfire.bicyclesharing.service.WalletTransactionService;
 
-import javassist.NotFoundException;
-
 /**
  * This class contains all the Request Mappings related to the wallet
  * transaction and sends the control to the service.
@@ -65,11 +63,10 @@ public class WalletTransactionController {
 	 * @param id
 	 *            User id
 	 * @return walletTransaction view
-	 * @throws NotFoundException
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = "/user/walletTransaction/{id}", method = RequestMethod.GET)
-	public ModelAndView walletTransactionDetails(Model model, @PathVariable("id") Long id) throws NotFoundException {
+	public ModelAndView walletTransactionDetails(Model model, @PathVariable("id") Long id) {
 
 		if (userService.userDetails(id) == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);

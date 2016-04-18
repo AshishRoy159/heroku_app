@@ -62,6 +62,7 @@ public class ScheduledTasksComponent {
 	 * given time scheduled. This method execute everyday at 23h 59m and 58s.
 	 * 
 	 * @throws ParseException
+	 *             may occur while parsing from String to Date
 	 */
 	@Scheduled(cron = "58 59 23 * * *")
 	public void updateDataBase() throws ParseException {

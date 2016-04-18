@@ -57,6 +57,7 @@ public class PickUpPoint implements Serializable {
 	@Column(name = "is_open", insertable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
 	private Boolean isOpen;
 
+	@Column(unique = true)
 	private String location;
 
 	@Column(name = "max_capacity")

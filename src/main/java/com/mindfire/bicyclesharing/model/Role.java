@@ -38,7 +38,7 @@ public class Role implements Serializable {
 	@Column(name = "role_id")
 	private Long roleId;
 
-	@Column(name = "user_role")
+	@Column(name = "user_role", unique = true)
 	private String userRole;
 
 	// bi-directional many-to-one association to User

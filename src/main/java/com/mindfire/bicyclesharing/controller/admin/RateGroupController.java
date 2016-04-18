@@ -178,6 +178,7 @@ public class RateGroupController {
 	 *            this is used to validate the data Rate Group DTO
 	 * @return selectRateGroupType view
 	 * @throws ParseException
+	 *             may occur while parsing from String to Date
 	 */
 	@RequestMapping(value = "/admin/updatedRateGroup", method = RequestMethod.POST)
 	public ModelAndView updateRateGroup(@Valid @ModelAttribute("updateRateGroupData") RateGroupDTO rateGroupDTO,
@@ -224,12 +225,17 @@ public class RateGroupController {
 	 */
 	@RequestMapping(value = "/manager/assignRateGroup", method = RequestMethod.POST)
 	public ModelAndView assignRateGroup(@ModelAttribute("assignRateGroupData") ManageRateGroupDTO manageRateGroupDTO,
-			Model model) {
-		if (null == userService.UpdateRateGroup(manageRateGroupDTO)) {
+			BindingResult result, Model model) {
+
+		if (result.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
+			model.addAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid Data.");
+		} else if (null == userService.UpdateRateGroup(manageRateGroupDTO)) {
 			model.addAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Operation failed..!");
 		} else {
 			model.addAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Rate group is assigned successfully!");
 		}
+
 		return new ModelAndView(ViewConstant.MANAGE_RATE_GROUP);
 	}
 }

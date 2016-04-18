@@ -40,7 +40,7 @@ public class ProofDetail implements Serializable {
 
 	private String document;
 
-	@Column(name = "proof_no")
+	@Column(name = "proof_no", unique = true)
 	private String proofNo;
 
 	@Column(name = "proof_type")

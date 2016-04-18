@@ -29,8 +29,6 @@ import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.Transfer;
 
-import javassist.NotFoundException;
-
 /**
  * BiCycleService class contains methods for BiCycle related operations
  * 
@@ -50,9 +48,8 @@ public class BiCycleService {
 	 * @param id
 	 *            this is biCycleId
 	 * @return {@link BiCycle} object
-	 * @throws NotFoundException 
 	 */
-	public BiCycle updateBiCycleDetails(Long id) throws NotFoundException {
+	public BiCycle updateBiCycleDetails(Long id) {
 		return biCycleComponent.updateBicycle(id);
 	}
 
@@ -63,9 +60,8 @@ public class BiCycleService {
 	 * @param transfer
 	 *            concerned transfer record
 	 * @return {@link BiCycle} List
-	 * @throws NotFoundException 
 	 */
-	public List<BiCycle> findBicyclesForShipment(Transfer transfer) throws NotFoundException {
+	public List<BiCycle> findBicyclesForShipment(Transfer transfer) {
 		Pageable pageable = new PageRequest(0, transfer.getQuantity());
 		return biCycleComponent.getAvailableBicycles(transfer.getTransferredFrom(), true, pageable);
 	}
@@ -81,19 +77,19 @@ public class BiCycleService {
 	 *            availability of bicycle
 	 * 
 	 * @return {@link BiCycle} List
-	 * @throws NotFoundException 
 	 */
-	public List<BiCycle> getBicyclesByPickupPointAndAvailability(PickUpPoint pickUpPoint, Boolean availability) throws NotFoundException {
+	public List<BiCycle> getBicyclesByPickupPointAndAvailability(PickUpPoint pickUpPoint, Boolean availability) {
 		return biCycleComponent.findByCurrentLocationAndAvailability(pickUpPoint, availability);
 	}
 
 	/**
+	 * This method is used to update the bicycle details
 	 * 
 	 * @param biCycleDTO
-	 * @return
-	 * @throws NotFoundException 
+	 *            the incoming bicycle data
+	 * @return {@link BiCycle} object
 	 */
-	public BiCycle saveBiCycleDetails(BiCycleDTO biCycleDTO) throws NotFoundException {
+	public BiCycle saveBiCycleDetails(BiCycleDTO biCycleDTO) {
 		return biCycleComponent.mapBiCycleData(biCycleDTO);
 	}
 }

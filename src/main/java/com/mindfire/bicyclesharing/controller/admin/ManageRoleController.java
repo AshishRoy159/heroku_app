@@ -46,8 +46,6 @@ import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
 import com.mindfire.bicyclesharing.service.UserService;
 
-import javassist.NotFoundException;
-
 /**
  * ManageRoleController contains all the mappings related to managing user roles
  * 
@@ -79,11 +77,9 @@ public class ManageRoleController {
 	 * @param authentication
 	 *            to get the current logged in user details
 	 * @return manageRole view
-	 * @throws NotFoundException
 	 */
 	@RequestMapping("/admin/manageRole/{id}")
-	public ModelAndView manageRole(@PathVariable("id") Long userId, Model model, Authentication authentication)
-			throws NotFoundException {
+	public ModelAndView manageRole(@PathVariable("id") Long userId, Model model, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
 		if (null == userService.userDetails(userId)) {
@@ -147,11 +143,10 @@ public class ManageRoleController {
 	 * @param authentication
 	 *            this is used for retrieve the current user.
 	 * @return searchUser view.
-	 * @throws NotFoundException
 	 */
 	@RequestMapping(value = "/user/userApproval/{id}", method = RequestMethod.GET)
 	public ModelAndView userApproval(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
-			Authentication authentication) throws NotFoundException {
+			Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
 		if (userService.userDetails(id) == null) {
@@ -196,11 +191,10 @@ public class ManageRoleController {
 	 * @param authentication
 	 *            this is used for retrieve the current user.
 	 * @return searchUser view.
-	 * @throws NotFoundException
 	 */
 	@RequestMapping(value = "/user/userEnable/{id}", method = RequestMethod.GET)
 	public ModelAndView userEnable(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
-			Authentication authentication) throws NotFoundException {
+			Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
 		if (null == userService.userDetails(id)) {

@@ -34,9 +34,6 @@ public class UserBookingPaymentDTO {
 	private String mode;
 
 	@NotNull
-	private Long bookingId;
-
-	@NotNull
 	@NumberFormat
 	private Double fare;
 
@@ -68,21 +65,6 @@ public class UserBookingPaymentDTO {
 	 */
 	public void setFare(Double fare) {
 		this.fare = fare;
-	}
-
-	/**
-	 * @return the bookingId
-	 */
-	public Long getBookingId() {
-		return bookingId;
-	}
-
-	/**
-	 * @param bookingId
-	 *            the bookingId to set
-	 */
-	public void setBookingId(Long bookingId) {
-		this.bookingId = bookingId;
 	}
 
 }

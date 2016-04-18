@@ -42,7 +42,7 @@ public class BaseRate implements Serializable {
 	@Column(name = "base_rate")
 	private double baseRate;
 
-	@Column(name = "group_type")
+	@Column(name = "group_type", unique = true)
 	private String groupType;
 
 	// bi-directional many-to-one association to RateGroup

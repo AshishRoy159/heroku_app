@@ -25,105 +25,48 @@ package com.mindfire.bicyclesharing.constant;
  */
 public class ViewConstant {
 
-	/**
-	 * String Constant for the index view.
-	 */
 	public static final String INDEX = "/index";
-
-	/**
-	 * String Constant for the registration view.
-	 */
 	public static final String REGISTRATION = "registration";
-
 	public static final String PAYMENT = "payment";
-
 	public static final String SUCCESS_REGISTER = "successRegister";
-
 	public static final String FAILURE = "failure";
-
 	public static final String BAD_USER = "badUser";
-
-	/**
-	 * String Constant for the Set Password view.
-	 */
 	public static final String SET_PASSWORD = "setPassword";
-
 	public static final String SIGN_IN = "signIn";
-
-	/**
-	 * String Constant for the changePassword view.
-	 */
 	public static final String CHANGE_PASSWORD = "changePassword";
-
 	public static final String FORGOT_PASSWORD = "forgotPassword";
-
-	/**
-	 * String Constant for the userProfile view.
-	 */
 	public static final String USER_PROFILE = "userProfile";
-
 	public static final String UPDATE_USER_DETAILS = "updateUserDetails";
-
 	public static final String USER_BOOKIG_HISTORY = "userBookingHistory";
-
 	public static final String WALLET_TRANSACTION = "walletTransaction";
-
 	public static final String ADMIN_HOME = "adminHome";
-
 	public static final String ADD_NEW_BICYCLE = "addNewBicycle";
-
 	public static final String ADD_NEW_USER = "addNewUser";
-
 	public static final String ADD_WALLET_BALANCE = "addWalletBalance";
-
 	public static final String BOOKING = "booking";
-
 	public static final String REDIRECT_TO_MANAGER_BOOKING = "redirect:/manager/booking";
-	
 	public static final String BOOKING_PAYMENT = "bookingPayment";
-
 	public static final String MANAGER_PAYMENT = "managerPayment";
-
 	public static final String SEARCH_USERS = "searchUsers";
-
 	public static final String MANAGE_ROLE = "manageRole";
-
 	public static final String ADD_NEW_PICKUP_POINT = "addNewPickupPoint";
-
 	public static final String PICKUP_POINT_DETAILS = "pickupPointDetails";
-
 	public static final String UPDATE_PICKUP_POINT_DETAILS = "updatePickupPointDetails";
-
 	public static final String USER_BOOKING_PAYMENT = "userBookingPayment";
-
 	public static final String PAYMENT_AT_PICKUP_POINT = "paymentAtPickupPoint";
-
 	public static final String PRINT_BOOKING_DETAILS = "printUserBookingDetails";
-
 	public static final String PRINT_ISSUE_BICYCLE_DETAILS = "printIssueBicycleDetails";
-
 	public static final String RECEIVE_BICYCLE = "receiveBicycle";
-
 	public static final String RECEIVE_BICYCLE_PAYMENT = "receiveBicyclePayment";
-
 	public static final String TRANSFER_REQUEST = "transferRequest";
-
 	public static final String REQUEST_AND_NOTIFICATIONS = "requestsAndNotificatons";
-
 	public static final String TRANSFER_RESPONSE_MANAGER = "transferResponseManager";
-
 	public static final String TRANSFER_RESPONSE_ADMIN = "transferResponseAdmin";
-
 	public static final String TRANSFERS = "transfers";
-
 	public static final String TRANSFER_CONFIRM = "transferConfirm";
-
 	public static final String RECEIVE_CONFIRM = "receiveConfirm";
-
 	public static final String REDIRECT = "redirect:";
-	
 	public static final String RUNNING_BOOKING = "bookingInUse";
-	
 	public static final String RATE_GROUP_DETAILS = "rateGroupDetails";
 	
 	public static final String MANAGE_RATE_GROUP = "manageRateGroup";

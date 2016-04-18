@@ -27,8 +27,6 @@ import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.BiCycleTransfer;
 import com.mindfire.bicyclesharing.model.Transfer;
 
-import javassist.NotFoundException;
-
 /**
  * BiCycleTransferService class contains methods for BiCycle Transfer related
  * operations
@@ -49,9 +47,8 @@ public class BiCycleTransferService {
 	 * @param transfer
 	 *            concerned transfer record
 	 * @return {@link BiCycle} List
-	 * @throws NotFoundException
 	 */
-	public List<BiCycle> findBicyclesInTransition(Transfer transfer) throws NotFoundException {
+	public List<BiCycle> findBicyclesInTransition(Transfer transfer) {
 		List<BiCycleTransfer> biCycleTransfers = bicycleTransferComponent.receiveTransferredBicycles(transfer);
 		List<BiCycle> biCycles = new ArrayList<BiCycle>();
 

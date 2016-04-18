@@ -37,8 +37,6 @@ import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.service.BiCycleService;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
 
-import javassist.NotFoundException;
-
 /**
  * This class contains all the Request Mappings related to the navigation of the
  * Bicycle related pages from admin section.
@@ -83,11 +81,10 @@ public class BicycleController {
 	 * @param redirectAttributes
 	 *            to map the model attributes
 	 * @return addNewBicycle view
-	 * @throws NotFoundException
 	 */
 	@RequestMapping(value = "admin/addBicycle", method = RequestMethod.POST)
 	public ModelAndView addedNewBicycle(@Valid @ModelAttribute("bicycleData") BiCycleDTO biCycleDTO,
-			BindingResult result, RedirectAttributes redirectAttributes) throws NotFoundException {
+			BindingResult result, RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Oops... Operation failed!!");
@@ -104,6 +101,7 @@ public class BicycleController {
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Added!!!");
 		}
+
 		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_BICYCLE);
 	}
 }

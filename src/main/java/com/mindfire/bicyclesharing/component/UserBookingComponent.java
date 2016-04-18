@@ -107,7 +107,7 @@ public class UserBookingComponent {
 	 *            this parameter is used to identify the current user.
 	 * @return {@link WalletTransaction}
 	 */
-	public WalletTransaction mapUserBookingPayment(UserBookingPaymentDTO userBookingPaymentDTO,
+	public WalletTransaction mapUserBookingPayment(UserBookingPaymentDTO userBookingPaymentDTO, Booking booking,
 			Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		Wallet userWallet = walletRepository.findByUser(currentUser.getUser());
@@ -130,12 +130,11 @@ public class UserBookingComponent {
 					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 				}
 
-				Booking userBooking = bookingRepository.findByBookingId(userBookingPaymentDTO.getBookingId());
-				userBooking.setFare(userBookingPaymentDTO.getFare());
+				booking.setFare(userBookingPaymentDTO.getFare());
 
 				try {
 					logger.info("Updated booking details.");
-					bookingRepository.save(userBooking);
+					bookingRepository.save(booking);
 				} catch (Exception e) {
 					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 				}

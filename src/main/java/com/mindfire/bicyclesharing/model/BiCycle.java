@@ -50,7 +50,7 @@ public class BiCycle implements Serializable {
 	@Column(name = "added_on", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp addedOn;
 
-	@Column(name = "chasis_no")
+	@Column(name = "chasis_no", unique = true)
 	private String chasisNo;
 
 	@ManyToOne
