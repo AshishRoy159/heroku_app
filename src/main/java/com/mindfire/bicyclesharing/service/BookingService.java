@@ -214,6 +214,7 @@ public class BookingService {
 	 */
 	public Calendar calculateExpectedIn(IssueCycleDTO issueCycleDTO) {
 		final Calendar cal = Calendar.getInstance();
+
 		cal.setTimeInMillis(new Date().getTime());
 		cal.add(Calendar.HOUR, issueCycleDTO.getExpectedInTime());
 
@@ -233,10 +234,20 @@ public class BookingService {
 	public Double calculateFare(User user, long hour) {
 		return (user.getRateGroup().getBaseRateBean().getBaseRate() * hour);
 	}
-	
-	public Double calculateDiscount(User user,Double fare){
+
+	/**
+	 * This method is used to calculate discount.
+	 * 
+	 * @param user
+	 *            User object
+	 * @param fare
+	 *            riding fare
+	 * @return {@link Double} value
+	 */
+	public Double calculateDiscount(User user, Double fare) {
 		return (fare * (user.getRateGroup().getDiscount() / 100));
 	}
+
 	/**
 	 * This method is used to calculate the riding time based on the booking.
 	 * 
@@ -262,9 +273,11 @@ public class BookingService {
 	public long calculateTotalRideTime(long actualTime) {
 		long hour = (actualTime / (60 * 1000)) / 60;
 		long remainder = (actualTime / (60 * 1000)) % 60;
+
 		if (remainder > 0) {
 			hour++;
 		}
+
 		return hour;
 	}
 

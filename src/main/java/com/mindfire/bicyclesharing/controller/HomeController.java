@@ -18,6 +18,7 @@ package com.mindfire.bicyclesharing.controller;
 
 import java.util.Optional;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,6 +46,8 @@ import com.mindfire.bicyclesharing.service.PickUpPointService;
  */
 @Controller
 public class HomeController {
+
+	Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
 	private PickUpPointService pickUpPointService;
@@ -103,22 +106,33 @@ public class HomeController {
 			@RequestParam Optional<String> logout, Model model, Authentication authentication) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
+			logger.info("User already logged in. Redirected to index page.");
 			/* The user is logged in :) */
 			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.INDEX);
 		} else {
+
 			if (error.isPresent()) {
+				logger.info("Error while trying to log in.");
+
 				if (error.get().equals("badUser")) {
+					logger.info("Invalid user credentials.");
 					model.addAttribute("loginError", "Invalid Email or Password");
 				} else if (error.get().equals("disabled")) {
+					logger.info("This user is not enabled.");
 					model.addAttribute("loginError", "Your Account is Disabled. Please contact nearest Pickup Point.");
 				}
 			}
+
 			if (logout.isPresent()) {
+				logger.info("User successfully logged out.");
 				model.addAttribute("loginError", "You have successfully logged out!!");
 			}
+
 			return new ModelAndView(ViewConstant.SIGN_IN, "error", error);
 		}
+
 	}
 
 	/**
@@ -145,9 +159,12 @@ public class HomeController {
 	@RequestMapping(value = { "admin", "admin/adminHome", "manager", "manager/managerHome" })
 	public ModelAndView adminHome(Model model, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+
 		if (currentUser.getUserRole().equals("MANAGER")) {
+			logger.info("The logged in user is a manager.");
 			pickUpPointManagerService.openPickUpPoint(currentUser.getUser());
 		}
+
 		model.addAttribute("bookings", bookingService.getAllBookingDetails(true));
 		model.addAttribute("pickUpPointManagers", pickUpPointManagerService.getAllPickUpPointManager());
 		return new ModelAndView(ViewConstant.ADMIN_HOME);

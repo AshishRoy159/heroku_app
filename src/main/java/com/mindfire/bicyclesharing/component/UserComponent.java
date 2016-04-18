@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -58,6 +59,8 @@ import com.mindfire.bicyclesharing.repository.WalletTransactionRepository;
  */
 @Component
 public class UserComponent {
+
+	Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
 	private RoleRepository roleRepository;
@@ -121,6 +124,7 @@ public class UserComponent {
 
 		try {
 			proofDetailRepository.save(proofDetail);
+			logger.info("Created new user proof detail record.");
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
@@ -128,22 +132,28 @@ public class UserComponent {
 		newUser.setProofDetail(proofDetail);
 		newUser.setRole(roleRepository.findByUserRole("USER"));
 		newUser.setRateGroup(rateGroupRepository.findByGroupTypeAndIsActive("USER", true));
+
 		try {
 			userRepository.save(newUser);
+			logger.info("Added new user details to the database.");
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
 
 		wallet.setUser(newUser);
+
 		try {
 			walletRepository.save(wallet);
+			logger.info("Added new wallet for the new user.");
 		} catch (Exception e) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
 
 		transaction.setWallet(wallet);
+
 		try {
 			transactionRepository.save(transaction);
+			logger.info("Created new wallet transaction for user's registration.");
 		} catch (Exception e) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
@@ -165,6 +175,7 @@ public class UserComponent {
 		BCryptPasswordEncoder passEncoder = new BCryptPasswordEncoder();
 
 		try {
+			logger.info("Updated user's password..");
 			return userRepository.updatePassword(passEncoder.encode(password), userEmail);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -182,13 +193,16 @@ public class UserComponent {
 	 *             may occur while pasring from String to Date
 	 */
 	public int mapUpdateUserDetail(UserDTO userDTO) throws ParseException {
+
 		try {
+			logger.info("Updated user's details.");
 			return userRepository.updateUser(userDTO.getFirstName(), userDTO.getLastName(),
 					simpleDateFormat.parse(userDTO.getDateOfBirth()), userDTO.getMobileNo(), userDTO.getUserAddress(),
 					userDTO.getEmail());
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
+
 	}
 
 	/**
@@ -223,7 +237,9 @@ public class UserComponent {
 	 */
 	public User mapUser(User user) {
 		user.setEnabled(true);
+
 		try {
+			logger.info("Updated user's status to enabled.");
 			return userRepository.save(user);
 		} catch (Exception e) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -250,6 +266,7 @@ public class UserComponent {
 		Role userRole = roleRepository.findByRoleId(manageRoleDTO.getUserRoleId());
 
 		try {
+			logger.info("Updated user's role.");
 			return userRepository.updateUserRole(userRole, manageRoleDTO.getUserId());
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -287,11 +304,15 @@ public class UserComponent {
 		User user = userRepository.findByUserId(id);
 
 		if (user.getIsApproved()) {
+			logger.info("User is approved. Setting status to unapproved.");
 			user.setIsApproved(false);
 		} else {
+			logger.info("User is not approved. Setting status to approved.");
 			user.setIsApproved(true);
 		}
+
 		try {
+			logger.info("Updated user's approval status.");
 			return userRepository.save(user);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -306,13 +327,19 @@ public class UserComponent {
 	 * @return {@link User} object
 	 */
 	public User mapIsActive(Long id) {
+
 		User user = userRepository.findByUserId(id);
+
 		if (user.getEnabled()) {
+			logger.info("User is enabled. Setting status to not enabled.");
 			user.setEnabled(false);
 		} else {
+			logger.info("User is not enabled. Setting status to enabled.");
 			user.setEnabled(true);
 		}
+
 		try {
+			logger.info("Updated user's enabled status.");
 			return userRepository.save(user);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);

@@ -74,7 +74,7 @@ public class WalletService {
 	 *            user booking payment data
 	 * @param authentication
 	 *            to get current logged in user details
-	 * @return {@link WalletTransaction}
+	 * @return {@link WalletTransaction} object
 	 */
 	public WalletTransaction saveUserBookingPayment(UserBookingPaymentDTO userBookingPaymentDTO,
 			Authentication authentication) {

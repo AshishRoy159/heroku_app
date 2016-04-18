@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -46,11 +47,13 @@ import com.mindfire.bicyclesharing.repository.RateGroupRepository;
 @Component
 public class ScheduledTasksComponent {
 
+	Logger logger = Logger.getLogger(getClass());
+
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Autowired
 	private RateGroupRepository rateGroupRepository;
-	
+
 	@Autowired
 	private BookingRepository bookingRepository;
 
@@ -63,35 +66,49 @@ public class ScheduledTasksComponent {
 	@Scheduled(cron = "58 59 23 * * *")
 	public void updateDataBase() throws ParseException {
 		List<RateGroup> rateGroups = rateGroupRepository.findAllByIsActiveAndEffectiveUptoIsNotNull(true);
+
 		for (RateGroup rateGroup : rateGroups) {
+
 			if (rateGroup.getEffectiveUpto().equals(dateFormat.parse(dateFormat.format(new Date())))) {
 				RateGroup newRateGroup = rateGroupRepository
 						.findByGroupTypeAndIsActiveAndEffectiveUptoIsNull(rateGroup.getGroupType(), false);
 				rateGroup.setIsActive(false);
+
 				try {
 					rateGroupRepository.save(rateGroup);
+					logger.info("Old rate group status is set to inactive.");
 				} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 				}
+
 				newRateGroup.setIsActive(true);
+
 				try {
 					rateGroupRepository.save(newRateGroup);
+					logger.info("New rate group status is set to active.");
 				} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 				}
 			}
 		}
-		//This is used to updating the booking table.
-		List<Booking> bookings=bookingRepository.findAllByIsOpenAndBiCycleIdIsNull(true);
-		for(Booking booking:bookings){
-			if(booking.getExpectedIn().before(new Timestamp(System.currentTimeMillis()))){
-			booking.setIsOpen(false);
-			try {
-				bookingRepository.save(booking);
-			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
-				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
-			}
+
+		// This is used to updating the booking table.
+		List<Booking> bookings = bookingRepository.findAllByIsOpenAndBiCycleIdIsNull(true);
+
+		for (Booking booking : bookings) {
+
+			if (booking.getExpectedIn().before(new Timestamp(System.currentTimeMillis()))) {
+				booking.setIsOpen(false);
+
+				try {
+					bookingRepository.save(booking);
+				} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+				}
+
 			}
 		}
+
+		logger.info("All unused bookings are set to closed.");
 	}
 }

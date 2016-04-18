@@ -18,6 +18,7 @@ package com.mindfire.bicyclesharing.component;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,8 @@ import com.mindfire.bicyclesharing.repository.WalletTransactionRepository;
  */
 @Component
 public class WalletTransactionComponent {
+
+	Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
 	private WalletRepository walletRepository;
@@ -72,6 +75,7 @@ public class WalletTransactionComponent {
 	 */
 	public WalletTransaction mapWalletTransactionDetails(WalletBalanceDTO walletBalanceDTO) {
 		WalletTransaction walletTransaction = new WalletTransaction();
+
 		walletTransaction.setAmount(walletBalanceDTO.getBalance());
 		walletTransaction
 				.setWallet(walletRepository.findByUser(userRepository.findByUserId(walletBalanceDTO.getUserId())));
@@ -79,6 +83,7 @@ public class WalletTransactionComponent {
 		walletTransaction.setType("DEPOSIT");
 
 		try {
+			logger.info("Created new wallet transaction.");
 			return walletTransactionRepository.save(walletTransaction);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);

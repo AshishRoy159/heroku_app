@@ -16,6 +16,7 @@
 
 package com.mindfire.bicyclesharing.component;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,8 @@ import com.mindfire.bicyclesharing.repository.VerificationTokenRepository;
  */
 @Component
 public class VerificationTokenComponent {
+
+	Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
 	private VerificationTokenRepository verificationTokenRepository;
@@ -60,6 +63,7 @@ public class VerificationTokenComponent {
 	 */
 	public VerificationToken saveVerificationToken(VerificationToken verificationToken) {
 		try {
+			logger.info("Saved new verification token for user.");
 			return verificationTokenRepository.save(verificationToken);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);

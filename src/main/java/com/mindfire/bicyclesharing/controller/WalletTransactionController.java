@@ -65,14 +65,16 @@ public class WalletTransactionController {
 	 * @param id
 	 *            User id
 	 * @return walletTransaction view
-	 * @throws NotFoundException 
+	 * @throws NotFoundException
 	 */
 	@PostAuthorize("@currentUserService.canAccessUser(principal, #id)")
 	@RequestMapping(value = "/user/walletTransaction/{id}", method = RequestMethod.GET)
 	public ModelAndView walletTransactionDetails(Model model, @PathVariable("id") Long id) throws NotFoundException {
-		if(userService.userDetails(id) == null){
+
+		if (userService.userDetails(id) == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
+
 		Wallet wallet = walletService.getWallet(userService.userDetails(id));
 		model.addAttribute("wallet", wallet);
 		model.addAttribute("walletTransactions", walletTransactionService.getAllTransactionByWallet(wallet));

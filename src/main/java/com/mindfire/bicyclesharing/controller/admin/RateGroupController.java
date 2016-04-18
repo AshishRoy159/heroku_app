@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mindfire.bicyclesharing.constant.CustomLoggerConstant;
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.ManageRateGroupDTO;
@@ -51,31 +53,55 @@ import com.mindfire.bicyclesharing.service.UserService;
 @Controller
 public class RateGroupController {
 
+	Logger logger = Logger.getLogger(getClass());
+
 	@Autowired
 	private RateGroupService rateGroupService;
 
 	@Autowired
 	private UserService userService;
 
+	/**
+	 * This method is used to map requests for adding new rate group. Simply
+	 * renders the addNewRateGroup view.
+	 * 
+	 * @return addNewRateGroup view
+	 */
 	@RequestMapping(value = "/admin/addNewRateGroup", method = RequestMethod.GET)
 	public ModelAndView addNewRateGroup() {
 		return new ModelAndView("addNewRateGroup");
 	}
 
+	/**
+	 * This method is used to map requests for adding new rate group to the
+	 * database.
+	 * 
+	 * @param rateGroupDTO
+	 *            the new rate group details
+	 * @param result
+	 *            for validating incoming data
+	 * @param redirectAttributes
+	 *            to map model attributes
+	 * @return addNewRateGroup view
+	 * @throws ParseException
+	 *             may occur while parsing from String to Date
+	 */
 	@RequestMapping(value = "/admin/addRateGroup", method = RequestMethod.POST)
 	public ModelAndView addRateGroup(@Valid @ModelAttribute("rateGroupData") RateGroupDTO rateGroupDTO,
 			BindingResult result, RedirectAttributes redirectAttributes) throws ParseException {
+
 		if (result.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid Data..!");
-			return new ModelAndView("redirect:/admin/addNewRateGroup");
-		}
-		if (null == rateGroupService.addNewRateGroup(rateGroupDTO)) {
+		} else if (null == rateGroupService.addNewRateGroup(rateGroupDTO)) {
+			logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Operation failed...");
-			return new ModelAndView("redirect:/admin/addNewRateGroup");
 		} else {
+			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully added..!");
-			return new ModelAndView("redirect:/admin/addNewRateGroup");
 		}
+
+		return new ModelAndView("redirect:/admin/addNewRateGroup");
 	}
 
 	/**
@@ -121,15 +147,21 @@ public class RateGroupController {
 	public ModelAndView updateRateGroupView(
 			@Valid @ModelAttribute("rateGroupTypeData") RateGroupTypeDTO rateGroupTypeDTO, BindingResult result,
 			RedirectAttributes redirectAttributes) {
+
 		if (result.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid Data..");
 			return new ModelAndView("redirect:/admin/selectRateGroup");
 		}
+
 		RateGroup rateGroup = rateGroupService.getRateGroupById(rateGroupTypeDTO.getRateGroupId());
+
 		if (null == rateGroup) {
+			logger.info("The rate group doesn't exist." + CustomLoggerConstant.TRANSACTION_FAILED);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Operation failed..");
 			return new ModelAndView("redirect:/admin/selectRateGroup");
 		}
+
 		return new ModelAndView("updateRateGroup", "rateGroup", rateGroup);
 	}
 
@@ -150,17 +182,19 @@ public class RateGroupController {
 	@RequestMapping(value = "/admin/updatedRateGroup", method = RequestMethod.POST)
 	public ModelAndView updateRateGroup(@Valid @ModelAttribute("updateRateGroupData") RateGroupDTO rateGroupDTO,
 			BindingResult result, RedirectAttributes redirectAttributes) throws ParseException {
+
 		if (result.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid Data.!");
-			return new ModelAndView("redirect:/admin/selectRateGroup");
-		}
-		if (null == rateGroupService.updateRateGroup(rateGroupDTO)) {
+		} else if (null == rateGroupService.updateRateGroup(rateGroupDTO)) {
+			logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Operation failed..!");
-			return new ModelAndView("redirect:/admin/selectRateGroup");
 		} else {
+			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Updated..!");
-			return new ModelAndView("redirect:/admin/selectRateGroup");
 		}
+
+		return new ModelAndView("redirect:/admin/selectRateGroup");
 	}
 
 	/**

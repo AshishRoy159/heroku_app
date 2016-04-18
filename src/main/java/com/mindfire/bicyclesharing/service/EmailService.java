@@ -66,12 +66,15 @@ public class EmailService {
 			String confirmationUrl, String template) throws Exception {
 		// Prepare the evaluation context
 		final Context ctx = new Context(locale);
+
 		ctx.setVariable("name", recipientName);
 		ctx.setVariable("subscriptionDate", new Date());
 		ctx.setVariable("confirmationUrl", confirmationUrl);
+
 		// Prepare message using a Spring helper
 		final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
 		final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
+
 		try {
 			message.setSubject(subject);
 			message.setFrom("bicyclerentaljava@gmail.com");

@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mindfire.bicyclesharing.constant.CustomLoggerConstant;
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.ManageRoleDTO;
@@ -55,6 +57,8 @@ import javassist.NotFoundException;
  */
 @Controller
 public class ManageRoleController {
+
+	Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
 	private PickUpPointService pickUpPointService;
@@ -87,9 +91,11 @@ public class ManageRoleController {
 		}
 
 		if (userId == currentUser.getUserId()) {
+			logger.info("Redirected as request was for updating current user role. Transaction cancelled.");
 			return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST,
 					userService.getAllUsers());
 		}
+
 		model.addAttribute("userId", userId);
 		return new ModelAndView(ViewConstant.MANAGE_ROLE, ModelAttributeConstant.PICKUP_POINTS,
 				pickUpPointService.getAllPickupPoints());
@@ -111,19 +117,24 @@ public class ManageRoleController {
 	public ModelAndView setPickUpPoint(@Valid @ModelAttribute("manageRoleData") ManageRoleDTO manageRoleDTO,
 			BindingResult result, Model model) {
 		List<User> users = userService.getAllUsers();
-		if (result.hasErrors()) {
-			model.addAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Something went wrong. Operation failed.");
-			return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST, users);
-		}
 
-		if (userService.updateUserRole(manageRoleDTO) > 0) {
+		if (result.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
+			model.addAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Something went wrong. Operation failed.");
+		} else if (userService.updateUserRole(manageRoleDTO) > 0) {
+			logger.info("Role choice was valid.");
+
 			if (manageRoleDTO.getUserRoleId() == 2) {
+				logger.info("Role choice was manager.");
 				pickUpPointManagerService.setPickUpPointToManager(manageRoleDTO);
 			}
-			return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST, users);
+
+			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 		} else {
-			return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST, users);
+			logger.info("Invalid role choice.");
 		}
+
+		return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST, users);
 	}
 
 	/**
@@ -142,35 +153,36 @@ public class ManageRoleController {
 	public ModelAndView userApproval(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
 			Authentication authentication) throws NotFoundException {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-		if(userService.userDetails(id) == null){
+
+		if (userService.userDetails(id) == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
+
 		if ((currentUser.getUserRole().equals("ADMIN") && currentUser.getUserId() != id)
 				|| (currentUser.getUserRole().equals("MANAGER")
 						&& userService.userDetails(id).getRole().getUserRole().equals("USER"))) {
+			logger.info("Permission granted to approve user.");
+
 			if (null == userService.setApproval(id)) {
+				logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 						"Sorry operation failed...!");
-				if (currentUser.getUserRole().equals("ADMIN")) {
-					return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
-				} else {
-					return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
-				}
 			} else {
-				if (currentUser.getUserRole().equals("ADMIN")) {
-					return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
-				} else {
-					return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
-				}
+				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			}
+
 		} else {
+			logger.info("Permission not granted for the request to approve user.");
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 					"You don't have permission to update this details...!");
-			if (currentUser.getUserRole().equals("ADMIN")) {
-				return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
-			} else {
-				return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
-			}
+		}
+
+		if (currentUser.getUserRole().equals("ADMIN")) {
+			logger.info(CustomLoggerConstant.REDIRECTED_TO_ADMIN_VIEW);
+			return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
+		} else {
+			logger.info(CustomLoggerConstant.REDIRECTED_TO_MANAGER_VIEW);
+			return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
 		}
 	}
 
@@ -190,35 +202,35 @@ public class ManageRoleController {
 	public ModelAndView userEnable(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
 			Authentication authentication) throws NotFoundException {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+
 		if (null == userService.userDetails(id)) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
+
 		if ((currentUser.getUserRole().equals("ADMIN") && currentUser.getUserId() != id)
 				|| (currentUser.getUserRole().equals("MANAGER")
 						&& userService.userDetails(id).getRole().getUserRole().equals("USER"))) {
+			logger.info("Permission granted to enable user.");
+
 			if (null == userService.setEnable(id)) {
+				logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 						"Sorry operation failed...!");
-				if (currentUser.getUserRole().equals("ADMIN")) {
-					return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
-				} else {
-					return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
-				}
 			} else {
-				if (currentUser.getUserRole().equals("ADMIN")) {
-					return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
-				} else {
-					return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
-				}
+				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			}
+
 		} else {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 					"You don't have permission to update this details...!");
-			if (currentUser.getUserRole().equals("ADMIN")) {
-				return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
-			} else {
-				return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
-			}
+		}
+
+		if (currentUser.getUserRole().equals("ADMIN")) {
+			logger.info(CustomLoggerConstant.REDIRECTED_TO_ADMIN_VIEW);
+			return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
+		} else {
+			logger.info(CustomLoggerConstant.REDIRECTED_TO_MANAGER_VIEW);
+			return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
 		}
 	}
 }

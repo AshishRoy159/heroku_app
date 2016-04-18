@@ -18,6 +18,7 @@ package com.mindfire.bicyclesharing.component;
 
 import java.sql.Timestamp;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -49,6 +50,8 @@ import com.mindfire.bicyclesharing.security.CurrentUser;
  */
 @Component
 public class UserBookingComponent {
+
+	Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
 	private BookingRepository bookingRepository;
@@ -88,6 +91,7 @@ public class UserBookingComponent {
 		userBooking.setPickedUpFrom(pickUpPointRepository.findByPickUpPointId(userBookingDTO.getPickUpPoint()));
 
 		try {
+			logger.info("Created new booking.");
 			return bookingRepository.save(userBooking);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -108,28 +112,38 @@ public class UserBookingComponent {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		Wallet userWallet = walletRepository.findByUser(currentUser.getUser());
 		String paymentType = "ONLINE BOOKING";
+
 		if (userBookingPaymentDTO.getMode().equals("wallet")) {
+			logger.info("User has chosen to pay from wallet.");
+
 			if (userWallet.getBalance() < userBookingPaymentDTO.getFare()) {
+				logger.info("Insufficient balance in wallet.");
 				return null;
 			} else {
+				logger.info("Sufficient balance in wallet.");
 				userWallet.setBalance(userWallet.getBalance() - userBookingPaymentDTO.getFare());
+
 				try {
+					logger.info("Updated user's wallet details.");
 					walletRepository.save(userWallet);
 				} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 				}
+
 				Booking userBooking = bookingRepository.findByBookingId(userBookingPaymentDTO.getBookingId());
 				userBooking.setFare(userBookingPaymentDTO.getFare());
+
 				try {
+					logger.info("Updated booking details.");
 					bookingRepository.save(userBooking);
 				} catch (Exception e) {
 					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 				}
-				return bookingComponent.userBookingWalletTransaction(userBookingPaymentDTO, userWallet, paymentType);
+
 			}
-		} else {
-			return bookingComponent.userBookingWalletTransaction(userBookingPaymentDTO, userWallet, paymentType);
 		}
+		logger.info("Payment successful.");
+		return bookingComponent.userBookingWalletTransaction(userBookingPaymentDTO, userWallet, paymentType);
 	}
 
 	/**
@@ -147,21 +161,27 @@ public class UserBookingComponent {
 	public Booking mapIssueBicycleDetails(Long bookingId, Long bicycleId, Double fare) {
 		Booking userBooking = bookingRepository.findByBookingId(bookingId);
 		BiCycle bicycle = biCycleRepository.findByBiCycleId(bicycleId);
+
 		bicycle.setIsAvailable(false);
 		userBooking.setActualOut(new Timestamp(System.currentTimeMillis()));
 		userBooking.setBiCycleId(biCycleRepository.save(bicycle));
 		userBooking.setIsOpen(true);
 		userBooking.setFare(fare);
-		PickUpPoint pickUpPoint = pickUpPointRepository.findByPickUpPointId(bicycle.getCurrentLocation().getPickUpPointId());
+
+		PickUpPoint pickUpPoint = pickUpPointRepository
+				.findByPickUpPointId(bicycle.getCurrentLocation().getPickUpPointId());
 		pickUpPoint.setCurrentAvailability(
 				biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size());
+
 		try {
+			logger.info("Updated pickup point details.");
 			pickUpPointRepository.save(pickUpPoint);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
-		
+
 		try {
+			logger.info("Updated booking details.");
 			return bookingRepository.save(userBooking);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);

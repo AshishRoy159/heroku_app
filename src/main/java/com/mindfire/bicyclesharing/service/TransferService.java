@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,8 @@ import com.mindfire.bicyclesharing.security.CurrentUser;
  */
 @Service
 public class TransferService {
+	
+	Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
 	private TransferComponent transferComponent;
@@ -118,8 +121,10 @@ public class TransferService {
 		Transfer transfer = transferComponent.updateTransferDetails(transferDataDTO);
 
 		if (transfer == null) {
+			logger.error("Data could not be updated.");
 			return null;
 		} else {
+			logger.info("Transfer status is set to 'in transition'.");
 			biCycleComponent.bicyclesInTransition(session, transfer);
 			PickUpPoint pickUpPoint = transfer.getTransferredFrom();
 			pickUpPoint.setCurrentAvailability(biCycleComponent.findByCurrentLocationAndIsAvailable(pickUpPoint, true));
@@ -144,9 +149,12 @@ public class TransferService {
 		transfer.setStatus(TransferStatusEnum.CLOSED);
 
 		Transfer closedTransfer = transferComponent.closeTransfer(transfer);
+		
 		if (closedTransfer == null) {
+			logger.error("Data could not be updated.");
 			return null;
 		} else {
+			logger.info("Transfer status is set to 'closed'.");
 			biCycleComponent.bicyclesTransferred(session, closedTransfer);
 			PickUpPoint pickUpPoint = transfer.getTransferredTo();
 			pickUpPoint.setCurrentAvailability(biCycleComponent.findByCurrentLocationAndIsAvailable(pickUpPoint, true));

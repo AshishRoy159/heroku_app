@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mindfire.bicyclesharing.component.MessageBean;
+import com.mindfire.bicyclesharing.constant.CustomLoggerConstant;
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.ChangePasswordDTO;
@@ -73,6 +75,8 @@ import com.mindfire.bicyclesharing.service.VerificationTokenService;
  */
 @Controller
 public class UserController {
+
+	Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
@@ -108,7 +112,9 @@ public class UserController {
 	@RequestMapping(value = "register", method = RequestMethod.POST)
 	public ModelAndView addUser(@Valid @ModelAttribute("paymentData") RegistrationPaymentDTO regPaymentDTO,
 			BindingResult result, HttpSession session, WebRequest request, Model model) throws ParseException {
+
 		if (result.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			return new ModelAndView(ViewConstant.PAYMENT, ModelAttributeConstant.ERROR_MESSAGE, "Invalid Payment data");
 		}
 
@@ -117,20 +123,26 @@ public class UserController {
 		Optional<User> existing = userService.getUserByEmail(userDTO.getEmail());
 
 		if (existing.isPresent()) {
+			logger.info("An user with the email id already exists. Transaction cancelled.");
 			model.addAttribute("failure", "User with same email already exists!!");
 			return new ModelAndView(ViewConstant.REGISTRATION);
 		} else {
+			logger.info("User details are valid for registration.");
 			WalletTransaction transaction = userService.saveUserDetails(userDTO, regPaymentDTO);
 
 			if (transaction != null) {
+				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 				User registered = transaction.getWallet().getUser();
+
 				try {
 					eventPublisher.publishEvent(new RegistrationCompleteEvent(registered, request.getLocale()));
 				} catch (Exception me) {
 					System.out.println(me.getMessage());
 				}
+
 				return new ModelAndView(ViewConstant.SUCCESS_REGISTER, ModelAttributeConstant.USER, userDTO);
 			} else {
+				logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
 				return new ModelAndView(ViewConstant.FAILURE);
 			}
 		}
@@ -157,18 +169,24 @@ public class UserController {
 		}
 
 		User user = verificationToken.getUser();
+
 		if (user.getEnabled()) {
+			logger.info("This user is already enabled. Transaction cancelled.");
 			String message = messageBean.getAlreadyActivated();
 			model.addAttribute(ModelAttributeConstant.MESSAGE, message);
 			return new ModelAndView(ViewConstant.BAD_USER);
 		} else {
+			logger.info("User and verification token are valid.");
 			Calendar cal = Calendar.getInstance();
+
 			if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+				logger.info("Verification token is expired. Transaction cancelled.");
 				model.addAttribute(ModelAttributeConstant.MESSAGE, messageBean.getExpired());
 				model.addAttribute("expired", true);
 				model.addAttribute("token", verificationToken);
 				return new ModelAndView(ViewConstant.BAD_USER);
 			} else {
+				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 				model.addAttribute(ModelAttributeConstant.USER, userService.saveRegisteredUser(user));
 				return new ModelAndView("setPassword");
 			}
@@ -192,11 +210,13 @@ public class UserController {
 		VerificationToken newToken = verificationTokenService.generateNewVerificationToken(existingToken);
 
 		User user = userService.getUser(newToken.getToken());
+
 		try {
 			eventPublisher.publishEvent(new ResendVerificationTokenEvent(request.getLocale(), newToken, user));
 		} catch (Exception me) {
 			System.out.println(me.getMessage());
 		}
+
 		return new ModelAndView("successRegister");
 
 	}
@@ -227,15 +247,19 @@ public class UserController {
 	@RequestMapping(value = "/setPasswordConfirmation", method = RequestMethod.POST)
 	public ModelAndView setPassword(@ModelAttribute("setPasswordData") @Valid SetPasswordDTO setPasswordDTO,
 			Model model, BindingResult result) {
+
 		if (result.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			return new ModelAndView("setPassword", "errorMessage", "Invalid password format");
 		}
 
 		int num = userService.savePassword(setPasswordDTO.getPassword(), setPasswordDTO.getEmail());
 
 		if (num == 0) {
+			logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
 			return new ModelAndView("setPassword");
 		} else {
+			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			return new ModelAndView("redirect:/logout");
 		}
 	}
@@ -268,12 +292,14 @@ public class UserController {
 			@Valid @ModelAttribute("forgotPasswordData") ForgotPasswordDTO forgotPasswordDTO, WebRequest request,
 			BindingResult result) {
 		if (result.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			return new ModelAndView("forgotPassword", "errorMessage", "Invalid Email");
 		}
 
 		User user = userService.userDetailsByEmail(forgotPasswordDTO);
 
 		if (null == user) {
+			logger.info("Email id doesn't exist. Request for reset password denied.");
 			return new ModelAndView("forgotPassword", "errorMessage", "Email doesn't exist");
 		}
 
@@ -283,6 +309,7 @@ public class UserController {
 			System.out.println(me.getMessage());
 		}
 
+		logger.info("Request for password reset approved.");
 		return new ModelAndView("successRegister");
 	}
 
@@ -302,24 +329,30 @@ public class UserController {
 		VerificationToken passwordResetToken = verificationTokenService.getVerificationToken(token);
 
 		if (passwordResetToken == null) {
+			logger.error("Password reset token is 'null'. Transaction cancelled.");
 			String message = messageBean.getInvalidToken();
 			model.addAttribute(ModelAttributeConstant.MESSAGE, message);
 			return new ModelAndView(ViewConstant.BAD_USER);
 		}
 
 		User user = passwordResetToken.getUser();
+
 		if (!user.getEnabled()) {
+			logger.info("User is not enabled. Transaction cancelled.");
 			String message = messageBean.getDisabled();
 			model.addAttribute(ModelAttributeConstant.MESSAGE, message);
 			return new ModelAndView(ViewConstant.BAD_USER);
 		} else {
+			logger.info("User details are valid for password reset request.");
 			Calendar cal = Calendar.getInstance();
 			if ((passwordResetToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+				logger.info("Password reset token is expired. Transaction cancelled.");
 				model.addAttribute(ModelAttributeConstant.MESSAGE, messageBean.getExpired());
 				model.addAttribute("expired", true);
 				model.addAttribute("token", passwordResetToken);
 				return new ModelAndView(ViewConstant.BAD_USER);
 			} else {
+				logger.info("User verifeid for password reset request. Redirected  to set password page.");
 				model.addAttribute(ModelAttributeConstant.USER, userService.saveRegisteredUser(user));
 				return new ModelAndView(ViewConstant.SET_PASSWORD);
 			}
@@ -358,6 +391,7 @@ public class UserController {
 			@Valid @ModelAttribute("changePasswordData") ChangePasswordDTO changePasswordDTO, BindingResult result,
 			RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.INVALID_PASSWORD,
 					"Password must be 4 to 16 characters long without any spaces");
 			return "redirect:changePassword";
@@ -367,10 +401,13 @@ public class UserController {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
 		if (passEncoder.matches(changePasswordDTO.getOldPassword(), currentUser.getUser().getPassword())) {
+			logger.info("The existing password is valid.");
 			if (userService.savePassword(changePasswordDTO.getNewPassword(), currentUser.getUser().getEmail()) != 0) {
+				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 				return "redirect:/logout";
 			}
 		} else {
+			logger.info("Invalid old password. Transaction cancelled.");
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.INVALID_PASSWORD, "Incorrect Old Password");
 		}
 
@@ -395,9 +432,11 @@ public class UserController {
 	public ModelAndView userProfile(Authentication authentication, Model model, @PathVariable Long id)
 			throws CustomException, CustomException {
 		User user = userService.userDetails(id);
+
 		if (user == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
+
 		model.addAttribute(ModelAttributeConstant.USER, user);
 		return new ModelAndView(ViewConstant.USER_PROFILE);
 	}
@@ -416,9 +455,11 @@ public class UserController {
 	@RequestMapping(value = { "/user/updateUserDetails/{id}" }, method = RequestMethod.GET)
 	public ModelAndView updateUserDetails(Model model, @PathVariable("id") Long id) throws CustomException {
 		User user = userService.userDetails(id);
+
 		if (user == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
+
 		model.addAttribute(ModelAttributeConstant.USER, userService.userDetails(id));
 		return new ModelAndView(ViewConstant.UPDATE_USER_DETAILS);
 	}
@@ -445,21 +486,28 @@ public class UserController {
 	@RequestMapping(value = { "user/updateUserDetails/{id}" }, method = RequestMethod.POST)
 	public ModelAndView afterUpdateUserDetails(@Valid @ModelAttribute("userDetailData") UserDTO userDTO,
 			@PathVariable("id") Long id, Model model, BindingResult result) throws ParseException, CustomException {
+
 		if (result.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			return new ModelAndView(ViewConstant.UPDATE_USER_DETAILS, ModelAttributeConstant.ERROR_MESSAGE,
 					"Invalid data. Updation failed.");
 		}
+
 		User user = userService.userDetails(id);
+
 		if (user == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
+
 		int success = userService.updateUserDetail(userDTO);
 		model.addAttribute(ModelAttributeConstant.USER, userService.userDetails(id));
 
 		if (success == 0) {
+			logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
 			return new ModelAndView(ViewConstant.UPDATE_USER_DETAILS, ModelAttributeConstant.ERROR_MESSAGE,
 					"Invalid data. Updation failed.");
 		} else {
+			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			return new ModelAndView(ViewConstant.USER_PROFILE);
 		}
 	}
@@ -479,8 +527,9 @@ public class UserController {
 	@RequestMapping(value = "payment", method = RequestMethod.POST)
 	public ModelAndView getPayment(@Valid @ModelAttribute("userData") UserDTO userDTO, BindingResult result,
 			HttpSession session) {
+
 		if (result.hasErrors()) {
-			System.out.println(result.toString());
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			return new ModelAndView(ViewConstant.REGISTRATION, ModelAttributeConstant.ERROR_MESSAGE,
 					"Invalid User data");
 		}
@@ -490,6 +539,7 @@ public class UserController {
 		} catch (IOException e) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.PAYLOAD_TOO_LARGE);
 		}
+
 		session.setAttribute("userDTO", userDTO);
 		return new ModelAndView(ViewConstant.PAYMENT);
 	}

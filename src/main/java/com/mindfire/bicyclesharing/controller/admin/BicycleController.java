@@ -18,6 +18,7 @@ package com.mindfire.bicyclesharing.controller.admin;
 
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mindfire.bicyclesharing.constant.CustomLoggerConstant;
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.BiCycleDTO;
@@ -47,6 +49,8 @@ import javassist.NotFoundException;
  */
 @Controller
 public class BicycleController {
+
+	Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
 	private PickUpPointService pickUpPointService;
@@ -85,16 +89,20 @@ public class BicycleController {
 	public ModelAndView addedNewBicycle(@Valid @ModelAttribute("bicycleData") BiCycleDTO biCycleDTO,
 			BindingResult result, RedirectAttributes redirectAttributes) throws NotFoundException {
 		if (result.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Oops... Operation failed!!");
-		} else {
-			BiCycle biCycle = biCycleService.saveBiCycleDetails(biCycleDTO);
+			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_BICYCLE);
+		}
 
-			if (biCycle == null) {
-				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
-						"No space for new bicycle at this pickup point!!");
-			} else {
-				redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Added!!!");
-			}
+		BiCycle biCycle = biCycleService.saveBiCycleDetails(biCycleDTO);
+
+		if (biCycle == null) {
+			logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
+					"No space for new bicycle at this pickup point!!");
+		} else {
+			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Added!!!");
 		}
 		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_BICYCLE);
 	}

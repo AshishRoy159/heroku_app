@@ -19,6 +19,7 @@ package com.mindfire.bicyclesharing.component;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,8 @@ import com.mindfire.bicyclesharing.repository.TransferRepository;
 @Component
 public class TransferComponent {
 
+	Logger logger = Logger.getLogger(getClass());
+
 	@Autowired
 	private TransferRepository transferRepository;
 
@@ -63,9 +66,12 @@ public class TransferComponent {
 
 		if (transferResponse.getQuantity() >= (transferResponse.getRequest().getQuantity()
 				- transferResponse.getRequest().getApprovedQuantity())) {
+			logger.info(
+					"Response quantity is more than required for request. Transfer quantity is set to required quantity.");
 			transfer.setQuantity(
 					transferResponse.getRequest().getQuantity() - transferResponse.getRequest().getApprovedQuantity());
 		} else {
+			logger.info("Transfer quantity is set to required quantity.");
 			transfer.setQuantity(transferResponse.getQuantity());
 		}
 
@@ -75,6 +81,7 @@ public class TransferComponent {
 				transferResponse.getRequest().getRequestId());
 
 		if (transferResponse.getRequest().getQuantity() == updatedApprovedQuantity) {
+			logger.info("Approved quantity has matched requested quantity. Transfer request is approved now.");
 			transferRequestComponent.uppdateIsApproved(true, transferResponse.getRequest().getRequestId());
 		}
 
@@ -83,6 +90,7 @@ public class TransferComponent {
 		transfer.setStatus(TransferStatusEnum.PENDING);
 
 		try {
+			logger.info("New transfer order created.");
 			return transferRepository.save(transfer);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
@@ -138,6 +146,7 @@ public class TransferComponent {
 	 */
 	public Transfer updateTransferDetails(TransferDataDTO transferDataDTO) {
 		Transfer transfer = getTransferDetails(transferDataDTO.getTransferId());
+
 		transfer.setDispatchedAt(new Timestamp(System.currentTimeMillis()));
 		transfer.setVehicleNo(transferDataDTO.getVehicleNo());
 		transfer.setStatus(TransferStatusEnum.IN_TRANSITION);

@@ -81,6 +81,7 @@ public class TransferRequestService {
 	public List<TransferRequestRespondedDTO> findOtherRequest(CurrentUser currentUser) {
 		List<TransferRequest> requests = transferRequestComponent.getOthersRequest(currentUser);
 		List<TransferResponse> responses = transferResponseComponent.getResponses(currentUser);
+
 		return setIsRespondedOrNot(requests, responses);
 	}
 

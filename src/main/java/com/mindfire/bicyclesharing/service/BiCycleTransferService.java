@@ -49,15 +49,17 @@ public class BiCycleTransferService {
 	 * @param transfer
 	 *            concerned transfer record
 	 * @return {@link BiCycle} List
-	 * @throws NotFoundException 
+	 * @throws NotFoundException
 	 */
 	public List<BiCycle> findBicyclesInTransition(Transfer transfer) throws NotFoundException {
 		List<BiCycleTransfer> biCycleTransfers = bicycleTransferComponent.receiveTransferredBicycles(transfer);
 		List<BiCycle> biCycles = new ArrayList<BiCycle>();
+
 		for (BiCycleTransfer biCycleTransfer : biCycleTransfers) {
 			BiCycle biCycle = biCycleTransfer.getBiCycle();
 			biCycles.add(biCycle);
 		}
+
 		return biCycles;
 	}
 }
