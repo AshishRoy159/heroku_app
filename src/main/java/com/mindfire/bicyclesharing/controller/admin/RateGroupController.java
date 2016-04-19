@@ -217,22 +217,22 @@ public class RateGroupController {
 	 *            Manage rate group related data.
 	 * @param result
 	 *            to validate incoming data
-	 * @param model
+	 * @param redirectAttributes
 	 *            this is used to show the message and data on the view.
 	 * @return manageRateGroup view.
 	 */
 	@RequestMapping(value = "/manager/assignRateGroup", method = RequestMethod.POST)
 	public ModelAndView assignRateGroup(@ModelAttribute("assignRateGroupData") ManageRateGroupDTO manageRateGroupDTO,
-			BindingResult result, Model model) {
+			BindingResult result, RedirectAttributes redirectAttributes) {
 
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
-			model.addAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid Data.");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid Data.");
 		} else if (null == userService.UpdateRateGroup(manageRateGroupDTO)) {
-			model.addAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Operation failed..!");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Operation failed..!");
 		} else {
-			model.addAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Rate group is assigned successfully!");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Rate group is assigned successfully!");
 		}
-		return new ModelAndView(ViewConstant.MANAGE_RATE_GROUP);
+		return new ModelAndView(ViewConstant.REDIRECT+"/manager/"+ ViewConstant.MANAGE_RATE_GROUP);
 	}
 }

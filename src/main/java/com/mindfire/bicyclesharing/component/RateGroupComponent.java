@@ -64,7 +64,7 @@ public class RateGroupComponent {
 	 * @return {@link RateGroup} object
 	 */
 	public RateGroup mapRateGroup(User user) {
-		return rateGroupRepository.findByGroupTypeAndIsActive(user.getRateGroup().getGroupType(), true);
+		return rateGroupRepository.findByGroupTypeAndIsActive(user.getRateGroup(), true);
 	}
 
 	/**

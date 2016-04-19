@@ -130,7 +130,7 @@ public class UserComponent {
 
 		newUser.setProofDetail(proofDetail);
 		newUser.setRole(roleRepository.findByUserRole("USER"));
-		newUser.setRateGroup(rateGroupRepository.findByGroupTypeAndIsActive("USER", true));
+		newUser.setRateGroup(rateGroupRepository.findByGroupTypeAndIsActive("USER", true).getGroupType());
 
 		try {
 			userRepository.save(newUser);
@@ -349,7 +349,7 @@ public class UserComponent {
 	 */
 	public User assignRateGroup(ManageRateGroupDTO manageRateGroupDTO) {
 		User user = userRepository.findByUserId(manageRateGroupDTO.getUserId());
-		user.setRateGroup(rateGroupRepository.findByRateGroupId(manageRateGroupDTO.getRateGroupId()));
+		user.setRateGroup(rateGroupRepository.findByRateGroupId(manageRateGroupDTO.getRateGroupId()).getGroupType());
 
 		try {
 			return userRepository.save(user);

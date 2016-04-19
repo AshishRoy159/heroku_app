@@ -75,9 +75,9 @@ public class User implements Serializable {
 
 	private String password;
 
-	@ManyToOne
-	@JoinColumn(name = "rate_group_id")
-	private RateGroup rateGroup;
+
+	@Column(name = "rate_group_id")
+	private String rateGroup;
 
 	@Column(name = "regisration_time", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp registrationTime;
@@ -188,11 +188,11 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public RateGroup getRateGroup() {
+	public String getRateGroup() {
 		return rateGroup;
 	}
 
-	public void setRateGroup(RateGroup rateGroup) {
+	public void setRateGroup(String rateGroup) {
 		this.rateGroup = rateGroup;
 	}
 

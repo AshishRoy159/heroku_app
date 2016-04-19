@@ -27,6 +27,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.component.BookingComponent;
+import com.mindfire.bicyclesharing.component.RateGroupComponent;
 import com.mindfire.bicyclesharing.component.UserBookingComponent;
 import com.mindfire.bicyclesharing.dto.BookingPaymentDTO;
 import com.mindfire.bicyclesharing.dto.IssueCycleDTO;
@@ -36,6 +37,7 @@ import com.mindfire.bicyclesharing.dto.ReceiveBicyclePaymentDTO;
 import com.mindfire.bicyclesharing.dto.ReceiveCycleDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingDTO;
 import com.mindfire.bicyclesharing.model.Booking;
+import com.mindfire.bicyclesharing.model.RateGroup;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
@@ -55,6 +57,9 @@ public class BookingService {
 
 	@Autowired
 	private UserBookingComponent userBookingComponent;
+	
+	@Autowired
+	private RateGroupComponent rateGroupComponent;
 
 	/**
 	 * This method is used to add a new booking entry to the database.
@@ -230,7 +235,8 @@ public class BookingService {
 	 * @return {@link Double} object
 	 */
 	public Double calculateFare(User user, long hour) {
-		return (user.getRateGroup().getBaseRateBean().getBaseRate() * hour);
+		RateGroup rateGroup = rateGroupComponent.mapRateGroup(user);
+		return (rateGroup.getBaseRateBean().getBaseRate() * hour);
 	}
 
 	/**
@@ -243,7 +249,8 @@ public class BookingService {
 	 * @return {@link Double} value
 	 */
 	public Double calculateDiscount(User user, Double fare) {
-		return (fare * (user.getRateGroup().getDiscount() / 100));
+		RateGroup rateGroup = rateGroupComponent.mapRateGroup(user);
+		return (fare * (rateGroup.getDiscount() / 100));
 	}
 
 	/**
