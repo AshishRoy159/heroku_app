@@ -3,7 +3,6 @@
 	<persistence-unit name="cycle_rental">
 		<class>com.mindfire.bicyclesharing.model.BiCycleTransfer</class>
 		<class>com.mindfire.bicyclesharing.model.BiCycle</class>
-		<class>com.mindfire.bicyclesharing.model.BookingTransaction</class>
 		<class>com.mindfire.bicyclesharing.model.Booking</class>
 		<class>com.mindfire.bicyclesharing.model.PickUpPoint</class>
 		<class>com.mindfire.bicyclesharing.model.ProofDetail</class>
@@ -20,5 +19,6 @@
 		<class>com.mindfire.bicyclesharing.enums.TransferStatusEnumConverter</class>
 		<class>com.mindfire.bicyclesharing.model.BaseRate</class>
 		<class>com.mindfire.bicyclesharing.model.RateGroup</class>
+		<class>com.mindfire.bicyclesharing.model.BookingTransaction</class>
 	</persistence-unit>
 </persistence>

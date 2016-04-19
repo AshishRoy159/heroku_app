@@ -191,7 +191,7 @@ public class BiCycleTransferController {
 		if (request == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
-		Optional<TransferResponse> response = transferResponseService.findResponseForrequest(request,
+		Optional<TransferResponse> response = transferResponseService.findResponseForRequest(request,
 				pickUpPointManagerService.getPickupPointManager(currentUser.getUser()).getPickUpPoint());
 
 		if (request.getIsApproved() || response.isPresent()) {

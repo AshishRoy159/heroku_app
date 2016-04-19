@@ -31,11 +31,13 @@ import com.mindfire.bicyclesharing.exception.CustomException;
 import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.Booking;
+import com.mindfire.bicyclesharing.model.BookingTransaction;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
 import com.mindfire.bicyclesharing.repository.BiCycleRepository;
 import com.mindfire.bicyclesharing.repository.BookingRepository;
+import com.mindfire.bicyclesharing.repository.BookingTransactionRepository;
 import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
 import com.mindfire.bicyclesharing.repository.WalletRepository;
 import com.mindfire.bicyclesharing.security.CurrentUser;
@@ -55,6 +57,9 @@ public class UserBookingComponent {
 
 	@Autowired
 	private BookingRepository bookingRepository;
+
+	@Autowired
+	private BookingTransactionRepository bookingTransactionRepository;
 
 	@Autowired
 	private PickUpPointRepository pickUpPointRepository;
@@ -114,6 +119,8 @@ public class UserBookingComponent {
 			Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		Wallet userWallet = walletRepository.findByUser(currentUser.getUser());
+		WalletTransaction walletTransaction = new WalletTransaction();
+		BookingTransaction bookingTransaction = new BookingTransaction();
 		String paymentType = "ONLINE BOOKING";
 
 		if (userBookingPaymentDTO.getMode().equals("wallet")) {
@@ -143,7 +150,18 @@ public class UserBookingComponent {
 			}
 		}
 		logger.info("Payment successful.");
-		return bookingComponent.userBookingWalletTransaction(userBookingPaymentDTO, userWallet, paymentType);
+		walletTransaction = bookingComponent.userBookingWalletTransaction(userBookingPaymentDTO, userWallet,
+				paymentType);
+
+		bookingTransaction.setBooking(booking);
+		bookingTransaction.setTransaction(walletTransaction);
+
+		try {
+			bookingTransactionRepository.save(bookingTransaction);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
+		return walletTransaction;
 	}
 
 	/**

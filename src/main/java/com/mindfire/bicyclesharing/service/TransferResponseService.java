@@ -113,7 +113,7 @@ public class TransferResponseService {
 	 *            the concerned pickup point
 	 * @return {@link TransferResponse} object null or not
 	 */
-	public Optional<TransferResponse> findResponseForrequest(TransferRequest transferRequest, PickUpPoint pickUpPoint) {
+	public Optional<TransferResponse> findResponseForRequest(TransferRequest transferRequest, PickUpPoint pickUpPoint) {
 		return transferResponseComponent.getResposneForRequest(transferRequest, pickUpPoint);
 	}
 

@@ -37,12 +37,14 @@ import com.mindfire.bicyclesharing.exception.CustomException;
 import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.Booking;
+import com.mindfire.bicyclesharing.model.BookingTransaction;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.Wallet;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
 import com.mindfire.bicyclesharing.repository.BiCycleRepository;
 import com.mindfire.bicyclesharing.repository.BookingRepository;
+import com.mindfire.bicyclesharing.repository.BookingTransactionRepository;
 import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
 import com.mindfire.bicyclesharing.repository.PickUpPointRepository;
 import com.mindfire.bicyclesharing.repository.UserRepository;
@@ -79,6 +81,9 @@ public class BookingComponent {
 	private BookingRepository bookingRepository;
 
 	@Autowired
+	private BookingTransactionRepository bookingTransactionRepository;
+
+	@Autowired
 	private WalletTransactionRepository walletTransactionRepository;
 
 	@Autowired
@@ -103,6 +108,7 @@ public class BookingComponent {
 			HttpSession session) {
 		User user = userRepository.findByUserId(bookingPaymentDTO.getUserId());
 		Wallet userWallet = walletRepository.findByUser(user);
+		WalletTransaction walletTransaction = new WalletTransaction();
 		String transactionType = "BOOKING";
 
 		if (bookingPaymentDTO.getMode().equals("wallet")) {
@@ -122,15 +128,15 @@ public class BookingComponent {
 					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 				}
 				logger.info("Payment successful.");
-				createWalletTransaction(bookingPaymentDTO.getAmount(), bookingPaymentDTO.getMode(), transactionType,
-						userWallet);
+				walletTransaction = createWalletTransaction(bookingPaymentDTO.getAmount(), bookingPaymentDTO.getMode(),
+						transactionType, userWallet);
 			}
 		} else {
 			logger.info("Payment successful.");
-			createWalletTransaction(bookingPaymentDTO.getAmount(), bookingPaymentDTO.getMode(), transactionType,
-					userWallet);
+			walletTransaction = createWalletTransaction(bookingPaymentDTO.getAmount(), bookingPaymentDTO.getMode(),
+					transactionType, userWallet);
 		}
-		return createNewBooking(authentication, bookingPaymentDTO, session);
+		return createNewBooking(authentication, bookingPaymentDTO, walletTransaction, session);
 	}
 
 	/**
@@ -170,14 +176,17 @@ public class BookingComponent {
 	 *            this object is used for retrieving the current user details.
 	 * @param bookingPaymentDTO
 	 *            this object is used for holding the booking related data..
+	 * @param walletTransaction
+	 *            the wallet transaction details for this booking
 	 * @param session
 	 *            HttpSession object is used for holding the required value into
 	 *            the session variable.
 	 * @return Booking object
 	 */
 	private Booking createNewBooking(Authentication authentication, BookingPaymentDTO bookingPaymentDTO,
-			HttpSession session) {
+			WalletTransaction walletTransaction, HttpSession session) {
 		Booking newBooking = new Booking();
+		BookingTransaction bookingTransaction = new BookingTransaction();
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
 		newBooking.setActualOut(new Timestamp(System.currentTimeMillis()));
@@ -192,11 +201,20 @@ public class BookingComponent {
 		newBooking.setFare(bookingPaymentDTO.getAmount());
 
 		try {
+			bookingRepository.save(newBooking);
 			logger.info("New booking record created.");
-			return bookingRepository.save(newBooking);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
+		bookingTransaction.setBooking(newBooking);
+		bookingTransaction.setTransaction(walletTransaction);
+
+		try {
+			bookingTransactionRepository.save(bookingTransaction);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
+		return newBooking;
 	}
 
 	/**
@@ -263,13 +281,14 @@ public class BookingComponent {
 	public WalletTransaction mapReceiveBicyclePayment(ReceiveBicyclePaymentDTO receiveBicyclePaymentDTO,
 			Wallet userWallet) {
 		String transactionType = "RECEIVEBICYCLE";
+		WalletTransaction walletTransaction = new WalletTransaction();
+		BookingTransaction bookingTransaction = new BookingTransaction();
 
 		if (receiveBicyclePaymentDTO.getMode().equals("cash")) {
 			logger.info("User paid by cash.");
-			WalletTransaction walletTransaction = createWalletTransaction(receiveBicyclePaymentDTO.getFare(),
+			walletTransaction = createWalletTransaction(receiveBicyclePaymentDTO.getFare(),
 					receiveBicyclePaymentDTO.getMode(), transactionType, userWallet);
 			logger.info("Payment successful.");
-			return walletTransaction;
 		} else if (userWallet.getBalance() < receiveBicyclePaymentDTO.getFare()) {
 			logger.info("User has insufficient balance in wallet.");
 			return null;
@@ -282,13 +301,21 @@ public class BookingComponent {
 			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 			}
-			WalletTransaction walletTransaction = createWalletTransaction(receiveBicyclePaymentDTO.getFare(),
+			walletTransaction = createWalletTransaction(receiveBicyclePaymentDTO.getFare(),
 					receiveBicyclePaymentDTO.getMode(), transactionType, userWallet);
 			logger.info("Added wallet transaction details to database.");
 			logger.info("Payment successful.");
-			return walletTransaction;
-
 		}
+
+		bookingTransaction.setBooking(bookingRepository.findByBookingId(receiveBicyclePaymentDTO.getBookingId()));
+		bookingTransaction.setTransaction(walletTransaction);
+
+		try {
+			bookingTransactionRepository.save(bookingTransaction);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
+		return walletTransaction;
 	}
 
 	/**
@@ -321,7 +348,19 @@ public class BookingComponent {
 		String mode = "cash";
 		Wallet userWallet = walletRepository
 				.findByUser(bookingRepository.findByBookingId(paymentAtPickUpPointDTO.getBookingId()).getUser());
-		return createWalletTransaction(paymentAtPickUpPointDTO.getFare(), mode, paymentType, userWallet);
+		WalletTransaction walletTransaction = createWalletTransaction(paymentAtPickUpPointDTO.getFare(), mode,
+				paymentType, userWallet);
+		BookingTransaction bookingTransaction = new BookingTransaction();
+
+		bookingTransaction.setBooking(bookingRepository.findByBookingId(paymentAtPickUpPointDTO.getBookingId()));
+		bookingTransaction.setTransaction(walletTransaction);
+
+		try {
+			bookingTransactionRepository.save(bookingTransaction);
+		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+		}
+		return walletTransaction;
 	}
 
 	/**
