@@ -100,7 +100,6 @@ public class RateGroupController {
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully added..!");
 		}
-
 		return new ModelAndView("redirect:/admin/addNewRateGroup");
 	}
 
@@ -153,7 +152,6 @@ public class RateGroupController {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid Data..");
 			return new ModelAndView("redirect:/admin/selectRateGroup");
 		}
-
 		RateGroup rateGroup = rateGroupService.getRateGroupById(rateGroupTypeDTO.getRateGroupId());
 
 		if (null == rateGroup) {
@@ -161,7 +159,6 @@ public class RateGroupController {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Operation failed..");
 			return new ModelAndView("redirect:/admin/selectRateGroup");
 		}
-
 		return new ModelAndView("updateRateGroup", "rateGroup", rateGroup);
 	}
 
@@ -194,7 +191,6 @@ public class RateGroupController {
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Updated..!");
 		}
-
 		return new ModelAndView("redirect:/admin/selectRateGroup");
 	}
 
@@ -237,7 +233,6 @@ public class RateGroupController {
 		} else {
 			model.addAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Rate group is assigned successfully!");
 		}
-
 		return new ModelAndView(ViewConstant.MANAGE_RATE_GROUP);
 	}
 }

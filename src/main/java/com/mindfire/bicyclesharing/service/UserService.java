@@ -259,12 +259,19 @@ public class UserService {
 		Path documentsDir = Files.createDirectories(Paths.get(DOCUMENTS_DIR + "/" + userDTO.getEmail()));
 		Path document = documentsDir.resolve(userDTO.getDocument().getOriginalFilename());
 		Files.deleteIfExists(document);
-
 		File dest = document.toAbsolutePath().toFile();
+
 		userDTO.getDocument().transferTo(dest);
 	}
-	
-	public User UpdateRateGroup(ManageRateGroupDTO manageRateGroupDTO){
+
+	/**
+	 * This method is used to assign rate group to user.
+	 * 
+	 * @param manageRateGroupDTO
+	 *            the incoming rate group details
+	 * @return {@link User} object
+	 */
+	public User UpdateRateGroup(ManageRateGroupDTO manageRateGroupDTO) {
 		return userComponent.assignRateGroup(manageRateGroupDTO);
 	}
 }

@@ -56,7 +56,6 @@ public class BiCycleTransferService {
 			BiCycle biCycle = biCycleTransfer.getBiCycle();
 			biCycles.add(biCycle);
 		}
-
 		return biCycles;
 	}
 }

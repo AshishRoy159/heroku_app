@@ -74,9 +74,7 @@ public class TransferComponent {
 			logger.info("Transfer quantity is set to required quantity.");
 			transfer.setQuantity(transferResponse.getQuantity());
 		}
-
 		int updatedApprovedQuantity = transferResponse.getRequest().getApprovedQuantity() + transfer.getQuantity();
-
 		transferRequestComponent.updateApprovedQuantity(updatedApprovedQuantity,
 				transferResponse.getRequest().getRequestId());
 
@@ -173,5 +171,4 @@ public class TransferComponent {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
 	}
-
 }

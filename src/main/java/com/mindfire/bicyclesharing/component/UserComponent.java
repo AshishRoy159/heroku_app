@@ -99,8 +99,10 @@ public class UserComponent {
 	 */
 	public WalletTransaction mapUserComponent(UserDTO userDTO, RegistrationPaymentDTO regPaymentDTO)
 			throws ParseException {
-
 		User newUser = new User();
+		ProofDetail proofDetail = new ProofDetail();
+		Wallet wallet = new Wallet();
+		WalletTransaction transaction = new WalletTransaction();
 
 		newUser.setFirstName(userDTO.getFirstName());
 		newUser.setLastName(userDTO.getLastName());
@@ -109,15 +111,12 @@ public class UserComponent {
 		newUser.setMobileNo(userDTO.getMobileNo());
 		newUser.setDateOfBirth(simpleDateFormat.parse(userDTO.getDateOfBirth()));
 
-		ProofDetail proofDetail = new ProofDetail();
 		proofDetail.setProofType(userDTO.getProofType());
 		proofDetail.setProofNo(userDTO.getProofNo());
 		proofDetail.setDocument(userDTO.getDocument().getOriginalFilename());
 
-		Wallet wallet = new Wallet();
 		wallet.setBalance(regPaymentDTO.getAmount());
 
-		WalletTransaction transaction = new WalletTransaction();
 		transaction.setMode(regPaymentDTO.getMode());
 		transaction.setType("REGISTRATION");
 		transaction.setAmount(regPaymentDTO.getAmount());
@@ -139,7 +138,6 @@ public class UserComponent {
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
-
 		wallet.setUser(newUser);
 
 		try {
@@ -148,7 +146,6 @@ public class UserComponent {
 		} catch (Exception e) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
-
 		transaction.setWallet(wallet);
 
 		try {
@@ -157,7 +154,6 @@ public class UserComponent {
 		} catch (Exception e) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
-
 		return transaction;
 	}
 
@@ -258,12 +254,11 @@ public class UserComponent {
 	public int mapUpdateRole(ManageRoleDTO manageRoleDTO) {
 		PickUpPointManager pickUpPointManager = pickUpPointManagerRepository
 				.findByUser(userRepository.findByUserId(manageRoleDTO.getUserId()));
+		Role userRole = roleRepository.findByRoleId(manageRoleDTO.getUserRoleId());
 
 		if (pickUpPointManager != null) {
 			pickUpPointManagerRepository.deleteByUser(pickUpPointManager.getUser());
 		}
-
-		Role userRole = roleRepository.findByRoleId(manageRoleDTO.getUserRoleId());
 
 		try {
 			logger.info("Updated user's role.");
@@ -327,7 +322,6 @@ public class UserComponent {
 	 * @return {@link User} object
 	 */
 	public User mapIsActive(Long id) {
-
 		User user = userRepository.findByUserId(id);
 
 		if (user.getEnabled()) {
@@ -346,9 +340,17 @@ public class UserComponent {
 		}
 	}
 
+	/**
+	 * This method is used to assign rate group to user.
+	 * 
+	 * @param manageRateGroupDTO
+	 *            the incoming rate group details
+	 * @return {@link User} object
+	 */
 	public User assignRateGroup(ManageRateGroupDTO manageRateGroupDTO) {
 		User user = userRepository.findByUserId(manageRateGroupDTO.getUserId());
 		user.setRateGroup(rateGroupRepository.findByRateGroupId(manageRateGroupDTO.getRateGroupId()));
+
 		try {
 			return userRepository.save(user);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {

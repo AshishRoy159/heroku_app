@@ -71,7 +71,6 @@ public class WalletTransactionController {
 		if (userService.userDetails(id) == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
-
 		Wallet wallet = walletService.getWallet(userService.userDetails(id));
 		model.addAttribute("wallet", wallet);
 		model.addAttribute("walletTransactions", walletTransactionService.getAllTransactionByWallet(wallet));

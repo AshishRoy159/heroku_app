@@ -90,21 +90,18 @@ public class WalletController {
 					"Balance must be between 100 and 999!!!");
 			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_WALLET_BALANCE);
 		}
-
 		User user = userService.userDetails(walletBalanceDTO.getUserId());
 
 		if (user == null) {
 			logger.info("User doesn't exist. Transaction canccelled.");
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "User not found!!!");
 			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_WALLET_BALANCE);
-
 		} else if (walletService.addBalance(walletBalanceDTO) == 1) {
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			walletTransactionService.createWalletTransaction(walletBalanceDTO);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Added!!!");
 			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_WALLET_BALANCE);
 		}
-
 		logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
 		redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Oops... Operation failed!!");
 		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_WALLET_BALANCE);

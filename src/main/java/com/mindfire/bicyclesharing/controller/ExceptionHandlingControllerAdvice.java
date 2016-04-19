@@ -70,10 +70,10 @@ public class ExceptionHandlingControllerAdvice {
 	 */
 	private ModelAndView showErrorPage(Exception exception) {
 		ModelAndView mav = new ModelAndView();
+
 		mav.addObject("cause", exception.getCause());
 		mav.addObject("message", exception.getMessage());
 		mav.addObject("printStackTrace", exception.fillInStackTrace());
-
 		mav.setViewName("errorPage");
 		return mav;
 	}

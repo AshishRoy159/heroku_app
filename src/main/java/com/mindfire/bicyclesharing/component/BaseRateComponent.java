@@ -68,7 +68,5 @@ public class BaseRateComponent {
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
-
 	}
-
 }

@@ -81,6 +81,7 @@ public class UserBookingComponent {
 	public Booking setUserBookingDetails(UserBookingDTO userBookingDTO, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		Booking userBooking = new Booking();
+
 		userBooking.setBookingTime(new Timestamp(System.currentTimeMillis()));
 		userBooking
 				.setExpectedOut(Timestamp.valueOf(userBookingDTO.getBookingTime().replace("/", "-").concat(":00.000")));
@@ -131,7 +132,6 @@ public class UserBookingComponent {
 				} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 				}
-
 				booking.setFare(userBookingPaymentDTO.getFare());
 
 				try {
@@ -140,7 +140,6 @@ public class UserBookingComponent {
 				} catch (Exception e) {
 					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 				}
-
 			}
 		}
 		logger.info("Payment successful.");

@@ -160,10 +160,12 @@ public class BookingService {
 	 *            User object
 	 * @param isOpen
 	 *            this is Boolean value
+	 * @param isUsed
+	 *            boolean value
 	 * @return {@link Booking} List
 	 */
-	public List<Booking> getAllBooking(User user, Boolean isOpen,Boolean isUsed) {
-		return bookingComponent.getAllBookingByUser(user, isOpen,isUsed);
+	public List<Booking> getAllBooking(User user, Boolean isOpen, Boolean isUsed) {
+		return bookingComponent.getAllBookingByUser(user, isOpen, isUsed);
 	}
 
 	/**
@@ -214,7 +216,6 @@ public class BookingService {
 
 		cal.setTimeInMillis(new Date().getTime());
 		cal.add(Calendar.HOUR, issueCycleDTO.getExpectedInTime());
-
 		return cal;
 	}
 
@@ -254,6 +255,7 @@ public class BookingService {
 	 */
 	public long calculateRidingTime(Booking booking) {
 		Calendar cal = Calendar.getInstance();
+
 		cal.setTimeInMillis(new Date().getTime());
 		return cal.getTimeInMillis() - booking.getExpectedIn().getTime();
 	}
@@ -274,7 +276,6 @@ public class BookingService {
 		if (remainder > 0) {
 			hour++;
 		}
-
 		return hour;
 	}
 

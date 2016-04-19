@@ -41,9 +41,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	 *            User object
 	 * @param open
 	 *            Boolean value
+	 * @param isUsed
+	 *            Boolean value
 	 * @return Booking
 	 */
-	public List<Booking> findByUserAndIsOpenAndIsUsed(User user, Boolean open,Boolean isUsed);
+	public List<Booking> findByUserAndIsOpenAndIsUsed(User user, Boolean open, Boolean isUsed);
 
 	public Booking findByIsOpenAndUser(Boolean open, User user);
 
@@ -92,7 +94,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	 * @return {@link Booking} List
 	 */
 	public List<Booking> findAllByIsOpenAndBiCycleIdIsNotNull(Boolean isOpen);
-	
+
 	/**
 	 * This method is used to find the all booking based on the isOpen status
 	 * and BiCycle is Null.

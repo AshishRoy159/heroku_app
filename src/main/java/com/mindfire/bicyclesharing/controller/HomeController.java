@@ -80,6 +80,7 @@ public class HomeController {
 	@RequestMapping(value = { "register" }, method = RequestMethod.GET)
 	public String getUserCreatePage() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
 			/* The user is logged in :) */
 			return ViewConstant.REDIRECT + ViewConstant.INDEX;
@@ -104,7 +105,6 @@ public class HomeController {
 	@RequestMapping(value = { "login" }, method = RequestMethod.GET)
 	public ModelAndView getUserSignInPage(@RequestParam("error") Optional<String> error,
 			@RequestParam Optional<String> logout, Model model, Authentication authentication) {
-
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
@@ -129,7 +129,6 @@ public class HomeController {
 				logger.info("User successfully logged out.");
 				model.addAttribute("loginError", "You have successfully logged out!!");
 			}
-
 			return new ModelAndView(ViewConstant.SIGN_IN, "error", error);
 		}
 
@@ -164,7 +163,6 @@ public class HomeController {
 			logger.info("The logged in user is a manager.");
 			pickUpPointManagerService.openPickUpPoint(currentUser.getUser());
 		}
-
 		model.addAttribute("bookings", bookingService.getAllBookingDetails(true));
 		model.addAttribute("pickUpPointManagers", pickUpPointManagerService.getAllPickUpPointManager());
 		return new ModelAndView(ViewConstant.ADMIN_HOME);

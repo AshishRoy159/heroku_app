@@ -132,7 +132,6 @@ public class BiCycleTransferController {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE,
 					"Transfer request for " + transferRequestDTO.getQuantity() + " bicycles sent successfully");
 		}
-
 		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.TRANSFER_REQUEST);
 	}
 
@@ -148,7 +147,6 @@ public class BiCycleTransferController {
 	public ModelAndView viewRequests(Model model) {
 		List<TransferRequest> allrequests = transferRequestService.findAllRequests();
 		model.addAttribute(ModelAttributeConstant.REQUESTS, allrequests);
-
 		return new ModelAndView(ViewConstant.REQUEST_AND_NOTIFICATIONS);
 	}
 
@@ -167,7 +165,6 @@ public class BiCycleTransferController {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		List<TransferRequestRespondedDTO> allrequests = transferRequestService.findOtherRequest(currentUser);
 		model.addAttribute(ModelAttributeConstant.REQUESTS, allrequests);
-
 		return new ModelAndView(ViewConstant.REQUEST_AND_NOTIFICATIONS);
 	}
 
@@ -189,11 +186,11 @@ public class BiCycleTransferController {
 			Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		TransferRequest request = transferRequestService.findTransferRequest(requestId);
+		int currentAvailable = pickUpPointManagerService.getCurrentAvailability(currentUser.getUser());
 
 		if (request == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
-
 		Optional<TransferResponse> response = transferResponseService.findResponseForrequest(request,
 				pickUpPointManagerService.getPickupPointManager(currentUser.getUser()).getPickUpPoint());
 
@@ -201,8 +198,6 @@ public class BiCycleTransferController {
 			logger.info("Not permitted to view this transfer request.");
 			return new ModelAndView(ViewConstant.REDIRECT + "/manager/requests");
 		}
-
-		int currentAvailable = pickUpPointManagerService.getCurrentAvailability(currentUser.getUser());
 		model.addAttribute(ModelAttributeConstant.REQUEST, request);
 		model.addAttribute("max", Math.min(request.getQuantity(), currentAvailable));
 		return new ModelAndView(ViewConstant.TRANSFER_RESPONSE_MANAGER);
@@ -245,7 +240,6 @@ public class BiCycleTransferController {
 		if (transferRequest == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
-
 		List<TransferResponse> responses = transferResponseService.findresponsesForRequest(transferRequest);
 		model.addAttribute(ModelAttributeConstant.REQUEST, transferRequest);
 		model.addAttribute(ModelAttributeConstant.RESPONSES, responses);
@@ -267,7 +261,6 @@ public class BiCycleTransferController {
 		if (transferResponse == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
-
 		transferResponseService.updateApproval(true, responseId);
 		transferService.addNewTransfer(transferResponse);
 		return new ModelAndView("redirect:/admin/respond/" + transferResponse.getRequest().getRequestId());
@@ -319,7 +312,6 @@ public class BiCycleTransferController {
 			logger.info("Transfer already shipped. " + CustomLoggerConstant.REDIRECTED_TO_MANAGER_VIEW);
 			return new ModelAndView(ViewConstant.REDIRECT + "/manager/transfers");
 		}
-
 		List<BiCycle> biCycles = bicycleService.findBicyclesForShipment(transfer);
 		session.setAttribute(ModelAttributeConstant.BICYCLES, biCycles);
 
@@ -368,10 +360,8 @@ public class BiCycleTransferController {
 					"Transfer not yet shipped or already received. " + CustomLoggerConstant.REDIRECTED_TO_MANAGER_VIEW);
 			return new ModelAndView(ViewConstant.REDIRECT + "/manager/transfers");
 		}
-
 		List<BiCycle> biCycles = biCycleTransferService.findBicyclesInTransition(transfer);
 		session.setAttribute(ModelAttributeConstant.BICYCLES, biCycles);
-
 		return new ModelAndView(ViewConstant.RECEIVE_CONFIRM, ModelAttributeConstant.TRANSFER, transfer);
 	}
 
@@ -402,7 +392,6 @@ public class BiCycleTransferController {
 					"Transfer not yet shipped or already received. " + CustomLoggerConstant.REDIRECTED_TO_MANAGER_VIEW);
 			return new ModelAndView(ViewConstant.REDIRECT + "/manager/transfers");
 		}
-
 		Transfer closedTransfer = transferService.confirmReceiveTransfer(transferId, session);
 
 		if (null == closedTransfer) {

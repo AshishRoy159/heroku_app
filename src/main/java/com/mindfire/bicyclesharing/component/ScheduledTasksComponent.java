@@ -81,7 +81,6 @@ public class ScheduledTasksComponent {
 				} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 				}
-
 				newRateGroup.setIsActive(true);
 
 				try {
@@ -106,10 +105,8 @@ public class ScheduledTasksComponent {
 				} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 				}
-
 			}
 		}
-
 		logger.info("All unused bookings are set to closed.");
 	}
 }

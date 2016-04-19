@@ -85,10 +85,8 @@ public class BiCycleComponent {
 			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 			}
-
 			pickUpPointComponent.updateBiCycleCurrentAvailability(pickUpPoint,
 					biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size());
-
 			logger.info("Bicycle with chassis no. " + biCycleDTO.getChasisNo() + " added to database.");
 			return biCycle;
 		} else {
@@ -137,7 +135,6 @@ public class BiCycleComponent {
 			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 			}
-
 			biCycleTransfer.setBiCycle(biCycle);
 			biCycleTransfer.setTransfer(transfer);
 
@@ -146,7 +143,6 @@ public class BiCycleComponent {
 			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 			}
-
 		}
 	}
 
@@ -163,6 +159,7 @@ public class BiCycleComponent {
 	public void bicyclesTransferred(HttpSession session, Transfer transfer) {
 		@SuppressWarnings("unchecked")
 		List<BiCycle> biCycles = (List<BiCycle>) session.getAttribute("biCycles");
+
 		for (BiCycle biCycle : biCycles) {
 			biCycle.setIsAvailable(true);
 			biCycle.setCurrentLocation(transfer.getTransferredTo());
@@ -172,7 +169,6 @@ public class BiCycleComponent {
 			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 			}
-
 		}
 	}
 
@@ -220,7 +216,6 @@ public class BiCycleComponent {
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
-
 		logger.info("Bicycle status updated to unavailable.");
 		return biCycle;
 	}

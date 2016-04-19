@@ -81,7 +81,6 @@ public class TransferRequestService {
 	public List<TransferRequestRespondedDTO> findOtherRequest(CurrentUser currentUser) {
 		List<TransferRequest> requests = transferRequestComponent.getOthersRequest(currentUser);
 		List<TransferResponse> responses = transferResponseComponent.getResponses(currentUser);
-
 		return setIsRespondedOrNot(requests, responses);
 	}
 
@@ -125,6 +124,7 @@ public class TransferRequestService {
 
 		for (TransferRequest request : requests) {
 			TransferRequestRespondedDTO transferRequestRespondedDTO = new TransferRequestRespondedDTO();
+
 			transferRequestRespondedDTO.setRequestId(request.getRequestId());
 			transferRequestRespondedDTO.setPickUpPoint(request.getPickUpPoint());
 			transferRequestRespondedDTO.setManager(request.getManager());
@@ -141,7 +141,6 @@ public class TransferRequestService {
 			}
 			allRequests.add(transferRequestRespondedDTO);
 		}
-
 		return allRequests;
 	}
 }

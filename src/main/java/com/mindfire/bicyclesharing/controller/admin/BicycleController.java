@@ -90,7 +90,6 @@ public class BicycleController {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Oops... Operation failed!!");
 			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_BICYCLE);
 		}
-
 		BiCycle biCycle = biCycleService.saveBiCycleDetails(biCycleDTO);
 
 		if (biCycle == null) {
@@ -101,7 +100,6 @@ public class BicycleController {
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Added!!!");
 		}
-
 		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_BICYCLE);
 	}
 }

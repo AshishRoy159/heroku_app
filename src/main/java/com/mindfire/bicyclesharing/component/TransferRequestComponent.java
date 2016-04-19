@@ -71,7 +71,6 @@ public class TransferRequestComponent {
 			logger.info("Requested transfer quantity is more than remaining space at pickup point.");
 			return null;
 		}
-
 		TransferRequest transferRequest = new TransferRequest();
 
 		transferRequest.setPickUpPoint(pickUpPoint);
@@ -156,5 +155,4 @@ public class TransferRequestComponent {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
 	}
-
 }

@@ -81,6 +81,7 @@ public class BicycleSharingApplication {
 	@Bean(name = "multipartResolver")
 	public CommonsMultipartResolver createMultipartResolver() {
 		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+
 		resolver.setDefaultEncoding("utf-8");
 		resolver.setMaxUploadSize(5242880);
 		return resolver;

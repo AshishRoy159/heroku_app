@@ -103,7 +103,6 @@ public class BookingComponent {
 			HttpSession session) {
 		User user = userRepository.findByUserId(bookingPaymentDTO.getUserId());
 		Wallet userWallet = walletRepository.findByUser(user);
-
 		String transactionType = "BOOKING";
 
 		if (bookingPaymentDTO.getMode().equals("wallet")) {
@@ -122,19 +121,15 @@ public class BookingComponent {
 				} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 				}
-
 				logger.info("Payment successful.");
 				createWalletTransaction(bookingPaymentDTO.getAmount(), bookingPaymentDTO.getMode(), transactionType,
 						userWallet);
-
 			}
-
 		} else {
 			logger.info("Payment successful.");
 			createWalletTransaction(bookingPaymentDTO.getAmount(), bookingPaymentDTO.getMode(), transactionType,
 					userWallet);
 		}
-
 		return createNewBooking(authentication, bookingPaymentDTO, session);
 	}
 
@@ -153,6 +148,7 @@ public class BookingComponent {
 	 */
 	private WalletTransaction createWalletTransaction(Double amount, String mode, String type, Wallet userWallet) {
 		WalletTransaction walletTransaction = new WalletTransaction();
+
 		walletTransaction.setAmount(amount);
 		walletTransaction.setMode(mode);
 		walletTransaction.setType(type);
@@ -164,7 +160,6 @@ public class BookingComponent {
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
-
 		return walletTransaction;
 	}
 
@@ -184,6 +179,7 @@ public class BookingComponent {
 			HttpSession session) {
 		Booking newBooking = new Booking();
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+
 		newBooking.setActualOut(new Timestamp(System.currentTimeMillis()));
 		newBooking.setBiCycleId(bicycleRepository.findByBiCycleId(bookingPaymentDTO.getBicycleId()));
 		newBooking.setBookingTime(new Timestamp(System.currentTimeMillis()));
@@ -201,7 +197,6 @@ public class BookingComponent {
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
-
 	}
 
 	/**
@@ -219,6 +214,7 @@ public class BookingComponent {
 	public Booking mapReceiveBicycle(Long id, double fare, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		Booking booking = bookingRepository.findByBookingId(id);
+
 		booking.setActualIn(new Timestamp(System.currentTimeMillis()));
 		booking.setReturnedAt(pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint());
 		booking.setIsOpen(false);
@@ -231,7 +227,6 @@ public class BookingComponent {
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
-
 		BiCycle biCycle = bicycleRepository.findByBiCycleId(booking.getBiCycleId().getBiCycleId());
 		biCycle.setCurrentLocation(booking.getReturnedAt());
 		biCycle.setIsAvailable(true);
@@ -242,7 +237,6 @@ public class BookingComponent {
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
-
 		PickUpPoint pickUpPoint = pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint();
 		pickUpPoint.setCurrentAvailability(
 				bicycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size());
@@ -288,7 +282,6 @@ public class BookingComponent {
 			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 			}
-
 			WalletTransaction walletTransaction = createWalletTransaction(receiveBicyclePaymentDTO.getFare(),
 					receiveBicyclePaymentDTO.getMode(), transactionType, userWallet);
 			logger.info("Added wallet transaction details to database.");
@@ -339,10 +332,12 @@ public class BookingComponent {
 	 *            {@link User}
 	 * @param isOpen
 	 *            this is Boolean type value
+	 * @param isUsed
+	 *            Boolean value
 	 * @return {@link Booking} List
 	 */
-	public List<Booking> getAllBookingByUser(User user, Boolean isOpen,Boolean isUsed) {
-		return bookingRepository.findByUserAndIsOpenAndIsUsed(user, isOpen,isUsed);
+	public List<Booking> getAllBookingByUser(User user, Boolean isOpen, Boolean isUsed) {
+		return bookingRepository.findByUserAndIsOpenAndIsUsed(user, isOpen, isUsed);
 	}
 
 	/**
@@ -376,7 +371,6 @@ public class BookingComponent {
 			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 			}
-
 		} else {
 			logger.info("Booking is already closed.");
 			return null;

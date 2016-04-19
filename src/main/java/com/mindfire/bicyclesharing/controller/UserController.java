@@ -117,9 +117,7 @@ public class UserController {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			return new ModelAndView(ViewConstant.PAYMENT, ModelAttributeConstant.ERROR_MESSAGE, "Invalid Payment data");
 		}
-
 		UserDTO userDTO = (UserDTO) session.getAttribute("userDTO");
-
 		Optional<User> existing = userService.getUserByEmail(userDTO.getEmail());
 
 		if (existing.isPresent()) {
@@ -139,14 +137,12 @@ public class UserController {
 				} catch (Exception me) {
 					System.out.println(me.getMessage());
 				}
-
 				return new ModelAndView(ViewConstant.SUCCESS_REGISTER, ModelAttributeConstant.USER, userDTO);
 			} else {
 				logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
 				return new ModelAndView(ViewConstant.FAILURE);
 			}
 		}
-
 	}
 
 	/**
@@ -167,7 +163,6 @@ public class UserController {
 		if (verificationToken == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
-
 		User user = verificationToken.getUser();
 
 		if (user.getEnabled()) {
@@ -206,9 +201,7 @@ public class UserController {
 	@RequestMapping(value = "resendRegistrationToken", method = RequestMethod.GET)
 	public ModelAndView resendRegistrationToken(HttpServletRequest request,
 			@RequestParam("token") String existingToken) {
-
 		VerificationToken newToken = verificationTokenService.generateNewVerificationToken(existingToken);
-
 		User user = userService.getUser(newToken.getToken());
 
 		try {
@@ -216,9 +209,7 @@ public class UserController {
 		} catch (Exception me) {
 			System.out.println(me.getMessage());
 		}
-
 		return new ModelAndView(ViewConstant.SUCCESS_REGISTER);
-
 	}
 
 	/**
@@ -253,7 +244,6 @@ public class UserController {
 			return new ModelAndView(ViewConstant.SET_PASSWORD, ModelAttributeConstant.ERROR_MESSAGE,
 					"Invalid password format");
 		}
-
 		int num = userService.savePassword(setPasswordDTO.getPassword(), setPasswordDTO.getEmail());
 
 		if (num == 0) {
@@ -297,7 +287,6 @@ public class UserController {
 			return new ModelAndView(ViewConstant.FORGOT_PASSWORD, ModelAttributeConstant.ERROR_MESSAGE,
 					"Invalid Email");
 		}
-
 		User user = userService.userDetailsByEmail(forgotPasswordDTO);
 
 		if (null == user) {
@@ -311,7 +300,6 @@ public class UserController {
 		} catch (Exception me) {
 			System.out.println(me.getMessage());
 		}
-
 		logger.info("Request for password reset approved.");
 		return new ModelAndView(ViewConstant.SUCCESS_REGISTER);
 	}
@@ -337,7 +325,6 @@ public class UserController {
 			model.addAttribute(ModelAttributeConstant.MESSAGE, message);
 			return new ModelAndView(ViewConstant.BAD_USER);
 		}
-
 		User user = passwordResetToken.getUser();
 
 		if (!user.getEnabled()) {
@@ -399,7 +386,6 @@ public class UserController {
 					"Password must be 4 to 16 characters long without any spaces");
 			return ViewConstant.REDIRECT + ViewConstant.CHANGE_PASSWORD;
 		}
-
 		BCryptPasswordEncoder passEncoder = new BCryptPasswordEncoder();
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
@@ -413,7 +399,6 @@ public class UserController {
 			logger.info("Invalid old password. Transaction cancelled.");
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.INVALID_PASSWORD, "Incorrect Old Password");
 		}
-
 		return ViewConstant.REDIRECT + ViewConstant.CHANGE_PASSWORD;
 	}
 
@@ -437,7 +422,6 @@ public class UserController {
 		if (user == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
-
 		model.addAttribute(ModelAttributeConstant.USER, user);
 		return new ModelAndView(ViewConstant.USER_PROFILE);
 	}
@@ -459,7 +443,6 @@ public class UserController {
 		if (user == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
-
 		model.addAttribute(ModelAttributeConstant.USER, userService.userDetails(id));
 		return new ModelAndView(ViewConstant.UPDATE_USER_DETAILS);
 	}
@@ -491,13 +474,11 @@ public class UserController {
 			return new ModelAndView(ViewConstant.UPDATE_USER_DETAILS, ModelAttributeConstant.ERROR_MESSAGE,
 					"Invalid data. Updation failed.");
 		}
-
 		User user = userService.userDetails(id);
 
 		if (user == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
-
 		int success = userService.updateUserDetail(userDTO);
 		model.addAttribute(ModelAttributeConstant.USER, userService.userDetails(id));
 
@@ -538,7 +519,6 @@ public class UserController {
 		} catch (IOException e) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.PAYLOAD_TOO_LARGE);
 		}
-
 		session.setAttribute("userDTO", userDTO);
 		return new ModelAndView(ViewConstant.PAYMENT);
 	}

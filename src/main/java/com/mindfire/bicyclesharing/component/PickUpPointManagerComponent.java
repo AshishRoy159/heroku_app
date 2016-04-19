@@ -119,6 +119,7 @@ public class PickUpPointManagerComponent {
 	 */
 	public PickUpPointManager mapPickupPointDetailForOpen(User user) {
 		PickUpPointManager pickUpPointManager = pickUpPointManagerRepository.findByUser(user);
+
 		pickUpPointManager.getPickUpPoint().setIsOpen(true);
 
 		try {

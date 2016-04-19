@@ -49,13 +49,16 @@ public class SMSService {
 		String authId = "MAY2VINJFJY2UXMZQ2ZJ";
 		String authToken = "MDk2NGY0ZjlkZDFmOTk3ZDFmYjdmM2JkM2JkYjFk";
 		RestAPI api = new RestAPI(authId, authToken, "v1");
-
 		LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-		parameters.put("src", "917809112166"); // Sender's phone number with
-												// country code
-		parameters.put("dst", recipientNumber); // Receiver's phone number with
-												// country code
-		parameters.put("text", message); // Your SMS text message
+
+		// Sender's phone number with country code
+		parameters.put("src", "917809112166");
+
+		// Receiver's phone number with country code
+		parameters.put("dst", recipientNumber);
+
+		// Your SMS text message
+		parameters.put("text", message);
 
 		// The URL to which with the status of the message is sent
 		parameters.put("url", "https://api.plivo.com/v1/Account/MAY2VINJFJY2UXMZQ2ZJ/Message/");

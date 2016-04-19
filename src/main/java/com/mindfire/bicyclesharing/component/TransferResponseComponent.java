@@ -70,9 +70,9 @@ public class TransferResponseComponent {
 	 */
 	public TransferResponse mapNewTransferResponse(TransferRensponseDTO transferRensponseDTO, CurrentUser currentUser) {
 		TransferResponse transferResponse = new TransferResponse();
+
 		transferResponse.setRequest(transferRequestRepository.findByRequestId(transferRensponseDTO.getRequestId()));
 		transferResponse.setQuantity(transferRensponseDTO.getQuantity());
-
 		transferResponse
 				.setPickUpPoint(pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint());
 		transferResponse.setManager(currentUser.getUser());
@@ -155,5 +155,4 @@ public class TransferResponseComponent {
 	public Optional<TransferResponse> getResposneForRequest(TransferRequest transferRequest, PickUpPoint pickUpPoint) {
 		return transferResponseRepository.findByRequestAndPickUpPoint(transferRequest, pickUpPoint);
 	}
-
 }

@@ -79,15 +79,18 @@ public class RateGroupComponent {
 	public RateGroup mapNewRateGroupDetails(RateGroupDTO rateGroupDTO) throws ParseException {
 		RateGroup existingRateGroup = rateGroupRepository.findByGroupTypeAndIsActive(rateGroupDTO.getGroupType(), true);
 		RateGroup rateGroup = new RateGroup();
+
 		rateGroup.setDiscount(rateGroupDTO.getDiscount());
 		rateGroup.setEffectiveFrom(simpleDateFormat.parse(rateGroupDTO.getEffectiveFrom()));
 		rateGroup.setGroupType(rateGroupDTO.getGroupType());
 		rateGroup.setBaseRateBean(baseRateRepository.findByGroupType("USER"));
+
 		if (null == existingRateGroup) {
 			rateGroup.setIsActive(true);
 		} else {
 			rateGroup.setIsActive(false);
 		}
+
 		try {
 			logger.info("Created new rate group data.");
 			return rateGroupRepository.save(rateGroup);
@@ -151,6 +154,7 @@ public class RateGroupComponent {
 	 */
 	public int checkMonth(int month) {
 		int day = 0;
+
 		switch (month) {
 		case 0:
 			day = 31;
@@ -205,10 +209,12 @@ public class RateGroupComponent {
 	public RateGroup mapUpdateRateGroupAndIsActive(RateGroupDTO rateGroupDTO) throws ParseException {
 		RateGroup existingRateGroup = rateGroupRepository
 				.findByGroupTypeAndIsActiveAndEffectiveUptoIsNull(rateGroupDTO.getGroupType(), false);
+
 		if (null != existingRateGroup) {
 			/* Some more work will be done here.. */
 			existingRateGroup.setEffectiveFrom(simpleDateFormat.parse(rateGroupDTO.getEffectiveFrom()));
 			existingRateGroup.setDiscount(rateGroupDTO.getDiscount());
+
 			try {
 				rateGroupRepository.save(existingRateGroup);
 			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
@@ -218,9 +224,11 @@ public class RateGroupComponent {
 		} else {
 			RateGroup updateRateGroup = rateGroupRepository
 					.findByGroupTypeAndIsActiveAndEffectiveUptoIsNull(rateGroupDTO.getGroupType(), true);
+
 			if (updateRateGroup.getEffectiveFrom().after(simpleDateFormat.parse(simpleDateFormat.format(new Date())))) {
 				updateRateGroup.setDiscount(rateGroupDTO.getDiscount());
 				updateRateGroup.setEffectiveFrom(simpleDateFormat.parse(rateGroupDTO.getEffectiveFrom()));
+
 				try {
 					return rateGroupRepository.save(updateRateGroup);
 				} catch (DataIntegrityViolationException dataIntegrityViolationException) {
@@ -229,7 +237,6 @@ public class RateGroupComponent {
 			}
 			RateGroup newRateGroup = mapNewRateGroupDetails(rateGroupDTO);
 			return updateEffectiveUpTo(newRateGroup);
-
 		}
 	}
 
@@ -247,10 +254,9 @@ public class RateGroupComponent {
 		@SuppressWarnings("deprecation")
 		int date = newRateGroup.getEffectiveFrom().getDate();
 
+		// it will return 0 to 11
 		@SuppressWarnings("deprecation")
-		int month = newRateGroup.getEffectiveFrom().getMonth();// it will
-																// return
-																// 0 to 11
+		int month = newRateGroup.getEffectiveFrom().getMonth();
 
 		@SuppressWarnings("deprecation")
 		int year = newRateGroup.getEffectiveFrom().getYear() + 1900;
@@ -267,7 +273,6 @@ public class RateGroupComponent {
 				rateGroup.setEffectiveUpto(simpleDateFormat
 						.parse(String.valueOf(year) + "-" + String.valueOf(2) + "-" + String.valueOf(28)));
 			}
-
 		} else {
 
 			if (date == 1) {
@@ -277,7 +282,6 @@ public class RateGroupComponent {
 				rateGroup.setEffectiveUpto(simpleDateFormat.parse(
 						String.valueOf(year) + "-" + String.valueOf(month + 1) + "-" + String.valueOf(date - 1)));
 			}
-
 		}
 
 		try {

@@ -86,7 +86,6 @@ public class BaseRateController {
 		} else {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully updated...!");
 		}
-
 		return new ModelAndView(ViewConstant.REDIRECT + "/admin/" + ViewConstant.UPDATE_BASE_RATE);
 	}
 

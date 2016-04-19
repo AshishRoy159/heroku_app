@@ -96,7 +96,6 @@ public class ManagerController {
 		} catch (IOException e) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.PAYLOAD_TOO_LARGE);
 		}
-
 		session.setAttribute("userDTO", userDTO);
 		return new ModelAndView(ViewConstant.MANAGER_PAYMENT);
 	}

@@ -51,6 +51,7 @@ public class BaseRateDTO {
 	/**
 	 * 
 	 * @param groupType
+	 *            the type of rate group
 	 */
 	public void setGroupType(String groupType) {
 		this.groupType = groupType;
@@ -67,6 +68,7 @@ public class BaseRateDTO {
 	/**
 	 * 
 	 * @param baseRate
+	 *            the base rate to set
 	 */
 	public void setBaseRate(Double baseRate) {
 		this.baseRate = baseRate;

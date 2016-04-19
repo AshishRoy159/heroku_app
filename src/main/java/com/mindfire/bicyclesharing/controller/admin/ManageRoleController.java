@@ -91,7 +91,6 @@ public class ManageRoleController {
 			return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST,
 					userService.getAllUsers());
 		}
-
 		model.addAttribute("userId", userId);
 		return new ModelAndView(ViewConstant.MANAGE_ROLE, ModelAttributeConstant.PICKUP_POINTS,
 				pickUpPointService.getAllPickupPoints());
@@ -124,7 +123,6 @@ public class ManageRoleController {
 				logger.info("Role choice was manager.");
 				pickUpPointManagerService.setPickUpPointToManager(manageRoleDTO);
 			}
-
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 		} else {
 			logger.info("Invalid role choice.");
@@ -165,7 +163,6 @@ public class ManageRoleController {
 			} else {
 				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			}
-
 		} else {
 			logger.info("Permission not granted for the request to approve user.");
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
@@ -213,7 +210,6 @@ public class ManageRoleController {
 			} else {
 				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			}
-
 		} else {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
 					"You don't have permission to update this details...!");

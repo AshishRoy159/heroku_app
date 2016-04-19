@@ -95,7 +95,6 @@ public class PickupPointController {
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Added!!!");
 		}
-
 		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_PICKUP_POINT);
 	}
 
@@ -123,6 +122,7 @@ public class PickupPointController {
 	 */
 	@RequestMapping(value = "admin/updatePickupPointDetails/{id}", method = RequestMethod.GET)
 	public ModelAndView pickupPointUpdateForm(@PathVariable("id") Integer pickUpPointId) {
+
 		if (pickUpPointService.getPickupPointById(pickUpPointId) == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
