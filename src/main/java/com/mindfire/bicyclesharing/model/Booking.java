@@ -82,9 +82,6 @@ public class Booking implements Serializable {
 	@JoinColumn(name = "returnet_at")
 	private PickUpPoint returnedAt;
 
-	@Column(name = "transaction_id")
-	private String transactionId;
-
 	// bi-directional many-to-one association to User
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -256,21 +253,6 @@ public class Booking implements Serializable {
 	 */
 	public void setReturnedAt(PickUpPoint returnedAt) {
 		this.returnedAt = returnedAt;
-	}
-
-	/**
-	 * @return the transactionId
-	 */
-	public String getTransactionId() {
-		return transactionId;
-	}
-
-	/**
-	 * @param transactionId
-	 *            the transactionId to set
-	 */
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
 	}
 
 	/**

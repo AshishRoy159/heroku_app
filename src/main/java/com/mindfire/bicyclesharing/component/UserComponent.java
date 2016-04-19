@@ -27,6 +27,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
 import com.mindfire.bicyclesharing.dto.ManageRateGroupDTO;
@@ -97,6 +98,7 @@ public class UserComponent {
 	 * @throws ParseException
 	 *             may occur while parsing from String to Date
 	 */
+	@Transactional
 	public WalletTransaction mapUserComponent(UserDTO userDTO, RegistrationPaymentDTO regPaymentDTO)
 			throws ParseException {
 		User newUser = new User();

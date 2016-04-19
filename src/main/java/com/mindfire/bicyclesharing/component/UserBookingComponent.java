@@ -24,6 +24,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mindfire.bicyclesharing.dto.UserBookingDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
@@ -115,6 +116,7 @@ public class UserBookingComponent {
 	 *            this parameter is used to identify the current user.
 	 * @return {@link WalletTransaction}
 	 */
+	@Transactional
 	public WalletTransaction mapUserBookingPayment(UserBookingPaymentDTO userBookingPaymentDTO, Booking booking,
 			Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
@@ -176,6 +178,7 @@ public class UserBookingComponent {
 	 *            this parameter holds the booking fare.
 	 * @return {@link Booking}
 	 */
+	@Transactional
 	public Booking mapIssueBicycleDetails(Long bookingId, Long bicycleId, Double fare) {
 		Booking userBooking = bookingRepository.findByBookingId(bookingId);
 		BiCycle bicycle = biCycleRepository.findByBiCycleId(bicycleId);

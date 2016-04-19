@@ -118,7 +118,7 @@
 							<li><a th:href="@{/user/userProfile/} + ${user.userId}">
 									<i class="glyphicon glyphicon-home"></i> Overview
 							</a></li>
-							<li class="active"><a href="#"> <i
+							<li class="active"><a th:href="@{/user/updateUserDetails/} + ${user.userId}"> <i
 									class="fa fa-user fa-fw"></i> Edit Account
 							</a></li>
 							<li><a href="/user/changePassword"><i
@@ -126,6 +126,9 @@
 							<li><a
 								th:href="@{/user/walletTransaction/} + ${user.userId}"> <i
 									class="fa fa-inr"></i> Wallet Details
+							</a></li>
+							<li><a th:href="@{/user/currentBooking/} + ${user.userId}">
+									<i class="fa fa-history"></i> Current Booking
 							</a></li>
 						</ul>
 					</div>
@@ -197,7 +200,7 @@
 				<div class="col-md-6"></div>
 				<div class="col-md-3" align="right">
 					<h4>
-						Developed by <a href="index.html#home">Java Interns</a>
+						Developed by <a href="/index.html#home">Java Interns</a>
 					</h4>
 				</div>
 			</div>

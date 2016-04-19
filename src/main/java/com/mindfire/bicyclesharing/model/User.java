@@ -89,10 +89,6 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "user")
 	private List<Booking> bookings;
 
-	// bi-directional many-to-one association to UserLog
-	@OneToMany(mappedBy = "user")
-	private List<UserLog> userLogs;
-
 	// bi-directional many-to-one association to ProofDetail
 	@ManyToOne
 	@JoinColumn(name = "proof_id")
@@ -232,28 +228,6 @@ public class User implements Serializable {
 		booking.setUser(null);
 
 		return booking;
-	}
-
-	public List<UserLog> getUserLogs() {
-		return this.userLogs;
-	}
-
-	public void setUserLogs(List<UserLog> userLogs) {
-		this.userLogs = userLogs;
-	}
-
-	public UserLog addUserLog(UserLog userLog) {
-		getUserLogs().add(userLog);
-		userLog.setUser(this);
-
-		return userLog;
-	}
-
-	public UserLog removeUserLog(UserLog userLog) {
-		getUserLogs().remove(userLog);
-		userLog.setUser(null);
-
-		return userLog;
 	}
 
 	public ProofDetail getProofDetail() {
