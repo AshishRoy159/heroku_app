@@ -260,6 +260,9 @@ public class BiCycleTransferController {
 
 		if (transferResponse == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		} else if (transferResponse.getRequest().getIsApproved()) {
+			return new ModelAndView(
+					ViewConstant.REDIRECT + "/admin/respond/" + transferResponse.getRequest().getRequestId());
 		}
 		transferResponseService.updateApproval(true, responseId);
 		transferService.addNewTransfer(transferResponse);

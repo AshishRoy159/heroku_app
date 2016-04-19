@@ -82,9 +82,16 @@
 												<td class="text-center"><span
 													th:if="${response.isApproved}">Already approved</span>
 													<div th:unless="${response.isApproved}">
-														<a
-															th:href="@{/admin/approveResponse/} + ${response.responseId}"><button
-																class="btn btn-primary">Approve</button></a>
+														<div th:if="${response.request.isApproved}">
+															<a
+																th:href="@{/admin/approveResponse/} + ${response.responseId}"><button
+																	class="btn btn-primary" disabled="disabled">Approve</button></a>
+														</div>
+														<div th:unless="${response.request.isApproved}">
+															<a
+																th:href="@{/admin/approveResponse/} + ${response.responseId}"><button
+																	class="btn btn-primary">Approve</button></a>
+														</div>
 													</div></td>
 											</tr>
 										</tbody>
