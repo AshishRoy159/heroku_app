@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -77,25 +78,22 @@ public class PickupPointController {
 	 *            to receive the incoming data
 	 * @param result
 	 *            to validate the incoming data
-	 * @param redirectAttributes
-	 *            to map the model attributes
 	 * @return addNewPickupPoint view
 	 */
 	@RequestMapping(value = "/admin/addPickupPoint", method = RequestMethod.POST)
-	public ModelAndView addedPickupPoint(@Valid @ModelAttribute("pickupPointData") PickUpPointDTO pickUpPointDTO,
-			BindingResult result, RedirectAttributes redirectAttributes) {
+	public @ResponseBody String addedPickupPoint(
+			@Valid @ModelAttribute("pickupPointData") PickUpPointDTO pickUpPointDTO, BindingResult result) {
 
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Oops... Operation failed!!");
+			return "Oops... Operation failed!!";
 		} else if (null == pickUpPointService.savePickUpPoint(pickUpPointDTO)) {
 			logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Oops... Operation failed!!");
+			return "Oops... Operation failed!!";
 		} else {
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Added!!!");
+			return "Successfully Added!!!";
 		}
-		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_PICKUP_POINT);
 	}
 
 	/**

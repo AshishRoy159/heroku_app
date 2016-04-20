@@ -36,17 +36,15 @@
 							details</div>
 						<div class="panel-body">
 							<div class="col-sm-6">
-								<form action="#" th:action="@{/admin/addPickupPoint}"
-									th:object="${pickupPointData}" method="post"
-									class="form-horizontal">
+								<form onsubmit="return addPickupPoint()" class="form-horizontal">
 									<fieldset>
 
 										<div class="control-group">
 											<label class="control-label">Location</label>
 											<div class="controls">
-												<textarea tabindex="1" maxlength="250" rows="5" name="location"
-													placeholder="" class="input-xlarge form-control"
-													required="required"></textarea>
+												<textarea id="location" tabindex="1" maxlength="250"
+													rows="5" name="location" placeholder=""
+													class="input-xlarge form-control" required="required"></textarea>
 												<span class="help-block">Location of the pick up
 													point</span>
 											</div>
@@ -56,7 +54,7 @@
 											<label class="control-label">Max capacity</label>
 											<div class="controls">
 												<input type="number" tabindex="2" min="1" max="999"
-													name="maxCapacity" placeholder=""
+													name="maxCapacity" placeholder="" id="maxCapacity"
 													class="input-xlarge form-control" required="required" /> <span
 													class="help-block">The maximum no. of bicycle this
 													pick up point can hold</span>
@@ -65,16 +63,15 @@
 
 										<div class="control-group">
 											<div class="controls">
-												<button type="submit" tabindex="3" class="btn btn-primary">Add
-													Pick up Point</button>
+												<button id="add" type="submit" tabindex="3"
+													class="btn btn-primary">Add Pick up Point</button>
 											</div>
 										</div>
 									</fieldset>
 								</form>
 							</div>
 							<div class="col-sm-6" style="padding-top: 60px;">
-								<h3 class="text-danger" th:text="*{errorMessage}"></h3>
-								<h2 class="text-success" th:text="*{successMessage}"></h2>
+								<h3 id="info"></h3>
 							</div>
 						</div>
 					</div>
@@ -93,5 +90,7 @@
 	<script th:src="@{/js/jquery.metisMenu.js}" type="text/javascript"></script>
 	<!-- Custom Js -->
 	<script th:src="@{/js/custom-scripts.js}" type="text/javascript"></script>
+	<!-- Ajax Js -->
+	<script th:src="@{/js/ajax-functions.js}" type="text/javascript"></script>
 </body>
 </html>

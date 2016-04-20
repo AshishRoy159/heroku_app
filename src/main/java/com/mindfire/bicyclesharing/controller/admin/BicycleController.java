@@ -26,14 +26,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mindfire.bicyclesharing.constant.CustomLoggerConstant;
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.BiCycleDTO;
-import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.service.BiCycleService;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
 
@@ -78,28 +77,25 @@ public class BicycleController {
 	 *            to receive the incoming data
 	 * @param result
 	 *            to validate the incoming data
-	 * @param redirectAttributes
-	 *            to map the model attributes
 	 * @return addNewBicycle view
 	 */
-	@RequestMapping(value = "admin/addBicycle", method = RequestMethod.POST)
-	public ModelAndView addedNewBicycle(@Valid @ModelAttribute("bicycleData") BiCycleDTO biCycleDTO,
-			BindingResult result, RedirectAttributes redirectAttributes) {
+	@RequestMapping(value = "admin/addNewBicycle", method = RequestMethod.POST)
+	public @ResponseBody String addedNewBicycle(@Valid @ModelAttribute BiCycleDTO biCycleDTO, BindingResult result) {
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Oops... Operation failed!!");
-			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_BICYCLE);
+			return "Oops... Operation failed!!";
 		}
-		BiCycle biCycle = biCycleService.saveBiCycleDetails(biCycleDTO);
+		String message = biCycleService.saveBiCycleDetails(biCycleDTO);
 
-		if (biCycle == null) {
+		if (message == null) {
 			logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
-					"No space for new bicycle at this pickup point!!");
+			return "No space for new bicycle at this pickup point!!";
+		} else if(message.equals("duplicate data")) {
+			logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
+			return "Bicycle with the given chasis number already exists.";
 		} else {
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Added!!!");
+			return message;
 		}
-		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_NEW_BICYCLE);
 	}
 }

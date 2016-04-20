@@ -89,7 +89,7 @@ public class BiCycleService {
 	 *            the incoming bicycle data
 	 * @return {@link BiCycle} object
 	 */
-	public BiCycle saveBiCycleDetails(BiCycleDTO biCycleDTO) {
+	public String saveBiCycleDetails(BiCycleDTO biCycleDTO) {
 		return biCycleComponent.mapBiCycleData(biCycleDTO);
 	}
 }

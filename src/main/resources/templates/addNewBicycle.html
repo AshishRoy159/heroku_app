@@ -38,16 +38,14 @@
 						<div class="panel-heading">Enter Bicycle details</div>
 						<div class="panel-body">
 							<div class="col-sm-6">
-								<form action="#" th:action="@{/admin/addBicycle}"
-									th:object="${bicycleData}" method="post"
-									class="form-horizontal">
+								<form onsubmit="return addBicycle()" class="form-horizontal">
 									<fieldset>
 
 										<div class="control-group">
 											<label class="control-label">Chasis Nubmer</label>
 											<div class="controls">
 												<input type="text" tabindex="1" maxlength="20"
-													name="chasisNo" placeholder=""
+													id="chasisNo" placeholder=""
 													class="input-xlarge form-control" required="required" /> <span
 													class="help-block">The bicycle chasis no.</span>
 											</div>
@@ -57,7 +55,7 @@
 											<label class="control-label">Add to</label>
 											<div class="controls">
 												<select tabindex="2" class="input-xlarge form-control"
-													name="pickUpPoint" required="required">
+													id="pickUpPoint" required="required">
 													<option value="">Select Pickup Point</option>
 													<option th:each="pickUpPoint : ${pickUpPoints}"
 														th:value="${pickUpPoint.pickUpPointId}"
@@ -69,7 +67,7 @@
 
 										<div class="control-group">
 											<div class="controls">
-												<button type="submit" tabindex="3" class="btn btn-primary">Add
+												<button id="add" type="submit" tabindex="3" class="btn btn-primary">Add
 													bicycle</button>
 											</div>
 										</div>
@@ -77,8 +75,7 @@
 								</form>
 							</div>
 							<div class="col-sm-6" style="padding-top: 60px;">
-								<h3 class="text-danger" th:text="*{errorMessage}"></h3>
-								<h2 class="text-success" th:text="*{successMessage}"></h2>
+								<h3 id="info"></h3>
 							</div>
 						</div>
 					</div>
@@ -97,5 +94,7 @@
 	<script th:src="@{/js/jquery.metisMenu.js}" type="text/javascript"></script>
 	<!-- Custom Js -->
 	<script th:src="@{/js/custom-scripts.js}" type="text/javascript"></script>
+	<!-- Ajax Js -->
+	<script th:src="@{/js/ajax-functions.js}" type="text/javascript"></script>
 </body>
 </html>

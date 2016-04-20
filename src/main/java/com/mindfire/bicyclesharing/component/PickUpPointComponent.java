@@ -54,7 +54,7 @@ public class PickUpPointComponent {
 	 *            the data from the view
 	 * @return PickUpPoint object
 	 */
-	public PickUpPoint mapPickUpPointDetails(PickUpPointDTO pickUpPointDTO) {
+	public String mapPickUpPointDetails(PickUpPointDTO pickUpPointDTO) {
 		PickUpPoint pickUpPoint = new PickUpPoint();
 
 		pickUpPoint.setLocation(pickUpPointDTO.getLocation());
@@ -62,11 +62,12 @@ public class PickUpPointComponent {
 		pickUpPoint.setCurrentAvailability(0);
 
 		try {
-			logger.info("Added new pickup point data to the database.");
-			return pickUpPointRepository.save(pickUpPoint);
+			pickUpPointRepository.save(pickUpPoint);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
-			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+			return null;
 		}
+		logger.info("Added new pickup point data to the database.");
+		return "Success";
 	}
 
 	/**

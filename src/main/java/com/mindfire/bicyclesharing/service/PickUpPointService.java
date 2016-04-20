@@ -45,7 +45,7 @@ public class PickUpPointService {
 	 *            this parameter holds PickUpPoint related data
 	 * @return PickUpPoint object
 	 */
-	public PickUpPoint savePickUpPoint(PickUpPointDTO pickUpPointDTO) {
+	public String savePickUpPoint(PickUpPointDTO pickUpPointDTO) {
 		return pickUpPointComponent.mapPickUpPointDetails(pickUpPointDTO);
 	}
 

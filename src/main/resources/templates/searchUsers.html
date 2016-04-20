@@ -58,7 +58,7 @@
 											<th>Registered on</th>
 											<th>Role</th>
 											<th>Is approved?</th>
-											<th> Is   Active?</th>
+											<th>Is Active?</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -78,18 +78,18 @@
 												th:text="${user.role.userRole}"></a></td>
 											<td sec:authorize="hasAuthority('MANAGER')"
 												class="text-center" th:text="${user.role.userRole}"></td>
-											<td class="text-center" th:if="${user.isApproved}">✔<span
-												style="font-size: 10px; color: blue;"><a
-													th:href="@{/user/userApproval/} + ${user.userId}">Disable</a></span></td>
-											<td class="text-center" th:unless="${user.isApproved}">✘
-												<span style="font-size: 10px; color: blue;"><a
+											<td class="text-center" th:if="${user.isApproved}">✔<span><a
+													class="btn btn-danger btn-xs"
+													th:href="@{/user/userApproval/} + ${user.userId}">Disapprove</a></span></td>
+											<td class="text-center" th:unless="${user.isApproved}">✘<span><a
+													class="btn btn-success btn-xs"
 													th:href="@{/user/userApproval/} + ${user.userId}">Approve</a></span>
 											</td>
-											<td class="text-center" th:if="${user.enabled}">✔ <span
-												style="font-size: 10px; color: blue;"><a
+											<td class="text-center" th:if="${user.enabled}">✔<span><a
+													class="btn btn-danger btn-xs"
 													th:href="@{/user/userEnable/} + ${user.userId}">Disable</a></span></td>
-											<td class="text-center" th:unless="${user.enabled}">✘ <span
-												style="font-size: 10px; color: blue;"><a
+											<td class="text-center" th:unless="${user.enabled}">✘<span><a
+													class="btn btn-success btn-xs"
 													th:href="@{/user/userEnable/} + ${user.userId}">Enable</a></span></td>
 										</tr>
 									</tbody>

@@ -71,7 +71,7 @@ public class BiCycleComponent {
 	 *            the data from the view
 	 * @return BiCycle object
 	 */
-	public BiCycle mapBiCycleData(BiCycleDTO biCycleDTO) {
+	public String mapBiCycleData(BiCycleDTO biCycleDTO) {
 		BiCycle biCycle = new BiCycle();
 		PickUpPoint pickUpPoint = pickUpPointRepository.findByPickUpPointId(biCycleDTO.getPickUpPoint());
 
@@ -83,12 +83,13 @@ public class BiCycleComponent {
 			try {
 				biCycleRepository.save(biCycle);
 			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
-				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+				logger.error("Bicycle with the chasis number already exists.");
+				return "duplicate data";
 			}
 			pickUpPointComponent.updateBiCycleCurrentAvailability(pickUpPoint,
 					biCycleRepository.findByCurrentLocationAndIsAvailable(pickUpPoint, true).size());
 			logger.info("Bicycle with chassis no. " + biCycleDTO.getChasisNo() + " added to database.");
-			return biCycle;
+			return "Successfully Added!!!";
 		} else {
 			logger.info("There are no more spaces for new bicycle at the desired pickup point.");
 			return null;
