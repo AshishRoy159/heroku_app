@@ -105,7 +105,7 @@ public class RateGroupService {
 	 * @throws ParseException
 	 *             may occur while parsing from String to Date
 	 */
-	public RateGroup updateRateGroup(RateGroupDTO rateGroupDTO) throws ParseException {
+	public String updateRateGroup(RateGroupDTO rateGroupDTO) throws ParseException {
 		return rateGroupComponent.mapUpdateRateGroupAndIsActive(rateGroupDTO);
 	}
 }

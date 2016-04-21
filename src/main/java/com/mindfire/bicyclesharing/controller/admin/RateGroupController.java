@@ -29,6 +29,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -67,7 +68,7 @@ public class RateGroupController {
 	 * 
 	 * @return addNewRateGroup view
 	 */
-	@RequestMapping(value = "/admin/addNewRateGroup", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/addRateGroup", method = RequestMethod.GET)
 	public ModelAndView addNewRateGroup() {
 		return new ModelAndView("addNewRateGroup");
 	}
@@ -87,20 +88,19 @@ public class RateGroupController {
 	 *             may occur while parsing from String to Date
 	 */
 	@RequestMapping(value = "/admin/addRateGroup", method = RequestMethod.POST)
-	public ModelAndView addRateGroup(@Valid @ModelAttribute("rateGroupData") RateGroupDTO rateGroupDTO,
-			BindingResult result, RedirectAttributes redirectAttributes) throws ParseException {
+	public @ResponseBody String addRateGroup(@Valid @ModelAttribute RateGroupDTO rateGroupDTO, BindingResult result)
+			throws ParseException {
 
 		if (result.hasErrors()) {
-			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid Data..!");
-		} else if (null == rateGroupService.addNewRateGroup(rateGroupDTO)) {
-			logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Operation failed...");
+			return "Enter Valid Data";
+		}
+		RateGroup message = rateGroupService.addNewRateGroup(rateGroupDTO);
+		if (null == message) {
+			return "Operation Failed";
 		} else {
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully added..!");
+			return "Succesfully Added";
 		}
-		return new ModelAndView("redirect:/admin/addNewRateGroup");
 	}
 
 	/**
@@ -178,20 +178,22 @@ public class RateGroupController {
 	 *             may occur while parsing from String to Date
 	 */
 	@RequestMapping(value = "/admin/updatedRateGroup", method = RequestMethod.POST)
-	public ModelAndView updateRateGroup(@Valid @ModelAttribute("updateRateGroupData") RateGroupDTO rateGroupDTO,
-			BindingResult result, RedirectAttributes redirectAttributes) throws ParseException {
+	public @ResponseBody String updateRateGroup(@Valid @ModelAttribute RateGroupDTO rateGroupDTO, BindingResult result)
+			throws ParseException {
 
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid Data.!");
-		} else if (null == rateGroupService.updateRateGroup(rateGroupDTO)) {
+			return "Inavlid Data ! ";
+		}
+		String message = rateGroupService.updateRateGroup(rateGroupDTO);
+		if (null == message) {
 			logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Operation failed..!");
+			return "Operation Failed. !";
 		} else {
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Updated..!");
+			return "Successfully Updated";
 		}
-		return new ModelAndView("redirect:/admin/selectRateGroup");
+
 	}
 
 	/**
@@ -231,8 +233,9 @@ public class RateGroupController {
 		} else if (null == userService.UpdateRateGroup(manageRateGroupDTO)) {
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Operation failed..!");
 		} else {
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Rate group is assigned successfully!");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE,
+					"Rate group is assigned successfully!");
 		}
-		return new ModelAndView(ViewConstant.REDIRECT+"/manager/"+ ViewConstant.MANAGE_RATE_GROUP);
+		return new ModelAndView(ViewConstant.REDIRECT + "/manager/" + ViewConstant.MANAGE_RATE_GROUP);
 	}
 }

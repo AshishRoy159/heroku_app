@@ -25,10 +25,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.BaseRateDTO;
 import com.mindfire.bicyclesharing.service.BaseRateService;
@@ -74,19 +73,17 @@ public class BaseRateController {
 	 * @return updatBaseRate view.
 	 */
 	@RequestMapping(value = "/admin/updateBaseRate", method = RequestMethod.POST)
-	public ModelAndView updateBaseRate(@Valid @ModelAttribute("baseRateData") BaseRateDTO baseRateDTO,
-			BindingResult result, RedirectAttributes redirectAttributes) {
+	public @ResponseBody String updateBaseRate(@Valid @ModelAttribute BaseRateDTO baseRateDTO, BindingResult result) {
 		if (result.hasErrors()) {
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Enter valid data!");
-			return new ModelAndView(ViewConstant.REDIRECT + "/admin/" + ViewConstant.UPDATE_BASE_RATE);
+			return "Enter Valid Data";
 		}
+		String message = baseRateService.updateBaseRate(baseRateDTO);
 
-		if (null == baseRateService.updateBaseRate(baseRateDTO)) {
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Oops Operation failed..!");
+		if (message == null) {
+			return "Oops Operation failed..!";
 		} else {
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully updated...!");
+			return "Successfully updated...!";
 		}
-		return new ModelAndView(ViewConstant.REDIRECT + "/admin/" + ViewConstant.UPDATE_BASE_RATE);
 	}
 
 }

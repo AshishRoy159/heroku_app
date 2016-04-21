@@ -90,13 +90,15 @@ public class RateGroupComponent {
 		} else {
 			rateGroup.setIsActive(false);
 		}
+		RateGroup saveRateGroup =new RateGroup();
 
 		try {
 			logger.info("Created new rate group data.");
-			return rateGroupRepository.save(rateGroup);
+		saveRateGroup =	rateGroupRepository.save(rateGroup);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
-			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+			return null;
 		}
+		return saveRateGroup;
 	}
 
 	/**
@@ -206,7 +208,7 @@ public class RateGroupComponent {
 	 * @throws ParseException
 	 *             may occur while parsing from String to Date
 	 */
-	public RateGroup mapUpdateRateGroupAndIsActive(RateGroupDTO rateGroupDTO) throws ParseException {
+	public String mapUpdateRateGroupAndIsActive(RateGroupDTO rateGroupDTO) throws ParseException {
 		RateGroup existingRateGroup = rateGroupRepository
 				.findByGroupTypeAndIsActiveAndEffectiveUptoIsNull(rateGroupDTO.getGroupType(), false);
 
@@ -230,9 +232,9 @@ public class RateGroupComponent {
 				updateRateGroup.setEffectiveFrom(simpleDateFormat.parse(rateGroupDTO.getEffectiveFrom()));
 
 				try {
-					return rateGroupRepository.save(updateRateGroup);
+					 rateGroupRepository.save(updateRateGroup);
 				} catch (DataIntegrityViolationException dataIntegrityViolationException) {
-					throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+					return "Duplicate Data";
 				}
 			}
 			RateGroup newRateGroup = mapNewRateGroupDetails(rateGroupDTO);
@@ -249,7 +251,7 @@ public class RateGroupComponent {
 	 * @throws ParseException
 	 *             may occur while parsing from String to Date
 	 */
-	public RateGroup updateEffectiveUpTo(RateGroup newRateGroup) throws ParseException {
+	public String updateEffectiveUpTo(RateGroup newRateGroup) throws ParseException {
 		RateGroup rateGroup = rateGroupRepository.findByGroupTypeAndIsActive(newRateGroup.getGroupType(), true);
 		@SuppressWarnings("deprecation")
 		int date = newRateGroup.getEffectiveFrom().getDate();
@@ -286,9 +288,10 @@ public class RateGroupComponent {
 
 		try {
 			logger.info("Updated rate group deatils.");
-			return rateGroupRepository.save(rateGroup);
+		 rateGroupRepository.save(rateGroup);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
-			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+			return "Duplicate data";
 		}
+		return "Successfully Updated !";
 	}
 }

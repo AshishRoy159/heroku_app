@@ -55,7 +55,7 @@ public class BaseRateService {
 	 *            this object contains base rate related data.
 	 * @return {@link BaseRate} object
 	 */
-	public BaseRate updateBaseRate(BaseRateDTO baseRateDTO) {
+	public String updateBaseRate(BaseRateDTO baseRateDTO) {
 		return baseRateComponent.mapUpdateBaseRate(baseRateDTO);
 	}
 

@@ -160,82 +160,82 @@ function checkDate(form) {
 
 }
 
-function userBookingValidationForImage1(form){
+function userBookingValidationForImage1(form) {
 	var bookingTime = document.getElementById("bookingId1").value;
 	var returnTime = document.getElementById("returnId1").value;
-	if(userBookingValidation(bookingTime,returnTime)){
+	if (userBookingValidation(bookingTime, returnTime)) {
 		return true;
-	}else{
+	} else {
 		return false;
 	}
 }
 
-function userBookingValidationForImage2(form){
+function userBookingValidationForImage2(form) {
 	var bookingTime = document.getElementById("bookingId2").value;
 	var returnTime = document.getElementById("returnId2").value;
-	if(userBookingValidation(bookingTime,returnTime)){
+	if (userBookingValidation(bookingTime, returnTime)) {
 		return true;
-	}else{
+	} else {
 		return false;
 	}
 }
 
-function userBookingValidationForImage3(form){
+function userBookingValidationForImage3(form) {
 	var bookingTime = document.getElementById("bookingId3").value;
 	var returnTime = document.getElementById("returnId3").value;
-	if(userBookingValidation(bookingTime,returnTime)){
+	if (userBookingValidation(bookingTime, returnTime)) {
 		return true;
-	}else{
+	} else {
 		return false;
 	}
 }
 
-function userBookingValidationForImage4(form){
+function userBookingValidationForImage4(form) {
 	var bookingTime = document.getElementById("bookingId4").value;
 	var returnTime = document.getElementById("returnId4").value;
-	if(userBookingValidation(bookingTime,returnTime)){
+	if (userBookingValidation(bookingTime, returnTime)) {
 		return true;
-	}else{
+	} else {
 		return false;
 	}
 }
 
-function userBookingValidationForImage5(form){
+function userBookingValidationForImage5(form) {
 	var bookingTime = document.getElementById("bookingId5").value;
 	var returnTime = document.getElementById("returnId5").value;
-	if(userBookingValidation(bookingTime,returnTime)){
+	if (userBookingValidation(bookingTime, returnTime)) {
 		return true;
-	}else{
+	} else {
 		return false;
 	}
 }
 
-function userBookingValidationForImage6(form){
+function userBookingValidationForImage6(form) {
 	var bookingTime = document.getElementById("bookingId6").value;
 	var returnTime = document.getElementById("returnId6").value;
-	if(userBookingValidation(bookingTime,returnTime)){
+	if (userBookingValidation(bookingTime, returnTime)) {
 		return true;
-	}else{
+	} else {
 		return false;
 	}
 }
 
-function userBookingValidationForImage7(form){
+function userBookingValidationForImage7(form) {
 	var bookingTime = document.getElementById("bookingId7").value;
 	var returnTime = document.getElementById("returnId7").value;
-	if(userBookingValidation(bookingTime,returnTime)){
+	if (userBookingValidation(bookingTime, returnTime)) {
 		return true;
-	}else{
+	} else {
 		return false;
 	}
 }
 
-function userBookingValidationForMobile(form){
+function userBookingValidationForMobile(form) {
 	var bookingTime = document.getElementById("bookingId8").value;
 	var returnTime = document.getElementById("returnId8").value;
-	if(userBookingValidation(bookingTime,returnTime)){
+	if (userBookingValidation(bookingTime, returnTime)) {
 		return true;
-	}else{
+	} else {
 		return false;
 	}
 }
@@ -243,7 +243,7 @@ function userBookingValidationForMobile(form){
 /*
  * This function validates the booking date and time provided by the user.
  */
-function userBookingValidation(bookingTime,returnTime) {
+function userBookingValidation(bookingTime, returnTime) {
 	var bookingTime = bookingTime;
 	var returnTime = returnTime;
 	var currentDate = new Date();
@@ -323,8 +323,8 @@ function userBookingValidation(bookingTime,returnTime) {
 	}
 }
 
-/* 
- * Used to check  iAgree checkbox 
+/*
+ * Used to check iAgree checkbox
  */
 function iAgree() {
 	document.getElementById('iAgreeId').checked = true;
@@ -333,6 +333,7 @@ function iAgree() {
 /*
  * Validates the input date.
  */
+
 function checkEffectiveFrom(form) {
 	var selectedText = document.getElementById('datepicker').value;
 	var selectedDate = new Date(selectedText);
@@ -345,19 +346,17 @@ function checkEffectiveFrom(form) {
 	}
 }
 
-function checkSize(max_img_size)
-{
-    var input = document.getElementById("upload");
-    // check for browser support (may need to be modified)
-    if(input.files && input.files.length == 1)
-    {           
-        if (input.files[0].size > max_img_size) 
-        {
-            alert("The file must be less than " + (max_img_size/1024/1024) + "MB");
-            document.getElementById("payNow").disabled = true;
-        } else {
-        	document.getElementById("payNow").disabled = false;
+function checkSize(max_img_size) {
+	var input = document.getElementById("upload");
+	// check for browser support (may need to be modified)
+	if (input.files && input.files.length == 1) {
+		if (input.files[0].size > max_img_size) {
+			alert("The file must be less than " + (max_img_size / 1024 / 1024)
+					+ "MB");
+			document.getElementById("payNow").disabled = true;
+		} else {
+			document.getElementById("payNow").disabled = false;
 		}
-    }
+	}
 
 }

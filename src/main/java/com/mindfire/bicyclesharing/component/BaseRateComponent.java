@@ -18,12 +18,9 @@ package com.mindfire.bicyclesharing.component;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.dto.BaseRateDTO;
-import com.mindfire.bicyclesharing.exception.CustomException;
-import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.BaseRate;
 import com.mindfire.bicyclesharing.repository.BaseRateRepository;
 
@@ -59,14 +56,15 @@ public class BaseRateComponent {
 	 *            this object holds the base rate related data.
 	 * @return {@link BaseRate} object
 	 */
-	public BaseRate mapUpdateBaseRate(BaseRateDTO baseRateDTO) {
+	public String mapUpdateBaseRate(BaseRateDTO baseRateDTO) {
 		BaseRate baseRate = baseRateRepository.findByGroupType(baseRateDTO.getGroupType());
 		baseRate.setBaseRate(baseRateDTO.getBaseRate());
 
 		try {
-			return baseRateRepository.save(baseRate);
+			baseRateRepository.save(baseRate);
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
-			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+			return "Duplicate Data";
 		}
+		return "success";
 	}
 }
