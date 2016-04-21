@@ -38,7 +38,7 @@
 				</div>
 			</div>
 			<div class="row" style="margin-bottom: 10px">
-				<h2 class="text-danger" th:text="${errorMessage}"></h2>
+				<h2 id="info"></h2>
 			</div>
 			<div class="row">
 				<div class="col-md-12 col-sm-12 col-xs-12">
@@ -80,17 +80,21 @@
 												class="text-center" th:text="${user.role.userRole}"></td>
 											<td class="text-center" th:if="${user.isApproved}">✔<span><a
 													class="btn btn-danger btn-xs"
-													th:href="@{/user/userApproval/} + ${user.userId}">Disapprove</a></span></td>
+													th:href="@{/user/userApproval/} + ${user.userId}"
+													onclick="return approveUser(this)">Disapprove</a></span></td>
 											<td class="text-center" th:unless="${user.isApproved}">✘<span><a
 													class="btn btn-success btn-xs"
-													th:href="@{/user/userApproval/} + ${user.userId}">Approve</a></span>
+													th:href="@{/user/userApproval/} + ${user.userId}"
+													onclick="return approveUser(this)">Approve</a></span>
 											</td>
 											<td class="text-center" th:if="${user.enabled}">✔<span><a
 													class="btn btn-danger btn-xs"
-													th:href="@{/user/userEnable/} + ${user.userId}">Disable</a></span></td>
+													th:href="@{/user/userEnable/} + ${user.userId}"
+													onclick="return enableUser(this)">Disable</a></span></td>
 											<td class="text-center" th:unless="${user.enabled}">✘<span><a
 													class="btn btn-success btn-xs"
-													th:href="@{/user/userEnable/} + ${user.userId}">Enable</a></span></td>
+													th:href="@{/user/userEnable/} + ${user.userId}"
+													onclick="return enableUser(this)">Enable</a></span></td>
 										</tr>
 									</tbody>
 								</table>
@@ -127,5 +131,6 @@
 	</script>
 	<!-- Custom Js -->
 	<script th:src="@{/js/custom-scripts.js}" type="text/javascript"></script>
+	<script th:src="@{/js/ajax-functions.js}" type="text/javascript"></script>
 </body>
 </html>

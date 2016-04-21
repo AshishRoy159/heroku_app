@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -143,12 +144,11 @@ public class ManageRoleController {
 	 * @return searchUser view.
 	 */
 	@RequestMapping(value = "/user/userApproval/{id}", method = RequestMethod.GET)
-	public ModelAndView userApproval(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
-			Authentication authentication) {
+	public @ResponseBody String userApproval(@PathVariable("id") Long id, Authentication authentication, Model model) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
 		if (userService.userDetails(id) == null) {
-			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+			return "No data available for the specified userId";
 		}
 
 		if ((currentUser.getUserRole().equals("ADMIN") && currentUser.getUserId() != id)
@@ -156,26 +156,23 @@ public class ManageRoleController {
 						&& userService.userDetails(id).getRole().getUserRole().equals("USER"))) {
 			logger.info("Permission granted to approve user.");
 
-			if (null == userService.setApproval(id)) {
+			User user = userService.setApproval(id);
+			if (null == user) {
 				logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
-				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
-						"Sorry operation failed...!");
+				return "Sorry operation failed...!";
 			} else {
 				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
+				if(user.getIsApproved()){
+					return "true";
+				} else {
+					return "false";
+				}
 			}
 		} else {
 			logger.info("Permission not granted for the request to approve user.");
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
-					"You don't have permission to update this details...!");
+			return "You don't have permission to update this details...!";
 		}
 
-		if (currentUser.getUserRole().equals("ADMIN")) {
-			logger.info(CustomLoggerConstant.REDIRECTED_TO_ADMIN_VIEW);
-			return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
-		} else {
-			logger.info(CustomLoggerConstant.REDIRECTED_TO_MANAGER_VIEW);
-			return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
-		}
 	}
 
 	/**
@@ -190,12 +187,12 @@ public class ManageRoleController {
 	 * @return searchUser view.
 	 */
 	@RequestMapping(value = "/user/userEnable/{id}", method = RequestMethod.GET)
-	public ModelAndView userEnable(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
+	public @ResponseBody String userEnable(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
 			Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
 		if (null == userService.userDetails(id)) {
-			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+			return "User does not exists with provided userId";
 		}
 
 		if ((currentUser.getUserRole().equals("ADMIN") && currentUser.getUserId() != id)
@@ -203,24 +200,20 @@ public class ManageRoleController {
 						&& userService.userDetails(id).getRole().getUserRole().equals("USER"))) {
 			logger.info("Permission granted to enable user.");
 
-			if (null == userService.setEnable(id)) {
+			User user = userService.setEnable(id);
+			if (null == user) {
 				logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
-				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
-						"Sorry operation failed...!");
+				return "Sorry operation failed...!";
 			} else {
 				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
+				if(user.getEnabled()){
+					return "true";
+				} else {
+					return "false";
+				}
 			}
 		} else {
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
-					"You don't have permission to update this details...!");
-		}
-
-		if (currentUser.getUserRole().equals("ADMIN")) {
-			logger.info(CustomLoggerConstant.REDIRECTED_TO_ADMIN_VIEW);
-			return new ModelAndView(ViewConstant.REDIRECT + "/admin/userList");
-		} else {
-			logger.info(CustomLoggerConstant.REDIRECTED_TO_MANAGER_VIEW);
-			return new ModelAndView(ViewConstant.REDIRECT + "/manager/userList");
+			return "You don't have permission to update this details...!";
 		}
 	}
 }

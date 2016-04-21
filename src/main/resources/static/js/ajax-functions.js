@@ -209,3 +209,66 @@ function hideMessage() {
 		$("#info").hide(500);
 	}, 2500);
 }
+
+/*------------------------------------------------------------------
+ * This function is used to approve user using ajax
+ *------------------------------------------------------------------*/
+function approveUser(param) {
+	var userDetails = $(param).attr('href');
+	$.ajax({
+		type : "GET",
+		url : userDetails,
+		success : function(response) {
+			if (response == "true") {
+				response = "User Approved Successfully";
+				$(param).text("Disapprove");
+				$(param).attr("class","btn btn-danger btn-xs");
+			} else if (response == "false") {
+				response = "User Disapproved Successfully"
+				$(param).text("Approve");
+				$(param).attr("class","btn btn-success btn-xs");
+			}
+			$('#info').show(200);
+			$('#info').html(response);
+
+			hideMessage();
+		},
+		error : function(xhr, status, e) {
+			alert(xhr.responseText);
+		}
+	});
+	return false;
+}
+
+function enableUser(param) {
+	var userDetails = $(param).attr('href');
+	$.ajax({
+		type : "GET",
+		url : userDetails,
+		success : function(response) {
+			if (response == "true") {
+				response = "User Enabled Successfully";
+				$(param).text("Disable");
+				$(param).attr("class","btn btn-danger btn-xs");
+			} else if (response == "false") {
+				response = "User Disabled Successfully"
+				$(param).text("Enable");
+				$(param).attr("class","btn btn-success btn-xs");
+			}
+			$('#info').show(200);
+			$('#info').html(response);
+
+			hideMessage();
+		},
+		error : function(xhr, status, e) {
+			alert(xhr.responseText);
+		}
+	});
+	return false;
+}
+
+function hideMessage() {
+	setTimeout(function() {
+		$("#info").hide(500);
+	}, 2500);
+}
