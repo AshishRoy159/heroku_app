@@ -35,14 +35,14 @@
 								<h3>Outgoing</h3>
 							</div>
 							<div class="panel-body">
-							<form action="#" th:action="@{/admin/afterSetPickUpPoint}"
-				th:object="${manageRoleData}" method="post">
-								<div class="col-md-8 col-sm-8 col-xs-8">
-									<fieldset>
-										<p>
-											<label>User Email</label> <input name="userEmail"
-												class="form-control" required="required" />
-										</p>
+								<form action="#" th:action="@{/admin/afterSetPickUpPoint}"
+									th:object="${manageRoleData}" method="post">
+									<div class="col-md-8 col-sm-8 col-xs-8">
+										<fieldset>
+											<p>
+												<label>User Email</label> <input name="userEmail"
+													class="form-control" required="required" />
+											</p>
 											<div class="controls">
 												<select class="input-xlarge form-control" name="pickUpPoint"
 													required="required">
@@ -53,12 +53,12 @@
 												</select> <span class="help-block">Input the initial pick up
 													point id</span>
 											</div>
-									</fieldset>
-									<div>
-										<button class="btn btn-primary">Submit &raquo;</button>
-										<input type="reset" class="btn btn-info" />
+										</fieldset>
+										<div>
+											<button class="btn btn-primary">Submit &raquo;</button>
+											<input type="reset" class="btn btn-info" />
+										</div>
 									</div>
-								</div>
 								</form>
 							</div>
 						</div>

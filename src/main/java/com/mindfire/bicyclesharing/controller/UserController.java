@@ -501,17 +501,27 @@ public class UserController {
 	 *            the current session
 	 * @param result
 	 *            for validating incoming data
+	 * @param model
+	 *            to map model attributes
 	 * @return payment view
 	 */
 	@PostAuthorize("isAnonymous()")
 	@RequestMapping(value = "payment", method = RequestMethod.POST)
 	public ModelAndView getPayment(@Valid @ModelAttribute("userData") UserDTO userDTO, BindingResult result,
-			HttpSession session) throws CustomException {
+			HttpSession session, Model model) throws CustomException {
 
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
 			return new ModelAndView(ViewConstant.REGISTRATION, ModelAttributeConstant.ERROR_MESSAGE,
 					"Invalid User data");
+		}
+
+		Optional<User> existing = userService.getUserByEmail(userDTO.getEmail());
+
+		if (existing.isPresent()) {
+			logger.info("An user with the email id already exists. Transaction cancelled.");
+			model.addAttribute("failure", "User with same email already exists!!");
+			return new ModelAndView(ViewConstant.REGISTRATION);
 		}
 
 		try {

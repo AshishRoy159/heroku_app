@@ -12,7 +12,7 @@ function addBicycle() {
 		url : "/admin/addNewBicycle",
 		data : 'chasisNo=' + chasisNo + '&pickUpPoint=' + pickUpPoint,
 		success : function(response) {
-			$('#info').show();
+			$('#info').show(200);
 			$('#info').html(response);
 			$('#chasisNo').val('');
 			$('#pickUpPoint').val('');
@@ -41,11 +41,11 @@ function addPickupPoint() {
 		url : "/admin/addPickupPoint",
 		data : 'location=' + location + '&maxCapacity=' + maxCapacity,
 		success : function(response) {
-			$('#info').show();
+			$('#info').show(200);
 			$('#info').html(response);
 			$('#location').val('');
 			$('#maxCapacity').val('');
-			$('#add').text("Add bicycle");
+			$('#add').text("Add Pickup point");
 			$('#add').prop("disabled", false);
 			hideMessage();
 		},
@@ -56,9 +56,38 @@ function addPickupPoint() {
 	return false;
 }
 
-/*-----------------------------------------------------------------
- * This function is used to send rate group details to the server
- *-----------------------------------------------------------------*/
+/*---------------------------------------------------------------
+ * This function is used to send wallet balance details to server
+ *---------------------------------------------------------------*/
+function addBalance() {
+	var userId = $('#userId').val();
+	var balance = $('#balance').val();
+	$('#add').text("Adding..");
+	$("#add").prop("disabled", true);
+
+	$.ajax({
+		type : "POST",
+		url : "/manager/wallet",
+		data : 'userId=' + userId + '&balance=' + balance,
+		success : function(response) {
+			$('#info').show(200);
+			$('#info').html(response);
+			$('#userId').val('');
+			$('#balance').val('');
+			$('#add').text("Add Balance");
+			$('#add').prop("disabled", false);
+			hideMessage();
+		},
+		error : function(xhr, status, e) {
+			alert(xhr.responseText);
+		}
+	});
+	return false;
+}
+
+/*---------------------------------------------------------------------
+ * This function is used to send base rate update details to the server
+ *---------------------------------------------------------------------*/
 function updateBaseRate() {
 	var groupType = $('#groupType').val();
 	var baseRate = $('#baseRate').val();
@@ -70,7 +99,7 @@ function updateBaseRate() {
 		url : "/admin/updateBaseRate",
 		data : 'groupType=' + groupType + '&baseRate=' + baseRate,
 		success : function(response) {
-			$('#info').show();
+			$('#info').show(200);
 			$('#info').html(response);
 			$('#baseRate').val('');
 			$('#update').text("Update Rate Group");
@@ -84,6 +113,9 @@ function updateBaseRate() {
 	return false;
 }
 
+/*-------------------------------------------------------------------
+ * This function is used to send new rate group details to the server
+ *-------------------------------------------------------------------*/
 function addNewRateGroup() {
 	var groupType = $('#groupType').val();
 	var discount = $('#discount').val();
@@ -97,7 +129,7 @@ function addNewRateGroup() {
 		data : 'discount=' + discount + '&groupType=' + groupType
 				+ '&effectiveFrom=' + effectiveFrom,
 		success : function(response) {
-			$('#info').show();
+			$('#info').show(200);
 			$('#info').html(response);
 			$('#groupType').val('');
 			$('#discount').val('');
@@ -113,6 +145,9 @@ function addNewRateGroup() {
 	return false;
 };
 
+/*----------------------------------------------------------------------
+ * This function is used to send rate group update details to the server
+ *----------------------------------------------------------------------*/
 function updateRateGroup() {
 	var rateGroupId = $('#rateGroupId').val();
 	var groupType = $('#groupType').val();
@@ -127,7 +162,7 @@ function updateRateGroup() {
 		data : 'discount=' + discount + '&groupType=' + groupType
 				+ '&effectiveFrom=' + effectiveFrom,
 		success : function(response) {
-			$('#info').show();
+			$('#info').show(200);
 			$('#info').html(response);
 			$('#discount').val('');
 			$('#effectiveFrom').val('');
@@ -142,8 +177,35 @@ function updateRateGroup() {
 	return false;
 }
 
+/*------------------------------------------------------------------
+ * This function is used to send close booking details to the server
+ *------------------------------------------------------------------*/
+function closeBooking() {
+	var bookingId = $('#bookingId').val();
+	$('#close').text("Closing..");
+	$("#close").prop("disabled", true);
+
+	$.ajax({
+		type : "POST",
+		url : "/manager/closeBooking",
+		data : 'bookingId=' + bookingId,
+		success : function(response) {
+			$('#info').show(200);
+			$('#info').html(response);
+			$('#bookingId').val('');
+			$('#close').text("Close");
+			$('#close').prop("disabled", false);
+			hideMessage();
+		},
+		error : function(xhr, status, e) {
+			alert(xhr.responseText);
+		}
+	});
+	return false;
+}
+
 function hideMessage() {
 	setTimeout(function() {
 		$("#info").hide(500);
-	}, 3000);
+	}, 2500);
 }

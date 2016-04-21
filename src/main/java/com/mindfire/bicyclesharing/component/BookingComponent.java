@@ -412,7 +412,7 @@ public class BookingComponent {
 				logger.info("Booking closed.");
 				return bookingRepository.save(booking);
 			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
-				throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
+				return null;
 			}
 		} else {
 			logger.info("Booking is already closed.");

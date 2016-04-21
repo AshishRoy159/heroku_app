@@ -146,21 +146,22 @@
 								<h3>Close Booking</h3>
 							</div>
 							<div class="panel-body">
-								<div class="col-md-8 col-sm-8 col-xs-8">
-									<h4 class="text-danger" th:text="*{closeMessage}"></h4>
-									<form action="manager/closeBooking"
-										th:action="@{/manager/closeBooking}"
-										th:object="${closeBookingData}" method="POST">
+								<div class="col-md-6 col-sm-6 col-xs-6">
+									<form onsubmit="return closeBooking()" class="form-horizontal">
 										<div>
 											<label class="control-label">Booking Id</label> <input
-												type="text" name="bookingId" class="form-control"
+												type="text" id="bookingId" class="form-control"
 												required="required" maxlength="10" />
 										</div>
 										<div style="padding: 5px">
-											<input type="submit" class="btn btn-primary" value="OK" /> <input
-												type="reset" class="btn btn-info" value="Reset" />
+											<button id="close" type="submit" class="btn btn-primary">Close</button>
+											<input type="reset" class="btn btn-info" value="Reset" />
 										</div>
 									</form>
+								</div>
+								<div class="col-md-6 col-sm-6 col-xs-6">
+									<h3 class="popover popover-right" style="padding: 10px;"
+										id="info"></h3>
 								</div>
 							</div>
 						</div>
@@ -182,9 +183,8 @@
 	<script th:src="@{/js/jquery.metisMenu.js}" type="text/javascript"></script>
 	<!-- Custom Js -->
 	<script th:src="@{/js/custom-scripts.js}" type="text/javascript"></script>
-	<script src="/js/jquery.js" th:src="@{js/jquery.js}"></script>
-	<script src="/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
-	<script src="/js/smoothscroll.js" th:src="@{js/smoothscroll.js}"></script>
 	<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
+	<!-- Ajax Js -->
+	<script th:src="@{/js/ajax-functions.js}" type="text/javascript"></script>
 </body>
 </html>

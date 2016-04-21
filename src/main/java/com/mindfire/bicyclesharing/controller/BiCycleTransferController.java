@@ -284,6 +284,7 @@ public class BiCycleTransferController {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 		List<Transfer> outgoingTransfers = transferService.findOutgoingTransfers(currentUser);
 		List<Transfer> incomingTransfers = transferService.findIncomingTransfers(currentUser);
+
 		model.addAttribute(ModelAttributeConstant.OUTGOINGS, outgoingTransfers);
 		model.addAttribute(ModelAttributeConstant.INCOMINGS, incomingTransfers);
 		return new ModelAndView(ViewConstant.TRANSFERS);

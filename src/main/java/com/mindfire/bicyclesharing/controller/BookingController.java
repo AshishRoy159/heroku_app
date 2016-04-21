@@ -35,6 +35,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -454,43 +455,40 @@ public class BookingController {
 	 * @return booking view
 	 */
 	@RequestMapping(value = { "/manager/closeBooking" }, method = RequestMethod.POST)
-	public ModelAndView closeCurrentBooking(@Valid @ModelAttribute("closeBookingData") ReceiveCycleDTO receiveCycleDTO,
+	public @ResponseBody String closeCurrentBooking(@Valid @ModelAttribute ReceiveCycleDTO receiveCycleDTO,
 			BindingResult result, RedirectAttributes redirectAttributes) {
 
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE, "Invalid Booking Id.");
-			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
+			return "Invalid Booking Id";
 		}
 
 		Booking booking = bookingService.getBookingById(receiveCycleDTO.getBookingId());
 
 		if (null != booking) {
-			logger.info("Booking data is valid.");
+			logger.info("Booking data is valid");
 
-			if (null != booking.getBiCycleId()) {
+			if (!booking.getIsOpen()) {
+				logger.info("This booking is already closed.");
+				return "This booking has already been closed";
+			} else if (null != booking.getBiCycleId()) {
 				logger.info("Issued bicycle has not been returned yet. Transaction cancelled.");
-				redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
-						"You have been issued a bicycle. Please return bicycle before closing the booking..!");
+				return "You have been issued a bicycle. Please return bicycle before closing the booking..!";
 			} else {
-				logger.info("Bicycle has been issued for this booking.");
+				logger.info("Bicycle has been issued for this booking");
 
 				if (null != bookingService.closeBooking(receiveCycleDTO)) {
 					logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
-					redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
-							"Your booking has been successfully closed.");
+					return "Your booking has been successfully closed";
 				} else {
 					logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
-					redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
-							"Your booking status is not valid..");
+					return "Your booking status is not valid..";
 				}
 			}
 		} else {
-			logger.info("Booking doesn't exist. Transaction cancelled.");
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
-					"Your booking status is not valid..");
+			logger.info("Booking doesn't exist. Transaction cancelled");
+			return "Your booking status is not valid..";
 		}
-		return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 	}
 
 	/**

@@ -25,11 +25,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mindfire.bicyclesharing.constant.CustomLoggerConstant;
-import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.WalletBalanceDTO;
 import com.mindfire.bicyclesharing.model.User;
@@ -77,33 +76,26 @@ public class WalletController {
 	 *            to receive the incoming data
 	 * @param result
 	 *            for validating incoming data
-	 * @param redirectAttributes
-	 *            to map the model attributes
 	 * @return addWalletBalance view
 	 */
 	@RequestMapping(value = "/manager/wallet", method = RequestMethod.POST)
-	public ModelAndView addWalletBalance(@Valid @ModelAttribute("addWalletBalance") WalletBalanceDTO walletBalanceDTO,
-			BindingResult result, RedirectAttributes redirectAttributes) {
+	public @ResponseBody String addWalletBalance(@Valid @ModelAttribute WalletBalanceDTO walletBalanceDTO,
+			BindingResult result) {
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
-					"Balance must be between 100 and 999!!!");
-			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_WALLET_BALANCE);
+			return "Balance must be between 100 and 999!!!";
 		}
 		User user = userService.userDetails(walletBalanceDTO.getUserId());
 
 		if (user == null) {
 			logger.info("User doesn't exist. Transaction canccelled.");
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "User not found!!!");
-			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_WALLET_BALANCE);
+			return "User not found!!!";
 		} else if (walletService.addBalance(walletBalanceDTO) == 1) {
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			walletTransactionService.createWalletTransaction(walletBalanceDTO);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE, "Successfully Added!!!");
-			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_WALLET_BALANCE);
+			return "Successfully Added!!!";
 		}
 		logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
-		redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Oops... Operation failed!!");
-		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.ADD_WALLET_BALANCE);
+		return "Oops... Operation failed!!";
 	}
 }

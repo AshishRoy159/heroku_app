@@ -29,54 +29,49 @@
 			<!-- /. ROW  -->
 
 			<div class="row">
-				<div class="col-sm-1"></div>
-				<div class="col-sm-10">
+				<div class="col-sm-6">
 					<div class="panel panel-primary">
 						<div class="panel-heading">Enter Pick up point details
 							details</div>
 						<div class="panel-body">
-							<div class="col-sm-6">
-								<form onsubmit="return addPickupPoint()" class="form-horizontal">
-									<fieldset>
+							<form onsubmit="return addPickupPoint()" class="form-horizontal">
+								<fieldset>
 
-										<div class="control-group">
-											<label class="control-label">Location</label>
-											<div class="controls">
-												<textarea id="location" tabindex="1" maxlength="250"
-													rows="5" name="location" placeholder=""
-													class="input-xlarge form-control" required="required"></textarea>
-												<span class="help-block">Location of the pick up
-													point</span>
-											</div>
+									<div class="control-group">
+										<label class="control-label">Location</label>
+										<div class="controls">
+											<textarea id="location" tabindex="1" maxlength="250" rows="5"
+												name="location" placeholder=""
+												class="input-xlarge form-control" required="required"></textarea>
+											<span class="help-block">Location of the pick up point</span>
 										</div>
+									</div>
 
-										<div class="control-group">
-											<label class="control-label">Max capacity</label>
-											<div class="controls">
-												<input type="number" tabindex="2" min="1" max="999"
-													name="maxCapacity" placeholder="" id="maxCapacity"
-													class="input-xlarge form-control" required="required" /> <span
-													class="help-block">The maximum no. of bicycle this
-													pick up point can hold</span>
-											</div>
+									<div class="control-group">
+										<label class="control-label">Max capacity</label>
+										<div class="controls">
+											<input type="number" tabindex="2" min="1" max="999"
+												name="maxCapacity" placeholder="" id="maxCapacity"
+												class="input-xlarge form-control" required="required" /> <span
+												class="help-block">The maximum no. of bicycle this
+												pick up point can hold</span>
 										</div>
+									</div>
 
-										<div class="control-group">
-											<div class="controls">
-												<button id="add" type="submit" tabindex="3"
-													class="btn btn-primary">Add Pick up Point</button>
-											</div>
+									<div class="control-group">
+										<div class="controls">
+											<button id="add" type="submit" tabindex="3"
+												class="btn btn-primary">Add Pick up Point</button>
 										</div>
-									</fieldset>
-								</form>
-							</div>
-							<div class="col-sm-6" style="padding-top: 60px;">
-								<h3 id="info"></h3>
-							</div>
+									</div>
+								</fieldset>
+							</form>
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-1"></div>
+				<div class="col-sm-6" style="padding-top: 60px;">
+					<h3 class="popover popover-right" style="padding: 10px;" id="info"></h3>
+				</div>
 			</div>
 		</div>
 	</div>
