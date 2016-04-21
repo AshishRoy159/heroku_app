@@ -144,7 +144,7 @@ public class ManageRoleController {
 	 * @return searchUser view.
 	 */
 	@RequestMapping(value = "/user/userApproval/{id}", method = RequestMethod.GET)
-	public @ResponseBody String userApproval(@PathVariable("id") Long id, Authentication authentication, Model model) {
+	public @ResponseBody String userApproval(@PathVariable("id") Long id, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
 		if (userService.userDetails(id) == null) {
@@ -154,7 +154,7 @@ public class ManageRoleController {
 		if ((currentUser.getUserRole().equals("ADMIN") && currentUser.getUserId() != id)
 				|| (currentUser.getUserRole().equals("MANAGER")
 						&& userService.userDetails(id).getRole().getUserRole().equals("USER"))) {
-			logger.info("Permission granted to approve user.");
+			logger.info("Permission granted to change approval of user.");
 
 			User user = userService.setApproval(id);
 			if (null == user) {
@@ -162,14 +162,14 @@ public class ManageRoleController {
 				return "Sorry operation failed...!";
 			} else {
 				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
-				if(user.getIsApproved()){
+				if (user.getIsApproved()) {
 					return "true";
 				} else {
 					return "false";
 				}
 			}
 		} else {
-			logger.info("Permission not granted for the request to approve user.");
+			logger.info("Permission not granted for the request to update approval of user.");
 			return "You don't have permission to update this details...!";
 		}
 
@@ -206,7 +206,7 @@ public class ManageRoleController {
 				return "Sorry operation failed...!";
 			} else {
 				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
-				if(user.getEnabled()){
+				if (user.getEnabled()) {
 					return "true";
 				} else {
 					return "false";

@@ -188,6 +188,17 @@ public class UserService {
 	}
 
 	/**
+	 * This method is used to find the details of User by its mobile number
+	 * 
+	 * @param mobileNo
+	 *            the mobile number of user
+	 * @return {@link User} object
+	 */
+	public Optional<User> getUserByMobileNo(Long mobileNo) {
+		return userComponent.findUserByMobileNo(mobileNo);
+	}
+
+	/**
 	 * This method is used for storing a Password Reset token for the user
 	 * 
 	 * @param user

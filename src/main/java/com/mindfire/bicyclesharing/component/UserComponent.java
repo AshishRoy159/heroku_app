@@ -291,6 +291,17 @@ public class UserComponent {
 	}
 
 	/**
+	 * This method is used to find the details of User by its mobile number
+	 * 
+	 * @param mobileNo
+	 *            the mobile number of user
+	 * @return {@link User} object
+	 */
+	public Optional<User> findUserByMobileNo(Long mobileNo) {
+		return userRepository.findByMobileNo(mobileNo);
+	}
+
+	/**
 	 * This method is used to approve the user.
 	 * 
 	 * @param id

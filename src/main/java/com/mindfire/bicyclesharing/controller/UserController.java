@@ -515,12 +515,16 @@ public class UserController {
 			return new ModelAndView(ViewConstant.REGISTRATION, ModelAttributeConstant.ERROR_MESSAGE,
 					"Invalid User data");
 		}
+		Optional<User> existingEmail = userService.getUserByEmail(userDTO.getEmail());
+		Optional<User> existingMobileNo = userService.getUserByMobileNo(userDTO.getMobileNo());
 
-		Optional<User> existing = userService.getUserByEmail(userDTO.getEmail());
-
-		if (existing.isPresent()) {
+		if (existingEmail.isPresent()) {
 			logger.info("An user with the email id already exists. Transaction cancelled.");
 			model.addAttribute("failure", "User with same email already exists!!");
+			return new ModelAndView(ViewConstant.REGISTRATION);
+		} else if (existingMobileNo.isPresent()) {
+			logger.info("An user with the mobile number already exists. Transaction cancelled.");
+			model.addAttribute("failure", "User with same mobile number already exists!!");
 			return new ModelAndView(ViewConstant.REGISTRATION);
 		}
 

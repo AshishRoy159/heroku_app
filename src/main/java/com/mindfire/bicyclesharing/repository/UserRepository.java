@@ -50,6 +50,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findOneByEmail(String email);
 
 	/**
+	 * This method is used to find the details of User by its mobile number
+	 * 
+	 * @param mobileNo
+	 *            the mobile number of user
+	 * @return {@link User} object
+	 */
+	Optional<User> findByMobileNo(Long mobileNo);
+
+	/**
 	 * This method is used to find the details of one User by its userId
 	 * 
 	 * @param id
@@ -123,6 +132,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	@Transactional
 	@Modifying(clearAutomatically = true)
-	@Query("update User u set u.role =:userRoleId where u.userId =:userId" )
+	@Query("update User u set u.role =:userRoleId where u.userId =:userId")
 	public int updateUserRole(@Param("userRoleId") Role userRoleId, @Param("userId") Long userId);
 }
