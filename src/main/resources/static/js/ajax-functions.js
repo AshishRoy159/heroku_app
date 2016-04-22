@@ -267,6 +267,33 @@ function enableUser(param) {
 	return false;
 }
 
+/*------------------------------------------------------------------
+ * This function is used to send transfer request using ajax
+ *------------------------------------------------------------------*/
+function transferRequest() {
+	var quantity = $('#quantity').val();
+	$('#send').text("Sending..");
+	$("#send").prop("disabled", true);
+
+	$.ajax({
+		type : "POST",
+		url : "/manager/sendRequest",
+		data : 'quantity=' + quantity,
+		success : function(response) {
+			$('#info').show(200);
+			$('#info').html(response);
+			$('#quantity').val('');
+			$('#send').text("Send Request");
+			$('#send').prop("disabled", false);
+			hideMessage();
+		},
+		error : function(xhr, status, e) {
+			alert(xhr.responseText);
+		}
+	});
+	return false;
+}
+
 function hideMessage() {
 	setTimeout(function() {
 		$("#info").hide(500);

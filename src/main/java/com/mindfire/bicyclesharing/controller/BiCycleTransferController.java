@@ -34,8 +34,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mindfire.bicyclesharing.constant.CustomLoggerConstant;
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
@@ -116,23 +116,19 @@ public class BiCycleTransferController {
 	 * @return transferRequest view
 	 */
 	@RequestMapping(value = "manager/sendRequest", method = RequestMethod.POST)
-	public ModelAndView sendRequest(@Valid @ModelAttribute("transferData") TransferRequestDTO transferRequestDTO,
-			BindingResult result, RedirectAttributes redirectAttributes, Authentication authentication) {
+	public @ResponseBody String sendRequest(@Valid @ModelAttribute TransferRequestDTO transferRequestDTO,
+			BindingResult result, Authentication authentication) {
 
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
-					"Inavlid Request. Please enter valid quantity");
+			return "Inavlid Request. Please enter valid quantity";
 		} else if (transferRequestService.addNewTransferRequest(authentication, transferRequestDTO) == null) {
 			logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
-					"Request Failed..!! Request cannot exceed maximum capacity.");
+			return "Request Failed..!! Request cannot exceed maximum capacity.";
 		} else {
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.SUCCESS_MESSAGE,
-					"Transfer request for " + transferRequestDTO.getQuantity() + " bicycles sent successfully");
+			return "Transfer request for " + transferRequestDTO.getQuantity() + " bicycles sent successfully";
 		}
-		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.TRANSFER_REQUEST);
 	}
 
 	/**
