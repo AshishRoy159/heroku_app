@@ -71,6 +71,15 @@ p {
 	color: white;
 	padding-top: 7px;
 }
+
+.popover {
+	background-color: #b6dcb6;
+	padding: 10px;
+}
+
+.alert {
+	display: none;
+}
 /*----------------------------------------------
    DASHBOARD STYLES    
 ------------------------------------------------*/
