@@ -35,9 +35,11 @@ public class WalletBalanceDTO {
 	@NotNull
 	@NumberFormat
 	private Long userId;
-	
-	@NotNull @NumberFormat 
-	@Min(100) @Max(999)
+
+	@NotNull
+	@NumberFormat
+	@Min(100)
+	@Max(999)
 	private Double balance;
 
 	/**
@@ -69,5 +71,4 @@ public class WalletBalanceDTO {
 	public void setBalance(Double balance) {
 		this.balance = balance;
 	}
-
 }

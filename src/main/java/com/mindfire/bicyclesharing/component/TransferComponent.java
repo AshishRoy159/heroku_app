@@ -116,7 +116,7 @@ public class TransferComponent {
 	 * @return {@link Transfer} List
 	 */
 	public List<Transfer> getIncomingTransfers(PickUpPoint pickUpPoint) {
-		return transferRepository.findByTransferredFrom(pickUpPoint);
+		return transferRepository.findByTransferredTo(pickUpPoint);
 	}
 
 	/**

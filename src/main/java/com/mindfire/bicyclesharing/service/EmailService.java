@@ -86,9 +86,6 @@ public class EmailService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		// Send email
 		this.mailSender.send(mimeMessage);
-
 	}
 }

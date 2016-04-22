@@ -72,5 +72,4 @@ public class BookingSuccessListener implements ApplicationListener<BookingSucces
 
 		smsService.sendMessage(recipientNumber, message);
 	}
-
 }

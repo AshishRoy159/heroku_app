@@ -24,8 +24,6 @@ package com.mindfire.bicyclesharing.exception;
  * @since 10/03/2016
  */
 public interface ExceptionMessages {
-
 	String NO_DATA_AVAILABLE = "No Such data found for the request.";
 	String DUPLICATE_DATA = "Provided data is not unique.";
-
 }

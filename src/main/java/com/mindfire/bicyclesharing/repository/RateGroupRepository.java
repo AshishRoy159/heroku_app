@@ -19,6 +19,7 @@ package com.mindfire.bicyclesharing.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.mindfire.bicyclesharing.model.RateGroup;
 
@@ -29,6 +30,7 @@ import com.mindfire.bicyclesharing.model.RateGroup;
  * @version 1.0
  * @since 10/03/2016
  */
+@Repository
 public interface RateGroupRepository extends JpaRepository<RateGroup, Long> {
 
 	/**

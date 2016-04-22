@@ -58,5 +58,4 @@ public class BaseRateService {
 	public String updateBaseRate(BaseRateDTO baseRateDTO) {
 		return baseRateComponent.mapUpdateBaseRate(baseRateDTO);
 	}
-
 }

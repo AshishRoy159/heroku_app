@@ -74,5 +74,4 @@ public class PaymentAtPickUpPointDTO {
 	public void setFare(Double fare) {
 		this.fare = fare;
 	}
-
 }

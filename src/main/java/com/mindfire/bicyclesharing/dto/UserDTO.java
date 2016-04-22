@@ -200,5 +200,4 @@ public class UserDTO {
 	public void setDocument(MultipartFile document) {
 		this.document = document;
 	}
-
 }

@@ -43,9 +43,15 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
 	private final String userRole;
 	private final static boolean accountNonExpired = true;
 
+	/**
+	 * This is the parameterized constructor for {@link CurrentUser} class
+	 * 
+	 * @param user
+	 *            the user details
+	 */
 	public CurrentUser(User user) {
-		super(user.getEmail(), user.getPassword(), user.getEnabled(),
-				accountNonExpired, accountNonExpired, accountNonExpired, AuthorityUtils.createAuthorityList(user.getRole().getUserRole().toString()));
+		super(user.getEmail(), user.getPassword(), user.getEnabled(), accountNonExpired, accountNonExpired,
+				accountNonExpired, AuthorityUtils.createAuthorityList(user.getRole().getUserRole().toString()));
 		this.user = user;
 		this.userId = user.getUserId();
 		this.firstName = user.getFirstName();
@@ -95,5 +101,4 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
 	public Role getRole() {
 		return user.getRole();
 	}
-
 }

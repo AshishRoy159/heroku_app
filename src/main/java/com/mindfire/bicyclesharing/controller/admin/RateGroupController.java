@@ -81,8 +81,6 @@ public class RateGroupController {
 	 *            the new rate group details
 	 * @param result
 	 *            for validating incoming data
-	 * @param redirectAttributes
-	 *            to map model attributes
 	 * @return addNewRateGroup view
 	 * @throws ParseException
 	 *             may occur while parsing from String to Date
@@ -168,9 +166,6 @@ public class RateGroupController {
 	 * 
 	 * @param rateGroupDTO
 	 *            this object contains rate group related data
-	 * @param redirectAttributes
-	 *            this is used to hold the messages and object for retrieving
-	 *            data on the view.
 	 * @param result
 	 *            this is used to validate the data Rate Group DTO
 	 * @return selectRateGroupType view

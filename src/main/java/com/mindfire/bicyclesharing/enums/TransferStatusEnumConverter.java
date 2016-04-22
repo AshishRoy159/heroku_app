@@ -64,5 +64,4 @@ public class TransferStatusEnumConverter implements AttributeConverter<TransferS
 			throw new IllegalArgumentException("Unknown" + dbData);
 		}
 	}
-
 }

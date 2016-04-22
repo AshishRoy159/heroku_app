@@ -58,5 +58,4 @@ public class TransferRensponseDTO {
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
-
 }

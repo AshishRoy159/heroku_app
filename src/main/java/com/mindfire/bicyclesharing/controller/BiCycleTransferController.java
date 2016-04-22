@@ -109,8 +109,6 @@ public class BiCycleTransferController {
 	 *            the incoming transfer request data
 	 * @param result
 	 *            for validation of incoming data
-	 * @param redirectAttributes
-	 *            to map the model attributes
 	 * @param authentication
 	 *            to get the current logged in user information
 	 * @return transferRequest view
@@ -402,7 +400,5 @@ public class BiCycleTransferController {
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			return new ModelAndView("redirect:/manager/transfers");
 		}
-
 	}
-
 }

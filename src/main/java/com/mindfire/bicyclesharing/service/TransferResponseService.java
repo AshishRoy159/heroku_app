@@ -116,5 +116,4 @@ public class TransferResponseService {
 	public Optional<TransferResponse> findResponseForRequest(TransferRequest transferRequest, PickUpPoint pickUpPoint) {
 		return transferResponseComponent.getResposneForRequest(transferRequest, pickUpPoint);
 	}
-
 }

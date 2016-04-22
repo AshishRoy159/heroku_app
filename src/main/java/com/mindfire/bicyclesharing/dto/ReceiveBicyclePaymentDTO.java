@@ -83,5 +83,4 @@ public class ReceiveBicyclePaymentDTO {
 	public void setMode(String mode) {
 		this.mode = mode;
 	}
-
 }

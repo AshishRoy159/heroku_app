@@ -84,5 +84,4 @@ public class ManageRoleDTO {
 	public void setUserRoleId(Long userRoleId) {
 		this.userRoleId = userRoleId;
 	}
-
 }

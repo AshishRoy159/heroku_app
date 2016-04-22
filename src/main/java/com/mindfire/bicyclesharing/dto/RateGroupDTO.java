@@ -86,5 +86,4 @@ public class RateGroupDTO {
 	public void setEffectiveFrom(String effectiveFrom) {
 		this.effectiveFrom = effectiveFrom;
 	}
-
 }

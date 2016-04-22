@@ -83,5 +83,4 @@ public class UserBookingDTO {
 	public void setPickUpPoint(int pickUpPoint) {
 		this.pickUpPoint = pickUpPoint;
 	}
-
 }

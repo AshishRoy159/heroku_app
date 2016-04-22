@@ -29,7 +29,14 @@ import com.mindfire.bicyclesharing.model.BaseRate;
  * @since 10/03/2016
  */
 @Repository
-public interface BaseRateRepository extends JpaRepository<BaseRate, Long>{
-  
+public interface BaseRateRepository extends JpaRepository<BaseRate, Long> {
+
+	/**
+	 * This method is used to retrieve Base rate details
+	 * 
+	 * @param rateGroup
+	 *            the name of the rate group
+	 * @return {@link BaseRate} object
+	 */
 	public BaseRate findByGroupType(String rateGroup);
 }

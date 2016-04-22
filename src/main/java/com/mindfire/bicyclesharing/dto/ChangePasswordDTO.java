@@ -86,5 +86,4 @@ public class ChangePasswordDTO {
 	public void setCnfPassword(String cnfPassword) {
 		this.cnfPassword = cnfPassword;
 	}
-
 }

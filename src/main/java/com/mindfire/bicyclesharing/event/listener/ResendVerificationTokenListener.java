@@ -39,10 +39,10 @@ import com.mindfire.bicyclesharing.service.EmailService;
  */
 @Component
 public class ResendVerificationTokenListener implements ApplicationListener<ResendVerificationTokenEvent> {
-	
+
 	@Autowired
 	private EmailService emailService;
-	
+
 	@Autowired
 	private HttpServletRequest request;
 
@@ -68,10 +68,9 @@ public class ResendVerificationTokenListener implements ApplicationListener<Rese
 	 * 
 	 * @param event
 	 *            ResendVerificationTokenEvent
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private void resendVerificationToken(final ResendVerificationTokenEvent event) throws Exception {
-		
 		String appUrl = request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/"));
 		final Locale locale = event.getLocale();
 		final VerificationToken token = event.getNewToken();
@@ -80,10 +79,7 @@ public class ResendVerificationTokenListener implements ApplicationListener<Rese
 		final String subject = "Registration Confirmation";
 		final String confirmationUrl = appUrl + "/registrationConfirm.html?token=" + token.getToken();
 		final String template = "/mail/resendVerificationMail";
-		
+
 		emailService.sendSimpleMail(user.getFirstName(), recipientAddress, locale, subject, confirmationUrl, template);
-
 	}
-
-	
 }

@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.mindfire.bicyclesharing.model.Role;
 
@@ -30,6 +31,7 @@ import com.mindfire.bicyclesharing.model.Role;
  * @version 1.0
  * @since 10/03/2016
  */
+@Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
 	/**

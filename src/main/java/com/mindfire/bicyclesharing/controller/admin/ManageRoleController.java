@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mindfire.bicyclesharing.constant.CustomLoggerConstant;
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
@@ -137,8 +136,6 @@ public class ManageRoleController {
 	 * 
 	 * @param id
 	 *            user id
-	 * @param redirectAttributes
-	 *            this is used for displaying messages
 	 * @param authentication
 	 *            this is used for retrieve the current user.
 	 * @return searchUser view.
@@ -180,15 +177,12 @@ public class ManageRoleController {
 	 * 
 	 * @param id
 	 *            user id
-	 * @param redirectAttributes
-	 *            this is used for displaying messages
 	 * @param authentication
 	 *            this is used for retrieve the current user.
 	 * @return searchUser view.
 	 */
 	@RequestMapping(value = "/user/userEnable/{id}", method = RequestMethod.GET)
-	public @ResponseBody String userEnable(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
-			Authentication authentication) {
+	public @ResponseBody String userEnable(@PathVariable("id") Long id, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
 		if (null == userService.userDetails(id)) {

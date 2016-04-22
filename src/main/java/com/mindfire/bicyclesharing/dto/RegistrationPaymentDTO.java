@@ -83,5 +83,4 @@ public class RegistrationPaymentDTO {
 	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
-
 }

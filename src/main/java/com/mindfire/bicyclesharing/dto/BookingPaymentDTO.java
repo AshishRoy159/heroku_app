@@ -122,5 +122,4 @@ public class BookingPaymentDTO {
 	public void setMode(String mode) {
 		this.mode = mode;
 	}
-
 }

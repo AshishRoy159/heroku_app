@@ -94,5 +94,4 @@ public interface TransferResponseRepository extends JpaRepository<TransferRespon
 	@Modifying(clearAutomatically = true)
 	@Query("update TransferResponse ts set ts.isApproved =:isApproved where ts.responseId =:responseId")
 	public int updateIsApproved(@Param("isApproved") Boolean isApproved, @Param("responseId") long responseId);
-
 }

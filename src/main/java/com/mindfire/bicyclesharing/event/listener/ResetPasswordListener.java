@@ -46,10 +46,10 @@ public class ResetPasswordListener implements ApplicationListener<ResetPasswordE
 
 	@Autowired
 	private EmailService emailService;
-	
+
 	@Autowired
 	private HttpServletRequest request;
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -72,10 +72,10 @@ public class ResetPasswordListener implements ApplicationListener<ResetPasswordE
 	 * 
 	 * @param event
 	 *            OnResetPasswordEvent
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private void confirmRegistration(final ResetPasswordEvent event) throws Exception {
-		
+
 		String appUrl = request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/"));
 		final User user = event.getUser();
 		final String token = UUID.randomUUID().toString();
@@ -85,7 +85,7 @@ public class ResetPasswordListener implements ApplicationListener<ResetPasswordE
 		final String subject = "Reset Password";
 		final String confirmationUrl = appUrl + "/resetPassword.html?token=" + token;
 		final String template = "/mail/resetPasswordMail";
-		
+
 		emailService.sendSimpleMail(user.getFirstName(), recipientAddress, locale, subject, confirmationUrl, template);
 	}
 }

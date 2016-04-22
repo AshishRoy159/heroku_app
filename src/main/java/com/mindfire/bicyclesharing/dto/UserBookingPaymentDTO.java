@@ -66,5 +66,4 @@ public class UserBookingPaymentDTO {
 	public void setFare(Double fare) {
 		this.fare = fare;
 	}
-
 }

@@ -67,5 +67,4 @@ public class IssueCycleForOnlineDTO {
 	public void setBicycleId(Long bicycleId) {
 		this.bicycleId = bicycleId;
 	}
-
 }

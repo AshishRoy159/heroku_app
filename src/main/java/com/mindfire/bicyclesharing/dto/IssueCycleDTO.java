@@ -87,5 +87,4 @@ public class IssueCycleDTO {
 	public void setExpectedInTime(int expectedInTime) {
 		this.expectedInTime = expectedInTime;
 	}
-
 }

@@ -98,5 +98,4 @@ public interface PickUpPointRepository extends JpaRepository<PickUpPoint, Intege
 	@Query("update PickUpPoint p set p.currentAvailability =:currentAvailability where p.pickUpPointId =:pickUpPointId")
 	public int updateCurrentAvailability(@Param("currentAvailability") int currentAvailability,
 			@Param("pickUpPointId") int pickUpPointId);
-
 }

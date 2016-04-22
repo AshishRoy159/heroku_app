@@ -68,8 +68,6 @@ public class BaseRateController {
 	 *            this object holds base rate related data.
 	 * @param result
 	 *            this is used for validating the base rate details.
-	 * @param redirectAttributes
-	 *            this is used to map redirect attributes.
 	 * @return updatBaseRate view.
 	 */
 	@RequestMapping(value = "/admin/updateBaseRate", method = RequestMethod.POST)
@@ -85,5 +83,4 @@ public class BaseRateController {
 			return "Successfully updated...!";
 		}
 	}
-
 }

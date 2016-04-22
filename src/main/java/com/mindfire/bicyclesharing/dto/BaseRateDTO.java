@@ -73,5 +73,4 @@ public class BaseRateDTO {
 	public void setBaseRate(Double baseRate) {
 		this.baseRate = baseRate;
 	}
-
 }

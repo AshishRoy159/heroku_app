@@ -48,5 +48,4 @@ public class ReceiveCycleDTO {
 	public void setBookingId(Long bookingId) {
 		this.bookingId = bookingId;
 	}
-
 }

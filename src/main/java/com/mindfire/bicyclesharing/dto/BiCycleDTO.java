@@ -67,5 +67,4 @@ public class BiCycleDTO {
 	public void setPickUpPoint(int pickUpPoint) {
 		this.pickUpPoint = pickUpPoint;
 	}
-
 }
