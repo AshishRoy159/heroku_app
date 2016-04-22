@@ -71,7 +71,8 @@
 												th:text="${user.firstName} + *{' '} + ${user.lastName}"></td>
 											<td class="text-center" th:text="${user.userAddress}"></td>
 											<td class="text-center" th:text="${user.mobileNo}"></td>
-											<td class="text-center" th:text="${user.registrationTime}"></td>
+											<td class="text-center"
+												th:text="${#strings.substring(user.registrationTime,0,16)}"></td>
 											<td sec:authorize="hasAuthority('ADMIN')" class="text-center"><a
 												th:href="@{/admin/manageRole/} + ${user.userId}"
 												th:text="${user.role.userRole}"></a></td>

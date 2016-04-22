@@ -26,8 +26,20 @@
 				<div class="row">
 					<div class="col-md-12">
 						<h1 class="page-header">Bookings</h1>
-						<h4 class="text-success" th:text="*{bookingSuccess}"></h4>
-						<h4 class="text-danger" th:text="*{bookingFailure}"></h4>
+						<div class="panel panel-success"
+							th:unless="${bookingSuccess} == null">
+							<div class="panel-heading">
+								<span th:text="*{bookingSuccess}"></span> <a href=""
+									id="close-panel" class="close glyphicon glyphicon-remove"></a>
+							</div>
+						</div>
+						<div class="panel panel-warning"
+							th:unless="${bookingFailure} == null">
+							<div class="panel-heading">
+								<span th:text="*{bookingFailure}"></span> <a href=""
+									id="close-panel" class="close glyphicon glyphicon-remove"></a>
+							</div>
+						</div>
 					</div>
 
 				</div>
@@ -85,7 +97,6 @@
 							</div>
 							<div class="panel-body">
 								<div class="col-md-8 col-sm-8 col-xs-8">
-									<h4 class="text-danger" th:text="*{errorMessage}"></h4>
 									<form action="manager/printBookingDetails"
 										th:action="@{/manager/printBookingDetails}"
 										th:object="${issueBookingData}" method="POST">
@@ -122,7 +133,6 @@
 							</div>
 							<div class="panel-body">
 								<div class="col-md-8 col-sm-8 col-xs-8">
-									<h4 class="text-danger" th:text="*{receiveCycleErrorMessage}"></h4>
 									<form action="manager/receiveCycle"
 										th:action="@{/manager/receiveCycle}"
 										th:object="${receiveCycleData}" method="POST">
@@ -160,8 +170,7 @@
 									</form>
 								</div>
 								<div class="col-md-6 col-sm-6 col-xs-6">
-									<h3 class="popover popover-right" style="padding: 10px;"
-										id="info"></h3>
+									<h3 class="popover popover-right" id="info"></h3>
 								</div>
 							</div>
 						</div>

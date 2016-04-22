@@ -233,7 +233,6 @@ public class BookingController {
 						"It seems your verification is still pending. you need to get approved to book a bicycle.");
 				return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 			}
-
 		}
 	}
 
@@ -256,7 +255,7 @@ public class BookingController {
 
 		if (result.hasErrors()) {
 			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
-			redirectAttributes.addFlashAttribute("receiveCycleErrorMessage", "Enter a valid Booking Id");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE, "Enter a valid Booking Id");
 			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 		}
 		Booking booking = bookingService.getBookingById(receiveCycleDTO.getBookingId());

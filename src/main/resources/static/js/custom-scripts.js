@@ -198,3 +198,8 @@
     });
 
 }(jQuery));
+
+
+$('#close-panel').click(function () {
+	$(this).parent().parent().hide(500);
+});

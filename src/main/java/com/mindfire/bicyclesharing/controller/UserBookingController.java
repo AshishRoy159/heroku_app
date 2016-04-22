@@ -124,43 +124,49 @@ public class UserBookingController {
 		Timestamp bookingTime = Timestamp.valueOf(userBookingDTO.getBookingTime().replace("/", "-").concat(":00.000"));
 		Timestamp returnTime = Timestamp.valueOf(userBookingDTO.getReturnTime().replace("/", "-").concat(":00.000"));
 
-		if (bookingTime.after(returnTime) || bookingTime.before(new Timestamp(System.currentTimeMillis()))) {
-			logger.info("Invalid booking date and time was selected. Transaction Cancelled.");
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
-					"Please Enter Valid booking date and time..!!");
-		} else {
-			logger.info("Valid booking credentials.");
-			Booking existingBooking = bookingSevice.getBookingDetails(true, currentUser.getUser());
-
-			if (null == existingBooking) {
-				logger.info("User doesn't have existing open bookings.");
-				session.setAttribute("bookingData", userBookingDTO);
-				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
-				redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_SUCCESS,
-						"Your Booking is successfully completed..Please Choose your payment.");
-
-				long actualTime = (returnTime.getTime() - bookingTime.getTime());
-				long hour = bookingSevice.calculateTotalRideTime(actualTime);
-				double baseRate = rateGroupService.getBaseRate(currentUser.getUser()).getBaseRateBean().getBaseRate();
-				double fare = bookingSevice.calculateFare(currentUser.getUser(), hour);
-				double discount = bookingSevice.calculateDiscount(currentUser.getUser(), fare);
-
-				if (fare == 0.0) {
-					logger.info("Calculated fare is 0. Fare is set to baserate.");
-					fare = baseRate - discount;
-				} else {
-					fare = fare - discount;
-				}
-				redirectAttributes.addFlashAttribute("fare", Math.ceil(fare));
-				redirectAttributes.addFlashAttribute("userBookingDetails", userBookingDTO);
-				redirectAttributes.addFlashAttribute("pickUpPoint",
-						pickUpPointService.getPickupPointById(userBookingDTO.getPickUpPoint()));
-				return new ModelAndView("redirect:/user/userPayment");
-			} else {
-				logger.info("User has an existing open booking. Transaction cancelled.");
+		if (currentUser.getUser().getIsApproved()) {
+			if (bookingTime.after(returnTime) || bookingTime.before(new Timestamp(System.currentTimeMillis()))) {
+				logger.info("Invalid booking date and time was selected. Transaction Cancelled.");
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
-						"You have a boooking still open!!");
+						"Please Enter Valid booking date and time..!!");
+			} else {
+				logger.info("Valid booking credentials.");
+				Booking existingBooking = bookingSevice.getBookingDetails(true, currentUser.getUser());
+
+				if (null == existingBooking) {
+					logger.info("User doesn't have existing open bookings.");
+					session.setAttribute("bookingData", userBookingDTO);
+					logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
+					redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_SUCCESS,
+							"Your Booking is successfully completed..Please Choose your payment.");
+
+					long actualTime = (returnTime.getTime() - bookingTime.getTime());
+					long hour = bookingSevice.calculateTotalRideTime(actualTime);
+					double baseRate = rateGroupService.getBaseRate(currentUser.getUser()).getBaseRateBean()
+							.getBaseRate();
+					double fare = bookingSevice.calculateFare(currentUser.getUser(), hour);
+					double discount = bookingSevice.calculateDiscount(currentUser.getUser(), fare);
+
+					if (fare == 0.0) {
+						logger.info("Calculated fare is 0. Fare is set to baserate.");
+						fare = baseRate - discount;
+					} else {
+						fare = fare - discount;
+					}
+					redirectAttributes.addFlashAttribute("fare", Math.ceil(fare));
+					redirectAttributes.addFlashAttribute("userBookingDetails", userBookingDTO);
+					redirectAttributes.addFlashAttribute("pickUpPoint",
+							pickUpPointService.getPickupPointById(userBookingDTO.getPickUpPoint()));
+					return new ModelAndView("redirect:/user/userPayment");
+				} else {
+					logger.info("User has an existing open booking. Transaction cancelled.");
+					redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
+							"You have a boooking still open!!");
+				}
 			}
+		} else {
+			logger.info("User is not approved for booking. Transaction cancelled.");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Your account is not approved.");
 		}
 		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.INDEX);
 	}
@@ -283,7 +289,7 @@ public class UserBookingController {
 			BindingResult result, RedirectAttributes redirectAttributes, Authentication authentication) {
 
 		if (result.hasErrors()) {
-			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid data !!");
+			redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE, "Invalid data !!");
 			return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 		} else {
 			CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
@@ -291,14 +297,14 @@ public class UserBookingController {
 
 			if (null == booking) {
 				logger.error(CustomLoggerConstant.TRANSACTION_FAILED);
-				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Invalid data !!");
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE, "Invalid data !!");
 				return new ModelAndView(ViewConstant.REDIRECT_TO_MANAGER_BOOKING);
 			}
 			Booking openBooking = bookingSevice.getBookingDetails(true, booking.getUser());
 
 			if (null == openBooking) {
 				logger.info("Booking doesn't exist. Transaction cancelled.");
-				redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
+				redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
 						"Your Booking Id is not valid !!");
 			} else {
 				logger.info("Booking details are valid.");
@@ -308,7 +314,7 @@ public class UserBookingController {
 				if (!openBooking.getExpectedOut().before(new Timestamp(System.currentTimeMillis() + 1800000))
 						|| !openBooking.getExpectedIn().after(new Timestamp(System.currentTimeMillis()))) {
 					logger.info("User is too early. Transaction cancelled.");
-					redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
+					redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
 							"Your expected out time is:-" + openBooking.getExpectedOut());
 				} else {
 					logger.info("User is on expected time.");
@@ -364,7 +370,7 @@ public class UserBookingController {
 							}
 						} else {
 							logger.info("A bicycle has already been issued for this bicycle. Transaction cancelled.");
-							redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE,
+							redirectAttributes.addFlashAttribute(ModelAttributeConstant.BOOKING_FAILURE,
 									"You already taken bicycle on this booking Id:- " + openBooking.getBookingId());
 						}
 					}

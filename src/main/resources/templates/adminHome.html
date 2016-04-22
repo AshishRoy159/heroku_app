@@ -45,13 +45,13 @@
 											<tr>
 												<th>Booking Id</th>
 												<th>User Id</th>
-												<th>FirstName</th>
+												<th>First Name</th>
 												<th>Booking time</th>
 												<th>Picked up from</th>
 												<th>Returned at</th>
 												<th>Out time</th>
 												<th>In time</th>
-												<th>BicycleNo</th>
+												<th>Bicycle No.</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -62,13 +62,15 @@
 												<td class="center"><span
 													th:text="${booking.user.firstName}"></span></td>
 												<td class="center"><span
-													th:text="${booking.bookingTime}"></span></td>
+													th:text="${#strings.substring(booking.bookingTime,0,16)}"></span></td>
 												<td class="center"><span
 													th:text="${booking.pickedUpFrom.location}"></span></td>
 												<td class="center"><span
 													th:text="${booking.returnedAt.location}"></span></td>
-												<td class="center"><span th:text="${booking.actualOut}"></span></td>
-												<td class="center"><span th:text="${booking.actualIn}"></span></td>
+												<td class="center"><span
+													th:text="${#strings.substring(booking.actualOut,0,16)}"></span></td>
+												<td class="center"><span
+													th:text="${#strings.substring(booking.actualIn,0,16)}"></span></td>
 												<td class="center"><span
 													th:text="${booking.biCycleId.chasisNo}"></span></td>
 											</tr>
