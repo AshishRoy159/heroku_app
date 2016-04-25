@@ -215,20 +215,23 @@ function hideMessage() {
  *------------------------------------------------------------------*/
 function approveUser(param) {
 	var userDetails = $(param).attr('href');
+	$(param).text("Updating..");
+	$(param).prop("disabled", true);
 	$.ajax({
 		type : "GET",
 		url : userDetails,
 		success : function(response) {
 			if (response == "true") {
 				response = "User Approved Successfully";
-				$(param).text("Disapprove");
-				$(param).attr("class","btn btn-danger btn-xs");
+				$(param).text("Approved");
+				$(param).attr("class", "btn btn-success btn-xs");
 			} else if (response == "false") {
 				response = "User Disapproved Successfully"
-				$(param).text("Approve");
-				$(param).attr("class","btn btn-success btn-xs");
+				$(param).text("Disapproved");
+				$(param).attr("class", "btn btn-danger btn-xs");
 			}
 			$('#info').show(200);
+			$(param).prop("disabled", false);
 			$('#info').html(response);
 
 			hideMessage();
@@ -248,12 +251,12 @@ function enableUser(param) {
 		success : function(response) {
 			if (response == "true") {
 				response = "User Enabled Successfully";
-				$(param).text("Disable");
-				$(param).attr("class","btn btn-danger btn-xs");
+				$(param).text("Active");
+				$(param).attr("class", "btn btn-success btn-xs");
 			} else if (response == "false") {
 				response = "User Disabled Successfully"
-				$(param).text("Enable");
-				$(param).attr("class","btn btn-success btn-xs");
+				$(param).text("Disabled");
+				$(param).attr("class", "btn btn-danger btn-xs");
 			}
 			$('#info').show(200);
 			$('#info').html(response);

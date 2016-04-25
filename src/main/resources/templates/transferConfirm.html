@@ -52,11 +52,12 @@
 										th:object="${transferData}" method="post">
 										<input type="text" class="form-control" name="vehicleNo"
 											placeholder="Vehicle Number"
-											pattern="^[A-Z]{2}[ -][0-9]{1,2}(?: [A-Z])?(?: [A-Z]*)? [0-9]{4}$" /><br />
-										<input type="hidden" name="transferId"
-											th:value="${transfer.transferId}" /> <input type="submit"
-											class="btn btn-primary" /> <a href="/manager/transfers"><button
-												type="button" class="btn btn-default">Cancel</button></a>
+											pattern="^[A-Z]{2}[ -][0-9]{1,2}(?: [A-Z])?(?: [A-Z]*)? [0-9]{4}$"
+											required="required" /><br /> <input type="hidden"
+											name="transferId" th:value="${transfer.transferId}" /> <input
+											type="submit" class="btn btn-primary" /> <a
+											href="/manager/transfers"><button type="button"
+												class="btn btn-default">Cancel</button></a>
 									</form>
 
 								</div>

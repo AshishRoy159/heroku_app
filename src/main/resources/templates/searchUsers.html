@@ -36,7 +36,11 @@
 							change your own role.)</small>
 					</h2>
 					<br />
-					<h3 class="alert alert-warning" id="info"></h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4 col-md-offset-4">
+					<h3 class="popover popover-right" id="info"></h3>
 				</div>
 			</div>
 			<div class="row">
@@ -78,29 +82,33 @@
 												th:text="${user.role.userRole}"></a></td>
 											<td sec:authorize="hasAuthority('MANAGER')"
 												class="text-center" th:text="${user.role.userRole}"></td>
-											<td class="text-center" th:if="${user.isApproved}">✔<span><a
-													class="btn btn-danger btn-xs"
-													th:href="@{/user/userApproval/} + ${user.userId}"
-													onclick="return approveUser(this)">Disapprove</a></span></td>
-											<td class="text-center" th:unless="${user.isApproved}">✘<span><a
+											<td class="text-center" th:if="${user.isApproved}"><span><a
 													class="btn btn-success btn-xs"
 													th:href="@{/user/userApproval/} + ${user.userId}"
-													onclick="return approveUser(this)">Approve</a></span>
-											</td>
-											<td class="text-center" th:if="${user.enabled}">✔<span><a
+													onclick="return approveUser(this)" data-toggle="tooltip"
+													title="Change approval status">Approved</a></span></td>
+											<td class="text-center" th:unless="${user.isApproved}"><span><a
 													class="btn btn-danger btn-xs"
-													th:href="@{/user/userEnable/} + ${user.userId}"
-													onclick="return enableUser(this)">Disable</a></span></td>
-											<td class="text-center" th:unless="${user.enabled}">✘<span><a
+													th:href="@{/user/userApproval/} + ${user.userId}"
+													onclick="return approveUser(this)" data-toggle="tooltip"
+													title="Change approval status">Disapproved</a></span></td>
+											<td class="text-center" th:if="${user.enabled}"><span><a
 													class="btn btn-success btn-xs"
 													th:href="@{/user/userEnable/} + ${user.userId}"
-													onclick="return enableUser(this)">Enable</a></span></td>
+													onclick="return enableUser(this)" data-toggle="tooltip"
+													title="Change active status">Active</a></span></td>
+											<td class="text-center" th:unless="${user.enabled}"><span><a
+													class="btn btn-danger btn-xs"
+													th:href="@{/user/userEnable/} + ${user.userId}"
+													onclick="return enableUser(this)" data-toggle="tooltip"
+													title="Change active status">Disabled</a></span></td>
 										</tr>
 									</tbody>
 								</table>
 							</div>
 
 						</div>
+
 					</div>
 					<!--End Advanced Tables -->
 				</div>

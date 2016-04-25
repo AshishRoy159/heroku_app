@@ -327,8 +327,12 @@ public class BiCycleTransferController {
 	 * @return transfers view
 	 */
 	@RequestMapping(value = "manager/confirmShipment", method = RequestMethod.POST)
-	public ModelAndView confirmShipment(@ModelAttribute("transferData") TransferDataDTO transferDataDTO,
-			HttpSession session) {
+	public ModelAndView confirmShipment(@Valid @ModelAttribute("transferData") TransferDataDTO transferDataDTO,
+			BindingResult bindingResult, HttpSession session) {
+		if (bindingResult.hasErrors()) {
+			logger.error(CustomLoggerConstant.BINDING_RESULT_HAS_ERRORS);
+			return new ModelAndView(ViewConstant.REDIRECT + "/manager/sendShipment/" + transferDataDTO.getTransferId());
+		}
 		transferService.confirmTransfer(transferDataDTO, session);
 		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.TRANSFERS);
 	}

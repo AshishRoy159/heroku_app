@@ -207,6 +207,7 @@ public class ManageRoleController {
 				}
 			}
 		} else {
+			logger.info("Permission not granted for the request to activate/deactivae user.");
 			return "You don't have permission to update this details...!";
 		}
 	}

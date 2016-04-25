@@ -16,6 +16,11 @@
 
 package com.mindfire.bicyclesharing.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import org.springframework.format.annotation.NumberFormat;
+
 /**
  * TransferDataDTO class is used for taking data from the sendTransfer view
  * 
@@ -25,7 +30,12 @@ package com.mindfire.bicyclesharing.dto;
  */
 public class TransferDataDTO {
 
+	@NotNull
+	@Pattern(regexp = "^[A-Z]{2}[ -][0-9]{1,2}(?: [A-Z])?(?: [A-Z]*)? [0-9]{4}$")
 	private String vehicleNo;
+
+	@NotNull
+	@NumberFormat
 	private Long transferId;
 
 	/**

@@ -73,7 +73,8 @@ p {
 }
 
 .popover {
-	background-color: #b6dcb6;
+	width: 100%;
+	background-color: #ffff99;
 	padding: 10px;
 }
 
