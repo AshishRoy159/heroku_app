@@ -29,6 +29,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
 /**
  * The persistent class for the bi_cycles database table.
  * 
@@ -44,17 +48,20 @@ public class BiCycle implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "bi_cycle_id")
 	private Long biCycleId;
 
 	@Column(name = "added_on", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp addedOn;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "chasis_no", unique = true)
 	private String chasisNo;
 
 	@ManyToOne
 	@JoinColumn(name = "current_location")
+	@JsonView(DataTablesOutput.View.class)
 	private PickUpPoint currentLocation;
 
 	@Column(name = "is_active", insertable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")

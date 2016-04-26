@@ -19,11 +19,15 @@ package com.mindfire.bicyclesharing.component;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -39,6 +43,7 @@ import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.BiCycle;
 import com.mindfire.bicyclesharing.model.Booking;
 import com.mindfire.bicyclesharing.model.BookingTransaction;
+import com.mindfire.bicyclesharing.model.Booking_;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.Wallet;
@@ -383,16 +388,16 @@ public class BookingComponent {
 		return bookingRepository.findByUserAndIsOpenAndIsUsed(user, isOpen, isUsed);
 	}
 
-	/**
-	 * This method is used for getting all Booking based on booking status.
-	 * 
-	 * @param isUsed
-	 *            this is Boolean type value
-	 * @return {@link Booking} List
-	 */
-	public List<Booking> getAllBooking(Boolean isUsed) {
-		return bookingRepository.findByIsUsed(isUsed);
-	}
+	// /**
+	// * This method is used for getting all Booking based on booking status.
+	// *
+	// * @param isUsed
+	// * this is Boolean type value
+	// * @return {@link Booking} List
+	// */
+	// public List<Booking> getAllBooking(Boolean isUsed) {
+	// return bookingRepository.findByIsUsed(isUsed);
+	// }
 
 	/**
 	 * This method is used for closing the booking based on the booking id
@@ -444,5 +449,34 @@ public class BookingComponent {
 	 */
 	public List<Booking> mapRunningBooking(Boolean isOpen) {
 		return bookingRepository.findAllByIsOpenAndBiCycleIdIsNotNull(isOpen);
+	}
+
+	/**
+	 * This method is used to get all booking details
+	 * 
+	 * @param isUsed
+	 *            booking status
+	 * @param input
+	 *            {@link DataTablesInput} object
+	 * @return {@link Booking} {@link DataTablesOutput}
+	 */
+	public DataTablesOutput<Booking> getAllBookings(DataTablesInput input, Boolean isUsed) {
+		return bookingRepository.findAll(input, getUsedSpecification(isUsed));
+	}
+
+	/**
+	 * This method is used to create specification for fetching only used
+	 * bookings.
+	 * 
+	 * @param isUsed
+	 *            booking status
+	 * @return {@link Booking} {@link Specification}
+	 */
+	private Specification<Booking> getUsedSpecification(Boolean isUsed) {
+		return (root, query, criteriaBuilder) -> {
+			Predicate predicate = criteriaBuilder.conjunction();
+			predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get(Booking_.isUsed), isUsed));
+			return predicate;
+		};
 	}
 }

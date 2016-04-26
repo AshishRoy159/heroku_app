@@ -27,6 +27,10 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
 /**
  * The persistent class for the pick_up_points database table.
  * 
@@ -57,6 +61,7 @@ public class PickUpPoint implements Serializable {
 	@Column(name = "is_open", insertable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
 	private Boolean isOpen;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(unique = true)
 	private String location;
 

@@ -24,6 +24,8 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -369,5 +371,16 @@ public class UserComponent {
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	/**
+	 * This method is used to fetch all user's data
+	 * 
+	 * @param input
+	 *            {@link DataTablesInput} object
+	 * @return {@link User} {@link DataTablesInput}
+	 */
+	public DataTablesOutput<User> getAllUsers(DataTablesInput input) {
+		return userRepository.findAll(input);
 	}
 }

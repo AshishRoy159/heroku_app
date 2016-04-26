@@ -32,7 +32,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.security.CurrentUser;
-import com.mindfire.bicyclesharing.service.BookingService;
 import com.mindfire.bicyclesharing.service.PickUpPointManagerService;
 import com.mindfire.bicyclesharing.service.PickUpPointService;
 
@@ -54,9 +53,6 @@ public class HomeController {
 
 	@Autowired
 	private PickUpPointManagerService pickUpPointManagerService;
-
-	@Autowired
-	private BookingService bookingService;
 
 	/**
 	 * This method maps all root request and find all pickup points and Simply
@@ -162,7 +158,6 @@ public class HomeController {
 			logger.info("The logged in user is a manager.");
 			pickUpPointManagerService.openPickUpPoint(currentUser.getUser());
 		}
-		model.addAttribute("bookings", bookingService.getAllBookingDetails(true));
 		model.addAttribute("pickUpPointManagers", pickUpPointManagerService.getAllPickUpPointManager());
 		return new ModelAndView(ViewConstant.ADMIN_HOME);
 	}

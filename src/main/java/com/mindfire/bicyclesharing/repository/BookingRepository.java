@@ -18,7 +18,7 @@ package com.mindfire.bicyclesharing.repository;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 import org.springframework.stereotype.Repository;
 
 import com.mindfire.bicyclesharing.model.Booking;
@@ -32,7 +32,7 @@ import com.mindfire.bicyclesharing.model.User;
  * @since 10/03/2016
  */
 @Repository
-public interface BookingRepository extends JpaRepository<Booking, Long> {
+public interface BookingRepository extends DataTablesRepository<Booking, Long> {
 
 	/**
 	 * This method is used for Booking status is open or not.
@@ -47,6 +47,15 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	 */
 	public List<Booking> findByUserAndIsOpenAndIsUsed(User user, Boolean open, Boolean isUsed);
 
+	/**
+	 * This method is used to get current open booking of an user.
+	 * 
+	 * @param open
+	 *            booking status
+	 * @param user
+	 *            the concerned user
+	 * @return {@link Booking} object
+	 */
 	public Booking findByIsOpenAndUser(Boolean open, User user);
 
 	/**
@@ -75,15 +84,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	 * @return {@link Booking} List
 	 */
 	public List<Booking> findByIsOpen(Boolean isOpen);
-
-	/**
-	 * This method is used for find all booking based on booking isUsed status.
-	 * 
-	 * @param isUsed
-	 *            Boolean value
-	 * @return {@link Booking} List
-	 */
-	public List<Booking> findByIsUsed(Boolean isUsed);
 
 	/**
 	 * This method is used to find the all booking based on the isOpen status

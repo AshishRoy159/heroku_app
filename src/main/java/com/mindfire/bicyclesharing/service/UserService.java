@@ -27,6 +27,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -284,5 +286,16 @@ public class UserService {
 	 */
 	public User UpdateRateGroup(ManageRateGroupDTO manageRateGroupDTO) {
 		return userComponent.assignRateGroup(manageRateGroupDTO);
+	}
+
+	/**
+	 * This method is used to get all user's details
+	 * 
+	 * @param input
+	 *            {@link DataTablesInput} object
+	 * @return {@link User} {@link DataTablesOutput}
+	 */
+	public DataTablesOutput<User> findAllUsers(DataTablesInput input) {
+		return userComponent.getAllUsers(input);
 	}
 }

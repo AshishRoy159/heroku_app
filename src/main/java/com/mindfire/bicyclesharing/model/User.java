@@ -101,7 +101,6 @@ public class User implements Serializable {
 	private String userAddress;
 
 	// bi-directional many-to-one association to Booking
-	@JsonView(DataTablesOutput.View.class)
 	@OneToMany(mappedBy = "user")
 	private List<Booking> bookings;
 

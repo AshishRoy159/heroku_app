@@ -29,6 +29,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
 /**
  * The persistent class for the bookings database table.
  * 
@@ -44,46 +48,59 @@ public class Booking implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "booking_id")
 	private Long bookingId;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "actual_in")
 	private Timestamp actualIn;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "actual_out")
 	private Timestamp actualOut;
 
+	@JsonView(DataTablesOutput.View.class)
 	@ManyToOne
 	@JoinColumn(name = "bi_cycle_id")
 	private BiCycle biCycleId;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "booking_time")
 	private Timestamp bookingTime;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "expected_in")
 	private Timestamp expectedIn;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "expected_out")
 	private Timestamp expectedOut;
 
+	@JsonView(DataTablesOutput.View.class)
 	private double fare;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "is_open")
 	private Boolean isOpen;
 
-	@Column(name = "is_used", insertable=false , columnDefinition = "BOOLEAN DEFAULT FALSE")
+	@JsonView(DataTablesOutput.View.class)
+	@Column(name = "is_used", insertable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
 	private Boolean isUsed;
 
 	@ManyToOne
+	@JsonView(DataTablesOutput.View.class)
 	@JoinColumn(name = "picked_up_from")
 	private PickUpPoint pickedUpFrom;
 
 	@ManyToOne
+	@JsonView(DataTablesOutput.View.class)
 	@JoinColumn(name = "returnet_at")
 	private PickUpPoint returnedAt;
 
 	// bi-directional many-to-one association to User
 	@ManyToOne
+	@JsonView(DataTablesOutput.View.class)
 	@JoinColumn(name = "user_id")
 	private User user;
 
@@ -269,7 +286,7 @@ public class Booking implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
 	public Boolean getIsUsed() {
 		return isUsed;
 	}

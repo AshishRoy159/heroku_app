@@ -241,6 +241,7 @@ function approveUser(param) {
 		},
 		error : function(xhr, status, e) {
 			$(param).text(currentText);
+			$(param).prop("disabled", false);
 			alert(xhr.responseText);
 		}
 	});
@@ -249,6 +250,9 @@ function approveUser(param) {
 
 function enableUser(param) {
 	var userDetails = $(param).attr('href');
+	var currentText = $(param).text();
+	$(param).text("Updating..");
+	$(param).prop("disabled", true);
 	$.ajax({
 		type : "GET",
 		url : userDetails,
@@ -259,15 +263,20 @@ function enableUser(param) {
 				$(param).attr("class", "btn btn-success btn-xs");
 			} else if (response == "false") {
 				response = "User Disabled Successfully"
-				$(param).text("Disabled");
+				$(param).text("Inactive");
 				$(param).attr("class", "btn btn-danger btn-xs");
+			} else {
+				$(param).text(currentText);
 			}
+			$(param).prop("disabled", false);
 			$('#info').show(200);
 			$('#info').html(response);
 
 			hideMessage();
 		},
 		error : function(xhr, status, e) {
+			$(param).text(currentText);
+			$(param).prop("disabled", false);
 			alert(xhr.responseText);
 		}
 	});
@@ -306,4 +315,3 @@ function hideMessage() {
 		$("#info").hide(500);
 	}, 2500);
 }
-

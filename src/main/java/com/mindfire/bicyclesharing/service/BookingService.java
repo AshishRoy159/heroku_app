@@ -23,6 +23,8 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +59,7 @@ public class BookingService {
 
 	@Autowired
 	private UserBookingComponent userBookingComponent;
-	
+
 	@Autowired
 	private RateGroupComponent rateGroupComponent;
 
@@ -179,10 +181,12 @@ public class BookingService {
 	 * 
 	 * @param isUsed
 	 *            this is Boolean value
-	 * @return {@link Booking} List
+	 * @param input
+	 *            {@link DataTablesInput} object
+	 * @return {@link Booking} {@link DataTablesOutput}
 	 */
-	public List<Booking> getAllBookingDetails(Boolean isUsed) {
-		return bookingComponent.getAllBooking(isUsed);
+	public DataTablesOutput<Booking> getAllBookingDetails(DataTablesInput input, Boolean isUsed) {
+		return bookingComponent.getAllBookings(input, isUsed);
 	}
 
 	/**
