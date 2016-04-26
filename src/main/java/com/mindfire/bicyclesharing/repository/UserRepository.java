@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -38,7 +38,7 @@ import com.mindfire.bicyclesharing.model.User;
  * @since 10/03/2016
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends DataTablesRepository<User, Long> {
 
 	/**
 	 * This method is used to find the details of one User by its email id

@@ -215,6 +215,7 @@ function hideMessage() {
  *------------------------------------------------------------------*/
 function approveUser(param) {
 	var userDetails = $(param).attr('href');
+	var currentText = $(param).text();
 	$(param).text("Updating..");
 	$(param).prop("disabled", true);
 	$.ajax({
@@ -226,9 +227,11 @@ function approveUser(param) {
 				$(param).text("Approved");
 				$(param).attr("class", "btn btn-success btn-xs");
 			} else if (response == "false") {
-				response = "User Disapproved Successfully"
+				response = "User Disapproved Successfully";
 				$(param).text("Disapproved");
 				$(param).attr("class", "btn btn-danger btn-xs");
+			} else {
+				$(param).text(currentText);
 			}
 			$('#info').show(200);
 			$(param).prop("disabled", false);
@@ -237,6 +240,7 @@ function approveUser(param) {
 			hideMessage();
 		},
 		error : function(xhr, status, e) {
+			$(param).text(currentText);
 			alert(xhr.responseText);
 		}
 	});
@@ -302,3 +306,4 @@ function hideMessage() {
 		$("#info").hide(500);
 	}, 2500);
 }
+

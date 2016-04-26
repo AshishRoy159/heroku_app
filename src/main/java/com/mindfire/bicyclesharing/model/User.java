@@ -34,6 +34,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
 /**
  * The persistent class for the users database table.
  * 
@@ -49,61 +53,77 @@ public class User implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "user_id")
 	private Long userId;
 
 	@Temporal(TemporalType.DATE)
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "date_of_birth")
 	private Date dateOfBirth;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(unique = true)
 	private String email;
 
+	@JsonView(DataTablesOutput.View.class)
 	private Boolean enabled;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "first_name")
 	private String firstName;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "is_approved")
 	private Boolean isApproved;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "last_name")
 	private String lastName;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "mobile_no", unique = true)
 	private Long mobileNo;
 
+	@JsonView(DataTablesOutput.View.class)
 	private String password;
 
-
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "rate_group_id")
 	private String rateGroup;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "regisration_time", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp registrationTime;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "user_address")
 	private String userAddress;
 
 	// bi-directional many-to-one association to Booking
+	@JsonView(DataTablesOutput.View.class)
 	@OneToMany(mappedBy = "user")
 	private List<Booking> bookings;
 
 	// bi-directional many-to-one association to ProofDetail
+	@JsonView(DataTablesOutput.View.class)
 	@ManyToOne
 	@JoinColumn(name = "proof_id")
 	private ProofDetail proofDetail;
 
 	// bi-directional many-to-one association to Role
+	@JsonView(DataTablesOutput.View.class)
 	@ManyToOne
 	@JoinColumn(name = "role_id")
 	private Role role;
 
 	// bi-directional many-to-one association to VerificationToken
+	@JsonView(DataTablesOutput.View.class)
 	@OneToMany(mappedBy = "user")
 	private List<VerificationToken> verificationTokens;
 
 	// bi-directional many-to-one association to Wallet
+	@JsonView(DataTablesOutput.View.class)
 	@OneToMany(mappedBy = "user")
 	private List<Wallet> wallets;
 

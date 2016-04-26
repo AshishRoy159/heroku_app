@@ -544,7 +544,6 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "admin/userList", "manager/userList" })
 	public ModelAndView userList() {
-		return new ModelAndView(ViewConstant.SEARCH_USERS, ModelAttributeConstant.USERS_LIST,
-				userService.getAllUsers());
+		return new ModelAndView(ViewConstant.SEARCH_USERS);
 	}
 }

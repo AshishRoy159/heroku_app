@@ -19,9 +19,13 @@ package com.mindfire.bicyclesharing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.MultipartAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.ErrorPage;
+import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.datatables.repository.DataTablesRepositoryFactoryBean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,8 +43,14 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
  */
 @EnableScheduling
 @SpringBootApplication(exclude = { MultipartAutoConfiguration.class })
-public class BicycleSharingApplication {
+@EnableJpaRepositories(repositoryFactoryBeanClass = DataTablesRepositoryFactoryBean.class)
+public class BicycleSharingApplication extends SpringBootServletInitializer{
 
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application){
+		return application.sources(BicycleSharingApplication.class);
+	}
+	
 	/**
 	 * This is the main method of the Spring Boot Application. Execution starts
 	 * here.
