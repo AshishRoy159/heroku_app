@@ -275,7 +275,7 @@ $('#closedTransferTable').ready(function() {
 		}, {
 			data : 'quantity',
 			render : function(data, type, row, meta) {
-				return '<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#bicyclesTransferred" title="Show Bicycles Transferred">'+row.quantity+'</button>';
+				return '<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#bicyclesTransferred" title="Show Bicycles Transferred" onclick = "return showBicycles('+row.transferId+');">'+row.quantity+'</button>';
 			}
 		}, {
 			data : 'dispatchedAt',
@@ -300,3 +300,21 @@ $('#closedTransferTable').ready(function() {
 		}]
 	});
 });
+
+function showBicycles(param){
+	var id = param;
+	$.ajax({
+		type : "GET",
+		url : "/admin/viewTransfer/"+id,
+		dataType: "json",
+		success: function(data){
+			$.each(data, function(index, value) {
+				$("#bicycleChasisNo").html(value.chasisNo+" ");
+	            console.log(value.chasisNo);
+	            });
+	        },
+	        error: function(e) {
+	            console.log(e.message);
+	        }
+		});
+}

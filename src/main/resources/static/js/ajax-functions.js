@@ -321,6 +321,23 @@ function transferRequest() {
 	return false;
 }
 
+function showBicycles(param){
+	var id = param;
+	$.ajax({
+		type : "POST",
+		url : "/admin/viewTransfer/"+id,
+		success: function(response){
+			$.each(data.items, function(item) {
+	            console.log(item);
+	            });
+	        },
+	        error: function(e) {
+	            console.log(e.message);
+	        }
+		});
+}
+
+
 function hideMessage() {
 	setTimeout(function() {
 		$("#info").hide(500);

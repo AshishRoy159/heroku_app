@@ -442,4 +442,15 @@ public class BiCycleTransferController {
 	public ModelAndView closedTransfers() {
 		return new ModelAndView(ViewConstant.CLOSED_TRANSFERS);
 	}
+	
+	/**
+	 * ss
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "admin/viewTransfer/{id}", method = RequestMethod.GET)
+	public @ResponseBody List<BiCycle> getTransferedBicycles(@PathVariable Long id){
+		Transfer transfer = transferService.findTransferDetails(id);
+		return biCycleTransferService.findBicyclesInTransition(transfer);
+	}
 }
