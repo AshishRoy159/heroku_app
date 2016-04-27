@@ -76,7 +76,7 @@ public class ResetPasswordListener implements ApplicationListener<ResetPasswordE
 	 */
 	private void confirmRegistration(final ResetPasswordEvent event) throws Exception {
 
-		String appUrl = request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/"));
+		String appUrl = request.getContextPath();
 		final User user = event.getUser();
 		final String token = UUID.randomUUID().toString();
 		service.createResetPasswordTokenForUser(user, token);

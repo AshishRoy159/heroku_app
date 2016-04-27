@@ -22,6 +22,7 @@ import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -38,6 +39,7 @@ import com.mindfire.bicyclesharing.constant.CustomLoggerConstant;
 import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.ManageRoleDTO;
+import com.mindfire.bicyclesharing.event.AccountUpdationEvent;
 import com.mindfire.bicyclesharing.exception.CustomException;
 import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.User;
@@ -66,6 +68,9 @@ public class ManageRoleController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
 
 	/**
 	 * This method maps requests for manageRole view
@@ -152,7 +157,7 @@ public class ManageRoleController {
 				|| (currentUser.getUserRole().equals("MANAGER")
 						&& userService.userDetails(id).getRole().getUserRole().equals("USER"))) {
 			logger.info("Permission granted to change approval of user.");
-
+			String approval;
 			User user = userService.setApproval(id);
 			if (null == user) {
 				logger.info(CustomLoggerConstant.TRANSACTION_FAILED);
@@ -160,10 +165,16 @@ public class ManageRoleController {
 			} else {
 				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 				if (user.getIsApproved()) {
-					return "true";
+					approval = "approved";
 				} else {
-					return "false";
+					approval = "disapproved";
 				}
+				try {
+					eventPublisher.publishEvent(new AccountUpdationEvent(user, approval));
+				} catch (Exception me) {
+					System.out.println(me.getMessage());
+				}
+				return approval;
 			}
 		} else {
 			logger.info("Permission not granted for the request to update approval of user.");
@@ -185,6 +196,7 @@ public class ManageRoleController {
 	public @ResponseBody String userEnable(@PathVariable("id") Long id, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
+		String enable;
 		if (null == userService.userDetails(id)) {
 			return "User does not exists with provided userId";
 		}
@@ -200,11 +212,17 @@ public class ManageRoleController {
 				return "Sorry operation failed...!";
 			} else {
 				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
-				if (user.getEnabled()) {
-					return "true";
+				if (user.getIsApproved()) {
+					enable = "enabled";
 				} else {
-					return "false";
+					enable = "disabled";
 				}
+				try {
+					eventPublisher.publishEvent(new AccountUpdationEvent(user, enable));
+				} catch (Exception me) {
+					System.out.println(me.getMessage());
+				}
+				return enable;
 			}
 		} else {
 			logger.info("Permission not granted for the request to activate/deactivae user.");

@@ -222,11 +222,11 @@ function approveUser(param) {
 		type : "GET",
 		url : userDetails,
 		success : function(response) {
-			if (response == "true") {
+			if (response == "approved") {
 				response = "User Approved Successfully";
 				$(param).text("Approved");
 				$(param).attr("class", "btn btn-success btn-xs");
-			} else if (response == "false") {
+			} else if (response == "disapproved") {
 				response = "User Disapproved Successfully";
 				$(param).text("Disapproved");
 				$(param).attr("class", "btn btn-danger btn-xs");
@@ -257,11 +257,11 @@ function enableUser(param) {
 		type : "GET",
 		url : userDetails,
 		success : function(response) {
-			if (response == "true") {
+			if (response == "enabled") {
 				response = "User Enabled Successfully";
 				$(param).text("Active");
 				$(param).attr("class", "btn btn-success btn-xs");
-			} else if (response == "false") {
+			} else if (response == "disabled") {
 				response = "User Disabled Successfully"
 				$(param).text("Inactive");
 				$(param).attr("class", "btn btn-danger btn-xs");

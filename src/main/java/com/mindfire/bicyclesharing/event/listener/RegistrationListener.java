@@ -76,7 +76,7 @@ public class RegistrationListener implements ApplicationListener<RegistrationCom
 	 */
 	private void confirmRegistration(final RegistrationCompleteEvent event) throws Exception {
 		
-		String appUrl = request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/"));
+		String appUrl = request.getContextPath();
 		final User user = event.getUser();
 		final String token = UUID.randomUUID().toString();
 		service.createVerificationTokenForUser(user, token);

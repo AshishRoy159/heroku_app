@@ -24,28 +24,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.mindfire.bicyclesharing.event.ResendVerificationTokenEvent;
+import com.mindfire.bicyclesharing.event.AccountUpdationEvent;
 import com.mindfire.bicyclesharing.model.User;
-import com.mindfire.bicyclesharing.model.VerificationToken;
 import com.mindfire.bicyclesharing.service.EmailService;
 
 /**
- * ResendVerificationTokenListener is an event listener for
- * ResendVerificationTokenEvent event class
+ * RegistrationListener is an event listener for OnRegistrationCompleteEvent
+ * event class
  * 
  * @author mindfire
  * @version 1.0
  * @since 10/03/2016
  */
 @Component
-public class ResendVerificationTokenListener implements ApplicationListener<ResendVerificationTokenEvent> {
+public class AccountUpdationListener implements ApplicationListener<AccountUpdationEvent> {
 
-	@Autowired
-	private EmailService emailService;
-
+	
 	@Autowired
 	private HttpServletRequest request;
 
+	@Autowired
+	private EmailService emailService;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -54,9 +54,9 @@ public class ResendVerificationTokenListener implements ApplicationListener<Rese
 	 * springframework.context.ApplicationEvent)
 	 */
 	@Override
-	public void onApplicationEvent(ResendVerificationTokenEvent event) {
+	public void onApplicationEvent(AccountUpdationEvent event) {
 		try {
-			this.resendVerificationToken(event);
+			this.confirmUpdate(event);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -67,18 +67,27 @@ public class ResendVerificationTokenListener implements ApplicationListener<Rese
 	 * the verification email
 	 * 
 	 * @param event
-	 *            ResendVerificationTokenEvent
+	 *            OnRegistrationCompleteEvent
 	 * @throws Exception
 	 */
-	private void resendVerificationToken(final ResendVerificationTokenEvent event) throws Exception {
-		String appUrl = request.getContextPath();
-		final Locale locale = event.getLocale();
-		final VerificationToken token = event.getNewToken();
+	private void confirmUpdate(final AccountUpdationEvent event) throws Exception {
+
 		final User user = event.getUser();
+		Locale locale = request.getLocale();
 		final String recipientAddress = user.getEmail();
-		final String subject = "Registration Confirmation";
-		final String confirmationUrl = appUrl + "/registrationConfirm.html?token=" + token.getToken();
-		final String template = "/mail/resendVerificationMail";
+		final String subject = "Account Credentials Updated";
+		String confirmationUrl;
+		if(event.getStatus() == "approved"){
+			confirmationUrl = "Approved";
+		} else if(event.getStatus() == "disapproved") {
+			confirmationUrl = "Disapproved";
+		} else if(event.getStatus() == "enabled") {
+			confirmationUrl = "Enabled";
+		} else {
+			confirmationUrl = "Disabled";
+		}
+		
+		final String template = "/mail/activationAndApproval";
 
 		emailService.sendSimpleMail(user.getFirstName(), recipientAddress, locale, subject, confirmationUrl, template);
 	}
