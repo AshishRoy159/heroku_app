@@ -446,7 +446,6 @@ public class UserBookingController {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
 		model.addAttribute(ModelAttributeConstant.USER, user);
-		model.addAttribute("bookingHistory", bookingSevice.getAllBooking(user, false, true));
 		return new ModelAndView(ViewConstant.USER_BOOKIG_HISTORY);
 	}
 

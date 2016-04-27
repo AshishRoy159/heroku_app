@@ -384,8 +384,8 @@ public class BookingComponent {
 	 *            Boolean value
 	 * @return {@link Booking} List
 	 */
-	public List<Booking> getAllBookingByUser(User user, Boolean isOpen, Boolean isUsed) {
-		return bookingRepository.findByUserAndIsOpenAndIsUsed(user, isOpen, isUsed);
+	public DataTablesOutput<Booking> getAllBookingByUser(DataTablesInput input, User user, Boolean isUsed) {
+		return bookingRepository.findAll(input, getClosedBookings(user, isUsed));
 	}
 
 	/**
@@ -464,6 +464,15 @@ public class BookingComponent {
 	private Specification<Booking> getUsedSpecification(Boolean isUsed) {
 		return (root, query, criteriaBuilder) -> {
 			Predicate predicate = criteriaBuilder.conjunction();
+			predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get(Booking_.isUsed), isUsed));
+			return predicate;
+		};
+	}
+	
+	private Specification<Booking> getClosedBookings(User user, Boolean isUsed) {
+		return (root, query, criteriaBuilder) -> {
+			Predicate predicate = criteriaBuilder.conjunction();
+			predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get(Booking_.user), user));
 			predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get(Booking_.isUsed), isUsed));
 			return predicate;
 		};

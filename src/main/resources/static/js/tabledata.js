@@ -141,3 +141,66 @@ $('#bookingtable').ready(function() {
 		} ]
 	});
 });
+
+$('#userBookings').ready(function() {
+	var id = $("#userId").val();
+	var url = '/data/userBookings/'+id;
+	var table = $('table#userBookingHistory').DataTable({
+		'ajax' : url,
+		'serverSide' : true,
+		columns : [ {
+			data : 'bookingId'
+		}, {
+			data : 'bookingTime',
+			render: function ( data, type, row ) {
+		        if ( type === 'display' || type === 'filter' ) {
+		            var d = new Date( data );
+		            return d.getDate() +'-'+ (d.getMonth()+1) +'-'+ d.getFullYear() + " "+ d.getHours() + ":"+d.getMinutes();
+		        }
+		        return data;
+		    }
+		}, {
+			data : 'actualOut',
+			render: function ( data, type, row ) {
+		        if ( type === 'display' || type === 'filter' ) {
+		            var d = new Date( data );
+		            return d.getDate() +'-'+ (d.getMonth()+1) +'-'+ d.getFullYear() + " "+ d.getHours() + ":"+d.getMinutes();
+		        }
+		        return data;
+		    }
+		}, {
+			data : 'actualIn',
+			render: function ( data, type, row ) {
+		        if ( type === 'display' || type === 'filter' ) {
+		            var d = new Date( data );
+		            return d.getDate() +'-'+ (d.getMonth()+1) +'-'+ d.getFullYear() + " "+ d.getHours() + ":"+d.getMinutes();
+		        }
+		        return data;
+		    }
+		},	{
+			data : 'pickedUpFrom.location',
+			render : function(data, type, row) {
+				if (row.pickedUpFrom) {
+					return row.pickedUpFrom.location;
+				}
+				return '';
+			}
+		}, {
+			data : 'returnedAt.location',
+			render : function(data, type, row) {
+				if (row.returnedAt) {
+					return row.returnedAt.location;
+				}
+				return '';
+			}
+		}, {
+			data : 'fare',
+			render : function(data, type, row) {
+				if (row.fare) {
+					return "Rs. "+row.fare;
+				}
+				return '';
+			}
+		}]
+	});
+});

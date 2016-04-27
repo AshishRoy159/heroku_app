@@ -171,8 +171,8 @@ public class BookingService {
 	 *            boolean value
 	 * @return {@link Booking} List
 	 */
-	public List<Booking> getAllBooking(User user, Boolean isOpen, Boolean isUsed) {
-		return bookingComponent.getAllBookingByUser(user, isOpen, isUsed);
+	public DataTablesOutput<Booking> getAllBooking(DataTablesInput input, User user, Boolean isUsed) {
+		return bookingComponent.getAllBookingByUser(input, user, isUsed);
 	}
 
 	/**

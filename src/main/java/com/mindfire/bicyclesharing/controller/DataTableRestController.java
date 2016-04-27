@@ -21,11 +21,15 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.mindfire.bicyclesharing.exception.CustomException;
+import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.Booking;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.service.BookingService;
@@ -72,5 +76,23 @@ public class DataTableRestController {
 	@RequestMapping(value = "/data/usedBookings", method = RequestMethod.GET)
 	public DataTablesOutput<Booking> getBookings(@Valid DataTablesInput input) {
 		return bookingService.getAllBookingDetails(input, true);
+	}
+	
+	/**
+	 * This method is used to map requests for fetching all used booking
+	 * details.
+	 * 
+	 * @param input
+	 *            {@link DataTablesInput} object
+	 * @return {@link Booking} {@link DataTablesOutput}
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(value = "/data/usedBookings/{id}", method = RequestMethod.GET)
+	public DataTablesOutput<Booking> getClosedBookings(@Valid DataTablesInput input, @PathVariable("id") Long id) {
+		User user = userService.userDetails(id);
+		if(user == null){
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
+		return bookingService.getAllBooking(input, user, true);
 	}
 }
