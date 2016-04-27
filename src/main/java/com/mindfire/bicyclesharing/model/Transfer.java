@@ -30,6 +30,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
+import com.fasterxml.jackson.annotation.JsonView;
 import com.mindfire.bicyclesharing.enums.TransferStatusEnum;
 import com.mindfire.bicyclesharing.enums.TransferStatusEnumConverter;
 
@@ -48,29 +51,37 @@ public class Transfer implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "transfer_id")
 	private Long transferId;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "arrived_on", insertable = false)
 	private Timestamp arrivedOn;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "dispatched_at", insertable = false)
 	private Timestamp dispatchedAt;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "quantity", updatable = false)
 	private Integer quantity;
 
 	@ManyToOne
+	@JsonView(DataTablesOutput.View.class)
 	@JoinColumn(name = "transferred_from", updatable = false)
 	private PickUpPoint transferredFrom;
 
+	@JsonView(DataTablesOutput.View.class)
 	@ManyToOne
 	@JoinColumn(name = "transferred_to", updatable = false)
 	private PickUpPoint transferredTo;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "vehicle_no", insertable = false)
 	private String vehicleNo;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "status", nullable = false)
 	@Convert(converter = TransferStatusEnumConverter.class)
 	private TransferStatusEnum status;

@@ -63,6 +63,7 @@ public class ViewConstant {
 	public static final String TRANSFER_RESPONSE_MANAGER = "transferResponseManager";
 	public static final String TRANSFER_RESPONSE_ADMIN = "transferResponseAdmin";
 	public static final String TRANSFERS = "transfers";
+	public static final String CLOSED_TRANSFERS = "closedTransfers";
 	public static final String TRANSFER_CONFIRM = "transferConfirm";
 	public static final String RECEIVE_CONFIRM = "receiveConfirm";
 	public static final String REDIRECT = "redirect:";

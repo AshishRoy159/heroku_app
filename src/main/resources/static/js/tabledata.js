@@ -208,9 +208,9 @@ $('#userClosedBookingHistory').ready(function() {
 	});
 });
 
-/*---------------------------------------------------
- * This function is used to fetch all closed bookings
- ----------------------------------------------------*/
+/*------------------------------------------------------
+ * This function is used to fetch all approved transfers
+ -------------------------------------------------------*/
 $('#approvedRequestTable').ready(function() {
 	var table = $('table#approvedRequests').DataTable({
 		'ajax' : "/data/approvedRequests",
@@ -239,10 +239,64 @@ $('#approvedRequestTable').ready(function() {
 		        }
 		        return data;
 		    }
-		},	{
+		}, {
 			data : 'quantity'
 		}, {
 			data : 'approvedQuantity'
+		}]
+	});
+});
+
+/*----------------------------------------------------
+ * This function is used to fetch all closed transfers
+ -----------------------------------------------------*/
+$('#closedTransferTable').ready(function() {
+	var table = $('table#closedTransfers').DataTable({
+		'ajax' : "/data/closedTransfers",
+		'serverSide' : true,
+		columns : [ {
+			data : 'transferId'
+		}, {
+			data : 'transferredFrom.location',
+			render : function(data, type, row) {
+				if (row.transferredFrom) {
+					return row.transferredFrom.location;
+				}
+				return '';
+			}
+		}, {
+			data : 'transferredTo.location',
+			render : function(data, type, row) {
+				if (row.transferredTo) {
+					return row.transferredTo.location;
+				}
+				return '';
+			}
+		}, {
+			data : 'quantity',
+			render : function(data, type, row, meta) {
+				return '<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#bicyclesTransferred" title="Show Bicycles Transferred">'+row.quantity+'</button>';
+			}
+		}, {
+			data : 'dispatchedAt',
+			render: function ( data, type, row ) {
+		        if ( type === 'display' || type === 'filter' ) {
+		            var d = new Date( data );
+		            return d.getDate() +'-'+ (d.getMonth()+1) +'-'+ d.getFullYear() + " "+ d.getHours() + ":"+d.getMinutes();
+		        }
+		        return data;
+		    }
+		}, {
+			data : 'arrivedOn',
+			render: function ( data, type, row ) {
+		        if ( type === 'display' || type === 'filter' ) {
+		            var d = new Date( data );
+		            return d.getDate() +'-'+ (d.getMonth()+1) +'-'+ d.getFullYear() + " "+ d.getHours() + ":"+d.getMinutes();
+		        }
+		        return data;
+		    }
+		}, {
+			data : 'vehicleNo'
 		}]
 	});
 });

@@ -31,10 +31,12 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.mindfire.bicyclesharing.exception.CustomException;
 import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.Booking;
+import com.mindfire.bicyclesharing.model.Transfer;
 import com.mindfire.bicyclesharing.model.TransferRequest;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.service.BookingService;
 import com.mindfire.bicyclesharing.service.TransferRequestService;
+import com.mindfire.bicyclesharing.service.TransferService;
 import com.mindfire.bicyclesharing.service.UserService;
 
 /**
@@ -55,6 +57,9 @@ public class DataTableRestController {
 
 	@Autowired
 	private TransferRequestService transferRequestService;
+
+	@Autowired
+	private TransferService transferService;
 
 	/**
 	 * This method is used to map requests for fetching all user's details.
@@ -112,5 +117,19 @@ public class DataTableRestController {
 	@RequestMapping(value = "/data/approvedRequests", method = RequestMethod.GET)
 	public DataTablesOutput<TransferRequest> closedRquests(@Valid DataTablesInput input) {
 		return transferRequestService.findAllClosedRequests(input);
+	}
+
+	/**
+	 * This method is used to map requests for fetching details of all closed
+	 * transfers.
+	 * 
+	 * @param input
+	 *            {@link DataTablesInput} object
+	 * @return {@link Transfer} {@link DataTablesOutput}
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(value = "/data/closedTransfers", method = RequestMethod.GET)
+	public DataTablesOutput<Transfer> closedTransfers(@Valid DataTablesInput input) {
+		return transferService.findAllClosedTransfers(input);
 	}
 }

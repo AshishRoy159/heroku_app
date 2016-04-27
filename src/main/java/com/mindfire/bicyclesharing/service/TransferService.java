@@ -23,6 +23,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
 import com.mindfire.bicyclesharing.component.BiCycleComponent;
@@ -44,7 +46,7 @@ import com.mindfire.bicyclesharing.security.CurrentUser;
  */
 @Service
 public class TransferService {
-	
+
 	Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
@@ -108,6 +110,17 @@ public class TransferService {
 	}
 
 	/**
+	 * This method is used to get all closed transfers.
+	 * 
+	 * @param input
+	 *            {@link DataTablesInput} object
+	 * @return {@link Transfer} {@link DataTablesOutput}
+	 */
+	public DataTablesOutput<Transfer> findAllClosedTransfers(DataTablesInput input) {
+		return transferComponent.getAllClosedTransfers(input);
+	}
+
+	/**
 	 * This method is used to update the transfer details and details of
 	 * bicycles involved on confirmation from dispatcher pickup point.
 	 * 
@@ -149,7 +162,7 @@ public class TransferService {
 		transfer.setStatus(TransferStatusEnum.CLOSED);
 
 		Transfer closedTransfer = transferComponent.closeTransfer(transfer);
-		
+
 		if (closedTransfer == null) {
 			logger.error("Data could not be updated.");
 			return null;

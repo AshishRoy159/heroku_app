@@ -432,4 +432,14 @@ public class BiCycleTransferController {
 	public ModelAndView approvedRequests() {
 		return new ModelAndView(ViewConstant.APPROVED_REQUESTS);
 	}
+
+	/**
+	 * This method is used to map requests for viewing all closed transfers.
+	 * 
+	 * @return closedTransfers view
+	 */
+	@RequestMapping(value = "admin/transfers", method = RequestMethod.GET)
+	public ModelAndView closedTransfers() {
+		return new ModelAndView(ViewConstant.CLOSED_TRANSFERS);
+	}
 }

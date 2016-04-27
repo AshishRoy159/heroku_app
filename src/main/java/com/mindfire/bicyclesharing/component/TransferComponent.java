@@ -19,9 +19,14 @@ package com.mindfire.bicyclesharing.component;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.persistence.criteria.Predicate;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +37,7 @@ import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.Transfer;
 import com.mindfire.bicyclesharing.model.TransferResponse;
+import com.mindfire.bicyclesharing.model.Transfer_;
 import com.mindfire.bicyclesharing.repository.TransferRepository;
 
 /**
@@ -170,5 +176,30 @@ public class TransferComponent {
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	/**
+	 * This method is used to get all closed transfers.
+	 * 
+	 * @param input
+	 *            {@link DataTablesInput} object
+	 * @return {@link Transfer} {@link DataTablesOutput}
+	 */
+	public DataTablesOutput<Transfer> getAllClosedTransfers(DataTablesInput input) {
+		return transferRepository.findAll(input, getClosedTransferSpecification());
+	}
+
+	/**
+	 * This method is used to get specification of transfer as closed
+	 * 
+	 * @return {@link Transfer} {@link Specification}
+	 */
+	private Specification<Transfer> getClosedTransferSpecification() {
+		return (root, query, criteriaBuilder) -> {
+			Predicate predicate = criteriaBuilder.conjunction();
+			predicate = criteriaBuilder.and(predicate,
+					criteriaBuilder.equal(root.get(Transfer_.status), TransferStatusEnum.CLOSED));
+			return predicate;
+		};
 	}
 }
