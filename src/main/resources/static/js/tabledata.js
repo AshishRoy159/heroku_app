@@ -142,7 +142,10 @@ $('#bookingtable').ready(function() {
 	});
 });
 
-$('#userBookings').ready(function() {
+/*---------------------------------------------------
+ * This function is used to fetch bookings of an user
+ ----------------------------------------------------*/
+$('#userClosedBookingHistory').ready(function() {
 	var id = $("#userId").val();
 	var url = '/data/userBookings/'+id;
 	var table = $('table#userBookingHistory').DataTable({
@@ -201,6 +204,45 @@ $('#userBookings').ready(function() {
 				}
 				return '';
 			}
+		}]
+	});
+});
+
+/*---------------------------------------------------
+ * This function is used to fetch all closed bookings
+ ----------------------------------------------------*/
+$('#approvedRequestTable').ready(function() {
+	var table = $('table#approvedRequests').DataTable({
+		'ajax' : "/data/approvedRequests",
+		'serverSide' : true,
+		columns : [ {
+			data : 'requestId'
+		}, {
+			data : 'pickUpPoint.location',
+			render : function(data, type, row) {
+				if (row.pickUpPoint) {
+					return row.pickUpPoint.location;
+				}
+				return '';
+			}
+		}, {
+			data : 'manager.firstName',
+			render: function ( data, type, row ) {
+				return row.manager.firstName+" "+row.manager.lastName;
+		    }
+		}, {
+			data : 'requestedOn',
+			render: function ( data, type, row ) {
+		        if ( type === 'display' || type === 'filter' ) {
+		            var d = new Date( data );
+		            return d.getDate() +'-'+ (d.getMonth()+1) +'-'+ d.getFullYear() + " "+ d.getHours() + ":"+d.getMinutes();
+		        }
+		        return data;
+		    }
+		},	{
+			data : 'quantity'
+		}, {
+			data : 'approvedQuantity'
 		}]
 	});
 });

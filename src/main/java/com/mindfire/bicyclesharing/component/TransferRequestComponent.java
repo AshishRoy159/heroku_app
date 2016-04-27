@@ -18,9 +18,14 @@ package com.mindfire.bicyclesharing.component;
 
 import java.util.List;
 
+import javax.persistence.criteria.Predicate;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -30,6 +35,7 @@ import com.mindfire.bicyclesharing.exception.CustomException;
 import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.PickUpPoint;
 import com.mindfire.bicyclesharing.model.TransferRequest;
+import com.mindfire.bicyclesharing.model.TransferRequest_;
 import com.mindfire.bicyclesharing.repository.PickUpPointManagerRepository;
 import com.mindfire.bicyclesharing.repository.TransferRequestRepository;
 import com.mindfire.bicyclesharing.security.CurrentUser;
@@ -178,5 +184,30 @@ public class TransferRequestComponent {
 	public TransferRequest setApproved(TransferRequest transferRequest) {
 		transferRequest.setIsApproved(true);
 		return transferRequestRepository.save(transferRequest);
+	}
+
+	/**
+	 * This method is used to get all approved transfer requests
+	 * 
+	 * @param input
+	 *            {@link DataTablesInput} object
+	 * @return {@link TransferRequest} {@link DataTablesOutput}
+	 */
+	public DataTablesOutput<TransferRequest> getAllClosedRequests(DataTablesInput input) {
+		return transferRequestRepository.findAll(input, getClosedSpecification());
+	}
+
+	/**
+	 * This method is used to get approved specification for transfer requests
+	 * 
+	 * @return {@link TransferRequest} {@link Specification}
+	 */
+	private Specification<TransferRequest> getClosedSpecification() {
+		return (root, query, criteriaBuilder) -> {
+			Predicate predicate = criteriaBuilder.conjunction();
+			predicate = criteriaBuilder.and(predicate,
+					criteriaBuilder.equal(root.get(TransferRequest_.isApproved), true));
+			return predicate;
+		};
 	}
 }

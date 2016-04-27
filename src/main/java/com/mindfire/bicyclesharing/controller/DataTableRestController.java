@@ -31,8 +31,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.mindfire.bicyclesharing.exception.CustomException;
 import com.mindfire.bicyclesharing.exception.ExceptionMessages;
 import com.mindfire.bicyclesharing.model.Booking;
+import com.mindfire.bicyclesharing.model.TransferRequest;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.service.BookingService;
+import com.mindfire.bicyclesharing.service.TransferRequestService;
 import com.mindfire.bicyclesharing.service.UserService;
 
 /**
@@ -50,6 +52,9 @@ public class DataTableRestController {
 
 	@Autowired
 	private BookingService bookingService;
+
+	@Autowired
+	private TransferRequestService transferRequestService;
 
 	/**
 	 * This method is used to map requests for fetching all user's details.
@@ -77,22 +82,35 @@ public class DataTableRestController {
 	public DataTablesOutput<Booking> getBookings(@Valid DataTablesInput input) {
 		return bookingService.getAllBookingDetails(input, true);
 	}
-	
+
 	/**
-	 * This method is used to map requests for fetching all used booking
-	 * details.
+	 * This method is used to map requests for fetching all used booking details
+	 * of the user.
 	 * 
 	 * @param input
 	 *            {@link DataTablesInput} object
 	 * @return {@link Booking} {@link DataTablesOutput}
 	 */
 	@JsonView(DataTablesOutput.View.class)
-	@RequestMapping(value = "/data/usedBookings/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/data/userBookings/{id}", method = RequestMethod.GET)
 	public DataTablesOutput<Booking> getClosedBookings(@Valid DataTablesInput input, @PathVariable("id") Long id) {
 		User user = userService.userDetails(id);
-		if(user == null){
+		if (user == null) {
 			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
 		}
 		return bookingService.getAllBooking(input, user, true);
+	}
+
+	/**
+	 * This method is used to map requests for fetching all approved requests.
+	 * 
+	 * @param input
+	 *            {@link DataTablesInput} object
+	 * @return {@link TransferRequest} {@link DataTablesOutput}
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(value = "/data/approvedRequests", method = RequestMethod.GET)
+	public DataTablesOutput<TransferRequest> closedRquests(@Valid DataTablesInput input) {
+		return transferRequestService.findAllClosedRequests(input);
 	}
 }

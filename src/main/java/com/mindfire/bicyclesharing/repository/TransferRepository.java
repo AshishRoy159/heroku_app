@@ -18,7 +18,7 @@ package com.mindfire.bicyclesharing.repository;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 import org.springframework.stereotype.Repository;
 
 import com.mindfire.bicyclesharing.model.PickUpPoint;
@@ -32,7 +32,7 @@ import com.mindfire.bicyclesharing.model.Transfer;
  * @since 10/03/2016
  */
 @Repository
-public interface TransferRepository extends JpaRepository<Transfer, Long> {
+public interface TransferRepository extends DataTablesRepository<Transfer, Long> {
 
 	/**
 	 * This method is retrieve the transfer details from its id

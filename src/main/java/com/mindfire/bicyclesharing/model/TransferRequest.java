@@ -29,6 +29,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
 /**
  * The persistent class for the tranfer_requests database table.
  * 
@@ -44,26 +48,33 @@ public class TransferRequest implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "request_id")
 	private Long requestId;
 
 	@ManyToOne
+	@JsonView(DataTablesOutput.View.class)
 	@JoinColumn(name = "requesting_pickup_point")
 	private PickUpPoint pickUpPoint;
 
 	@ManyToOne
+	@JsonView(DataTablesOutput.View.class)
 	@JoinColumn(name = "requesting_manager")
 	private User manager;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "quantity")
 	private Integer quantity;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "approved_quantity", insertable = false, columnDefinition = "INTEGER DEFAULT 0")
 	private Integer approvedQuantity;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "requested_on", nullable = false, insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp requestedOn;
 
+	@JsonView(DataTablesOutput.View.class)
 	@Column(name = "is_approved", insertable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
 	private Boolean isApproved;
 

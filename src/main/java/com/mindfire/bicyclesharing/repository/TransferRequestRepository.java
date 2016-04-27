@@ -18,7 +18,7 @@ package com.mindfire.bicyclesharing.repository;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,7 +37,7 @@ import com.mindfire.bicyclesharing.model.TransferRequest;
  * @since 10/03/2016
  */
 @Repository
-public interface TransferRequestRepository extends JpaRepository<TransferRequest, Long> {
+public interface TransferRequestRepository extends DataTablesRepository<TransferRequest, Long> {
 
 	/**
 	 * This method is used to retrieve all transfer requests from the database

@@ -10,7 +10,7 @@ public class Booking_ {
 	public static volatile SingularAttribute<Booking, Long> bookingId;
 	public static volatile SingularAttribute<Booking, Timestamp> actualIn;
 	public static volatile SingularAttribute<Booking, Timestamp> actualOut;
-	public static volatile SingularAttribute<Booking, BiCycle> bicycleId;
+	public static volatile SingularAttribute<Booking, BiCycle> biCycleId;
 	public static volatile SingularAttribute<Booking, Timestamp> bookingTime;
 	public static volatile SingularAttribute<Booking, Timestamp> expectedIn;
 	public static volatile SingularAttribute<Booking, Timestamp> expectedOut;

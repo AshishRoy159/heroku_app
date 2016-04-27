@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -128,6 +130,17 @@ public class TransferRequestService {
 	 */
 	public TransferRequest updateAppproval(TransferRequest transferRequest) {
 		return transferRequestComponent.setApproved(transferRequest);
+	}
+
+	/**
+	 * This method is used to get all approved transfer requests
+	 * 
+	 * @param input
+	 *            {@link DataTablesInput} object
+	 * @return {@link TransferRequest} {@link DataTablesOutput}
+	 */
+	public DataTablesOutput<TransferRequest> findAllClosedRequests(DataTablesInput input) {
+		return transferRequestComponent.getAllClosedRequests(input);
 	}
 
 	/**
