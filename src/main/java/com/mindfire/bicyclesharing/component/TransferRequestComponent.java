@@ -102,9 +102,9 @@ public class TransferRequestComponent {
 	 *            the current logged in manager
 	 * @return {@link TransferRequest} List
 	 */
-	public List<TransferRequest> getOthersRequest(CurrentUser currentUser) {
+	public List<TransferRequest> getOthersRequest(CurrentUser currentUser, Boolean isApproved) {
 		PickUpPoint pickUpPoint = pickUpPointManagerRepository.findByUser(currentUser.getUser()).getPickUpPoint();
-		return transferRequestRepository.findByPickUpPointNot(pickUpPoint);
+		return transferRequestRepository.findByIsApprovedAndPickUpPointNot(isApproved, pickUpPoint);
 	}
 
 	/**
@@ -154,5 +154,29 @@ public class TransferRequestComponent {
 		} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 			throw new CustomException(ExceptionMessages.DUPLICATE_DATA, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	/**
+	 * This method is used to retrieve transfer requests by approval status
+	 * 
+	 * @param isApproved
+	 *            approval status
+	 * @return {@link TransferRequest} List
+	 */
+	public List<TransferRequest> getRequestsByApproval(Boolean isApproved) {
+		return transferRequestRepository.findByIsApproved(isApproved);
+	}
+
+	/**
+	 * This method is used to set approval status of the transfer request to
+	 * true
+	 * 
+	 * @param transferRequest
+	 *            the concerned request
+	 * @return {@link TransferRequest} object
+	 */
+	public TransferRequest setApproved(TransferRequest transferRequest) {
+		transferRequest.setIsApproved(true);
+		return transferRequestRepository.save(transferRequest);
 	}
 }

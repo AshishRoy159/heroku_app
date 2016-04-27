@@ -8,7 +8,7 @@ $('#usertable').ready(function() {
 		columns : [ {
 			data : 'userId'
 		}, {
-			data : 'user',
+			data : 'firstName',
 			render: function ( data, type, row, meta ) {
 				if($('#currentUserRole').val() == 'ADMIN'){
 					return '<a href="/user/userProfile/' + row.userId + '">'+row.firstName+" "+row.lastName+'</a>';

@@ -85,6 +85,10 @@ p {
 #close-panel {
 	float: right;
 }
+
+body.modal-open {
+    overflow: visible;
+}
 /*----------------------------------------------
    DASHBOARD STYLES    
 ------------------------------------------------*/

@@ -78,8 +78,8 @@ public class TransferRequestService {
 	 *            to get the current logged in manager details
 	 * @return {@link TransferRequestRespondedDTO} List
 	 */
-	public List<TransferRequestRespondedDTO> findOtherRequest(CurrentUser currentUser) {
-		List<TransferRequest> requests = transferRequestComponent.getOthersRequest(currentUser);
+	public List<TransferRequestRespondedDTO> findOtherRequest(CurrentUser currentUser, Boolean isApproved) {
+		List<TransferRequest> requests = transferRequestComponent.getOthersRequest(currentUser, isApproved);
 		List<TransferResponse> responses = transferResponseComponent.getResponses(currentUser);
 		return setIsRespondedOrNot(requests, responses);
 	}
@@ -106,6 +106,28 @@ public class TransferRequestService {
 	 */
 	public int updateQuantityApproved(Integer approvedQuantity, Long requestId) {
 		return transferRequestComponent.updateApprovedQuantity(approvedQuantity, requestId);
+	}
+
+	/**
+	 * This method is used to retrieve transfer requests by approval status
+	 * 
+	 * @param isApproved
+	 *            approval status
+	 * @return {@link TransferRequest} List
+	 */
+	public List<TransferRequest> findRequestsByApproval(Boolean isApproved) {
+		return transferRequestComponent.getRequestsByApproval(isApproved);
+	}
+
+	/**
+	 * This method is used to update approval status of the transfer request
+	 * 
+	 * @param transferRequest
+	 *            the concerned request
+	 * @return {@link TransferRequest} object
+	 */
+	public TransferRequest updateAppproval(TransferRequest transferRequest) {
+		return transferRequestComponent.setApproved(transferRequest);
 	}
 
 	/**

@@ -139,8 +139,8 @@ public class BiCycleTransferController {
 	 */
 	@RequestMapping(value = "admin/requests", method = RequestMethod.GET)
 	public ModelAndView viewRequests(Model model) {
-		List<TransferRequest> allrequests = transferRequestService.findAllRequests();
-		model.addAttribute(ModelAttributeConstant.REQUESTS, allrequests);
+		List<TransferRequest> pendingRequests = transferRequestService.findRequestsByApproval(false);
+		model.addAttribute(ModelAttributeConstant.REQUESTS, pendingRequests);
 		return new ModelAndView(ViewConstant.REQUEST_AND_NOTIFICATIONS);
 	}
 
@@ -157,7 +157,7 @@ public class BiCycleTransferController {
 	@RequestMapping(value = "manager/requests", method = RequestMethod.GET)
 	public ModelAndView viewOthersRequests(Model model, Authentication authentication) {
 		CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-		List<TransferRequestRespondedDTO> allrequests = transferRequestService.findOtherRequest(currentUser);
+		List<TransferRequestRespondedDTO> allrequests = transferRequestService.findOtherRequest(currentUser, false);
 		model.addAttribute(ModelAttributeConstant.REQUESTS, allrequests);
 		return new ModelAndView(ViewConstant.REQUEST_AND_NOTIFICATIONS);
 	}
@@ -187,11 +187,10 @@ public class BiCycleTransferController {
 		}
 		Optional<TransferResponse> response = transferResponseService.findResponseForRequest(request,
 				pickUpPointManagerService.getPickupPointManager(currentUser.getUser()).getPickUpPoint());
+		List<TransferResponse> responses = transferResponseService.findresponsesForRequest(request);
 
-		if (request.getIsApproved() || response.isPresent()) {
-			logger.info("Not permitted to view this transfer request.");
-			return new ModelAndView(ViewConstant.REDIRECT + "/manager/requests");
-		}
+		model.addAttribute("responded", response.isPresent());
+		model.addAttribute("responses", responses);
 		model.addAttribute(ModelAttributeConstant.REQUEST, request);
 		model.addAttribute("max", Math.min(request.getQuantity(), currentAvailable));
 		return new ModelAndView(ViewConstant.TRANSFER_RESPONSE_MANAGER);
@@ -261,6 +260,24 @@ public class BiCycleTransferController {
 		transferResponseService.updateApproval(true, responseId);
 		transferService.addNewTransfer(transferResponse);
 		return new ModelAndView("redirect:/admin/respond/" + transferResponse.getRequest().getRequestId());
+	}
+
+	/**
+	 * This method is used to map requests for closing a transfer request.
+	 * 
+	 * @param requestId
+	 *            id of the transfer request
+	 * @return Transfer requests view
+	 */
+	@RequestMapping(value = "/admin/closeRequest/{id}", method = RequestMethod.GET)
+	public ModelAndView closeRequest(@PathVariable("id") Long requestId) {
+		TransferRequest transferRequest = transferRequestService.findTransferRequest(requestId);
+
+		if (null == transferRequest) {
+			throw new CustomException(ExceptionMessages.NO_DATA_AVAILABLE, HttpStatus.NOT_FOUND);
+		}
+		transferRequestService.updateAppproval(transferRequest);
+		return new ModelAndView(ViewConstant.REDIRECT + "/admin/requests");
 	}
 
 	/**
@@ -404,5 +421,15 @@ public class BiCycleTransferController {
 			logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 			return new ModelAndView("redirect:/manager/transfers");
 		}
+	}
+
+	/**
+	 * This method is used to map requests for viewing approved requests.
+	 * 
+	 * @return approvedRequests view
+	 */
+	@RequestMapping(value = { "/admin/approvedRequests", "/manager/approvedRequests" }, method = RequestMethod.GET)
+	public ModelAndView approvedRequests() {
+		return new ModelAndView(ViewConstant.APPROVED_REQUESTS);
 	}
 }

@@ -52,6 +52,10 @@
 									<strong>Quantity Approved: </strong><span
 										th:text="${request.approvedQuantity}"></span>
 								</div>
+								<div class="pull-right">
+									<a th:href="@{/admin/closeRequest/} + ${request.requestId}"><button
+											class="btn btn-primary">Close</button></a>
+								</div>
 							</div>
 						</div>
 					</div>

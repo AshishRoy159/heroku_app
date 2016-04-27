@@ -63,7 +63,7 @@ public interface TransferRequestRepository extends JpaRepository<TransferRequest
 	 *            the current pickup point
 	 * @return {@link TransferRequest} List
 	 */
-	public List<TransferRequest> findByPickUpPointNot(PickUpPoint pickUpPoint);
+	public List<TransferRequest> findByIsApprovedAndPickUpPointNot(Boolean isApproved, PickUpPoint pickUpPoint);
 
 	/**
 	 * This method is used to update the approvedQuantity field
@@ -93,4 +93,13 @@ public interface TransferRequestRepository extends JpaRepository<TransferRequest
 	@Modifying(clearAutomatically = true)
 	@Query("update TransferRequest tr set tr.isApproved = :isApproved where tr.requestId = :requestId")
 	public int updateIsApproved(@Param("isApproved") Boolean isApproved, @Param("requestId") Long requestId);
+
+	/**
+	 * This method is used to retrieve transfer requests by approval status
+	 * 
+	 * @param isApproved
+	 *            approval status
+	 * @return {@link TransferRequest} List
+	 */
+	public List<TransferRequest> findByIsApproved(Boolean isApproved);
 }

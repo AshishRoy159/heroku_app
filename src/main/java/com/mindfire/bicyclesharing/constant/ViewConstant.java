@@ -59,6 +59,7 @@ public class ViewConstant {
 	public static final String RECEIVE_BICYCLE_PAYMENT = "receiveBicyclePayment";
 	public static final String TRANSFER_REQUEST = "transferRequest";
 	public static final String REQUEST_AND_NOTIFICATIONS = "requestsAndNotificatons";
+	public static final String APPROVED_REQUESTS = "approvedRequests";
 	public static final String TRANSFER_RESPONSE_MANAGER = "transferResponseManager";
 	public static final String TRANSFER_RESPONSE_ADMIN = "transferResponseAdmin";
 	public static final String TRANSFERS = "transfers";

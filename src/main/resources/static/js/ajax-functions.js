@@ -210,74 +210,85 @@ function hideMessage() {
 	}, 2500);
 }
 
-/*------------------------------------------------------------------
- * This function is used to approve user using ajax
- *------------------------------------------------------------------*/
+/*------------------------------------------------------------
+ * This function is used to approve/disapprove user using ajax
+ *------------------------------------------------------------*/
 function approveUser(param) {
-	var userDetails = $(param).attr('href');
-	var currentText = $(param).text();
-	$(param).text("Updating..");
-	$(param).prop("disabled", true);
-	$.ajax({
-		type : "GET",
-		url : userDetails,
-		success : function(response) {
-			if (response == "approved") {
-				response = "User Approved Successfully";
-				$(param).text("Approved");
-				$(param).attr("class", "btn btn-success btn-xs");
-			} else if (response == "disapproved") {
-				response = "User Disapproved Successfully";
-				$(param).text("Disapproved");
-				$(param).attr("class", "btn btn-danger btn-xs");
-			} else {
-				$(param).text(currentText);
-			}
-			$('#info').show(200);
-			$(param).prop("disabled", false);
-			$('#info').html(response);
+	var result = bootbox.confirm("Are you sure?", function(result) {
+		if (result) {
+			var userDetails = $(param).attr('href');
+			var currentText = $(param).text();
+			$(param).text("Updating..");
+			$(param).prop("disabled", true);
+			$.ajax({
+				type : "GET",
+				url : userDetails,
+				success : function(response) {
+					if (response == "approved") {
+						response = "User Approved Successfully";
+						$(param).text("Approved");
+						$(param).attr("class", "btn btn-success btn-xs");
+					} else if (response == "disapproved") {
+						response = "User Disapproved Successfully";
+						$(param).text("Disapproved");
+						$(param).attr("class", "btn btn-danger btn-xs");
+					} else {
+						$(param).text(currentText);
+					}
+					$('#info').show(200);
+					$(param).prop("disabled", false);
+					$('#info').html(response);
 
-			hideMessage();
-		},
-		error : function(xhr, status, e) {
-			$(param).text(currentText);
-			$(param).prop("disabled", false);
-			alert(xhr.responseText);
+					hideMessage();
+				},
+				error : function(xhr, status, e) {
+					$(param).text(currentText);
+					$(param).prop("disabled", false);
+					alert(xhr.responseText);
+				}
+			});
 		}
 	});
 	return false;
 }
 
+/*-------------------------------------------------------------
+ * This function is used to activate/deactivate user using ajax
+ *-------------------------------------------------------------*/
 function enableUser(param) {
-	var userDetails = $(param).attr('href');
-	var currentText = $(param).text();
-	$(param).text("Updating..");
-	$(param).prop("disabled", true);
-	$.ajax({
-		type : "GET",
-		url : userDetails,
-		success : function(response) {
-			if (response == "enabled") {
-				response = "User Enabled Successfully";
-				$(param).text("Active");
-				$(param).attr("class", "btn btn-success btn-xs");
-			} else if (response == "disabled") {
-				response = "User Disabled Successfully"
-				$(param).text("Inactive");
-				$(param).attr("class", "btn btn-danger btn-xs");
-			} else {
-				$(param).text(currentText);
-			}
-			$(param).prop("disabled", false);
-			$('#info').show(200);
-			$('#info').html(response);
+	var result = bootbox.confirm("Are you sure?", function(result) {
+		if (result) {
+			var userDetails = $(param).attr('href');
+			var currentText = $(param).text();
+			$(param).text("Updating..");
+			$(param).prop("disabled", true);
+			$.ajax({
+				type : "GET",
+				url : userDetails,
+				success : function(response) {
+					if (response == "enabled") {
+						response = "User Enabled Successfully";
+						$(param).text("Active");
+						$(param).attr("class", "btn btn-success btn-xs");
+					} else if (response == "disabled") {
+						response = "User Disabled Successfully"
+						$(param).text("Inactive");
+						$(param).attr("class", "btn btn-danger btn-xs");
+					} else {
+						$(param).text(currentText);
+					}
+					$(param).prop("disabled", false);
+					$('#info').show(200);
+					$('#info').html(response);
 
-			hideMessage();
-		},
-		error : function(xhr, status, e) {
-			$(param).text(currentText);
-			$(param).prop("disabled", false);
-			alert(xhr.responseText);
+					hideMessage();
+				},
+				error : function(xhr, status, e) {
+					$(param).text(currentText);
+					$(param).prop("disabled", false);
+					alert(xhr.responseText);
+				}
+			});
 		}
 	});
 	return false;

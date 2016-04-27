@@ -212,7 +212,7 @@ public class ManageRoleController {
 				return "Sorry operation failed...!";
 			} else {
 				logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
-				if (user.getIsApproved()) {
+				if (user.getEnabled()) {
 					enable = "enabled";
 				} else {
 					enable = "disabled";

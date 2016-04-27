@@ -71,7 +71,7 @@ public class ResendVerificationTokenListener implements ApplicationListener<Rese
 	 * @throws Exception
 	 */
 	private void resendVerificationToken(final ResendVerificationTokenEvent event) throws Exception {
-		String appUrl = request.getContextPath();
+		String appUrl = request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/"));
 		final Locale locale = event.getLocale();
 		final VerificationToken token = event.getNewToken();
 		final User user = event.getUser();

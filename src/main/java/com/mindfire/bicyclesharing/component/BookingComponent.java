@@ -388,17 +388,6 @@ public class BookingComponent {
 		return bookingRepository.findByUserAndIsOpenAndIsUsed(user, isOpen, isUsed);
 	}
 
-	// /**
-	// * This method is used for getting all Booking based on booking status.
-	// *
-	// * @param isUsed
-	// * this is Boolean type value
-	// * @return {@link Booking} List
-	// */
-	// public List<Booking> getAllBooking(Boolean isUsed) {
-	// return bookingRepository.findByIsUsed(isUsed);
-	// }
-
 	/**
 	 * This method is used for closing the booking based on the booking id
 	 * 
