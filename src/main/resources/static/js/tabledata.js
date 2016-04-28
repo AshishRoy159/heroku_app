@@ -308,10 +308,12 @@ function showBicycles(param){
 		url : "/admin/viewTransfer/"+id,
 		dataType: "json",
 		success: function(data){
+			var bicycles = "";
 			$.each(data, function(index, value) {
-				$("#bicycleChasisNo").html(value.chasisNo+" ");
-	            console.log(value.chasisNo);
+				bicycles = bicycles + "<span class = 'label label-info'>"+value.chasisNo+"</span> ";
+	            console.log(value.chasisNo+" ");
 	            });
+			$("#bicycleChasisNo").html(bicycles);
 	        },
 	        error: function(e) {
 	            console.log(e.message);
