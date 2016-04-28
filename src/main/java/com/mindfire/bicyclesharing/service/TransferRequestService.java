@@ -78,6 +78,8 @@ public class TransferRequestService {
 	 * 
 	 * @param currentUser
 	 *            to get the current logged in manager details
+	 * @param isApproved
+	 *            status of the request
 	 * @return {@link TransferRequestRespondedDTO} List
 	 */
 	public List<TransferRequestRespondedDTO> findOtherRequest(CurrentUser currentUser, Boolean isApproved) {

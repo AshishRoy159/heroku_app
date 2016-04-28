@@ -36,7 +36,6 @@ import com.mindfire.bicyclesharing.dto.IssueCycleDTO;
 import com.mindfire.bicyclesharing.dto.IssueCycleForOnlineDTO;
 import com.mindfire.bicyclesharing.dto.PaymentAtPickUpPointDTO;
 import com.mindfire.bicyclesharing.dto.ReceiveBicyclePaymentDTO;
-import com.mindfire.bicyclesharing.dto.ReceiveCycleDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingDTO;
 import com.mindfire.bicyclesharing.model.Booking;
 import com.mindfire.bicyclesharing.model.RateGroup;
@@ -163,10 +162,10 @@ public class BookingService {
 	 * This method is used for getting all booking details based or particular
 	 * user and their booking status.
 	 * 
+	 * @param input
+	 *            {@link DataTablesInput} object
 	 * @param user
 	 *            User object
-	 * @param isOpen
-	 *            this is Boolean value
 	 * @param isUsed
 	 *            boolean value
 	 * @return {@link Booking} List
@@ -192,12 +191,12 @@ public class BookingService {
 	/**
 	 * This method is used to close unused booking.
 	 * 
-	 * @param receiveCycleDTO
-	 *            receive cycle data
+	 * @param booking
+	 *            current booking object
 	 * @return {@link Booking}
 	 */
-	public Booking closeBooking(ReceiveCycleDTO receiveCycleDTO) {
-		return bookingComponent.mapCloseBooking(receiveCycleDTO);
+	public Booking closeBooking(Booking booking) {
+		return bookingComponent.mapCloseBooking(booking);
 	}
 
 	/**

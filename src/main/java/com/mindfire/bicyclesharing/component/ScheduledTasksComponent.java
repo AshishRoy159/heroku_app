@@ -99,6 +99,7 @@ public class ScheduledTasksComponent {
 
 			if (booking.getExpectedIn().before(new Timestamp(System.currentTimeMillis()))) {
 				booking.setIsOpen(false);
+				booking.setIsUsed(false);
 
 				try {
 					bookingRepository.save(booking);

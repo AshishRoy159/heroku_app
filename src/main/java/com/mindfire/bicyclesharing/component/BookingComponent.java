@@ -36,7 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mindfire.bicyclesharing.dto.BookingPaymentDTO;
 import com.mindfire.bicyclesharing.dto.PaymentAtPickUpPointDTO;
 import com.mindfire.bicyclesharing.dto.ReceiveBicyclePaymentDTO;
-import com.mindfire.bicyclesharing.dto.ReceiveCycleDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
 import com.mindfire.bicyclesharing.exception.CustomException;
 import com.mindfire.bicyclesharing.exception.ExceptionMessages;
@@ -376,10 +375,10 @@ public class BookingComponent {
 	 * This method is used for getting all booking details for particular user
 	 * where booking status is false
 	 * 
+	 * @param input
+	 *            {@link DataTablesInput} object
 	 * @param user
 	 *            {@link User}
-	 * @param isOpen
-	 *            this is Boolean type value
 	 * @param isUsed
 	 *            Boolean value
 	 * @return {@link Booking} List
@@ -391,20 +390,23 @@ public class BookingComponent {
 	/**
 	 * This method is used for closing the booking based on the booking id
 	 * 
-	 * @param receiveCycleDTO
-	 *            receive cycle Data.
+	 * @param booking
+	 *            the current booking object
 	 * @return {@link Booking} object
 	 */
-	public Booking mapCloseBooking(ReceiveCycleDTO receiveCycleDTO) {
-		Booking booking = bookingRepository.findByBookingId(receiveCycleDTO.getBookingId());
+	@Transactional
+	public Booking mapCloseBooking(Booking booking) {
+		BookingTransaction bookingTransaction;
+		Wallet wallet;
 
 		if (null != booking && booking.getIsOpen()) {
-			logger.info("Booking is now closed.");
+			logger.info("Booking is valid for close request.");
 			booking.setIsOpen(false);
+			booking.setIsUsed(false);
 
 			try {
 				logger.info("Booking closed.");
-				return bookingRepository.save(booking);
+				booking = bookingRepository.save(booking);
 			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
 				return null;
 			}
@@ -413,6 +415,23 @@ public class BookingComponent {
 			return null;
 		}
 
+		bookingTransaction = bookingTransactionRepository.findByBooking(booking);
+
+		if (null == bookingTransaction) {
+			return booking;
+		} else {
+			wallet = walletRepository.findByUser(booking.getUser());
+
+			wallet.setBalance(wallet.getBalance() + bookingTransaction.getTransaction().getAmount());
+
+			try {
+				walletRepository.save(wallet);
+			} catch (DataIntegrityViolationException dataIntegrityViolationException) {
+				return null;
+			}
+			createWalletTransaction(bookingTransaction.getTransaction().getAmount(), "wallet", "REFUND", wallet);
+		}
+		return booking;
 	}
 
 	/**
@@ -468,7 +487,7 @@ public class BookingComponent {
 			return predicate;
 		};
 	}
-	
+
 	private Specification<Booking> getClosedBookings(User user, Boolean isUsed) {
 		return (root, query, criteriaBuilder) -> {
 			Predicate predicate = criteriaBuilder.conjunction();

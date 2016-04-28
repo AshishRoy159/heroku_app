@@ -94,6 +94,8 @@ public class DataTableRestController {
 	 * 
 	 * @param input
 	 *            {@link DataTablesInput} object
+	 * @param id
+	 *            of the user
 	 * @return {@link Booking} {@link DataTablesOutput}
 	 */
 	@JsonView(DataTablesOutput.View.class)

@@ -59,6 +59,8 @@ public interface TransferRequestRepository extends DataTablesRepository<Transfer
 	 * This method is used to retrieve transfer requests from pickup points
 	 * other than the current one.
 	 * 
+	 * @param isApproved
+	 *            status of the request
 	 * @param pickUpPoint
 	 *            the current pickup point
 	 * @return {@link TransferRequest} List

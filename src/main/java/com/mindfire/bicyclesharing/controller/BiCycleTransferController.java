@@ -339,6 +339,8 @@ public class BiCycleTransferController {
 	 * 
 	 * @param transferDataDTO
 	 *            the transfer details
+	 * @param bindingResult
+	 *            for validating incoming data
 	 * @param session
 	 *            for session attributes
 	 * @return transfers view
@@ -442,14 +444,17 @@ public class BiCycleTransferController {
 	public ModelAndView closedTransfers() {
 		return new ModelAndView(ViewConstant.CLOSED_TRANSFERS);
 	}
-	
+
 	/**
-	 * ss
+	 * This method is used to map requests for fetching bicycle details of a
+	 * transfer.
+	 * 
 	 * @param id
-	 * @return
+	 *            transfer id
+	 * @return {@link BiCycle} List
 	 */
 	@RequestMapping(value = "admin/viewTransfer/{id}", method = RequestMethod.GET)
-	public @ResponseBody List<BiCycle> getTransferedBicycles(@PathVariable Long id){
+	public @ResponseBody List<BiCycle> getTransferedBicycles(@PathVariable Long id) {
 		Transfer transfer = transferService.findTransferDetails(id);
 		return biCycleTransferService.findBicyclesInTransition(transfer);
 	}

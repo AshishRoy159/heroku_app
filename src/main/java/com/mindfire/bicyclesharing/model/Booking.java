@@ -287,10 +287,17 @@ public class Booking implements Serializable {
 		this.user = user;
 	}
 
+	/**
+	 * @return the isUsed
+	 */
 	public Boolean getIsUsed() {
 		return isUsed;
 	}
 
+	/**
+	 * @param isUsed
+	 *            the isUsed to set
+	 */
 	public void setIsUsed(Boolean isUsed) {
 		this.isUsed = isUsed;
 	}

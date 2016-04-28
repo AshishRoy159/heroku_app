@@ -19,10 +19,12 @@ package com.mindfire.bicyclesharing.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.mindfire.bicyclesharing.model.Booking;
 import com.mindfire.bicyclesharing.model.BookingTransaction;
 
 /**
- * Repository for {@link BookingTransaction} Entity used for CRUD operation on Booking.
+ * Repository for {@link BookingTransaction} Entity used for CRUD operation on
+ * Booking.
  * 
  * @author mindfire
  * @version 1.0
@@ -31,4 +33,12 @@ import com.mindfire.bicyclesharing.model.BookingTransaction;
 @Repository
 public interface BookingTransactionRepository extends JpaRepository<BookingTransaction, Long> {
 
+	/**
+	 * This method is used to get booking transaction detail from booking
+	 * 
+	 * @param booking
+	 *            the concerned booking
+	 * @return {@link BookingTransaction} object
+	 */
+	public BookingTransaction findByBooking(Booking booking);
 }

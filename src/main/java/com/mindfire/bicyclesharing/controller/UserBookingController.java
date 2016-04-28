@@ -42,7 +42,6 @@ import com.mindfire.bicyclesharing.constant.ModelAttributeConstant;
 import com.mindfire.bicyclesharing.constant.ViewConstant;
 import com.mindfire.bicyclesharing.dto.IssueCycleForOnlineDTO;
 import com.mindfire.bicyclesharing.dto.PaymentAtPickUpPointDTO;
-import com.mindfire.bicyclesharing.dto.ReceiveCycleDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingDTO;
 import com.mindfire.bicyclesharing.dto.UserBookingPaymentDTO;
 import com.mindfire.bicyclesharing.event.BookingSuccessEvent;
@@ -493,11 +492,9 @@ public class UserBookingController {
 				redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
 						"You have been issued a bicycle. Please return bicycle before closing the booking..!");
 			} else {
-				logger.info("Bicycle has been issued for this booking.");
-				ReceiveCycleDTO receiveCycleDTO = new ReceiveCycleDTO();
-				receiveCycleDTO.setBookingId(bookingId);
+				logger.info("Bicycle has not been issued for this booking.");
 
-				if (null != bookingSevice.closeBooking(receiveCycleDTO)) {
+				if (null != bookingSevice.closeBooking(booking)) {
 					logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 					redirectAttributes.addFlashAttribute(ModelAttributeConstant.CLOSE_MESSAGE,
 							"Your booking has been successfully closed.");

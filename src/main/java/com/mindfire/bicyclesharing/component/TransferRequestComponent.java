@@ -106,6 +106,8 @@ public class TransferRequestComponent {
 	 * 
 	 * @param currentUser
 	 *            the current logged in manager
+	 * @param isApproved
+	 *            status of the request
 	 * @return {@link TransferRequest} List
 	 */
 	public List<TransferRequest> getOthersRequest(CurrentUser currentUser, Boolean isApproved) {

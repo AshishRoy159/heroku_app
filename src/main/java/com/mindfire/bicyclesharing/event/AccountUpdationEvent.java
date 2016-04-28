@@ -39,8 +39,8 @@ public class AccountUpdationEvent extends ApplicationEvent {
 	 * 
 	 * @param user
 	 *            User object
-	 * @param booking
-	 *            booking details
+	 * @param status
+	 *            updated status
 	 */
 	public AccountUpdationEvent(final User user, final String status) {
 		super(user);

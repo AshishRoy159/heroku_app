@@ -474,9 +474,9 @@ public class BookingController {
 				logger.info("Issued bicycle has not been returned yet. Transaction cancelled.");
 				return "You have been issued a bicycle. Please return bicycle before closing the booking..!";
 			} else {
-				logger.info("Bicycle has been issued for this booking");
+				logger.info("Bicycle has not been issued for this booking");
 
-				if (null != bookingService.closeBooking(receiveCycleDTO)) {
+				if (null != bookingService.closeBooking(booking)) {
 					logger.info(CustomLoggerConstant.TRANSACTION_COMPLETE);
 					return "Your booking has been successfully closed";
 				} else {
