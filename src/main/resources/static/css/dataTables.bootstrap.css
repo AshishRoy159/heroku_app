@@ -43,7 +43,7 @@ table.dataTable {
     clear: both;
     margin-top: 6px !important;
     margin-bottom: 6px !important;
-    max-width: none !important;
+    max-width: inherit !important;
 }
 
 table.dataTable thead .sorting,
