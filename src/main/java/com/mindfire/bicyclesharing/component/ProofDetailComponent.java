@@ -14,31 +14,38 @@
  * limitations under the License.
  */
 
-package com.mindfire.bicyclesharing.repository;
+package com.mindfire.bicyclesharing.component;
 
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.mindfire.bicyclesharing.model.ProofDetail;
+import com.mindfire.bicyclesharing.repository.ProofDetailRepository;
 
 /**
- * Repository for {@link ProofDetail} Entity used for CRUD operation on
- * ProofDetail.
+ * BaseRateComponent class is used to get the data from the BaseRateDTO class
+ * and set the data to the corresponding Entity class
  * 
  * @author mindfire
  * @version 1.0
  * @since 10/03/2016
  */
-@Repository
-public interface ProofDetailRepository extends JpaRepository<ProofDetail, Long> {
+@Component
+public class ProofDetailComponent {
+
+	@Autowired
+	private ProofDetailRepository proofDetailRepository;
 
 	/**
-	 * This method is used to get the user proof details by the proof no.
+	 * This method is used get the user's proof details by proof no.
+	 * 
 	 * @param proofNo
-	 *            the user's document proof no.
+	 *            User's proof No.
 	 * @return {@link ProofDetail} object
 	 */
-	public Optional<ProofDetail> findByProofNo(String proofNo);
+	public Optional<ProofDetail> findProofDetailByProofNo(String proofNo) {
+		return proofDetailRepository.findByProofNo(proofNo);
+	}
 }

@@ -32,6 +32,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.mindfire.bicyclesharing.component.ProofDetailComponent;
 import com.mindfire.bicyclesharing.component.UserComponent;
 import com.mindfire.bicyclesharing.dto.ForgotPasswordDTO;
 import com.mindfire.bicyclesharing.dto.ManageRateGroupDTO;
@@ -40,6 +41,7 @@ import com.mindfire.bicyclesharing.dto.RegistrationPaymentDTO;
 import com.mindfire.bicyclesharing.dto.UserDTO;
 import com.mindfire.bicyclesharing.exception.CustomException;
 import com.mindfire.bicyclesharing.exception.ExceptionMessages;
+import com.mindfire.bicyclesharing.model.ProofDetail;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.VerificationToken;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
@@ -57,6 +59,9 @@ public class UserService {
 
 	@Autowired
 	private UserComponent userComponent;
+
+	@Autowired
+	private ProofDetailComponent proofDetailComponent;
 
 	@Autowired
 	private VerificationTokenRepository tokenRepository;
@@ -297,5 +302,16 @@ public class UserService {
 	 */
 	public DataTablesOutput<User> findAllUsers(DataTablesInput input) {
 		return userComponent.getAllUsers(input);
+	}
+
+	/**
+	 * This method is used to get the user proof details by proof no.
+	 * 
+	 * @param proofNo
+	 *            User's proof number
+	 * @return {@link ProofDetail} object
+	 */
+	public Optional<ProofDetail> getProofDetailByProofNo(String proofNo) {
+		return proofDetailComponent.findProofDetailByProofNo(proofNo);
 	}
 }

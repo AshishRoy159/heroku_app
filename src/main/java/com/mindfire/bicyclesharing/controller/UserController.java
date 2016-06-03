@@ -59,6 +59,7 @@ import com.mindfire.bicyclesharing.event.ResendVerificationTokenEvent;
 import com.mindfire.bicyclesharing.event.ResetPasswordEvent;
 import com.mindfire.bicyclesharing.exception.CustomException;
 import com.mindfire.bicyclesharing.exception.ExceptionMessages;
+import com.mindfire.bicyclesharing.model.ProofDetail;
 import com.mindfire.bicyclesharing.model.User;
 import com.mindfire.bicyclesharing.model.VerificationToken;
 import com.mindfire.bicyclesharing.model.WalletTransaction;
@@ -517,6 +518,7 @@ public class UserController {
 		}
 		Optional<User> existingEmail = userService.getUserByEmail(userDTO.getEmail());
 		Optional<User> existingMobileNo = userService.getUserByMobileNo(userDTO.getMobileNo());
+		Optional<ProofDetail> proofDetail = userService.getProofDetailByProofNo(userDTO.getProofNo());
 
 		if (existingEmail.isPresent()) {
 			logger.info("An user with the email id already exists. Transaction cancelled.");
@@ -525,6 +527,10 @@ public class UserController {
 		} else if (existingMobileNo.isPresent()) {
 			logger.info("An user with the mobile number already exists. Transaction cancelled.");
 			model.addAttribute("failure", "User with same mobile number already exists!!");
+			return new ModelAndView(ViewConstant.REGISTRATION);
+		} else if (proofDetail.isPresent()) {
+			logger.info("An user with the proof number already exists. Transaction cancelled.");
+			model.addAttribute("failure", "User with same proof number already exists!!");
 			return new ModelAndView(ViewConstant.REGISTRATION);
 		}
 

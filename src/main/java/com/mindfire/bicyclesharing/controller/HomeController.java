@@ -78,7 +78,7 @@ public class HomeController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
-			/* The user is logged in :) */
+			/* The user is logged in */
 			return ViewConstant.REDIRECT + ViewConstant.INDEX;
 		} else {
 			return ViewConstant.REGISTRATION;
@@ -105,10 +105,9 @@ public class HomeController {
 
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
 			logger.info("User already logged in. Redirected to index page.");
-			/* The user is logged in :) */
+			/* The user is logged in */
 			return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.INDEX);
 		} else {
-
 			if (error.isPresent()) {
 				logger.info("Error while trying to log in.");
 
