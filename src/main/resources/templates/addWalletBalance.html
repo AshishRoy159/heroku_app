@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bicycle Sharing:Wallet Balance</title>
+<!-- Bootstrap Styles-->
+<link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+<!-- FontAwesome Styles-->
+<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" />
+<!-- Custom Styles-->
+<link th:href="@{/css/admin-styles.css}" rel="stylesheet" />
+<!-- Google Fonts-->
+<link th:href="@{http://fonts.googleapis.com/css?family=Open+Sans}"
+	rel="stylesheet" type="text/css" />
+<!-- TABLE STYLES-->
+<link th:href="@{/css/dataTables.bootstrap.css}" rel="stylesheet" />
+</head>
+<body>
+	<!-- Navigation section
+================================================== -->
+	<div class="wrapper">
+		<div th:include="adminNav :: head-and-side"></div>
+		<div id="page-wrapper">
+			<div id="page-inner">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 class="page-header">Wallet</h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3>Add Balance</h3>
+							</div>
+							<div class="panel-body">
+								<div class="col-md-8 col-sm-8 col-xs-8">
+									<form onsubmit="return addBalance()" class="form-horizontal">
+										<div>
+											<label class="control-label"> UserId</label> <input
+												type="text" id="userId" class="form-control" maxlength="15"
+												required="required" tabindex="1" />
+										</div>
+										<div>
+											<label class="control-label">Balance</label> <input
+												type="number" min="100" max="999" step="10" id="balance"
+												class="form-control" maxlength="3" required="required"
+												tabindex="2" />
+
+										</div>
+										<div style="padding: 5px">
+											<button id="add" type="submit" tabindex="3"
+												class="btn btn-primary">Add Balance</button>
+											<input type="reset" class="btn btn-info" tabindex="4" />
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6" style="padding-top: 60px;">
+						<h3 class="popover popover-right" id="info"></h3>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="adminNav :: page-footer"></div>
+	<!-- /. PAGE WRAPPER  -->
+	<!-- /. WRAPPER  -->
+	<!-- JS Scripts-->
+	<!-- jQuery Js -->
+	<script th:src="@{/js/jquery-1.10.2.js}" type="text/javascript"></script>
+	<!-- Bootstrap Js -->
+	<script th:src="@{/js/bootstrap.min.js}" type="text/javascript"></script>
+	<!-- Metis Menu Js -->
+	<script th:src="@{/js/jquery.metisMenu.js}" type="text/javascript"></script>
+	<!-- Custom Js -->
+	<script th:src="@{/js/custom-scripts.js}" type="text/javascript"></script>
+	<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
+	<!-- Ajax Js -->
+	<script th:src="@{/js/ajax-functions.js}" type="text/javascript"></script>
+</body>
+</html>

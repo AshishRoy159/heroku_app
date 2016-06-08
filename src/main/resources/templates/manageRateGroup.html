@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bicycle Sharing:Manage Rate Group</title>
+<!-- Bootstrap Styles-->
+<link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+<!-- FontAwesome Styles-->
+<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" />
+<!-- Custom Styles-->
+<link th:href="@{/css/admin-styles.css}" rel="stylesheet" />
+<!-- Google Fonts-->
+<link th:href="@{http://fonts.googleapis.com/css?family=Open+Sans}"
+	rel="stylesheet" type="text/css" />
+<!-- TABLE STYLES-->
+<link th:href="@{/css/dataTables.bootstrap.css}" rel="stylesheet" />
+</head>
+<body>
+	<!-- Navigation section
+================================================== -->
+	<div class="wrapper">
+		<div th:include="adminNav :: head-and-side"></div>
+		<div id="page-wrapper">
+			<div id="page-inner">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 class="page-header">Manage Rate Group</h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<h3 class="text-danger" th:text="*{errorMessage}"></h3>
+						<h2 class="text-success" th:text="*{successMessage}"></h2>
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3>Assign Rate Group</h3>
+							</div>
+							<div class="panel-body">
+								<div class="col-md-8 col-sm-8 col-xs-8">
+									<form action="#" th:action="@{/manager/assignRateGroup}"
+										th:object="${assignRateGroupData}" method="post">
+										<div>
+											<label class="control-label"> UserId</label> <input
+												type="text" name="userId" class="form-control" maxlength="15"
+												required="required" />
+										</div>
+										<div>
+											<label class="control-label">Select Rate Group</label> <select
+												class="input-xlarge form-control" name="rateGroupId"
+												required="required">
+												<option value="">Select Rate Group</option>
+												<option th:each="rateGroup : ${rateGroups}"
+													th:value="${rateGroup.rateGroupId}"
+													th:text="${rateGroup.groupType}"></option>
+											</select>
+										</div>
+										<div style="padding: 5px">
+											<input type="submit" value="Submit" class="btn btn-primary" />
+											<input type="reset" class="btn btn-info" />
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="adminNav :: page-footer"></div>
+	<!-- /. PAGE WRAPPER  -->
+	<!-- /. WRAPPER  -->
+	<!-- JS Scripts-->
+	<!-- jQuery Js -->
+	<script th:src="@{/js/jquery-1.10.2.js}" type="text/javascript"></script>
+	<!-- Bootstrap Js -->
+	<script th:src="@{/js/bootstrap.min.js}" type="text/javascript"></script>
+	<!-- Metis Menu Js -->
+	<script th:src="@{/js/jquery.metisMenu.js}" type="text/javascript"></script>
+	<!-- Custom Js -->
+	<script th:src="@{/js/custom-scripts.js}" type="text/javascript"></script>
+	<script src="/js/jquery.js" th:src="@{js/jquery.js}"></script>
+	<script src="/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
+	<script src="/js/smoothscroll.js" th:src="@{js/smoothscroll.js}"></script>
+	<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
+</body>
+</html>

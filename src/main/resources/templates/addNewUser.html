@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bicycle Sharing:Registration</title>
+<!-- Bootstrap Styles-->
+<link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+<!-- FontAwesome Styles-->
+<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" />
+<!-- Custom Styles-->
+<link th:href="@{/css/admin-styles.css}" rel="stylesheet" />
+<!-- Google Fonts-->
+<link th:href="@{http://fonts.googleapis.com/css?family=Open+Sans}"
+	rel="stylesheet" type="text/css" />
+<!-- TABLE STYLES-->
+<link th:href="@{/css/dataTables.bootstrap.css}" rel="stylesheet" />
+<!-- CSS for jquery datetime picker -->
+<link rel="stylesheet" href="/css/jquery.datetimepicker.css"
+	th:href="@{/css/jquery.datetimepicker.css}" />
+</head>
+<body>
+	<!-- Navigation section
+================================================== -->
+	<div class="wrapper">
+		<div th:include="adminNav :: head-and-side"></div>
+		<div id="page-wrapper">
+			<div id="page-inner">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 class="page-header">Registration</h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-9">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<strong>Add New User</strong>
+							</div>
+							<div class="panel-body">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<form action="#" th:action="@{/manager/managerPayment}"
+										th:object="${userData}" method="post"
+										enctype="multipart/form-data"
+										onsubmit="return emailFunction(this)">
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<input type="text" name="firstName"
+														class="form-control input-lg" placeholder="First Name"
+														pattern="[a-zA-Z]{2,20}"
+														title="Please enter alphabet only. Size{min=2 , max=20}"
+														tabindex="1" maxlength="20" required="required" />
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<input type="text" name="lastName"
+														class="form-control input-lg" placeholder="Last Name"
+														pattern="[a-zA-Z]{2,20}"
+														title="Please enter alphabet only. Size{min=2 , max=20}"
+														tabindex="2" maxlength="20" required="required" />
+												</div>
+											</div>
+										</div>
+										<span id="email_error_id" class="text-danger"></span>
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<input type="email" name="email" id="emailId"
+														class="form-control input-lg" placeholder="Enter Email"
+														title="Please Enter valid email" tabindex="3"
+														maxlength="50" required="required" />
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<input type="email" name="confirmUserEmail"
+														id="email_confirm" class="form-control input-lg"
+														maxlength="50" title="Please Enter valid email"
+														placeholder="Confirm Email" tabindex="4"
+														required="required" />
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<input type="text" name="mobileNo"
+												class="form-control input-lg" placeholder="Enter Mobile No"
+												tabindex="5" pattern="[0-9]{10}"
+												title="Enter 10 digits Number Only" maxlength="10"
+												required="required" />
+										</div>
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<select class="form-control input-lg" name="proofType"
+														tabindex="6" required="required">
+														<option value="">Select Proof Type:</option>
+														<option value="Driving Licence">Driving Licence</option>
+														<option value="Voter ID">Voter ID</option>
+														<option value="Aadhar Card">Aadhar Card</option>
+														<option value="PAN Card">PAN Card</option>
+													</select>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<input type="text" name="proofNo"
+														class="form-control input-lg" placeholder="Enter Proof Id"
+														pattern="[a-zA-Z0-9]{2,20}"
+														title="please enter alphabet and digits only.Size[min=2,max=20]"
+														maxlength="20" tabindex="7" required="required" />
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<input type="file" name="document"
+														class="form-control input-lg" tabindex="8"
+														title="Upload Proof Document" required="required" />
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<input type="text" name="dateOfBirth"
+														class="form-control input-lg" id="datepicker"
+														pattern="^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$"
+														onchange="checkDate();"
+														placeholder="Date Of Birth(yyyy/mm/dd)" tabindex="9"
+														required="required" />
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<textarea name="userAddress" class="form-control input-lg"
+												placeholder="Enter Address" tabindex="10" rows="5"
+												maxlength="250" required="required"></textarea>
+										</div>
+										<div class="row">
+											<div class="col-md-4"></div>
+											<div class="col-md-4">
+												<a href="/manager/managerPayment"> <input type="submit"
+													onclick="return checkDate()"
+													class="btn btn-primary btn-block btn-lg" tabindex="11" />
+												</a>
+											</div>
+											<div class="col-md-4"></div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+						<!-- panel-->
+					</div>
+					<div class="col-md-3">
+						<div>
+							<h3 class="text-danger" th:text="${errorMessage}"></h3>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="adminNav :: page-footer"></div>
+	<!-- /. PAGE WRAPPER  -->
+	<!-- /. WRAPPER  -->
+	<!-- JS Scripts-->
+	<!-- jQuery Js -->
+	<script th:src="@{/js/jquery-1.10.2.js}" type="text/javascript"></script>
+	<!-- Bootstrap Js -->
+	<script th:src="@{/js/bootstrap.min.js}" type="text/javascript"></script>
+	<!-- Metis Menu Js -->
+	<script th:src="@{/js/jquery.metisMenu.js}" type="text/javascript"></script>
+	<!-- DATA TABLE SCRIPTS -->
+	<script th:src="@{/js/jquery.dataTables.js}" type="text/javascript"></script>
+	<script th:src="@{/js/dataTables.bootstrap.js}" type="text/javascript"></script>
+	<!-- Custom Js -->
+	<script th:src="@{/js/custom-scripts.js}" type="text/javascript"></script>
+	<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
+	<script src="/js/jquery.datetimepicker.full.js"
+		th:src="@{/js/jquery.datetimepicker.full.js}"></script>
+	<script>
+		$('#datepicker').datetimepicker({
+			yearOffset : 0,
+			lang : 'ch',
+			timepicker : false,
+			format : 'Y-m-d',
+			formatDate : 'Y-m-d',
+		});
+	</script>
+</body>
+</html>

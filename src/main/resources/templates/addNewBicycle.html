@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bicycle Sharing:Add New Bicycle</title>
+<!-- Bootstrap Styles-->
+<link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+<!-- FontAwesome Styles-->
+<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" />
+<!-- Custom Styles-->
+<link th:href="@{/css/admin-styles.css}" rel="stylesheet" />
+<!-- Google Fonts-->
+<link th:href="@{http://fonts.googleapis.com/css?family=Open+Sans}"
+	rel="stylesheet" type="text/css" />
+<!-- TABLE STYLES-->
+<link th:href="@{/css/dataTables.bootstrap.css}" rel="stylesheet" />
+</head>
+<body>
+	<div th:include="adminNav :: head-and-side"></div>
+	<div id="page-wrapper">
+		<div id="page-inner">
+
+			<div class="row">
+				<div class="col-md-12">
+					<h1 class="page-header">Add a new Bicycle</h1>
+				</div>
+			</div>
+			<!-- /. ROW  -->
+
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="panel panel-primary">
+						<div class="panel-heading">Enter Bicycle details</div>
+						<div class="panel-body">
+							<form onsubmit="return addBicycle()" class="form-horizontal">
+								<fieldset>
+									<div class="control-group">
+										<label class="control-label">Chasis Nubmer</label>
+										<div class="controls">
+											<input type="text" tabindex="1" maxlength="20" id="chasisNo"
+												placeholder="" class="input-xlarge form-control"
+												required="required" /> <span class="help-block">The
+												bicycle chasis no.</span>
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label">Add to</label>
+										<div class="controls">
+											<select tabindex="2" class="input-xlarge form-control"
+												id="pickUpPoint" required="required">
+												<option value="">Select Pickup Point</option>
+												<option th:each="pickUpPoint : ${pickUpPoints}"
+													th:value="${pickUpPoint.pickUpPointId}"
+													th:text="${pickUpPoint.location}"></option>
+											</select> <span class="help-block">Input the initial pick up
+												point id</span>
+										</div>
+									</div>
+
+									<div class="control-group">
+										<div class="controls">
+											<button id="add" type="submit" tabindex="3"
+												class="btn btn-primary">Add bicycle</button>
+										</div>
+									</div>
+								</fieldset>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6" style="padding-top: 60px;">
+					<h3 class="popover popover-right" id="info"></h3>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="adminNav :: page-footer"></div>
+	<!-- JS Scripts-->
+	<!-- jQuery Js -->
+	<script th:src="@{/js/jquery-1.10.2.js}" type="text/javascript"></script>
+	<!-- Bootstrap Js -->
+	<script th:src="@{/js/bootstrap.min.js}" type="text/javascript"></script>
+	<!-- Metis Menu Js -->
+	<script th:src="@{/js/jquery.metisMenu.js}" type="text/javascript"></script>
+	<!-- Custom Js -->
+	<script th:src="@{/js/custom-scripts.js}" type="text/javascript"></script>
+	<!-- Ajax Js -->
+	<script th:src="@{/js/ajax-functions.js}" type="text/javascript"></script>
+</body>
+</html>

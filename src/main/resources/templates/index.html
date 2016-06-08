@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- Template site title
+   ================================================== -->
+<title>Bicycle Sharing</title>
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+
+<!-- Bootstrap CSS
+   ================================================== -->
+<link rel="stylesheet" href="css/bootstrap.min.css"
+	th:href="@{css/bootstrap.min.css}" />
+
+<!-- Animate CSS
+   ================================================== -->
+<link rel="stylesheet" href="css/animate.min.css"
+	th:href="@{css/animate.min.css}" />
+
+<!-- Font Icons
+   ================================================== -->
+<link rel="stylesheet" href="css/font-awesome.min.css"
+	th:href="@{css/font-awesome.min.css}" />
+<link rel="stylesheet" href="css/et-line-font.css"
+	th:href="@{css/et-line-font.css}" />
+
+<!-- Nivo Lightbox CSS
+   ================================================== -->
+<link rel="stylesheet" href="css/nivo-lightbox.css"
+	th:href="@{css/nivo-lightbox.css}" />
+<link rel="stylesheet" href="css/nivo_themes/default/default.css"
+	th:href="@{css/nivo_themes/default/default.css}" />
+
+<!-- Owl Carousel CSS
+   ================================================== -->
+<link rel="stylesheet" href="/css/owl.theme.css"
+	th:href="@{/css/owl.theme.css}" />
+<link rel="stylesheet" href="/css/owl.carousel.css"
+	th:href="@{/css/owl.carousel.css}" />
+
+<!-- BxSlider CSS
+   ================================================== -->
+<link rel="stylesheet" href="css/bxslider.css"
+	th:href="@{css/bxslider.css}" />
+
+<!-- CSS for jquery datetime picker -->
+<link rel="stylesheet" href="/css/jquery.datetimepicker.css"
+	th:href="@{/css/jquery.datetimepicker.css}" />
+
+<!-- Main CSS
+   	================================================== -->
+<link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}" />
+
+<!-- Google web font
+   ================================================== -->
+<link href='https://fonts.googleapis.com/css?family=Raleway:700'
+	th:href="@{https://fonts.googleapis.com/css?family=Raleway:700}"
+	rel='stylesheet' type='text/css' />
+</head>
+
+<body data-spy="scroll" data-target=".navbar-collapse" data-offset="50">
+
+	<!-- Preloader section
+================================================== -->
+	<section class="preloader">
+		<div class="sk-rotating-plane"></div>
+	</section>
+
+	<!-- Navigation section
+================================================== -->
+	<section class="navbar navbar-fixed-top custom-navbar"
+		role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button class="navbar-toggle" data-toggle="collapse"
+					data-target="#homeNav">
+					<span class="icon icon-bar"></span> <span class="icon icon-bar"></span>
+					<span class="icon icon-bar"></span>
+				</button>
+				<a href="#home" class="smoothScroll navbar-brand">BICYCLE
+					SHARING</a>
+			</div>
+			<div class="collapse navbar-collapse" id="homeNav">
+				<ul class="nav navbar-nav navbar-right">
+
+					<li><a href="#home" class="smoothScroll">HOME</a></li>
+					<li><a href="#work" class="smoothScroll">HOW IT WORKS</a></li>
+					<li><a href="#about" class="smoothScroll">ABOUT</a></li>
+					<li><a href="#portfolio" class="smoothScroll">GALLERY</a></li>
+					<li><a href="#plan" class="smoothScroll">PLANS</a></li>
+					<li><a href="#contact" class="smoothScroll">CONTACT</a></li>
+					<li sec:authorize="isAnonymous()"><a class="smoothScroll"
+						href="login">LOGIN</a></li>
+					<li class="dropdown" sec:authorize="isAuthenticated()"><a
+						data-toggle="dropdown" class="dropdown-toggle" role="button"
+						aria-haspopup="true" aria-expanded="false" href="#"><i
+							class="fa fa-user fa-fw"></i>ACCOUNT<strong class="caret"></strong></a>
+						<ul class="dropdown-menu black-and-white">
+							<li><a
+								th:href="@{/user/userProfile/} + ${#authentication.principal.userId}"><i
+									class="fa fa-user fa-fw"></i>View Profile<br /> [<small
+									sec:authentication="name">[email]</small>] </a></li>
+							<li class="divider"></li>
+							<li sec:authorize="hasAuthority('MANAGER')"><a
+								th:href="@{/manager/managerHome}"><i class="fa fa-home "></i>Manager
+									Home</a></li>
+							<li sec:authorize="hasAuthority('MANAGER')" class="divider"></li>
+							<li sec:authorize="hasAuthority('ADMIN')"><a
+								th:href="@{/admin/adminHome}"><i class="fa fa-home "></i>Admin
+									Home</a></li>
+							<li sec:authorize="hasAuthority('ADMIN')" class="divider"></li>
+							<li><a th:href="@{/user/changePassword}"><i
+									class="fa fa-gear fa-fw"></i>Change Password</a></li>
+							<li class="divider"></li>
+							<li><a href="logout"><i class="fa fa-sign-out fa-fw"></i>Logout</a></li>
+						</ul></li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<!-- Homepage section
+================================================== -->
+	<div id="home">
+		<div class="site-slider">
+			<ul class="bxslider">
+				<li><img src="images/slider/slide1.jpg"
+					th:src="@{images/slider/slide1.jpg}" alt="slider image 1" />
+					<div class="container">
+						<div class="row">
+							<div class="col-md-12">
+								<div sec:authorize="isAnonymous()" class="slider-caption">
+									<h2>Plan your trip</h2>
+									<p class="color-white wow bounceIn">
+										You <span class="color-yellow">create</span> the <span
+											class="color-yellow">journey,</span> we provide the <span
+											class="color-yellow">service</span>.
+									</p>
+								</div>
+								<div sec:authorize="isAuthenticated()"
+									class="slider-caption caption-form">
+									<div style="color: white;" id="errorMessage"
+										th:text="${errorMessage}"></div>
+									<div style="color: white;" th:text="${message}"></div>
+									<form action="/user/booking" th:action="@{/user/booking}"
+										class="form-inline" th:object="${userBookingData}"
+										method="POST"
+										onsubmit="return userBookingValidationForImage1(this);"
+										style="width: 100%; padding-top: 5px;">
+										<input type="text" id="bookingId1" name="bookingTime"
+											class="form-control input-md datetimepicker_mask"
+											tabindex="1" placeholder="Booking Date and Time"
+											required="required" maxlength="20" /> <select tabindex="2"
+											class="input-md form-control" name="pickUpPoint"
+											required="required">
+											<option value="">Select Pickup Point</option>
+											<option th:each="pickUpPoint : ${pickUpPoints}"
+												th:value="${pickUpPoint.pickUpPointId}"
+												th:text="${pickUpPoint.location}"></option>
+										</select> <input type="text" name="returnTime" id="returnId1"
+											class="form-control input-md datetimepicker_mask"
+											placeholder="Return Date and Time" tabindex="3"
+											required="required" maxlength="20" /> <input type="submit"
+											class="btn btn-success btn-md" value="Book Now" />
+									</form>
+								</div>
+							</div>
+						</div>
+					</div></li>
+				<li><img src="images/slider/slide2.jpg"
+					th:src="@{images/slider/slide2.jpg}" alt="slider image 2" />
+					<div class="container caption-wrapper">
+						<div sec:authorize="isAnonymous()" class="slider-caption">
+							<h2>Plan your trip</h2>
+							<p class="color-white wow bounceIn">
+								You <span class="color-yellow">create</span> the <span
+									class="color-yellow">journey,</span> we provide the <span
+									class="color-yellow">service</span>.
+							</p>
+						</div>
+						<div sec:authorize="isAuthenticated()"
+							class="slider-caption caption-form">
+							<div style="color: white;" th:text="${errorMessage}"></div>
+							<div style="color: white;" th:text="${message}"></div>
+							<form action="/user/booking" th:action="@{/user/booking}"
+								class="form-inline" th:object="${userBookingData}" method="POST"
+								onsubmit="return userBookingValidationForImage2(this);"
+								style="width: 100%; padding-top: 5px;">
+								<input type="text" id="bookingId2" name="bookingTime"
+									class="form-control input-md datetimepicker_mask" tabindex="1"
+									placeholder="Booking Date and Time" required="required"
+									maxlength="20" /> <select tabindex="2"
+									class="input-md form-control" name="pickUpPoint"
+									required="required">
+									<option value="">Select Pickup Point</option>
+									<option th:each="pickUpPoint : ${pickUpPoints}"
+										th:value="${pickUpPoint.pickUpPointId}"
+										th:text="${pickUpPoint.location}"></option>
+								</select> <input type="text" name="returnTime" id="returnId2"
+									class="form-control input-md datetimepicker_mask"
+									placeholder="Return Date and Time" tabindex="3"
+									required="required" maxlength="20" /> <input type="submit"
+									class="btn btn-success btn-md" value="Book Now" />
+							</form>
+						</div>
+					</div></li>
+				<li><img src="images/slider/slide3.jpg"
+					th:src="@{images/slider/slide3.jpg}" alt="slider image 3" />
+					<div class="container">
+						<div class="row">
+							<div class="col-md-12">
+								<div sec:authorize="isAnonymous()" class="slider-caption">
+									<h2>Plan your trip</h2>
+									<p class="color-white wow bounceIn">
+										You <span class="color-yellow">create</span> the <span
+											class="color-yellow">journey,</span> we provide the <span
+											class="color-yellow">service</span>.
+									</p>
+								</div>
+								<div sec:authorize="isAuthenticated()"
+									class="slider-caption caption-form">
+									<div style="color: white;" th:text="${errorMessage}"></div>
+									<div style="color: white;" th:text="${message}"></div>
+									<form action="/user/booking" th:action="@{/user/booking}"
+										class="form-inline" th:object="${userBookingData}"
+										method="POST"
+										onsubmit="return userBookingValidationForImage3(this);"
+										style="width: 100%; padding-top: 5px;">
+										<input type="text" id="bookingId3" name="bookingTime"
+											class="form-control input-md datetimepicker_mask"
+											tabindex="1" placeholder="Booking Date and Time"
+											required="required" maxlength="20" /> <select tabindex="2"
+											class="input-md form-control" name="pickUpPoint"
+											required="required">
+											<option value="">Select Pickup Point</option>
+											<option th:each="pickUpPoint : ${pickUpPoints}"
+												th:value="${pickUpPoint.pickUpPointId}"
+												th:text="${pickUpPoint.location}"></option>
+										</select> <input type="text" name="returnTime" id="returnId3"
+											class="form-control input-md datetimepicker_mask"
+											placeholder="Return Date and Time" tabindex="3"
+											required="required" maxlength="20" /> <input type="submit"
+											class="btn btn-success btn-md" value="Book Now" />
+									</form>
+								</div>
+							</div>
+						</div>
+					</div></li>
+				<li><img src="images/slider/slide4.jpg"
+					th:src="@{images/slider/slide4.jpg}" alt="slider image 4" />
+					<div class="container">
+						<div class="row">
+							<div class="col-md-12">
+								<div sec:authorize="isAnonymous()" class="slider-caption">
+									<h2>Plan your trip</h2>
+									<p class="color-white wow bounceIn">
+										You <span class="color-yellow">create</span> the <span
+											class="color-yellow">journey,</span> we provide the <span
+											class="color-yellow">service</span>.
+									</p>
+								</div>
+								<div sec:authorize="isAuthenticated()"
+									class="slider-caption caption-form">
+									<div style="color: white;" th:text="${errorMessage}"></div>
+									<div style="color: white;" th:text="${message}"></div>
+									<form action="/user/booking" th:action="@{/user/booking}"
+										class="form-inline" th:object="${userBookingData}"
+										method="POST"
+										onsubmit="return userBookingValidationForImage4(this);"
+										style="width: 100%; padding-top: 5px;">
+										<input type="text" id="bookingId4" name="bookingTime"
+											class="form-control input-md datetimepicker_mask"
+											tabindex="1" placeholder="Booking Date and Time"
+											required="required" maxlength="20" /> <select tabindex="2"
+											class="input-md form-control" name="pickUpPoint"
+											required="required">
+											<option value="">Select Pickup Point</option>
+											<option th:each="pickUpPoint : ${pickUpPoints}"
+												th:value="${pickUpPoint.pickUpPointId}"
+												th:text="${pickUpPoint.location}"></option>
+										</select> <input type="text" name="returnTime" id="returnId4"
+											class="form-control input-md datetimepicker_mask"
+											placeholder="Return Date and Time" tabindex="3"
+											required="required" maxlength="20" /> <input type="submit"
+											class="btn btn-success btn-md" value="Book Now" />
+									</form>
+								</div>
+							</div>
+						</div>
+					</div></li>
+				<li><img src="images/slider/slide5.jpg"
+					th:src="@{images/slider/slide5.jpg}" alt="slider image 5" />
+					<div class="container">
+						<div class="row">
+							<div class="col-md-12">
+								<div sec:authorize="isAnonymous()" class="slider-caption">
+									<h2>Plan your trip</h2>
+									<p class="color-white wow bounceIn">
+										You <span class="color-yellow">create</span> the <span
+											class="color-yellow">journey,</span> we provide the <span
+											class="color-yellow">service</span>.
+									</p>
+								</div>
+								<div sec:authorize="isAuthenticated()"
+									class="slider-caption caption-form">
+									<div class="text-danger" th:text="${errorMessage}"></div>
+									<div class="text-success" th:text="${message}"></div>
+									<form action="/user/booking" th:action="@{/user/booking}"
+										class="form-inline" th:object="${userBookingData}"
+										method="POST"
+										onsubmit="return userBookingValidationForImage5(this);"
+										style="width: 100%; padding-top: 5px;">
+										<input type="text" id="bookingId5" name="bookingTime"
+											class="form-control input-md datetimepicker_mask"
+											tabindex="1" placeholder="Booking Date and Time"
+											required="required" maxlength="20" /> <select tabindex="2"
+											class="input-md form-control" name="pickUpPoint"
+											required="required">
+											<option value="">Select Pickup Point</option>
+											<option th:each="pickUpPoint : ${pickUpPoints}"
+												th:value="${pickUpPoint.pickUpPointId}"
+												th:text="${pickUpPoint.location}"></option>
+										</select> <input type="text" name="returnTime" id="returnId5"
+											class="form-control input-md datetimepicker_mask"
+											placeholder="Return Date and Time" tabindex="3"
+											required="required" maxlength="20" /> <input type="submit"
+											class="btn btn-success btn-md" value="Book Now" />
+									</form>
+								</div>
+							</div>
+						</div>
+					</div></li>
+				<li><img src="images/slider/slide6.jpg"
+					th:src="@{images/slider/slide6.jpg}" alt="slider image 6" />
+					<div class="container">
+						<div class="row">
+							<div class="col-md-12">
+								<div sec:authorize="isAnonymous()" class="slider-caption">
+									<h2>Plan your trip</h2>
+									<p class="color-white wow bounceIn">
+										You <span class="color-yellow">create</span> the <span
+											class="color-yellow">journey,</span> we provide the <span
+											class="color-yellow">service</span>.
+									</p>
+								</div>
+								<div sec:authorize="isAuthenticated()"
+									class="slider-caption caption-form">
+									<div style="color: white;" th:text="${errorMessage}"></div>
+									<div style="color: white;" th:text="${message}"></div>
+									<form action="/user/booking" th:action="@{/user/booking}"
+										class="form-inline" th:object="${userBookingData}"
+										method="POST"
+										onsubmit="return userBookingValidationForImage6(this);"
+										style="width: 100%; padding-top: 5px;">
+										<input type="text" id="bookingId6" name="bookingTime"
+											class="form-control input-md datetimepicker_mask"
+											tabindex="1" placeholder="Booking Date and Time"
+											required="required" maxlength="20" /> <select tabindex="2"
+											class="input-md form-control" name="pickUpPoint"
+											required="required">
+											<option value="">Select Pickup Point</option>
+											<option th:each="pickUpPoint : ${pickUpPoints}"
+												th:value="${pickUpPoint.pickUpPointId}"
+												th:text="${pickUpPoint.location}"></option>
+										</select> <input type="text" name="returnTime" id="returnId6"
+											class="form-control input-md datetimepicker_mask"
+											placeholder="Return Date and Time" tabindex="3"
+											required="required" maxlength="20" /> <input type="submit"
+											class="btn btn-success btn-md" value="Book Now" />
+									</form>
+								</div>
+							</div>
+						</div>
+					</div></li>
+				<li><img src="images/slider/slide7.jpg"
+					th:src="@{images/slider/slide7.jpg}" alt="slider image 7" />
+					<div class="container">
+						<div class="row">
+							<div class="col-md-12">
+								<div sec:authorize="isAnonymous()" class="slider-caption">
+									<h2>Plan your trip</h2>
+									<p class="color-white wow bounceIn">
+										You <span class="color-yellow">create</span> the <span
+											class="color-yellow">journey,</span> we provide the <span
+											class="color-yellow">service</span>.
+									</p>
+								</div>
+								<div sec:authorize="isAuthenticated()"
+									class="slider-caption caption-form">
+									<div style="color: white;" th:text="${errorMessage}"></div>
+									<div style="color: white;" th:text="${message}"></div>
+									<form action="/user/booking" th:action="@{/user/booking}"
+										class="form-inline" th:object="${userBookingData}"
+										method="POST"
+										onsubmit="return userBookingValidationForImage7(this);"
+										style="width: 100%; padding-top: 5px;">
+										<input type="text" id="bookingId7" name="bookingTime"
+											class="form-control input-md datetimepicker_mask"
+											tabindex="1" placeholder="Booking Date and Time"
+											required="required" maxlength="20" /> <select tabindex="2"
+											class="input-md form-control" name="pickUpPoint"
+											required="required">
+											<option value="">Select Pickup Point</option>
+											<option th:each="pickUpPoint : ${pickUpPoints}"
+												th:value="${pickUpPoint.pickUpPointId}"
+												th:text="${pickUpPoint.location}"></option>
+										</select> <input type="text" name="returnTime" id="returnId7"
+											class="form-control input-md datetimepicker_mask"
+											placeholder="Return Date and Time" tabindex="3"
+											required="required" maxlength="20" /> <input type="submit"
+											class="btn btn-success btn-md" value="Book Now" />
+									</form>
+								</div>
+							</div>
+						</div>
+					</div></li>
+			</ul>
+			<!-- /.bxslider -->
+			<div class="bx-thumbnail-wrapper">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<div class="col-md-12">
+							<div id="bx-pager">
+								<a data-slide-index="0" href=""><img
+									src="images/slider/thumb1.jpg"
+									th:src="@{images/slider/thumb1.jpg}" alt="thumbnail 1"
+									height="70" width="120" /></a> <a data-slide-index="1" href=""><img
+									src="images/slider/thumb2.jpg"
+									th:src="@{images/slider/thumb2.jpg}" alt="thumbnail 2"
+									height="70" width="120" /></a> <a data-slide-index="2" href=""><img
+									src="images/slider/thumb3.jpg"
+									th:src="@{images/slider/thumb3.jpg}" alt="thumbnail 3"
+									height="70" width="120" /></a> <a data-slide-index="3" href=""><img
+									src="images/slider/thumb4.jpg"
+									th:src="@{images/slider/thumb4.jpg}" alt="thumbnail 4"
+									height="70" width="120" /></a> <a data-slide-index="4" href=""><img
+									src="images/slider/thumb5.jpg"
+									th:src="@{images/slider/thumb5.jpg}" alt="thumbnail 5"
+									height="70" width="120" /></a> <a data-slide-index="5" href=""><img
+									src="images/slider/thumb6.jpg"
+									th:src="@{images/slider/thumb6.jpg}" alt="thumbnail 5"
+									height="70" width="120" /></a> <a data-slide-index="6" href=""><img
+									src="images/slider/thumb7.jpg"
+									th:src="@{images/slider/thumb7.jpg}" alt="thumbnail 5"
+									height="70" width="120" /></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /.site-slider -->
+	</div>
+
+	<!-- Booking form
+================================================== -->
+	<div class="booking-form parallax-section"
+		sec:authorize="isAuthenticated()">
+		<div style="color: white;" th:text="${errorMessage}"></div>
+		<div style="color: white;" th:text="${message}"></div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-offset-2 col-md-8 col-sm-offset-2 col-sm-8">
+					<div class="section-title">
+						<h5 class="wow bounceIn">Bicycle Sharing Service</h5>
+						<h1 class="heading wow bounceIn">BOOK NOW</h1>
+						<hr />
+						<form action="/user/booking" th:action="@{/user/booking}"
+							class="form-inline" th:object="${userBookingData}" method="POST"
+							onsubmit="return userBookingValidationForMobile(this);"
+							style="width: 100%; padding-top: 5px;">
+							<input type="text" id="bookingId8" name="bookingTime"
+								class="form-control datetimepicker_mask" tabindex="1"
+								placeholder="Booking Date and Time" required="required" /> <select
+								tabindex="2" class="input-xlarge form-control"
+								name="pickUpPoint" required="required">
+								<option value="">Select Pickup Point</option>
+								<option th:each="pickUpPoint : ${pickUpPoints}"
+									th:value="${pickUpPoint.pickUpPointId}"
+									th:text="${pickUpPoint.location}"></option>
+							</select> <input type="text" name="returnTime" id="returnId8"
+								class="form-control datetimepicker_mask"
+								placeholder="Return Date and Time" tabindex="3"
+								required="required" /> <input type="submit"
+								class="btn btn-success" value="Book Now" />
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- How It Work section
+================================================== -->
+	<section id="work" class="parallax-section">
+		<div class="container">
+			<div class="row">
+
+				<!-- Section title
+			================================================== -->
+				<div class="col-md-offset-2 col-md-8 col-sm-offset-2 col-sm-8">
+					<div class="section-title">
+						<h5 class="wow bounceIn">Bicycle Sharing Service</h5>
+						<h1 class="heading wow bounceIn">HOW IT WORKS</h1>
+						<hr />
+						<p>A convenient solution for quick trips around Bhubaneswar
+							City. The Bicycle Sharing system, developed by Mindfire, features
+							thousands of bicycle at several stations across Bhubaneswar City.
+							Bicycles are available 7:00 A.M to 10:00 P.M, 365 days a year.
+							Station locations are based on population and transit needs, and
+							were selected through a participatory public input process. Each
+							station has a manager, a map of the service area and surrounding
+							neighborhood, and a parking lot. You must be 15 or older to avail
+							the service.</p>
+					</div>
+				</div>
+
+				<!-- Work Owl Carousel section
+			================================================== -->
+				<div id="owl-work" class="owl-carousel">
+
+					<div class="item col-md-4 col-sm-6 wow fadeInUp"
+						data-wow-delay="0.3s">
+						<i class="icon-tools medium-icon"></i>
+						<h3>
+							<a href="register">REGISTER</a>
+						</h3>
+						<h5>From Anywhere</h5>
+						<hr />
+						<p>Register with a nominal fee, provide any of your document
+							as a proof, and you are ready to use the service from anywhere.</p>
+					</div>
+
+					<div class="item col-md-4 col-sm-6 wow fadeInUp"
+						data-wow-delay="0.6s">
+						<i class="icon-tablet medium-icon"></i>
+						<h3>BOOK</h3>
+						<h5>From Anywhere</h5>
+						<hr />
+						<p>Come to any Pick-up Point or go Online for booking. Use
+							your Id number and pay for the ride and your booking is
+							confirmed.</p>
+					</div>
+
+					<div class="item col-md-4 col-sm-6 wow fadeInUp"
+						data-wow-delay="0.9s">
+						<i class="icon-bike medium-icon"></i>
+						<h3>RIDE</h3>
+						<h5>Wherever You Want</h5>
+						<hr />
+						<p>Take the bicycle and go anywhere but keep an eye on the
+							clock. You will be charged for the service depending on the time
+							you spent.</p>
+					</div>
+
+					<div class="item col-md-4 col-sm-6 wow fadeInUp"
+						data-wow-delay="0.9s">
+						<i class="icon-flag medium-icon"></i>
+						<h3>RETURN</h3>
+						<h5>To Any Pick-up Point</h5>
+						<hr />
+						<p>Whenever you are done go to any pick-up point and return
+							the bicycle. Always remember you must return it before the end of
+							the day.</p>
+					</div>
+
+					<div class="item col-md-4 col-sm-6 wow fadeInUp"
+						data-wow-delay="0.9s">
+						<i class="icon-basket medium-icon"></i>
+						<h3>RECHARGE</h3>
+						<h5>Your Wallet</h5>
+						<hr />
+						<p>Your trip charges are generally deducted from your wallet.
+							Recharge your wallet before it runs out of balance. Do it from
+							anywhere.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- About section
+================================================== -->
+	<section id="about" class="parallax-section">
+		<div class="container">
+			<div class="row">
+
+				<!-- Section title
+			================================================== -->
+				<div class="col-md-offset-2 col-md-8 col-sm-offset-2 col-sm-8">
+					<div class="section-title">
+						<h1 class="heading color-white wow bounceIn">WHO WE ARE</h1>
+						<hr />
+						<p class="color-white">"Bicycle Sharing" is Bhubaneswar's own
+							bicycle sharing system. Intended to provide peoples of
+							bhubaneswar and visitors with an additional transportation option
+							for getting around the city, bicycle sharing is fun, efficient
+							and convenient.</p>
+					</div>
+				</div>
+
+				<div class="col-md-6 col-sm-12">
+					<h2>BICYCLE SHARING SYSTEM</h2>
+					<p class="color-white">A bicycle sharing system consists of a
+						fleet of specially designed, sturdy, very durable bicycles that
+						are placed in the parking lot sited at regular intervals around a
+						city. The bicycles can be rented from and then returned to any
+						station in the system, creating an efficient network with many
+						possible points and combinations of departure and arrival.</p>
+				</div>
+
+				<div class="col-md-6 col-sm-12">
+					<h2 class="mobile-top">WHY CHOOSE US?</h2>
+					<div class="panel-group" id="accordion" role="tablist"
+						aria-multiselectable="true">
+
+						<div class="panel panel-default">
+							<div class="panel-heading" role="tab" id="headingOne">
+								<h4 class="panel-title">
+									<a role="button" data-toggle="collapse"
+										data-parent="#accordion" href="#collapseOne"
+										aria-expanded="true" aria-controls="collapseOne"> Very
+										Friendly Response </a>
+								</h4>
+							</div>
+							<div id="collapseOne" class="panel-collapse collapse in"
+								role="tabpanel" aria-labelledby="headingOne">
+								<div class="panel-body">
+									<p>Here are just a few;</p>
+									<ul>
+										<li>We offer service with a smile.</li>
+										<li>We listen and are responsive to your needs</li>
+										<li>We offer up-to-date, modern and clean vehicles.</li>
+										<li>We offer competitive prices with no hidden fees or
+											charges.</li>
+										<li>We offer specials and free add-ons at different times
+											throughout the year</li>
+										<li>No credit cards are required to book.</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel panel-default">
+							<div class="panel-heading" role="tab" id="headingTwo">
+								<h4 class="panel-title">
+									<a role="button" data-toggle="collapse"
+										data-parent="#accordion" href="#collapseTwo"
+										aria-expanded="true" aria-controls="collapseTwo"> We
+										Respect Your Privacy </a>
+								</h4>
+							</div>
+
+							<div id="collapseTwo" class="panel-collapse collapse"
+								role="tabpanel" aria-labelledby="headingTwo">
+								<div class="panel-body">
+									<p>Thank you for reviewing our policies regarding any
+										personal information you may choose to provide at our website.
+										We take your privacy very seriously and carefully protect any
+										and all information entrusted to us. We only collect
+										information that helps us serve you better and that you
+										voluntarily provide. We do not share your information with
+										anyone else unless you've approved of such sharing in advance.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Portfolio section
+================================================== -->
+	<section id="portfolio" class="parallax-section">
+		<div class="container">
+			<div class="row">
+
+				<!-- Section title
+			================================================== -->
+				<div class="col-md-offset-2 col-md-8 col-sm-offset-2 col-sm-8">
+					<div class="section-title">
+						<h5 class="wow bounceIn">WE ARE DELIGENT</h5>
+						<h1 class="heading wow bounceIn">SHOWCASE</h1>
+						<hr />
+						<p>Have a look at our locations and bicycles</p>
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6">
+					<div class="grid">
+						<figure class="effect-zoe">
+							<img src="images/1190-04.jpg" th:src="@{images/1190-04.jpg}"
+								alt="portfolio img" />
+							<figcaption>
+								<h2>FUN RIDE</h2>
+								<p class="icon-links">
+									<a href="images/1190-04.jpg" th:src="@{images/1190-04.jpg}"
+										data-lightbox-gallery="portfolio-gallery"><span
+										class="icon icon-attachment"></span></a>
+								</p>
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6">
+					<div class="grid">
+						<figure class="effect-zoe">
+							<img src="images/bicycle.jpg" th:src="@{images/bicycle.jpg}"
+								alt="portfolio img" />
+							<figcaption>
+								<h2>Jayadev Bihar parking</h2>
+								<p class="icon-links">
+									<a href="images/bicycle.jpg" th:src="@{images/bicycle.jpg}"
+										data-lightbox-gallery="portfolio-gallery"><span
+										class="icon icon-attachment"></span></a>
+								</p>
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6">
+					<div class="grid">
+						<figure class="effect-zoe">
+							<img src="images/bike parking_1.jpg"
+								th:src="@{images/bike parking_1.jpg}" alt="portfolio img" />
+							<figcaption>
+								<h2>KIIT Square parking</h2>
+								<p class="icon-links">
+									<a href="images/bike parking_1.jpg"
+										th:src="@{images/bike parking_1.jpg}"
+										data-lightbox-gallery="portfolio-gallery"><span
+										class="icon icon-attachment"></span></a>
+								</p>
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6">
+					<div class="grid">
+						<figure class="effect-zoe">
+							<img src="images/cycle2.jpg" th:src="@{images/cycle2.jpg}"
+								alt="portfolio img" />
+							<figcaption>
+								<h2>Sharing</h2>
+								<p class="icon-links">
+									<a href="images/cycle2.jpg" th:src="@{images/cycle2.jpg}"
+										data-lightbox-gallery="portfolio-gallery"><span
+										class="icon icon-attachment"></span></a>
+								</p>
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6">
+					<div class="grid">
+						<figure class="effect-zoe">
+							<img src="images/cycle-parking.jpg"
+								th:src="@{images/cycle-parking.jpg}" alt="portfolio img" />
+							<figcaption>
+								<h2>Banibihar parking</h2>
+								<p class="icon-links">
+									<a href="images/cycle-parking.jpg"
+										th:src="@{images/cycle-parking.jpg}"
+										data-lightbox-gallery="portfolio-gallery"><span
+										class="icon icon-attachment"></span></a>
+								</p>
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6">
+					<div class="grid">
+						<figure class="effect-zoe">
+							<img src="images/bicycles-46a.jpg"
+								th:src="@{images/bicycles-46a.jpg}" alt="portfolio img" />
+							<figcaption>
+								<h2>Rasulgarh parking</h2>
+								<p class="icon-links">
+									<a href="images/bicycles-46a.jpg"
+										th:src="@{images/bicycles-46a.jpg}"
+										data-lightbox-gallery="portfolio-gallery"><span
+										class="icon icon-attachment"></span></a>
+								</p>
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<!-- Portfolio bottom section
+			================================================== -->
+				<div class="col-md-offset-2 col-md-8 col-sm-12">
+					<div class="portfolio-bottom">
+						<h2 class="wow bounceIn">INTERESTED?</h2>
+						<p>If you are interested check our pricing and plans below</p>
+						<a href="#plan" class="smoothScroll btn btn-default">LET'S GO!</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Plan section
+================================================== -->
+	<section id="plan" class="parallax-section">
+		<div class="container">
+			<div class="row">
+				<!-- Section title
+			================================================== -->
+				<div
+					class="col-md-offset-2 col-md-8 col-sm-offset-2 col-sm-8 wow fadeInUp">
+					<div class="section-title">
+						<h1 class="heading color-white wow bounceIn">UNIQUE PLANS</h1>
+						<hr />
+						<p class="color-white">Have a look at our registration plans.</p>
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+					<div class="plan">
+						<h2 class="plan-title">Starter</h2>
+						<div class="plan-price">
+							<h1 class="plan-price-title">
+								₹100 / <small>user</small>
+							</h1>
+						</div>
+						<ul class="plan-list">
+							<li><strong>₹100 wallet balance</strong></li>
+							<li>Explore the city</li>
+							<li>Visit anywhere in bhubaneswar</li>
+						</ul>
+						<div class="plan-button">
+							<a href="register.html?plan=1"><button
+									class="btn btn-default">CHOOSE PLAN</button></a>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.6s">
+					<div class="plan">
+						<h2 class="plan-title">Regular</h2>
+						<div class="plan-price">
+							<h1 class="plan-price-title">
+								₹200 / <small>user</small>
+							</h1>
+						</div>
+						<ul class="plan-list">
+							<li><strong>₹220 wallet balance</strong></li>
+							<li>Take a ride anywhere</li>
+							<li>Make your plans</li>
+						</ul>
+						<div class="plan-button">
+							<a href="register.html?plan=2"><button
+									class="btn btn-default">CHOOSE PLAN</button></a>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.9s">
+					<div class="plan">
+						<h2 class="plan-title">Explorer</h2>
+						<div class="plan-price">
+							<h1 class="plan-price-title">
+								₹300 / <small>user</small>
+							</h1>
+						</div>
+						<ul class="plan-list">
+							<li><strong>₹345 wallet balance</strong></li>
+							<li>Faster recharge</li>
+							<li>Unique Experiences</li>
+						</ul>
+						<div class="plan-button">
+							<a href="register.html?plan=3"><button
+									class="btn btn-default">CHOOSE PLAN</button></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Contact section
+================================================== -->
+	<section id="contact" class="parallax-section">
+		<div class="container">
+			<div class="row">
+
+				<!-- Section title
+			================================================== -->
+				<div class="col-md-offset-2 col-md-8 col-sm-offset-2 col-sm-8">
+					<div class="section-title">
+						<h5 class="wow bounceIn">PLAN YOUR TRIP</h5>
+						<h1 class="heading wow bounceIn">CONTACT US</h1>
+						<hr />
+						<p>Have any questions? Feel free to ask.</p>
+					</div>
+				</div>
+
+				<!-- Contact form section
+			================================================== -->
+				<div class="col-md-offset-1 col-md-10 col-sm-12">
+					<form action="#" method="post" class="wow fadeInUp"
+						data-wow-delay="0.6s">
+						<div class="col-md-4 col-sm-6">
+							<input type="text" class="form-control" placeholder="Name"
+								name="name" />
+						</div>
+						<div class="col-md-4 col-sm-6">
+							<input type="email" class="form-control" placeholder="Email"
+								name="email" />
+						</div>
+						<div class="col-md-4 col-sm-12">
+							<input type="text" class="form-control" placeholder="Subject"
+								name="subject" />
+						</div>
+						<div class="col-md-12 col-sm-12">
+							<textarea class="form-control" placeholder="Message" rows="7"
+								name="message"></textarea>
+						</div>
+						<div class="col-md-offset-2 col-md-8 col-sm-offset-2 col-sm-8">
+							<input type="submit" class="form-control" value="SHOOT MESSAGE" />
+						</div>
+					</form>
+				</div>
+
+				<!-- Contact detail section
+			================================================== -->
+				<div class="contact-detail col-md-12 col-sm-12">
+					<div class="col-md-6 col-sm-6">
+						<h3>
+							<i class="icon-envelope medium-icon wow bounceIn"
+								data-wow-delay="0.6s"></i> EMAIL
+						</h3>
+						<p>javaintern@mindfiresolutions.com</p>
+					</div>
+					<div class="col-md-6 col-sm-6">
+						<h3>
+							<i class="icon-phone medium-icon wow bounceIn"
+								data-wow-delay="0.6s"></i> PHONES
+						</h3>
+						<p>8148401623 | 7809112166</p>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+	<div id="login-overlay" class="modal container-fluid">
+		<div style="height: 128px"></div>
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class=" col-md-8">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">X</button>
+						<h4 class="modal-title" id="myModalLabel">Login to your
+							Account</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-xs-6">
+								<div class="well">
+									<form action="#" th:action="@{/login}" th:object="${loginData}"
+										method="post" class="login">
+										<div class="form-group">
+											<label for="username" class="control-label">Email</label> <input
+												type="text" class="form-control" id="email" name="email"
+												value="" required="required" title="Please enter you email"
+												placeholder="example@gmail.com" /> <span class="help-block"></span>
+										</div>
+										<div class="form-group">
+											<label for="password" class="control-label">Password</label>
+											<input type="password" class="form-control" id="password"
+												name="password" value="" required="required"
+												title="Please enter your password" /> <span
+												class="help-block"></span>
+										</div>
+										<div id="loginErrorMsg" class="alert alert-error hide">Wrong
+											Email or password</div>
+										<div class="checkbox">
+											<label> <input type="checkbox" name="remember"
+												id="remember" /> Remember login
+											</label>
+											<p class="help-block">(if this is a private computer)</p>
+										</div>
+										<button type="submit" class="btn btn-success btn-block">Login</button>
+										<a href="/forgot/" class="btn btn-default btn-block">Help
+											to login</a>
+									</form>
+								</div>
+							</div>
+							<div class="col-xs-6">
+								<p class="lead">
+									Register now for <span class="text-success">Services</span>
+								</p>
+								<ul class="list-unstyled" style="line-height: 2">
+									<li><span class="fa fa-check text-success"></span> Quick
+										online booking</li>
+									<li><span class="fa fa-check text-success"></span> Online
+										wallet recharge</li>
+									<li><span class="fa fa-check text-success"></span> View
+										booking history</li>
+									<li><span class="fa fa-check text-success"></span> Manage
+										personal information</li>
+
+								</ul>
+								<p>
+									<a href="registration.html" class="btn btn-info btn-block">Yes
+										please, register now!</a>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2"></div>
+		</div>
+	</div>
+	<!-- Footer section
+================================================== -->
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 col-sm-12">
+
+					<h2 class="wow bounceIn">BICYCLE SHARING</h2>
+					<ul class="social-icon">
+						<li><a href="https://www.facebook.com"
+							class="fa fa-facebook wow fadeIn" data-wow-delay="0.3s"></a></li>
+						<li><a href="https://www.twitter.com"
+							class="fa fa-twitter wow fadeIn" data-wow-delay="0.6s"></a></li>
+
+						<li><a href="https://plus.google.com"
+							class="fa fa-google-plus wow fadeIn" data-wow-delay="1s"></a></li>
+						<li><a href="https://github.com/kirankumarsingh/cycle_rental"
+							class="fa fa-github wow fadeIn" data-wow-delay="1.3s"></a></li>
+
+					</ul>
+					<p>
+						Copyright &copy; 2016 <a href="http://www.mindfiresolutions.com">Mindfire
+							Solutions</a> | Designed By: <a rel="nofollow" href="#home"
+							target="_parent">JAVA INTERNS</a>
+					</p>
+
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<!-- Javascript 
+================================================== -->
+	<script src="/js/jquery.js" th:src="@{/js/jquery.js}"></script>
+	<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+	<script src="/js/smoothscroll.js" th:src="@{/js/smoothscroll.js}"></script>
+	<script src="/js/nivo-lightbox.min.js"
+		th:src="@{/js/nivo-lightbox.min.js}"></script>
+	<script src="/js/jquery.easing-1.3.js"
+		th:src="@{/js/jquery.easing-1.3.js}"></script>
+	<script src="/js/plugins.js" th:src="@{/js/plugins.js}"></script>
+	<script src="/js/owl.carousel.min.js"
+		th:src="@{/js/owl.carousel.min.js}"></script>
+	<script src="/js/jquery.parallax.js" th:src="@{/js/jquery.parallax.js}"></script>
+	<script src="/js/wow.min.js" th:src="@{/js/wow.min.js}"></script>
+	<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
+	<script src="/js/jquery.datetimepicker.full.js"
+		th:src="@{/js/jquery.datetimepicker.full.js}"></script>
+	<script>
+		$('.datetimepicker_mask').datetimepicker();
+	</script>
+</body>
+</html>

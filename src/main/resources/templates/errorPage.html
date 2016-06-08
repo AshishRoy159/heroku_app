@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- Template site title
+   ================================================== -->
+<title>Error</title>
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+
+<!-- Bootstrap CSS
+   ================================================== -->
+<link rel="stylesheet" href="/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/css/nivo-lightbox.css" />
+<link rel="stylesheet" href="/css/nivo_themes/default/default.css" />
+
+<!-- Main CSS
+   	================================================== -->
+<link rel="stylesheet" href="/css/style.css" />
+<link rel="stylesheet" type="text/css" href="/css/default.css" />
+
+<!-- Google web font
+   ================================================== -->
+<link href='https://fonts.googleapis.com/css?family=Raleway:700'
+	rel='stylesheet' type='text/css' />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+</head>
+<body>
+	<!-- Navigation section
+================================================== -->
+	<div class="jumbotron">
+		<h1>Oops ! You broke something...</h1>
+		<p>
+			<a class="btn btn-primary btn-lg" href="/index.html#home"
+				role="button">Go Home</a>
+		</p>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div
+				class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+				<h2 id="errorId">Why am I here ?</h2>
+				<hr class="colorgraph"></hr>
+				<div class="form-group">
+					<h3>
+						<span th:text="*{cause}">Sebastian</span>
+					</h3>
+					<h3>
+						<span th:text="*{message}">Sebastian</span>
+					</h3>
+				</div>
+				<hr class="colorgraph" />
+			</div>
+		</div>
+	</div>
+	<div class="hidden">
+		<span th:text="*{printStackTrace}">Hidden text</span> 
+	</div>
+	<!-- javascript  -->
+	<script src="/js/jquery.js" th:src="@{/js/jquery.js}"></script>
+	<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+</html>

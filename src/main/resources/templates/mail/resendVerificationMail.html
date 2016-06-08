@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:remove="all">Registration Confirmation</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+        <p>
+            Hello, <span th:text="${name}">Peter Static!</span>
+        </p>
+        <p th:if="${name.length() gt 10}">
+            Wow! You've got a long name (more than 10 chars)! <br />
+        </p>
+        <p>
+            Your request for new verification mail have been successfully processed by the <b>Cycle Rental System</b> on
+            <span th:text="${#dates.format(subscriptionDate)}">28-12-2012</span>
+        </p>
+        <p>
+        	To confirm your registration <a th:href="${confirmationUrl}">Click Here</a>
+        </p>
+        <p>
+        	<b>N.B.: </b> This verification link is only active for 24 hours.
+        </p>
+        <p>
+            Regards, <br />
+            &emsp; <em>The Cycle Rental Team</em>
+        </p>
+        <br />
+        <p>
+        	<b>P.S.:</b> This is a system generated email. Please <b>do not reply</b> to this mail.
+        </p>
+    </body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+
+	<div th:fragment="head-and-side">
+		<nav class="navbar navbar-default top-navbar " role="navigation">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand " th:href="@{/index}">Bicycle Sharing</a>
+			</div>
+
+			<ul class="nav navbar-top-links navbar-right">
+				<h3 class="greeting-text">HELLO,</h3>
+				<h3 class="greeting-text"
+					th:text="${#authentication.principal.authorities[0]}"></h3>
+				<!-- /.dropdown -->
+				<li class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown" th:href="@{#}" aria-expanded="false"> <i
+						class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+				</a>
+					<ul class="dropdown-menu dropdown-user">
+
+						<li><a
+							th:href="@{/user/userProfile/} + ${#authentication.principal.userId}"><i
+								class="fa fa-user fa-fw"></i> User Profile</a></li>
+						<li class="divider"></li>
+						<li><a th:href="@{/user/changePassword}"><i
+								class="fa fa-gear fa-fw"></i> Settings</a></li>
+						<li class="divider"></li>
+						<li sec:authorize="hasAuthority('ADMIN')"><a
+							th:href="@{/logout}"><i class="fa fa-sign-out fa-fw"></i>
+								Logout</a></li>
+						<li sec:authorize="hasAuthority('MANAGER')"><a
+							th:href="@{/managerLogout}"><i class="fa fa-sign-out fa-fw"></i>
+								Logout</a></li>
+					</ul> <!-- /.dropdown-user --></li>
+				<!-- /.dropdown -->
+			</ul>
+		</nav>
+		<!--/. NAV TOP  -->
+		<nav class="navbar-default navbar-side " role="navigation">
+			<div class="sidebar-collapse">
+				<ul class="nav" id="main-menu">
+
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/managerHome}"><i class="fa fa-dashboard "></i>Dashboard</a></li>
+					<li sec:authorize="hasAuthority('ADMIN')"><a
+						th:href="@{/admin/adminHome}"><i class="fa fa-dashboard "></i>Dashboard</a></li>
+					<li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{#}"><i
+							class="fa fa-desktop "></i> Pricing and plans<span
+							class="fa arrow"></span></a>
+						<ul class="nav nav-second-level ">
+							<li><a th:href="@{/admin/addRateGroup}">Add New Rate
+									Group</a></li>
+							<li><a th:href="@{/admin/updateBaseRate}">Update Base
+									Rate</a></li>
+							<li><a th:href="@{/admin/selectRateGroup}">Update Plan</a></li>
+							<li><a th:href="@{/admin/rateGroupDetails}">Rate Group
+									Details</a></li>
+						</ul></li>
+					<li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{#}"><i
+							class="fa fa-qrcode "></i>Transfer Requests<span
+							class="fa arrow "></span></a>
+						<ul class="nav nav-second-level ">
+							<li><a th:href="@{/admin/requests}">Requests</a></li>
+							<li><a th:href="@{/admin/approvedRequests}">Approved Requests</a></li>
+							<li><a th:href="@{/admin/transfers}">Transfers</a></li>
+						</ul></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a th:href="@{#}"><i
+							class="fa fa-qrcode "></i>Transfer Requests<span
+							class="fa arrow "></span></a>
+						<ul class="nav nav-second-level ">
+							<li><a th:href="@{/manager/transferRequest}">Request for
+									Bicycles</a></li>
+							<li><a th:href="@{/manager/requests}">Other's Requests</a></li>
+							<li><a th:href="@{/manager/approvedRequests}">Approved Requests</a></li>
+							<li><a th:href="@{/manager/transfers}">Transfers</a></li>
+						</ul></li>
+					<li sec:authorize="hasAuthority('ADMIN')"><a
+						th:href="@{/admin/userList}"><i class="fa fa-table "></i>Users</a></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/userList}"><i class="fa fa-table "></i>Users</a></li>
+					<li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{#}"><i
+							class="fa fa-sitemap "></i>Manage Pickup points<span
+							class="fa arrow "></span></a>
+						<ul class="nav nav-second-level ">
+							<li><a th:href="@{/admin/addNewBicycle}">Add bicycle</a></li>
+							<li><a th:href="@{#}">Pickup points<span
+									class="fa arrow"></span></a>
+								<ul class="nav nav-third-level ">
+									<li><a th:href="@{/admin/pickupPointDetails}">Pickup
+											point details</a></li>
+									<li><a th:href="@{/admin/addNewPickupPoint}">Add new
+											pickup point</a></li>
+
+								</ul></li>
+						</ul></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/pickupPointDetails}"><i
+							class="fa fa-sitemap "></i>Pickup point details</a></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/addNewUser}"><i class="fa fa-fw fa-file "></i>
+							Add New User</a></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/booking}"><i class="fa fa-edit "></i>
+							Booking</a></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/addWalletBalance}"><i
+							class="fa fa-fw fa-file "></i> Add Wallet balance</a></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/manageRateGroup}"><i
+							class="fa fa-gear fa-fw"></i> Manage Rate Group</a></li>
+					<li sec:authorize="hasAuthority('MANAGER')"><a
+						th:href="@{/manager/bookingInUse}"><i
+							class="fa fa-history fa-fw"></i> Running bookings</a></li>
+					<li sec:authorize="hasAuthority('ADMIN')"><a
+						th:href="@{/admin/bookingInUse}"><i
+							class="fa fa-history fa-fw"></i> Running bookings</a></li>
+				</ul>
+			</div>
+
+		</nav>
+		<!-- /. NAV SIDE  -->
+	</div>
+	<div th:fragment="page-footer">
+		<div class="footerDiv admin-footer">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3" align="left">
+						<h4>
+							Copyright <a href="/index.html#home">Bicycle Sharing</a>
+						</h4>
+					</div>
+					<div class="col-md-6"></div>
+					<div class="col-md-3" align="right">
+						<h4>
+							Developed by <a href="/index.html#home">Java Interns</a>
+						</h4>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

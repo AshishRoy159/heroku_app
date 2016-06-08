@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bicycle Sharing:Booking</title>
+<!-- Bootstrap Styles-->
+<link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+<!-- FontAwesome Styles-->
+<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" />
+<!-- Custom Styles-->
+<link th:href="@{/css/admin-styles.css}" rel="stylesheet" />
+<!-- Google Fonts-->
+<link th:href="@{http://fonts.googleapis.com/css?family=Open+Sans}"
+	rel="stylesheet" type="text/css" />
+<!-- TABLE STYLES-->
+<link th:href="@{/css/dataTables.bootstrap.css}" rel="stylesheet" />
+</head>
+<body>
+	<!-- Navigation section
+================================================== -->
+	<div class="wrapper">
+		<div th:include="adminNav :: head-and-side"></div>
+		<div id="page-wrapper">
+			<div id="page-inner">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 class="page-header">Bookings</h1>
+						<div class="panel panel-success"
+							th:unless="${bookingSuccess} == null">
+							<div class="panel-heading">
+								<span th:text="*{bookingSuccess}"></span> <a href=""
+									id="close-panel" class="close glyphicon glyphicon-remove"></a>
+							</div>
+						</div>
+						<div class="panel panel-warning"
+							th:unless="${bookingFailure} == null">
+							<div class="panel-heading">
+								<span th:text="*{bookingFailure}"></span> <a href=""
+									id="close-panel" class="close glyphicon glyphicon-remove"></a>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3>
+									Issue Bicycle By <strong
+										th:text="${#authentication.principal.firstName}"></strong>
+								</h3>
+							</div>
+							<div class="panel-body">
+								<div class="col-md-8 col-sm-8 col-xs-8">
+									<h4 class="text-danger" th:text="*{issueCycleErrorMessage}"></h4>
+									<form action="manager/bookingPayment"
+										th:action="@{/manager/bookingPayment}"
+										th:object="${issueCycleData}" method="GET">
+										<div>
+											<label class="control-label"> UserId</label> <input
+												type="text" name="userId" class="form-control"
+												required="required" maxlength="10" />
+										</div>
+										<div>
+											<label class="control-label">Select BiCycle</label> <select
+												class="input-xlarge form-control" name="bicycleId"
+												required="required">
+												<option value="">Select BiCycle</option>
+												<option th:each="biCycle : ${biCycles}"
+													th:value="${biCycle.biCycleId}"
+													th:text="${biCycle.chasisNo}"></option>
+											</select>
+										</div>
+										<div>
+											<label class="control-label">Expected Return(In
+												Hours)</label> <input type="number" name="expectedInTime"
+												class="form-control" max="15" min="1" maxlength="2"
+												required="required" />
+										</div>
+										<div style="padding: 5px">
+											<button class="btn btn-primary">OK</button>
+											<input type="reset" class="btn btn-info" />
+										</div>
+									</form>
+
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- panel-->
+					<div class="col-md-6">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3>Issue Bicycle For Online Booking</h3>
+							</div>
+							<div class="panel-body">
+								<div class="col-md-8 col-sm-8 col-xs-8">
+									<form action="manager/printBookingDetails"
+										th:action="@{/manager/printBookingDetails}"
+										th:object="${issueBookingData}" method="POST">
+										<div>
+											<label class="control-label"> Booking Id</label> <input
+												type="text" name="bookingId" class="form-control"
+												maxlength="10" required="required" />
+										</div>
+										<div>
+											<label class="control-label">Select BiCycle</label> <select
+												class="input-xlarge form-control" name="bicycleId"
+												required="required">
+												<option value="">Select BiCycle</option>
+												<option th:each="biCycle : ${biCycles}"
+													th:value="${biCycle.biCycleId}"
+													th:text="${biCycle.chasisNo}"></option>
+											</select>
+										</div>
+										<div style="padding: 5px">
+											<input type="submit" class="btn btn-primary" value="OK" /> <input
+												type="reset" class="btn btn-info" />
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3>Recieve Bicycle</h3>
+							</div>
+							<div class="panel-body">
+								<div class="col-md-8 col-sm-8 col-xs-8">
+									<form action="manager/receiveCycle"
+										th:action="@{/manager/receiveCycle}"
+										th:object="${receiveCycleData}" method="POST">
+										<div>
+											<label class="control-label">Booking Id</label> <input
+												type="text" name="bookingId" class="form-control"
+												required="required" maxlength="10" />
+										</div>
+										<div style="padding: 5px">
+											<input type="submit" class="btn btn-primary" value="OK" /> <input
+												type="reset" class="btn btn-info" value="Reset" />
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3>Close Booking</h3>
+							</div>
+							<div class="panel-body">
+								<div class="col-md-6 col-sm-6 col-xs-6">
+									<form onsubmit="return closeBooking()" class="form-horizontal">
+										<div>
+											<label class="control-label">Booking Id</label> <input
+												type="text" id="bookingId" class="form-control"
+												required="required" maxlength="10" />
+										</div>
+										<div style="padding: 5px">
+											<button id="close" type="submit" class="btn btn-primary">Close</button>
+											<input type="reset" class="btn btn-info" value="Reset" />
+										</div>
+									</form>
+								</div>
+								<div class="col-md-6 col-sm-6 col-xs-6">
+									<h3 class="popover popover-right" id="info"></h3>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- panel end -->
+			</div>
+		</div>
+	</div>
+	<div th:include="adminNav :: page-footer"></div>
+	<!-- /. PAGE WRAPPER  -->
+	<!-- /. WRAPPER  -->
+	<!-- JS Scripts-->
+	<!-- jQuery Js -->
+	<script th:src="@{/js/jquery-1.10.2.js}" type="text/javascript"></script>
+	<!-- Bootstrap Js -->
+	<script th:src="@{/js/bootstrap.min.js}" type="text/javascript"></script>
+	<!-- Metis Menu Js -->
+	<script th:src="@{/js/jquery.metisMenu.js}" type="text/javascript"></script>
+	<!-- Custom Js -->
+	<script th:src="@{/js/custom-scripts.js}" type="text/javascript"></script>
+	<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
+	<!-- Ajax Js -->
+	<script th:src="@{/js/ajax-functions.js}" type="text/javascript"></script>
+</body>
+</html>

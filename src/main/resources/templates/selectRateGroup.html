@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bicycle Sharing:Set Rate Group</title>
+<!-- Bootstrap Styles-->
+<link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+<!-- FontAwesome Styles-->
+<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" />
+<!-- Custom Styles-->
+<link th:href="@{/css/admin-styles.css}" rel="stylesheet" />
+<!-- Google Fonts-->
+<link th:href="@{http://fonts.googleapis.com/css?family=Open+Sans}"
+	rel="stylesheet" type="text/css" />
+
+<!-- CSS for jquery datetime picker -->
+<link rel="stylesheet" href="/css/jquery.datetimepicker.css"
+	th:href="@{/css/jquery.datetimepicker.css}" />
+</head>
+<body>
+	<div th:include="adminNav :: head-and-side"></div>
+	<div id="page-wrapper">
+		<div id="page-inner">
+
+			<div class="row">
+				<div class="col-md-12">
+					<h1 class="page-header">Select Rate Group</h1>
+				</div>
+			</div>
+			<!-- /. ROW  -->
+
+			<div class="row">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-10">
+					<div class="panel panel-primary">
+						<div class="panel-heading">Select rate group for update the details</div>
+						<div class="panel-body">
+							<br />
+							<h3 class="text-danger" th:text="*{errorMessage}"></h3>
+							<h2 class="text-success" th:text="*{successMessage}"></h2>
+							<hr />
+							<div class="col-sm-6">
+								<form action="#" th:action="@{/admin/updateRateGroup}"
+									th:object="${rateGroupTypeData}" method="post"
+									class="form-horizontal"
+									onsubmit="return checkEffectiveFrom(this)">
+									<fieldset>
+										<div class="control-group">
+											<label class="control-label">Group Type</label>
+											<div class="controls">
+												<select class="form-control" name="rateGroupId"
+													tabindex="6" required="required">
+													<option value="">Select Proof Type:</option>
+													<option th:each="rateGroup : ${rateGroups}"
+												th:value="${rateGroup.rateGroupId}"
+												th:text="${rateGroup.groupType}"></option>
+												</select>
+											</div>
+										</div>
+										<br />
+										<div class="control-group">
+											<div class="controls">
+												<input type="submit" tabindex="4" class="btn btn-primary"
+													value="Submit" /> <input type="reset" tabindex="5"
+													class="btn btn-primary" value="Reset" />
+											</div>
+										</div>
+									</fieldset>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-1"></div>
+			</div>
+		</div>
+	</div>
+	<div th:include="adminNav :: page-footer"></div>
+	<!-- JS Scripts-->
+	<!-- jQuery Js -->
+	<script th:src="@{/js/jquery-1.10.2.js}" type="text/javascript"></script>
+	<!-- Bootstrap Js -->
+	<script th:src="@{/js/bootstrap.min.js}" type="text/javascript"></script>
+	<!-- Metis Menu Js -->
+	<script th:src="@{/js/jquery.metisMenu.js}" type="text/javascript"></script>
+	<!-- Custom Js -->
+	<script th:src="@{/js/custom-scripts.js}" type="text/javascript"></script>
+	<script src="/js/jquery.datetimepicker.full.js"
+		th:src="@{/js/jquery.datetimepicker.full.js}"></script>
+	<script>
+		$('#datepicker').datetimepicker({
+			yearOffset : 0,
+			lang : 'ch',
+			timepicker : false,
+			format : 'Y-m-d',
+			formatDate : 'Y-m-d',
+		});
+	</script>
+	<script src="/js/custom.js" th:src="@{/js/custom.js}"></script>
+</body>
+</html>

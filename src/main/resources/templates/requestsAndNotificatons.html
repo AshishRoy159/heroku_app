@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bicycle Sharing:Requests</title>
+<!-- Bootstrap Styles-->
+<link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+<!-- FontAwesome Styles-->
+<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" />
+<!-- Custom Styles-->
+<link th:href="@{/css/admin-styles.css}" rel="stylesheet" />
+<!-- Google Fonts-->
+<link th:href="@{http://fonts.googleapis.com/css?family=Open+Sans}"
+	rel="stylesheet" type="text/css" />
+<!-- TABLE STYLES-->
+<link th:href="@{/css/dataTables.bootstrap.css}" rel="stylesheet" />
+</head>
+<body>
+	<div th:include="adminNav :: head-and-side"></div>
+	<div id="page-wrapper">
+		<div id="page-inner">
+			<div class="row">
+				<div class="col-md-12">
+					<h1 class="page-header">
+						Transfer Requests <small>From Managers</small>
+					</h1>
+				</div>
+			</div>
+			<!-- /. ROW  -->
+			<div class="row">
+				<div class="col-sm-1"></div>
+				<div class="col-md-10">
+					<div class="panel panel-primary">
+						<div class="panel-heading">Requests</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+								<table class="table table-hover table-striped table-bordered"
+									id="dataTables-example">
+									<thead>
+										<tr>
+											<th>Id</th>
+											<th>Pick up point</th>
+											<th>Manager</th>
+											<th>Quantity</th>
+											<th>Requested on</th>
+											<th>Respond</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="request : ${requests}">
+											<td th:text="${request.requestId}"></td>
+											<td><span th:text="${request.pickUpPoint.location}"></span><br />(Id=<span
+												th:text="${request.pickUpPoint.pickUpPointId}"></span>)</td>
+											<td class="text-center"><span
+												th:text="${request.manager.firstName} + ${request.manager.lastName}"></span><br />
+												(Id=<span th:text="${request.manager.userId}"></span>)</td>
+											<td class="text-center" th:text="${request.quantity}"></td>
+											<td th:text="${request.requestedOn}"></td>
+											<td sec:authorize="hasAuthority('ADMIN')"><a
+												th:href="@{/admin/respond/} + ${request.requestId}"><button
+														class="btn btn-primary">View</button></a></td>
+											<td sec:authorize="hasAuthority('MANAGER')"><a
+												th:href="@{/manager/respond/} + ${request.requestId}"><button
+														class="btn btn-primary">View</button></a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-1"></div>
+			</div>
+		</div>
+	</div>
+	<!-- JS Scripts-->
+	<!-- jQuery Js -->
+	<script th:src="@{/js/jquery-1.10.2.js}" type="text/javascript"></script>
+	<!-- Bootstrap Js -->
+	<script th:src="@{/js/bootstrap.min.js}" type="text/javascript"></script>
+	<!-- Metis Menu Js -->
+	<script th:src="@{/js/jquery.metisMenu.js}" type="text/javascript"></script>
+	<!-- DATA TABLE SCRIPTS -->
+	<script th:src="@{/js/jquery.dataTables.js}" type="text/javascript"></script>
+	<script th:src="@{/js/dataTables.bootstrap.js}" type="text/javascript"></script>
+	<script>
+		$(document).ready(function() {
+			$("#dataTables-example").dataTable();
+		});
+	</script>
+	<!-- Custom Js -->
+	<script th:src="@{/js/custom-scripts.js}" type="text/javascript"></script>
+</body>
+</html>

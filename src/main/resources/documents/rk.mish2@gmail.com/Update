@@ -1,0 +1,18 @@
+Today We :
+
+1. Worked on receive transfer on pick up point.
+2. Designed receive transfer confirmation page.
+3. Added javadoc comments on transfer.
+4. Added booking and pick up point manager history to admin home page.
+5. Added server side validations to user's booking.
+6. Added print option on successful booking.
+7. Added user booking history to user profile page.
+8. Added Wallet Transaction history to user profile page.
+
+Tomorrow we will :
+
+1. Work on validations on transfer.
+2. Work on method level security on transfer.
+3. Design page for managing rate group plan.
+4. Work on rate group plan service.
+5. Work on the proper control flow of the code.
