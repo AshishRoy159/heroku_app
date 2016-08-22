@@ -77,7 +77,7 @@ public class EmailService {
 
 		try {
 			message.setSubject(subject);
-			message.setFrom("bicyclerentaljava@gmail.com");
+			message.setFrom("no-reply@cyclerental.com");
 			message.setTo(recipientEmail);
 
 			// Create the HTML body using Thymeleaf
