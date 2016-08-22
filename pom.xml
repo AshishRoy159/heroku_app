@@ -6,7 +6,7 @@
 	<groupId>com.mindfire.bicyclesharing</groupId>
 	<artifactId>bicyclesharing</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<name>BicycleSharing</name>
 	<description>Bicycle Sharing Application</description>
