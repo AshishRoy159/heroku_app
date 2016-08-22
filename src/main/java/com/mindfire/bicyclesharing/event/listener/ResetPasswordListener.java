@@ -84,7 +84,7 @@ public class ResetPasswordListener implements ApplicationListener<ResetPasswordE
 		final String recipientAddress = user.getEmail();
 		final String subject = "Reset Password";
 		final String confirmationUrl = appUrl + "/resetPassword.html?token=" + token;
-		final String template = "/mail/resetPasswordMail";
+		final String template = "mail/resetPasswordMail";
 
 		emailService.sendSimpleMail(user.getFirstName(), recipientAddress, locale, subject, confirmationUrl, template);
 	}
