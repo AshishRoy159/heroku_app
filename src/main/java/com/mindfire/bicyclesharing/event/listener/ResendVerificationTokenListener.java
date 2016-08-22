@@ -78,7 +78,7 @@ public class ResendVerificationTokenListener implements ApplicationListener<Rese
 		final String recipientAddress = user.getEmail();
 		final String subject = "Registration Confirmation";
 		final String confirmationUrl = appUrl + "/registrationConfirm.html?token=" + token.getToken();
-		final String template = "/mail/resendVerificationMail";
+		final String template = "mail/resendVerificationMail";
 
 		emailService.sendSimpleMail(user.getFirstName(), recipientAddress, locale, subject, confirmationUrl, template);
 	}
