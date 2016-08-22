@@ -24,7 +24,7 @@ package com.mindfire.bicyclesharing.constant;
  * @since 01/03/2016
  */
 public class ViewConstant {
-	public static final String INDEX = "/index";
+	public static final String INDEX = "index";
 	public static final String REGISTRATION = "registration";
 	public static final String PAYMENT = "payment";
 	public static final String SUCCESS_REGISTER = "successRegister";
