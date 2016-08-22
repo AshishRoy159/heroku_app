@@ -1,8 +1,8 @@
 ##Database Configuration##
 spring.datasource.driverClassName = org.postgresql.Driver
-spring.datasource.url = jdbc:postgresql://ec2-54-163-238-215.compute-1.amazonaws.com:5432/d3kdl55gpr2gg6
-spring.datasource.username= wbqvqpveitlplm
-spring.datasource.password= 0ynrHQPVWPdi08BJOxX9CQTTHF
+spring.datasource.url = jdbc:postgresql://localhost:5432/cycle_rental
+spring.datasource.username= postgres
+spring.datasource.password= postgres
 
 ##Hibernate Configuration##
 spring.jpa.hibernate.ddl-auto= update
