@@ -87,7 +87,7 @@ public class AccountUpdationListener implements ApplicationListener<AccountUpdat
 			confirmationUrl = "Disabled";
 		}
 		
-		final String template = "/mail/activationAndApproval";
+		final String template = "mail/activationAndApproval";
 
 		emailService.sendSimpleMail(user.getFirstName(), recipientAddress, locale, subject, confirmationUrl, template);
 	}
