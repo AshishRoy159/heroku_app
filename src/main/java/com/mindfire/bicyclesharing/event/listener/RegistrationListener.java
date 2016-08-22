@@ -84,7 +84,7 @@ public class RegistrationListener implements ApplicationListener<RegistrationCom
 		final String recipientAddress = user.getEmail();
 		final String subject = "Registration Confirmation";
 		final String confirmationUrl = appUrl + "/registrationConfirm.html?token=" + token;
-		final String template = "/mail/registrationMail";
+		final String template = "mail/registrationMail";
 
 		emailService.sendSimpleMail(user.getFirstName(), recipientAddress, locale, subject, confirmationUrl, template);
 	}
