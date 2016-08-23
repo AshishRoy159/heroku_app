@@ -167,7 +167,7 @@ public class UserBookingController {
 			logger.info("User is not approved for booking. Transaction cancelled.");
 			redirectAttributes.addFlashAttribute(ModelAttributeConstant.ERROR_MESSAGE, "Your account is not approved.");
 		}
-		return new ModelAndView(ViewConstant.REDIRECT + ViewConstant.INDEX);
+		return new ModelAndView(ViewConstant.REDIRECT + "/" + ViewConstant.INDEX);
 	}
 
 	/**
